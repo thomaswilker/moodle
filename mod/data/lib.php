@@ -137,6 +137,7 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
         $this->field->param3 = '';
         $this->field->name = '';
         $this->field->description = '';
+        $this->field->private = false;
 
         return true;
     }
@@ -152,6 +153,7 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
 
         $this->field->name        = trim($data->name);
         $this->field->description = trim($data->description);
+        $this->field->private = !empty($data->private)?1:0;
 
         if (isset($data->param1)) {
             $this->field->param1 = trim($data->param1);
@@ -1196,7 +1198,13 @@ function data_print_template($template, $records, $data, $search='', $page=0, $r
     // Then we generate strings to replace for normal tags
         foreach ($fields as $field) {
             $patterns[]='[['.$field->field->name.']]';
-            $replacement[] = highlight($search, $field->display_browse_field($record->id, $template));
+
+            if ($field->field->private && !has_capability('mod/data:viewprivatefields', $context) &&
+                !(has_capability('mod/data:viewownprivatefields', $context) && data_isowner($record->id))) {
+                $replacement[] = '<span class="privatefieldhidden">' . get_string('cannotviewprivatefield', 'data') . '</span>';
+            } else {
+                $replacement[] = highlight($search, $field->display_browse_field($record->id, $template));
+            }
         }
 
     // Replacing special tags (##Edit##, ##Delete##, ##More##)
@@ -2762,9 +2770,14 @@ function data_get_exportdata($dataid, $fields, $selectedfields, $currentgroup=0)
 
     $exportdata = array();
 
+    $cm = get_coursemodule_from_instance('data', $dataid, 0, false, MUST_EXIST);
+    $viewprivate = has_capability('mod/data:viewprivatefields', context_module::instance($cm->id));
+    $viewownprivate = has_capability('mod/data:viewownprivatefields', context_module::instance($cm->id));
+
     // populate the header in first row of export
     foreach($fields as $key => $field) {
-        if (!in_array($field->field->id, $selectedfields)) {
+        if (!in_array($field->field->id, $selectedfields) ||
+            ($field->field->private && !$viewprivate && !$viewownprivate)) {
             // ignore values we aren't exporting
             unset($fields[$key]);
         } else {
@@ -2788,8 +2801,10 @@ function data_get_exportdata($dataid, $fields, $selectedfields, $currentgroup=0)
         if( $content = $DB->get_records_sql($select, $where) ) {
             foreach($fields as $field) {
                 $contents = '';
-                if(isset($content[$field->field->id])) {
-                    $contents = $field->export_text_value($content[$field->field->id]);
+                if (!$field->field->private || $viewprivate || ($viewownprivate && data_isowner($record->id))) {
+                    if(isset($content[$field->field->id])) {
+                        $contents = $field->export_text_value($content[$field->field->id]);
+                    }
                 }
                 $exportdata[$line][] = $contents;
             }

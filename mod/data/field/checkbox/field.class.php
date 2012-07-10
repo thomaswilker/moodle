@@ -27,7 +27,7 @@ class data_field_checkbox extends data_field_base {
     var $type = 'checkbox';
 
     function display_add_field($recordid=0) {
-        global $CFG, $DB;
+        global $CFG, $DB, $PAGE;
 
         $content = array();
 

@@ -45,8 +45,15 @@ class mod_data_export_form extends moodleform {
             $mform->setDefault('delimiter_name', 'comma');
         }
         $mform->addElement('header', 'notice', get_string('chooseexportfields', 'data'));
+
+        $viewprivate = has_any_capability( array('mod/data:viewprivatefields',
+                                                 'mod/data:viewownprivatefields'),
+                                          context_module::instance($this->_cm->id));
         foreach($this->_datafields as $field) {
-            if($field->text_export_supported()) {
+
+            if ($field->field->private && !$viewprivate) {
+                // skip this field
+            } else if($field->text_export_supported()) {
                 $mform->addElement('advcheckbox', 'field_'.$field->field->id, '<div title="' . s($field->field->description) . '">' . $field->field->name . '</div>', ' (' . $field->name() . ')', array('group'=>1));
                 $mform->setDefault('field_'.$field->field->id, 1);
             } else {

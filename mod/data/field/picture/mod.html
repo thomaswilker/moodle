@@ -13,6 +13,10 @@
         </td>
     </tr>
     <tr>
+        <td class="c0"><label for="private"><?php echo get_string('fieldprivate', 'data'); echo(' ' . $OUTPUT->help_icon('privatefield', 'data')); ?></label></td>
+        <td class="c1"><input class="fieldprivate" type="checkbox" name="private" id="private" <?php p($this->field->private?"checked=\"checked\"":""); ?>/></td>
+    </tr>
+    <tr>
         <td class="c0"><label for="param1">
             <?php echo get_string('fieldwidthsingleview', 'data');?></label></td>
         <td class="c1">

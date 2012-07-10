@@ -64,6 +64,7 @@ require_login($course, false, $cm);
 
 $context = get_context_instance(CONTEXT_MODULE, $cm->id);
 require_capability('mod/data:manageentries', $context);
+$haseditprivate = has_any_capability(array('mod/data:editprivatefields', 'mod/data:editownprivatefields'), $context);
 $form = new mod_data_import_form(new moodle_url('/mod/data/import.php'));
 
 /// Print the page header
@@ -126,10 +127,14 @@ if (!$formdata = $form->get_data()) {
         $recordsadded = 0;
         while ($record = $cir->next()) {
             if ($recordid = data_add_record($data, 0)) {  // add instance to data_record
-                $fields = $DB->get_records('data_fields', array('dataid'=>$data->id), '', 'name, id, type');
+                $fields = $DB->get_records('data_fields', array('dataid'=>$data->id), '', 'name, id, type, private');
 
                 // Insert new data_content fields with NULL contents:
                 foreach ($fields as $field) {
+                    if ($field->private && !$haseditprivate) {
+                        // skip private fields with no permission
+                        continue;
+                    }
                     $content = new stdClass();
                     $content->recordid = $recordid;
                     $content->fieldid = $field->id;
@@ -139,6 +144,10 @@ if (!$formdata = $form->get_data()) {
                 foreach ($record as $key => $value) {
                     $name = $fieldnames[$key];
                     $field = $fields[$name];
+                    if ($field->private && !$haseditprivate) {
+                        // skip private fields with no permission
+                        continue;
+                    }
                     $content = new stdClass();
                     $content->fieldid = $field->id;
                     $content->recordid = $recordid;

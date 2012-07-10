@@ -289,7 +289,14 @@ if ($data->addtemplate){
     foreach ($possiblefields as $eachfield){
         $field = data_get_field($eachfield, $data);
         $patterns[]="[[".$field->field->name."]]";
-        $replacements[] = $field->display_add_field($rid);
+
+        if ($field->field->private && !has_capability('mod/data:editprivatefields', $context) &&
+            !(has_capability('mod/data:editownprivatefields', $context) && (!$rid || data_isowner($rid)))) {
+            $replacements[] = '<span class="privatefieldlocked">' . get_string('cannoteditprivatefield', 'data') . '</span>';
+        } else {
+            $replacements[] = $field->display_add_field($rid);
+        }
+
         $patterns[]="[[".$field->field->name."#id]]";
         $replacements[] = 'field_'.$field->field->id;
     }
