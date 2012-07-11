@@ -54,8 +54,9 @@
         <FIELD NAME="type" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="dataid" NEXT="name"/>
         <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="type" NEXT="description"/>
         <FIELD NAME="description" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="private"/>
-        <FIELD NAME="private" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Private fields are only visible or editable by users with additional capabilities" PREVIOUS="description" NEXT="param1"/>
-        <FIELD NAME="param1" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="private" NEXT="param2"/>
+        <FIELD NAME="private" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Private fields are only visible or editable by users with additional capabilities" PREVIOUS="description" NEXT="required"/>
+        <FIELD NAME="required" TYPE="int" LENGTH="4" NOTNULL="true" UNSIGNED="true" DEFAULT="0" SEQUENCE="false" COMMENT="Private fields are only visible or editable by users with additional capabilities" PREVIOUS="private" NEXT="param1"/>
+        <FIELD NAME="param1" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="required" NEXT="param2"/>
         <FIELD NAME="param2" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="param1" NEXT="param3"/>
         <FIELD NAME="param3" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="param2" NEXT="param4"/>
         <FIELD NAME="param4" TYPE="text" NOTNULL="false" SEQUENCE="false" PREVIOUS="param3" NEXT="param5"/>

@@ -26,12 +26,15 @@ class data_field_checkbox extends data_field_base {
 
     var $type = 'checkbox';
 
-    function display_add_field($recordid=0) {
+    function display_add_field($recordid=0, $formdata=null) {
         global $CFG, $DB, $PAGE;
 
         $content = array();
 
-        if ($recordid) {
+        if ($formdata) {
+            $fieldname = 'field_' . $this->field->id;
+            $content = $formdata->$fieldname;
+        } else if ($recordid) {
             $content = $DB->get_field('data_content', 'content', array('fieldid'=>$this->field->id, 'recordid'=>$recordid));
             $content = explode('##', $content);
         } else {
@@ -42,7 +45,8 @@ class data_field_checkbox extends data_field_base {
         $str .= '<fieldset><legend><span class="accesshide">'.$this->field->name.'</span></legend>';
 
         $i = 0;
-        foreach (explode("\n", $this->field->param1) as $checkbox) {
+        $options = explode("\n", $this->field->param1);
+        foreach ($options as $checkbox) {
             $checkbox = trim($checkbox);
             if ($checkbox === '') {
                 continue; // skip empty lines
@@ -56,7 +60,7 @@ class data_field_checkbox extends data_field_base {
             } else {
                 $str .= '/>';
             }
-            $str .= '<label for="field_'.$this->field->id.'_'.$i.'">'.$checkbox.'</label><br />';
+            $str .= '<label for="field_'.$this->field->id.'_'.$i.'">'.$checkbox.'</label><br/>';
             $i++;
         }
         $str .= '</fieldset>';

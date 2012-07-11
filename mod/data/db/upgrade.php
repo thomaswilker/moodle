@@ -40,6 +40,15 @@ function xmldb_data_upgrade($oldversion) {
 
         upgrade_mod_savepoint(true, 2012071000, 'data');
     }
+    if ($oldversion < 2012071001) {
+        $table = new xmldb_table('data_fields');
+        $field = new xmldb_field('required', XMLDB_TYPE_INTEGER, '4', XMLDB_UNSIGNED, XMLDB_NOTNULL, null, '0', 'private');
+
+        // Private field support
+        $dbman->add_field($table, $field);
+
+        upgrade_mod_savepoint(true, 2012071001, 'data');
+    }
 
 
     return true;

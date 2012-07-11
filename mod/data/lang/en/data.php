@@ -154,6 +154,7 @@ $string['fieldname'] = 'Field name';
 $string['fieldnotmatched'] = 'The following fields in your file are not known in this database: {$a}';
 $string['fieldoptions'] = 'Options (one per line)';
 $string['fieldprivate'] = 'Private field';
+$string['fieldrequired'] = 'Required field';
 $string['fields'] = 'Fields';
 $string['fieldupdated'] = 'Field updated';
 $string['fieldwidth'] = 'Width';
@@ -295,12 +296,18 @@ $string['recordsnotsaved'] = 'No entry was saved. Please check the format of the
 $string['recordssaved'] = 'entries saved';
 $string['requireapproval'] = 'Require approval?';
 $string['requireapproval_help'] = 'If enabled, entries require approving by a teacher before they are viewable by everyone.';
+$string['required'] = 'Required';
 $string['requiredentries'] = 'Required entries';
 $string['requiredentries_help'] = 'The number of entries a student is required to submit before the activity can be considered complete.';
 $string['requiredentriestoview'] = 'Entries required before viewing';
 $string['requiredentriestoview_help'] = 'The number of entries a student is required to submit before they can view entries from other students.
 
 Note: If entries are required before viewing, the database auto-linking filter should be disabled. This is because the database auto-linking filter can\'t determine whether a user has submitted the required number of entries.';
+$string['requiredfield'] = 'Required field';
+$string['requiredfieldhint'] = ' (required field)';
+$string['requiredfieldmissing'] = 'Required field "{$a}" missing.';
+$string['requiredfieldshort'] = ' *';
+$string['requiredfield_help'] = 'If this field is marked as required, all entries will be required to have a value for this field';
 $string['resetsettings'] = 'Reset filters';
 $string['resettemplate'] = 'Reset template';
 $string['resizingimages'] = 'Resizing image thumbnails...';

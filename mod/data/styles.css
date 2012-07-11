@@ -37,3 +37,4 @@
 
 #page-mod-data-edit .privatefieldlocked { font-style: italic; color: #888888; }
 #page-mod-data-view .privatefieldhidden { display: none; }
+#page-mod-data-edit .requiredfield { color: #ff0000; }

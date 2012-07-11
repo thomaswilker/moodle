@@ -25,7 +25,7 @@
 class data_field_url extends data_field_base {
     var $type = 'url';
 
-    function display_add_field($recordid=0) {
+    function display_add_field($recordid=0, $formdata=null) {
         global $CFG, $DB, $OUTPUT, $PAGE;
 
         require_once($CFG->dirroot. '/repository/lib.php'); // necessary for the constants used in args
@@ -43,13 +43,25 @@ class data_field_url extends data_field_base {
         $straddlink = get_string('choosealink', 'repository');
         $url = '';
         $text = '';
-        if ($recordid) {
+        if ($formdata) {
+            $fieldname = 'field_' . $this->field->id . '_0';
+            $url = $formdata->$fieldname;
+            $fieldname = 'field_' . $this->field->id . '_1';
+            if (isset($formdata->$fieldname)) {
+                $text = $formdata->$fieldname;
+            }
+        } else if ($recordid) {
             if ($content = $DB->get_record('data_content', array('fieldid'=>$this->field->id, 'recordid'=>$recordid))) {
                 $url  = $content->content;
                 $text = $content->content1;
             }
         }
-        $str = '<div title="'.s($this->field->description).'">';
+        $requiredfieldhint = '';
+        if ($this->field->required) {
+            $requiredfieldhint = get_string('requiredfieldhint', 'data');
+        }
+
+        $str = '<div title="'.s($this->field->description).s($requiredfieldhint).'">';
         if (!empty($this->field->param1) and empty($this->field->param2)) {
             $str .= '<table><tr><td align="right">';
             $str .= get_string('url','data').':</td><td><input type="text" name="field_'.$this->field->id.'_0" id="'.$fieldid.'" value="'.$url.'" size="60" /></td></tr>';
@@ -69,6 +81,9 @@ class data_field_url extends data_field_base {
         $PAGE->requires->js_init_call('M.data_urlpicker.init', array($options), true, $module);
         $PAGE->requires->js_function_call('show_item', array('filepicker-button-'.$options->client_id));
 
+        if ($this->field->required) {
+            $str .= '<span class="requiredfield">' . get_string('requiredfieldshort', 'data') . '</span>';
+        }
         $str .= '</div>';
         return $str;
     }
