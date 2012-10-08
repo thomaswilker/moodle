@@ -261,6 +261,15 @@ abstract class assign_plugin {
     }
 
     /**
+     * Get file area for editor returns string
+     * @param string $editorfield - the fieldname of the editor
+     * @return string - The name of file areas
+     */
+    public function get_file_area_for_editor($editorfield) {
+        return '';
+    }
+
+    /**
      * Get the numerical sort order for this plugin
      *
      * @return int

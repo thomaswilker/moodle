@@ -125,25 +125,97 @@ class assign_feedback_comments extends assign_feedback_plugin {
     }
 
     /**
+     * Save the settings for feedback comments plugin
+     *
+     * @param stdClass $data
+     * @return bool
+     */
+    public function save_settings(stdClass $data) {
+        $this->set_config('commentinline', $data->assignfeedback_comments_commentinline);
+        return true;
+    }
+
+    /**
      * Get form elements for the grading page
      *
      * @param stdClass|null $grade
      * @param MoodleQuickForm $mform
      * @param stdClass $data
+     * @param int $userid
      * @return bool true if elements were added to the form
      */
-    public function get_form_elements($grade, MoodleQuickForm $mform, stdClass $data) {
+    public function get_form_elements_for_user($grade, MoodleQuickForm $mform, stdClass $data, $userid) {
+        $commentinlinenabled = $this->get_config('commentinline');
+        $submission = $this->assignment->get_user_submission($userid, false);
+        $feedbackcomments = false;
+
         if ($grade) {
             $feedbackcomments = $this->get_feedback_comments($grade->id);
-            if ($feedbackcomments) {
-                $data->assignfeedbackcomments_editor['text'] = $feedbackcomments->commenttext;
-                $data->assignfeedbackcomments_editor['format'] = $feedbackcomments->commentformat;
+        }
+
+        if ($feedbackcomments && !empty($feedbackcomments->commenttext)) {
+            $data->assignfeedbackcomments_editor['text'] = $feedbackcomments->commenttext;
+            $data->assignfeedbackcomments_editor['format'] = $feedbackcomments->commentformat;
+        } else {
+            if (!empty($commentinlinenabled)) {
+                $data->assignfeedbackcomments_editor['text'] = '';
+                $data->assignfeedbackcomments_editor['format'] = editors_get_preferred_format();
+                $formatset = false;
+                foreach ($this->assignment->get_submission_plugins() as $plugin) {
+                    $fields = $plugin->get_editor_fields();
+                    if ($plugin->is_enabled() && $plugin->is_visible() && !empty($fields)) {
+                        foreach ($fields as $key => $description) {
+                            $rawtext = $plugin->get_editor_text($key, $submission->id);
+                            // Add rewrite_plugin to fix broken images inserted into the feedback editor.
+                            // Just update the link to the images, do not copy the files.
+                            $plugincomponent = $plugin->get_subtype() . '_' . $plugin->get_type();
+                            $filearea = $plugin->get_file_area_for_editor($key);
+                            $text = file_rewrite_pluginfile_urls($rawtext,
+                                                                 'pluginfile.php',
+                                                                 $this->assignment->get_context()->id,
+                                                                 $plugincomponent,
+                                                                 $filearea,
+                                                                 $submission->id);
+                            $data->assignfeedbackcomments_editor['text'] .= $text;
+
+                            $newformat = $plugin->get_editor_format($key, $submission->id);
+                            $oldformat = $data->assignfeedbackcomments_editor['format'];
+
+                            if ($formatset && $newformat != $oldformat) {
+                                // There are 2 or more editor fields using different formats, set to plain as a fallback.
+                                $newformat = FORMAT_PLAIN;
+                            } else {
+                                $formatset = true;
+                            }
+                            $data->assignfeedbackcomments_editor['format'] = $newformat;
+                        }
+                    }
+                }
             }
         }
 
         $mform->addElement('editor', 'assignfeedbackcomments_editor', '', null, null);
         return true;
     }
+
+     /**
+     * Get the default setting for feedback comments plugin
+     *
+     * @param MoodleQuickForm $mform The form to add elements to
+     * @return void
+     */
+    public function get_settings(MoodleQuickForm $mform) {
+        $defaultcommentinline = $this->get_config('commentinline');
+        if ($defaultcommentinline === false) {
+            $defaultcommentinline = get_config('assignfeedback_comments', 'inline');
+        }
+        $mform->addElement('selectyesno', 'assignfeedback_comments_commentinline', get_string('commentinline', 'assignfeedback_comments'));
+        $mform->addHelpButton('assignfeedback_comments_commentinline', 'commentinline', 'assignfeedback_comments');
+        $mform->setDefault('assignfeedback_comments_commentinline', $defaultcommentinline);
+        // Disable comment online if comment feedback plugin is disabled.
+        $mform->disabledIf('assignfeedback_comments_commentinline', 'assignfeedback_comments_enabled', 'eq', 0);
+   }
+
 
     /**
      * Saving the comment content into dtabase
@@ -229,8 +301,10 @@ class assign_feedback_comments extends assign_feedback_plugin {
      * @return bool was it a success? (false will trigger a rollback)
      */
     public function upgrade_settings(context $oldcontext, stdClass $oldassignment, & $log) {
-        // first upgrade settings (nothing to do)
-        return true;
+        if ($oldassignment->assignmenttype == 'online') {
+            $this->set_config('commentinline', $oldassignment->var1);
+            return true;
+        }
     }
 
     /**

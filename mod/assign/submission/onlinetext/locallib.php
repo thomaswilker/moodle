@@ -149,6 +149,25 @@ class assign_submission_onlinetext extends assign_submission_plugin {
     }
 
     /**
+     * Return a list of the text fields that can be imported/exported by this plugin
+     *
+     * @return array An array of field names and descriptions. (name=>description, ...)
+     */
+    public function get_editor_fields() {
+        return array('onlinetext' => get_string('pluginname', 'assignsubmission_onlinetext'));
+    }
+
+    /**
+     * Get file area for editor
+     *
+     * @param string $editorfield
+     * @return string
+     */
+    public function get_file_area_for_editor($editorfield) {
+        return ASSIGNSUBMISSION_ONLINETEXT_FILEAREA;
+    }
+
+    /**
      * Get the saved text content from the editor
      *
      * @param string $name
