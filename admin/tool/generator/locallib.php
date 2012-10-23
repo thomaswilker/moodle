@@ -26,7 +26,11 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->libdir . '/formslib.php');
+require_once($CFG->libdir . '/phpunit/generatorlib.php');
+require_once($CFG->libdir . '/gradelib.php');
+require_once($CFG->libdir . '/plagiarismlib.php');
 require_once($CFG->dirroot .'/course/lib.php');
+require_once($CFG->dirroot .'/course/moodleform_mod.php');
 require_once($CFG->libdir .'/filelib.php');
 
 define('GENERATOR_RANDOM', 0);
@@ -113,6 +117,7 @@ class generator {
              array('short'=>'mods', 'long' => 'modules_list',
                    'help' => 'The list of modules you want to generate', 'default' => $this->modules_list,
                    'type' => 'mod1,mod2...'),
+            /**
              array('short'=>'rt', 'long' => 'resource_type',
                    'help' => 'The specific type of resource you want to generate. Defaults to all',
                    'default' => $this->resource_types,
@@ -157,6 +162,7 @@ class generator {
              array('short'=>'mc', 'long' => 'messages_per_chat',
                    'help' => 'The number of messages to generate for each chat module. Default=10',
                    'type'=>'NUMBER', 'default' => 10),
+                */
             );
 
         foreach ($arguments as $args_array) {
@@ -287,11 +293,11 @@ class generator {
             $this->set('number_of_students',1);
             $this->set('number_of_modules',1);
             $this->set('number_of_sections',1);
-            $this->set('assignment_grades',false);
-            $this->set('quiz_grades',false);
+           // $this->set('assignment_grades',false);
+           // $this->set('quiz_grades',false);
             $this->set('students_per_course',1);
-            $this->set('questions_per_course',1);
-            $this->set('questions_per_quiz',1);
+          //  $this->set('questions_per_course',1);
+          //  $this->set('questions_per_quiz',1);
         }
 
         if ($this->get('pre_cleanup')) {
@@ -308,11 +314,11 @@ class generator {
             $users = $this->generate_users();
             $courses = $this->generate_courses();
             $modules = $this->generate_modules($courses);
-            $questions = $this->generate_questions($courses, $modules);
-            $course_users = $this->generate_role_assignments($users, $courses);
-            $this->generate_forum_posts($course_users, $modules);
-            $this->generate_grades($course_users, $courses, $modules);
-            $this->generate_module_content($course_users, $courses, $modules);
+          //  $questions = $this->generate_questions($courses, $modules);
+          //  $course_users = $this->generate_role_assignments($users, $courses);
+          //  $this->generate_forum_posts($course_users, $modules);
+          //  $this->generate_grades($course_users, $courses, $modules);
+          //  $this->generate_module_content($course_users, $courses, $modules);
         }
 
         if ($this->get('post_cleanup')) {
@@ -378,6 +384,31 @@ class generator {
         return $courses;
     }
 
+    /**
+     * Get an instance of the phpunit generator for this module without requiring phpunit libs.
+     * @param $modulename String - The name of the module e.g. 'assignment'
+     * @return phpunit_module_generator - The module generator class or false on error
+     */
+    public function get_module_generator($modulename) {
+        global $CFG;
+
+        $filepath = $CFG->dirroot . '/mod/' . $modulename . '/tests/generator/lib.php';
+
+        if (!file_exists($filepath)) {
+            return false;
+        }
+
+        require_once($filepath);
+
+        $classname = 'mod_' . $modulename . '_generator';
+        if (!class_exists($classname)) {
+            return false;
+        }
+
+        return new $classname(new phpunit_data_generator());
+        //return new $classname();
+    }
+
     public function generate_modules($courses) {
         global $DB, $CFG;
         // Parse the modules-list variable
@@ -422,13 +453,13 @@ class generator {
                         $module = new stdClass();
 
                         // If only one module is created, and we also need to add a question to a quiz, create only a quiz
-                        if ($this->get('number_of_modules') == 1
-                                    && $this->get('questions_per_quiz') > 0
-                                    && !empty($modules[8])) {
-                            $moduledata = $modules[8];
-                        } else {
-                            $moduledata = $modules[array_rand($modules)];
-                        }
+                     //   if ($this->get('number_of_modules') == 1
+                     //               && $this->get('questions_per_quiz') > 0
+                     //               && !empty($modules[8])) {
+                     //       $moduledata = $modules[8];
+                     //   } else {
+                        $moduledata = $modules[array_rand($modules)];
+                     //   }
 
                         $libfile = "$CFG->dirroot/mod/$moduledata->name/lib.php";
                         if (file_exists($libfile)) {
@@ -452,146 +483,31 @@ class generator {
                                      . "its speed and ease of use being affected dramatically.";
                         $content = 'Very useful content, I am sure you would agree';
 
-                        $module_type_index = 0;
-                        $module->introformat = FORMAT_MOODLE;
-                        $module->messageformat = FORMAT_MOODLE;
-
-                        // Special module-specific config
-                        switch ($moduledata->name) {
-                            case 'assignment':
-                                $module->intro = $description;
-                                $module->assignmenttype = $this->get_module_type('assignment');
-                                $module->timedue = time() + 89487321;
-                                $module->grade = rand(50,100);
-                                break;
-                            case 'chat':
-                                $module->intro = $description;
-                                $module->schedule = 1;
-                                $module->chattime = 60 * 60 * 4;
-                                break;
-                            case 'data':
-                                $module->intro = $description;
-                                $module->name = 'test';
-                                break;
-                            case 'choice':
-                                $module->intro = $description;
-                                $module->text = $content;
-                                $module->option = array('Good choice', 'Bad choice', 'No choice');
-                                $module->limit  = array(1, 5, 0);
-                                break;
-                            case 'comments':
-                                $module->intro = $description;
-                                $module->comments = $content;
-                                break;
-                            case 'feedback':
-                                $module->intro = $description;
-                                $module->page_after_submit = $description;
-                                $module->comments = $content;
-                                break;
-                            case 'forum':
-                                $module->intro = $description;
-                                $module->type = $this->get_module_type('forum');
-                                $module->forcesubscribe = rand(0, 1);
-                                $module->format = 1;
-                                break;
-                            case 'glossary':
-                                $module->intro = $description;
-                                $module->displayformat = $this->glossary_formats[rand(0, count($this->glossary_formats) - 1)];
-                                $module->cmidnumber = rand(0,999999);
-                                break;
-                            case 'label':
-                                $module->content = $content;
-                                $module->intro = $description;
-                                break;
-                            case 'lesson':
-                                $module->lessondefault = 1;
-                                $module->available = time();
-                                $module->deadline = time() + 719891987;
-                                $module->grade = 100;
-                                break;
-                            case 'quiz':
-                                $module->intro = $description;
-                                $module->feedbacktext = 'blah';
-                                $module->feedback = 1;
-                                $module->feedbackboundaries = array(2, 1);
-                                $module->grade = 10;
-                                $module->timeopen = time();
-                                $module->timeclose = time() + 68854;
-                                $module->shufflequestions = true;
-                                $module->shuffleanswers = true;
-                                $module->quizpassword = '';
-                                break;
-                            case 'resource':
-                                $module->type = $this->get_module_type('resource');
-                                $module->alltext = $content;
-                                $module->summary = $description;
-                                $module->windowpopup = rand(0,1);
-                                $module->display = rand(0,1);
-                                $module->resizable = rand(0,1);
-                                $module->scrollbars = rand(0,1);
-                                $module->directories = rand(0,1);
-                                $module->location = 'file.txt';
-                                $module->menubar = rand(0,1);
-                                $module->toolbar = rand(0,1);
-                                $module->status = rand(0,1);
-                                $module->width = rand(200,600);
-                                $module->height = rand(200,600);
-                                $module->directories = rand(0,1);
-                                $module->files = false;
-                                $module->param_navigationmenu = rand(0,1);
-                                $module->param_navigationbuttons = rand(0,1);
-                                $module->reference = 1;
-                                $module->forcedownload = 1;
-                                break;
-                            case 'survey':
-                                $module->template = rand(1,5);
-                                $module->intro = $description;
-                                break;
-                            case 'wiki':
-                                $module->intro = $description;
-                                $module->summary = $description;
-                                break;
-                        }
-
                         $module->name = ucfirst($moduledata->name) . ' ' . $moduledata->count++;
 
-                        $module->course = $courseid;
-                        $module->section = 0;
-                        $module->module = $moduledata->id;
-                        $module->modulename = $moduledata->name;
-                        $module->add = $moduledata->name;
-                        $module->cmidnumber = '';
-                        $module->coursemodule = '';
-                        $add_instance_function = $moduledata->name . '_add_instance';
+                        // Get the phpunit generator for this type of module (if it exists)
+                        $generator = $this->get_module_generator($moduledata->name);
 
-                        $module->coursemodule = add_course_module($module);
-
-                        if (function_exists($add_instance_function)) {
-                            $this->verbose("Calling module function $add_instance_function");
-                            $module->instance = $add_instance_function($module, '');
-                            $DB->set_field('course_modules', 'instance', $module->instance, array('id'=>$module->coursemodule));
-                        } else {
-                            $this->verbose("Function $add_instance_function does not exist!");
-                            if (!$this->get('ignore_errors')) {
-                                die();
-                            }
+                        if (empty($generator)) {
+                            $this->verbose("No generator class found for module $module->name");
+                            continue;
+            
                         }
+                        $module_record = $generator->create_instance(array('course'=>$courseid,
+                                                                    'grade'=>100,
+                                                                    'section'=>$i,
+                                                                    'intro'=>$description));
 
-                        $module->section = course_add_cm_to_section($courseid, $module->coursemodule, $i);
+                        $this->verbose("A $module->name module was added to section $i (id $i) "
+                        ."of course $courseid.");
 
-                        $module->cmidnumber = set_coursemodule_idnumber($module->coursemodule, '');
-
-                        $this->verbose("A $moduledata->name module was added to section $i (id $module->section) "
-                            ."of course $courseid.");
-
-                        $module_instance = $DB->get_field('course_modules', 'instance', array('id' => $module->coursemodule));
-                        $module_record = $DB->get_record($moduledata->name, array('id' => $module_instance));
-                        $module_record->instance = $module_instance;
+                      //  $module_instance = $DB->get_field('course_modules', 'instance', array('id' => $module->coursemodule));
+                       // $module_record = $DB->get_record($moduledata->name, array('id' => $module_instance));
+                        //$module_record->instance = $module_instance;
 
                         if (empty($modules_array[$moduledata->name])) {
                             $modules_array[$moduledata->name] = array();
                         }
-
                         // TODO Find out why some $module_record end up empty here... (particularly quizzes)
                         if (!empty($module_record->instance)) {
                             $modules_array[$moduledata->name][] = $module_record;
@@ -630,16 +546,20 @@ class generator {
                     $qtype = $questiontypes[array_rand($questiontypes)];
 
                     // Only the following types are supported right now. Hang around for more!
-                    $supported_types = array('match', 'essay', 'multianswer', 'multichoice', 'shortanswer',
+                    $supported_types = array('match', 'shortanswer',
                             'numerical', 'truefalse', 'calculated');
                     $qtype = $supported_types[array_rand($supported_types)];
 
                     if ($qtype == 'calculated') {
                         continue;
                     }
-                    $classname = "question_{$qtype}_qtype";
+                    $classname = "qtype_{$qtype}_question";
                     if ($qtype == 'multianswer') {
-                        $classname = "embedded_cloze_qtype";
+                        //$classname = "embedded_cloze_qtype";
+                    }
+                    require_once($CFG->dirroot . '/question/type/' . $qtype . '/question.php');
+                    if ($qtype == 'multichoice') {
+                        $classname = "qtype_multichoice_single_question";
                     }
 
                     $question = new $classname();
@@ -1307,5 +1227,10 @@ class generator_form extends moodleform {
 
     function definition_after_data() {
 
+    }
+}
+
+if (!class_exists('phpunit_data_generator')) {
+    class phpunit_data_generator {
     }
 }
