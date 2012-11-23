@@ -209,7 +209,9 @@ class assign_feedback_comments extends assign_feedback_plugin {
         if ($defaultcommentinline === false) {
             $defaultcommentinline = get_config('assignfeedback_comments', 'inline');
         }
-        $mform->addElement('selectyesno', 'assignfeedback_comments_commentinline', get_string('commentinline', 'assignfeedback_comments'));
+        $mform->addElement('selectyesno',
+                           'assignfeedback_comments_commentinline',
+                           get_string('commentinline', 'assignfeedback_comments'));
         $mform->addHelpButton('assignfeedback_comments_commentinline', 'commentinline', 'assignfeedback_comments');
         $mform->setDefault('assignfeedback_comments_commentinline', $defaultcommentinline);
         // Disable comment online if comment feedback plugin is disabled.
@@ -251,7 +253,9 @@ class assign_feedback_comments extends assign_feedback_plugin {
     public function view_summary(stdClass $grade, & $showviewlink) {
         $feedbackcomments = $this->get_feedback_comments($grade->id);
         if ($feedbackcomments) {
-            $text = format_text($feedbackcomments->commenttext, $feedbackcomments->commentformat, array('context' => $this->assignment->get_context()));
+            $text = format_text($feedbackcomments->commenttext,
+                                $feedbackcomments->commentformat,
+                                array('context' => $this->assignment->get_context()));
             $short = shorten_text($text, 140);
 
             // show the view all link if the text has been shortened
@@ -270,7 +274,9 @@ class assign_feedback_comments extends assign_feedback_plugin {
     public function view(stdClass $grade) {
         $feedbackcomments = $this->get_feedback_comments($grade->id);
         if ($feedbackcomments) {
-            return format_text($feedbackcomments->commenttext, $feedbackcomments->commentformat, array('context' => $this->assignment->get_context()));
+            return format_text($feedbackcomments->commenttext,
+                               $feedbackcomments->commentformat,
+                               array('context' => $this->assignment->get_context()));
         }
         return '';
     }
