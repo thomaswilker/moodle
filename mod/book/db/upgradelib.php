@@ -150,11 +150,11 @@ function mod_book_migrate_area($record, $field, $table, $courseid, $context, $co
         if (preg_match_all("|$CFG->wwwroot/file.php(\?file=)?/$cid(/[^\s'\"&\?#]+)|", $record->$field, $matches)) {
             $file_record = array('contextid'=>$context->id, 'component'=>$component, 'filearea'=>$filearea, 'itemid'=>$itemid);
             foreach ($matches[2] as $i=>$filepath) {
-                if (!$file = $fs->get_file_by_hash(sha1("/$ooldcontext->id/course/legacy/0".$filepath))) {
+                if (!$file = $fs->get_file_by_pathname("/$ooldcontext->id/course/legacy/0".$filepath)) {
                     continue;
                 }
                 try {
-                    if (!$newfile = $fs->get_file_by_hash(sha1("/$context->id/$component/$filearea/$itemid".$filepath))) {
+                    if (!$newfile = $fs->get_file_by_pathname("/$context->id/$component/$filearea/$itemid".$filepath)) {
                         $fs->create_file_from_storedfile($file_record, $file);
                     }
                     $record->$field = str_replace($matches[0][$i], '@@PLUGINFILE@@'.$filepath, $record->$field);

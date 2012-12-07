@@ -77,7 +77,7 @@ $fs = get_file_storage();
 $relativepath = implode('/', $args);
 $fullpath = "/$context->id/user/draft/$draftid/$relativepath";
 
-if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->get_filename() == '.') {
+if (!$file = $fs->get_file_by_pathname($fullpath) or $file->get_filename() == '.') {
     send_file_not_found();
 }
 

@@ -61,7 +61,7 @@ function toolbook_importhtml_import_chapters($package, $type, $book, $context, $
         }
     } else {
         foreach ($chapterfiles as $chapterfile) {
-            if ($file = $fs->get_file_by_hash(sha1("/$context->id/mod_book/importhtmltemp/0/$chapterfile->pathname"))) {
+            if ($file = $fs->get_file_by_pathname("/$context->id/mod_book/importhtmltemp/0/$chapterfile->pathname")) {
                 $chapter = new stdClass();
                 $htmlcontent = toolbook_importhtml_fix_encoding($file->get_content());
 
@@ -111,8 +111,8 @@ function toolbook_importhtml_import_chapters($package, $type, $book, $context, $
                     }
                 }
 
-                if ($file = $fs->get_file_by_hash(sha1("/$context->id/mod_book/importhtmltemp/0$filepath"))) {
-                    if (!$oldfile = $fs->get_file_by_hash(sha1("/$context->id/mod_book/chapter/$chapter->id$filepath"))) {
+                if ($file = $fs->get_file_by_pathname("/$context->id/mod_book/importhtmltemp/0$filepath")) {
+                    if (!$oldfile = $fs->get_file_by_pathname("/$context->id/mod_book/chapter/$chapter->id$filepath")) {
                         $fs->create_file_from_storedfile($file_record, $file);
                     }
                     $chapter->content = str_replace($match, $matches[1][$i].'="@@PLUGINFILE@@'.$filepath.'"', $chapter->content);

@@ -1224,7 +1224,7 @@ function workshop_pluginfile($course, $cm, $context, $filearea, array $args, $fo
         $fullpath = "/$context->id/mod_workshop/$filearea/0/$relativepath";
 
         $fs = get_file_storage();
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
             send_file_not_found();
         }
 
@@ -1239,7 +1239,7 @@ function workshop_pluginfile($course, $cm, $context, $filearea, array $args, $fo
         $fullpath = "/$context->id/mod_workshop/$filearea/0/$relativepath";
 
         $fs = get_file_storage();
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
             send_file_not_found();
         }
 
@@ -1254,7 +1254,7 @@ function workshop_pluginfile($course, $cm, $context, $filearea, array $args, $fo
         $fullpath = "/$context->id/mod_workshop/$filearea/0/$relativepath";
 
         $fs = get_file_storage();
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
             send_file_not_found();
         }
 
@@ -1303,7 +1303,7 @@ function workshop_pluginfile($course, $cm, $context, $filearea, array $args, $fo
         $fs = get_file_storage();
         $relativepath = implode('/', $args);
         $fullpath = "/$context->id/mod_workshop/$filearea/$itemid/$relativepath";
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
             return false;
         }
         // finally send the file

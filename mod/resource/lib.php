@@ -398,15 +398,15 @@ function resource_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
     $relativepath = implode('/', $args);
     $fullpath = rtrim("/$context->id/mod_resource/$filearea/0/$relativepath", '/');
     do {
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath))) {
-            if ($fs->get_file_by_hash(sha1("$fullpath/."))) {
-                if ($file = $fs->get_file_by_hash(sha1("$fullpath/index.htm"))) {
+        if (!$file = $fs->get_file_by_pathname($fullpath)) {
+            if ($fs->get_file_by_pathname("$fullpath/.")) {
+                if ($file = $fs->get_file_by_pathname("$fullpath/index.htm")) {
                     break;
                 }
-                if ($file = $fs->get_file_by_hash(sha1("$fullpath/index.html"))) {
+                if ($file = $fs->get_file_by_pathname("$fullpath/index.html")) {
                     break;
                 }
-                if ($file = $fs->get_file_by_hash(sha1("$fullpath/Default.htm"))) {
+                if ($file = $fs->get_file_by_pathname("$fullpath/Default.htm")) {
                     break;
                 }
             }

@@ -95,6 +95,7 @@ class file_storage {
      * This hash is a unique file identifier - it is used to improve
      * performance and overcome db index size limits.
      *
+     * @deprecated Since Moodle 2.5. You should not need pathname hashes outside of file_storage.
      * @param int $contextid context ID
      * @param string $component component
      * @param string $filearea file area
@@ -104,6 +105,24 @@ class file_storage {
      * @return string sha1 hash
      */
     public static function get_pathname_hash($contextid, $component, $filearea, $itemid, $filepath, $filename) {
+        return self::filestorage_get_pathname_hash($contextid, $component, $filearea, $itemid, $filepath, $filename);
+    }
+
+    /**
+     * Calculates sha1 hash of unique full path name information.
+     *
+     * This hash is a unique file identifier - it is used to improve
+     * performance and overcome db index size limits.
+     *
+     * @param int $contextid context ID
+     * @param string $component component
+     * @param string $filearea file area
+     * @param int $itemid item ID
+     * @param string $filepath file path
+     * @param string $filename file name
+     * @return string sha1 hash
+     */
+    private static function filestorage_get_pathname_hash($contextid, $component, $filearea, $itemid, $filepath, $filename) {
         return sha1("/$contextid/$component/$filearea/$itemid".$filepath.$filename);
     }
 
@@ -119,15 +138,54 @@ class file_storage {
      * @return bool
      */
     public function file_exists($contextid, $component, $filearea, $itemid, $filepath, $filename) {
-        $filepath = clean_param($filepath, PARAM_PATH);
-        $filename = clean_param($filename, PARAM_FILE);
+        $cleanfilepath = clean_param($filepath, PARAM_PATH);
+        $cleanfilename = clean_param($filename, PARAM_FILE);
 
-        if ($filename === '') {
-            $filename = '.';
+        if ($cleanfilename === '') {
+            $cleanfilename = '.';
         }
 
-        $pathnamehash = $this->get_pathname_hash($contextid, $component, $filearea, $itemid, $filepath, $filename);
-        return $this->file_exists_by_hash($pathnamehash);
+        $pathnamehash = $this->filestorage_get_pathname_hash($contextid, $component, $filearea, $itemid, $cleanfilepath, $cleanfilename);
+        if (!$this->filestorage_file_exists_by_hash($pathnamehash)) {
+            $pathnamehash = $this->filestorage_get_pathname_hash($contextid, $component, $filearea, $itemid, $filepath, $filename);
+            return $this->filestorage_file_exists_by_hash($pathnamehash);
+        }
+        return true;
+    }
+
+    /**
+     * Whether or not the file exist
+     *
+     * @param string $pathname Full path name of the file
+     * @return bool
+     */
+    public function file_exists_by_pathname($pathname) {
+        $cleanpathname = clean_filename($pathname);
+        $pathnamehash = sha1($cleanpathname);
+
+        if (!$this->filestorage_file_exists_by_hash($pathnamehash)) {
+            // Try the older filename that may have invalid chars.
+            if ($pathname == $cleanpathname) {
+                return false;
+            }
+            $pathnamehash = sha1($pathname);
+            if (!$this->filestorage_file_exists_by_hash($pathnamehash)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Whether or not the file exist
+     *
+     * @deprecated Since Moodle 2.5. Use $fs->file_exists_by_pathname($path) instead of
+     *                               $fs->file_exists_by_hash(sha1($path))
+     * @param string $pathnamehash path name hash
+     * @return bool
+     */
+    public function file_exists_by_hash($pathnamehash) {
+        return $this->filestorage_file_exists_by_hash($pathnamehash);
     }
 
     /**
@@ -136,7 +194,7 @@ class file_storage {
      * @param string $pathnamehash path name hash
      * @return bool
      */
-    public function file_exists_by_hash($pathnamehash) {
+    private function filestorage_file_exists_by_hash($pathnamehash) {
         global $DB;
 
         return $DB->record_exists('files', array('pathnamehash'=>$pathnamehash));
@@ -287,10 +345,22 @@ class file_storage {
     /**
      * Fetch file using local file full pathname hash
      *
+     * @deprecated Since Moodle 2.5. Use $fs->get_file_by_pathname($path) instead of
+     *                               $fs->get_file_by_hash(sha1($path))
      * @param string $pathnamehash path name hash
      * @return stored_file|bool stored_file instance if exists, false if not
      */
     public function get_file_by_hash($pathnamehash) {
+        return $this->filestorage_get_file_by_hash($pathnamehash);
+    }
+
+    /**
+     * Fetch file using local file full pathname hash
+     *
+     * @param string $pathnamehash path name hash
+     * @return stored_file|bool stored_file instance if exists, false if not
+     */
+    private function filestorage_get_file_by_hash($pathnamehash) {
         global $DB;
 
         $sql = "SELECT ".self::instance_sql_fields('f', 'r')."
@@ -303,6 +373,31 @@ class file_storage {
         } else {
             return false;
         }
+    }
+
+    /**
+     * Fetch file using local file full pathname hash
+     *
+     * @deprecated Since Moodle 2.5. Use $fs->get_file_by_pathname($path) instead of
+     *                               $fs->get_file_by_hash(sha1($path))
+     * @param string $pathnamehash path name hash
+     * @return stored_file|bool stored_file instance if exists, false if not
+     */
+    public function get_file_by_pathname($pathname) {
+        $cleanpathname = clean_filename($pathname);
+        $pathnamehash = sha1($cleanpathname);
+
+        if (!($file = $this->filestorage_get_file_by_hash($pathnamehash))) {
+            // Try the older filename that may have invalid chars.
+            if ($pathname == $cleanpathname) {
+                return false;
+            }
+            $pathnamehash = sha1($pathname);
+            if (!($file = $this->filestorage_get_file_by_hash($pathnamehash))) {
+                return false;
+            }
+        }
+        return $file;
     }
 
     /**
@@ -324,8 +419,8 @@ class file_storage {
             $filename = '.';
         }
 
-        $pathnamehash = $this->get_pathname_hash($contextid, $component, $filearea, $itemid, $filepath, $filename);
-        return $this->get_file_by_hash($pathnamehash);
+        $pathnamehash = $this->filestorage_get_pathname_hash($contextid, $component, $filearea, $itemid, $filepath, $filename);
+        return $this->filestorage_get_file_by_hash($pathnamehash);
     }
 
     /**
@@ -727,9 +822,9 @@ class file_storage {
             throw new file_exception('storedfileproblem', 'Invalid file path');
         }
 
-        $pathnamehash = $this->get_pathname_hash($contextid, $component, $filearea, $itemid, $filepath, '.');
+        $pathnamehash = $this->filestorage_get_pathname_hash($contextid, $component, $filearea, $itemid, $filepath, '.');
 
-        if ($dir_info = $this->get_file_by_hash($pathnamehash)) {
+        if ($dir_info = $this->filestorage_get_file_by_hash($pathnamehash)) {
             return $dir_info;
         }
 
@@ -759,7 +854,7 @@ class file_storage {
         $dir_record->pathnamehash = $pathnamehash;
 
         $DB->insert_record('files', $dir_record);
-        $dir_info = $this->get_file_by_hash($pathnamehash);
+        $dir_info = $this->filestorage_get_file_by_hash($pathnamehash);
 
         if ($filepath !== '/') {
             //recurse to parent dirs
@@ -867,7 +962,7 @@ class file_storage {
             $newrecord->$key = $value;
         }
 
-        $newrecord->pathnamehash = $this->get_pathname_hash($newrecord->contextid, $newrecord->component, $newrecord->filearea, $newrecord->itemid, $newrecord->filepath, $newrecord->filename);
+        $newrecord->pathnamehash = $this->filestorage_get_pathname_hash($newrecord->contextid, $newrecord->component, $newrecord->filearea, $newrecord->itemid, $newrecord->filepath, $newrecord->filename);
 
         if ($newrecord->filename === '.') {
             // special case - only this function supports directories ;-)
@@ -1053,7 +1148,7 @@ class file_storage {
 
         list($newrecord->contenthash, $newrecord->filesize, $newfile) = $this->add_file_to_pool($pathname);
 
-        $newrecord->pathnamehash = $this->get_pathname_hash($newrecord->contextid, $newrecord->component, $newrecord->filearea, $newrecord->itemid, $newrecord->filepath, $newrecord->filename);
+        $newrecord->pathnamehash = $this->filestorage_get_pathname_hash($newrecord->contextid, $newrecord->component, $newrecord->filearea, $newrecord->itemid, $newrecord->filepath, $newrecord->filename);
 
         try {
             $newrecord->id = $DB->insert_record('files', $newrecord);
@@ -1170,7 +1265,7 @@ class file_storage {
         // get mimetype by magic bytes
         $newrecord->mimetype = empty($filerecord->mimetype) ? $this->mimetype($filepathname, $filerecord->filename) : $filerecord->mimetype;
 
-        $newrecord->pathnamehash = $this->get_pathname_hash($newrecord->contextid, $newrecord->component, $newrecord->filearea, $newrecord->itemid, $newrecord->filepath, $newrecord->filename);
+        $newrecord->pathnamehash = $this->filestorage_get_pathname_hash($newrecord->contextid, $newrecord->component, $newrecord->filearea, $newrecord->itemid, $newrecord->filepath, $newrecord->filename);
 
         try {
             $newrecord->id = $DB->insert_record('files', $newrecord);
@@ -1306,7 +1401,7 @@ class file_storage {
             }
         }
 
-        $filerecord->pathnamehash = $this->get_pathname_hash($filerecord->contextid, $filerecord->component, $filerecord->filearea, $filerecord->itemid, $filerecord->filepath, $filerecord->filename);
+        $filerecord->pathnamehash = $this->filestorage_get_pathname_hash($filerecord->contextid, $filerecord->component, $filerecord->filearea, $filerecord->itemid, $filerecord->filepath, $filerecord->filename);
 
         try {
             $filerecord->id = $DB->insert_record('files', $filerecord);

@@ -306,7 +306,7 @@ function folder_pluginfile($course, $cm, $context, $filearea, $args, $forcedownl
     $fs = get_file_storage();
     $relativepath = implode('/', $args);
     $fullpath = "/$context->id/mod_folder/content/0/$relativepath";
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+    if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
         return false;
     }
 

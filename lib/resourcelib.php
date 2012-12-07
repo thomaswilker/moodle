@@ -76,15 +76,15 @@ function resourcelib_try_file_migration($filepath, $cmid, $courseid, $component,
 
     $fullpath = rtrim("/$coursecontext->id/course/legacy/0".$filepath, '/');
     do {
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath))) {
-            if ($file = $fs->get_file_by_hash(sha1("$fullpath/.")) and $file->is_directory()) {
-                if ($file = $fs->get_file_by_hash(sha1("$fullpath/index.htm"))) {
+        if (!$file = $fs->get_file_by_pathname($fullpath)) {
+            if ($file = $fs->get_file_by_pathname("$fullpath/.") and $file->is_directory()) {
+                if ($file = $fs->get_file_by_pathname("$fullpath/index.htm")) {
                     break;
                 }
-                if ($file = $fs->get_file_by_hash(sha1("$fullpath/index.html"))) {
+                if ($file = $fs->get_file_by_pathname("$fullpath/index.html")) {
                     break;
                 }
-                if ($file = $fs->get_file_by_hash(sha1("$fullpath/Default.htm"))) {
+                if ($file = $fs->get_file_by_pathname("$fullpath/Default.htm")) {
                     break;
                 }
             }

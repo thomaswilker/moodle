@@ -269,7 +269,7 @@ function feedback_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
 
     $fs = get_file_storage();
 
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+    if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
         return false;
     }
 

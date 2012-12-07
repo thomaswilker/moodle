@@ -60,6 +60,32 @@ class filestoragelib_testcase extends advanced_testcase {
     }
 
     /**
+     * File paths can be clean or unclean
+     */
+    public function test_clean_filename() {
+        global $CFG;
+
+        $this->resetAfterTest(false);
+
+        $filepath = $CFG->dirroot.'/lib/filestorage/tests/fixtures/testimage.jpg';
+        $syscontext = context_system::instance();
+        $filerecord = array(
+            'contextid' => $syscontext->id,
+            'component' => 'core',
+            'filearea'  => 'unittest',
+            'itemid'    => 0,
+            'filepath'  => '/cleanfilename/',
+            'filename'  => 'testimage?.jpg',
+        );
+
+        $fs = get_file_storage();
+        $fs->create_file_from_pathname($filerecord, $filepath);
+
+        $this->assertTrue($fs->file_exists($syscontext->id, 'core', 'unittest', 0, '/cleanfilename/', 'testimage.jpg'));
+        $this->assertTrue($fs->file_exists($syscontext->id, 'core', 'unittest', 0, '/cleanfilename/', 'testimage?.jpg'));
+    }
+
+    /**
      * Local images can be added to the filepool and their preview can be obtained
      *
      * @depends test_create_file_from_pathname

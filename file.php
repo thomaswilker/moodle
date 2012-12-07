@@ -89,19 +89,19 @@ $fs = get_file_storage();
 
 $fullpath = "/$context->id/course/legacy/0/$relativepath";
 
-if (!$file = $fs->get_file_by_hash(sha1($fullpath))) {
+if (!$file = $fs->get_file_by_pathname($fullpath)) {
     if (strrpos($fullpath, '/') !== strlen($fullpath) -1 ) {
         $fullpath .= '/';
     }
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath.'/.'))) {
+    if (!$file = $fs->get_file_by_pathname($fullpath.'/.')) {
         send_file_not_found();
     }
 }
 // do not serve dirs
 if ($file->get_filename() == '.') {
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath.'index.html'))) {
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath.'index.htm'))) {
-            if (!$file = $fs->get_file_by_hash(sha1($fullpath.'Default.htm'))) {
+    if (!$file = $fs->get_file_by_pathname($fullpath.'index.html')) {
+        if (!$file = $fs->get_file_by_pathname($fullpath.'index.htm')) {
+            if (!$file = $fs->get_file_by_pathname($fullpath.'Default.htm')) {
                 send_file_not_found();
             }
         }

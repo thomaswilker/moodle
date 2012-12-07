@@ -68,7 +68,7 @@ function workshopform_accumulative_pluginfile($course, $cm, $context, $filearea,
     $fs = get_file_storage();
     $relativepath = implode('/', $args);
     $fullpath = "/$context->id/workshopform_accumulative/$filearea/$itemid/$relativepath";
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+    if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
         return false;
     }
 

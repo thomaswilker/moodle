@@ -957,7 +957,7 @@ function scorm_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
     }
 
     $fs = get_file_storage();
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+    if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
         if ($filearea === 'content') { //return file not found straight away to improve performance.
             send_header_404();
             die;

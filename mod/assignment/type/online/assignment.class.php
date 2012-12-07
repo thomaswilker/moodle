@@ -411,7 +411,7 @@ class assignment_online extends assignment_base {
         $fullpath = "/{$this->context->id}/mod_assignment/$filearea/".implode('/', $args);
 
         $fs = get_file_storage();
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
             send_file_not_found();
         }
 

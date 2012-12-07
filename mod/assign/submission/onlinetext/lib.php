@@ -64,7 +64,7 @@ function assignsubmission_onlinetext_pluginfile($course, $cm, context $context, 
     $fullpath = "/{$context->id}/assignsubmission_onlinetext/$filearea/$itemid/$relativepath";
 
     $fs = get_file_storage();
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+    if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
         return false;
     }
     send_stored_file($file, 0, 0, true); // download MUST be forced - security!

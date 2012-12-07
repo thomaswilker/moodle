@@ -1761,7 +1761,7 @@ function question_send_questiontext_file($questionid, $args, $forcedownload, $op
 
     $fs = get_file_storage();
     $fullpath = "/$question->contextid/question/questiontext/$question->id/" . implode('/', $args);
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+    if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
         send_file_not_found();
     }
 

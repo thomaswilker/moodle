@@ -351,7 +351,7 @@ function imscp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
             }
         }
         $fullpath = "/$context->id/mod_imscp/$filearea/$revision/$relativepath";
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
             return false;
         }
 
@@ -367,7 +367,7 @@ function imscp_pluginfile($course, $cm, $context, $filearea, $args, $forcedownlo
         $fs = get_file_storage();
         $relativepath = implode('/', $args);
         $fullpath = "/$context->id/mod_imscp/$filearea/$revision/$relativepath";
-        if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
             return false;
         }
 

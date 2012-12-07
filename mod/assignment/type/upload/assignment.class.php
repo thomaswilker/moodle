@@ -562,7 +562,7 @@ class assignment_upload extends assignment_base {
             $fullpath = "/{$this->context->id}/mod_assignment/submission/$submission->id/$relativepath";
 
             $fs = get_file_storage();
-            if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+            if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
                 return false;
             }
 
@@ -583,7 +583,7 @@ class assignment_upload extends assignment_base {
             $fullpath = "/{$this->context->id}/mod_assignment/response/$submission->id/$relativepath";
 
             $fs = get_file_storage();
-            if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+            if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
                 return false;
             }
             send_stored_file($file, 0, 0, true, $options);

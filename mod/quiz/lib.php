@@ -1696,7 +1696,7 @@ function quiz_pluginfile($course, $cm, $context, $filearea, $args, $forcedownloa
     $fs = get_file_storage();
     $relativepath = implode('/', $args);
     $fullpath = "/$context->id/mod_quiz/$filearea/$feedbackid/$relativepath";
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+    if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
         return false;
     }
     send_stored_file($file, 0, 0, true, $options);
@@ -1748,7 +1748,7 @@ function quiz_question_pluginfile($course, $context, $component,
     $fs = get_file_storage();
     $relativepath = implode('/', $args);
     $fullpath = "/$context->id/$component/$filearea/$relativepath";
-    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+    if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
         send_file_not_found();
     }
 

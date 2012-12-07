@@ -3620,7 +3620,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
 
             $fullpath = "/$context->id/$component/$filearea/".implode('/', $args);
 
-            if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+            if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
                 send_file_not_found();
             }
 
@@ -3637,7 +3637,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
 
             $fullpath = "/$context->id/$component/$filearea/".implode('/', $args);
 
-            if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+            if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
                 send_file_not_found();
             }
 
@@ -3658,7 +3658,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
 
             $fullpath = "/$context->id/tag/description/".implode('/', $args);
 
-            if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+            if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
                 send_file_not_found();
             }
 
@@ -4194,7 +4194,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
 
             $fullpath = "/$context->id/$component/$filearea/$formid/".implode('/', $args);
 
-            if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+            if (!$file = $fs->get_file_by_pathname($fullpath) or $file->is_directory()) {
                 send_file_not_found();
             }
 
