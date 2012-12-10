@@ -1067,6 +1067,36 @@ class assign {
     }
 
     /**
+     * Load a count of submissions
+     *
+     * @return int number of submissions
+     */
+    public function count_submissions() {
+        global $DB;
+
+        if (!$this->has_instance()) {
+            return 0;
+        }
+
+        $params = array();
+
+        $currentgroup = groups_get_activity_group($this->get_course_module(), true);
+        list($esql, $params) = get_enrolled_sql($this->get_context(), 'mod/assign:submit', $currentgroup, false);
+
+        $params['assignid'] = $this->get_instance()->id;
+
+        $sql = 'SELECT COUNT(s.userid)
+                       FROM {assign_submission} s
+                       JOIN(' . $esql . ') AS e ON e.id = s.userid
+                       WHERE
+                            s.assignment = :assignid AND
+                            s.timemodified IS NOT NULL';
+
+        return $DB->count_records_sql($sql, $params);
+    }
+
+
+    /**
      * Load a count of users enrolled in the current course with the specified permission and group (optional)
      *
      * @param string $status The submission status - should match one of the constants
@@ -3501,6 +3531,7 @@ class assign {
         $graderesults->close();
         return $grades;
     }
+
 
 }
 
