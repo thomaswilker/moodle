@@ -32,6 +32,28 @@ require_once("$CFG->libdir/externallib.php");
  */
 class mod_assign_external extends external_api {
 
+    private static function generate_warning($assignmentid, $warningcode, $detail) {
+        $warningmessages = array(
+            'couldnotlock'=>'Could not lock the submission for this user.',
+            'couldnotunlock'=>'Could not unlock the submission for this user.',
+            'couldnotsubmitforgrading'=>'Could not submit assignment for grading.',
+            'couldnotrevealidentities'=>'Could not reveal identities.',
+            'couldnotgrantextensions'=>'Could not grant submission date extensions.',
+            'couldnotrevert'=>'Could not revert submission to draft.',
+            'invalidparameters'=>'Invalid parameters.'
+        );
+
+        $message = $warningmessages[$warningcode];
+        if (empty($message)) {
+            $message = 'Unknown warning type.';
+        }
+
+        return array('item'=>$detail,
+                     'itemid'=>$assignmentid,
+                     'warningcode'=>$warningcode,
+                     'message'=>$message);
+    }
+
     /**
      * Describes the parameters for get_grades
      * @return external_external_function_parameters
@@ -667,6 +689,443 @@ class mod_assign_external extends external_api {
             array(
                 'assignments' => new external_multiple_structure(self::get_submissions_structure(), 'assignment submissions'),
                 'warnings' => new external_warnings()
+            )
+        );
+    }
+
+    /**
+     * Describes the parameters for lock_submissions
+     * @return external_external_function_parameters
+     * @since  Moodle 2.5
+     */
+    public static function lock_submissions_parameters() {
+        return new external_function_parameters(
+            array(
+                'assignmentid' => new external_value(PARAM_INT, 'The assignment id to operate on'),
+                'userids' => new external_multiple_structure(
+                    new external_value(PARAM_INT, 'user id'),
+                    '1 or more user ids',
+                    VALUE_REQUIRED),
+            )
+        );
+    }
+
+    /**
+     * Locks (prevent updates to) submissions in this assignment.
+     *
+     * @param int $assignmentid The id of the assignment
+     * @param array $userids Array of user ids to lock
+     * @return array of warnings for each submission that could not be locked.
+     * @since Moodle 2.5
+     */
+    public static function lock_submissions($assignmentid, $userids) {
+        global $CFG;
+        require_once("$CFG->dirroot/mod/assign/locallib.php");
+
+        $params = self::validate_parameters(self::lock_submissions_parameters(),
+                        array('assignmentid' => $assignmentid,
+                              'userids' => $userids));
+
+        $cm = get_coursemodule_from_instance('assign', $assignmentid, 0, false, MUST_EXIST);
+        $context = context_module::instance($cm->id);
+
+        $assignment = new assign($context, $cm, null);
+
+        $warnings = array();
+        foreach ($userids as $userid) {
+            if (!$assignment->lock_submission($userid)) {
+                $detail = 'User id: ' . $userid . ', Assignment id: ' . $assignmentid;
+                $warnings[] = self::generate_warning($assignmentid,
+                                                     'couldnotlock',
+                                                     $detail);
+            }
+        }
+
+        return $warnings;
+    }
+
+    /**
+     * Describes the return value for lock_submissions
+     *
+     * @return external_single_structure
+     * @since Moodle 2.5
+     */
+    public static function lock_submissions_returns() {
+        return new external_multiple_structure(
+           new external_warnings()
+        );
+    }
+
+    /**
+     * Describes the parameters for revert_submissions_to_draft
+     * @return external_external_function_parameters
+     * @since  Moodle 2.5
+     */
+    public static function revert_submissions_to_draft_parameters() {
+        return new external_function_parameters(
+            array(
+                'assignmentid' => new external_value(PARAM_INT, 'The assignment id to operate on'),
+                'userids' => new external_multiple_structure(
+                    new external_value(PARAM_INT, 'user id'),
+                    '1 or more user ids',
+                    VALUE_REQUIRED),
+            )
+        );
+    }
+
+    /**
+     * Reverts a list of user submissions to draft for a single assignment.
+     *
+     * @param int $assignmentid The id of the assignment
+     * @param array $userids Array of user ids to revert
+     * @return array of warnings for each submission that could not be reverted.
+     * @since Moodle 2.5
+     */
+    public static function revert_submissions_to_draft($assignmentid, $userids) {
+        global $CFG;
+        require_once("$CFG->dirroot/mod/assign/locallib.php");
+
+        $params = self::validate_parameters(self::revert_submissions_to_draft_parameters(),
+                        array('assignmentid' => $assignmentid,
+                              'userids' => $userids));
+
+        $cm = get_coursemodule_from_instance('assign', $assignmentid, 0, false, MUST_EXIST);
+        $context = context_module::instance($cm->id);
+
+        $assignment = new assign($context, $cm, null);
+
+        $warnings = array();
+        foreach ($userids as $userid) {
+            if (!$assignment->revert_to_draft($userid)) {
+                $detail = 'User id: ' . $userid . ', Assignment id: ' . $assignmentid;
+                $warnings[] = self::generate_warning($assignmentid,
+                                                     'couldnotrevert',
+                                                     $detail);
+            }
+        }
+
+        return $warnings;
+    }
+
+    /**
+     * Describes the return value for revert_submissions_to_draft
+     *
+     * @return external_single_structure
+     * @since Moodle 2.5
+     */
+    public static function revert_submissions_to_draft_returns() {
+        return new external_multiple_structure(
+           new external_warnings()
+        );
+    }
+
+    /**
+     * Describes the parameters for unlock_submissions
+     * @return external_external_function_parameters
+     * @since  Moodle 2.5
+     */
+    public static function unlock_submissions_parameters() {
+        return new external_function_parameters(
+            array(
+                'assignmentid' => new external_value(PARAM_INT, 'The assignment id to operate on'),
+                'userids' => new external_multiple_structure(
+                    new external_value(PARAM_INT, 'user id'),
+                    '1 or more user ids',
+                    VALUE_REQUIRED),
+            )
+        );
+    }
+
+    /**
+     * Locks (prevent updates to) submissions in this assignment.
+     *
+     * @param int $assignmentid The id of the assignment
+     * @param array $userids Array of user ids to lock
+     * @return array of warnings for each submission that could not be locked.
+     * @since Moodle 2.5
+     */
+    public static function unlock_submissions($assignmentid, $userids) {
+        global $CFG;
+        require_once("$CFG->dirroot/mod/assign/locallib.php");
+
+        $params = self::validate_parameters(self::unlock_submissions_parameters(),
+                        array('assignmentid' => $assignmentid,
+                              'userids' => $userids));
+
+        $cm = get_coursemodule_from_instance('assign', $assignmentid, 0, false, MUST_EXIST);
+        $context = context_module::instance($cm->id);
+
+        $assignment = new assign($context, $cm, null);
+
+        $warnings = array();
+        foreach ($userids as $userid) {
+            if (!$assignment->unlock_submission($userid)) {
+                $detail = 'User id: ' . $userid . ', Assignment id: ' . $assignmentid;
+                $warnings[] = self::generate_warning($assignmentid,
+                                                     'couldnotunlock',
+                                                     $detail);
+            }
+        }
+
+        return $warnings;
+    }
+
+    /**
+     * Describes the return value for unlock_submissions
+     *
+     * @return external_single_structure
+     * @since Moodle 2.5
+     */
+    public static function unlock_submissions_returns() {
+        return new external_multiple_structure(
+           new external_warnings()
+        );
+    }
+
+    /**
+     * Describes the parameters for unlock_submissions
+     * @return external_external_function_parameters
+     * @since  Moodle 2.5
+     */
+    public static function submit_for_grading_parameters() {
+        return new external_function_parameters(
+            array(
+                'assignmentid' => new external_value(PARAM_INT, 'The assignment id to operate on')
+            )
+        );
+    }
+
+    /**
+     * Submit the logged in users assignment for grading.
+     *
+     * @param int $assignmentid The id of the assignment
+     * @return array of warnings to indicate any errors.
+     * @since Moodle 2.5
+     */
+    public static function submit_for_grading($assignmentid) {
+        global $CFG, $USER;
+        require_once("$CFG->dirroot/mod/assign/locallib.php");
+
+        $params = self::validate_parameters(self::submit_for_grading_parameters(),
+                                            array('assignmentid' => $assignmentid));
+
+        $cm = get_coursemodule_from_instance('assign', $assignmentid, 0, false, MUST_EXIST);
+        $context = context_module::instance($cm->id);
+
+        $assignment = new assign($context, $cm, null);
+
+        $warnings = array();
+        if (!$assignment->submit_for_grading()) {
+            $detail = 'User id: ' . $USER->id . ', Assignment id: ' . $assignmentid;
+            $warnings[] = self::generate_warning($assignmentid,
+                                                 'couldnotsubmitforgrading',
+                                                 $detail);
+        }
+
+        return $warnings;
+    }
+
+    /**
+     * Describes the return value for submit_for_grading
+     *
+     * @return external_single_structure
+     * @since Moodle 2.5
+     */
+    public static function submit_for_grading_returns() {
+        return new external_multiple_structure(
+           new external_warnings()
+        );
+    }
+
+    /**
+     * Describes the parameters for save_user_extensions
+     * @return external_external_function_parameters
+     * @since  Moodle 2.5
+     */
+    public static function save_user_extensions_parameters() {
+        return new external_function_parameters(
+            array(
+                'assignmentid' => new external_value(PARAM_INT, 'The assignment id to operate on'),
+                'userids' => new external_multiple_structure(
+                    new external_value(PARAM_INT, 'user id'),
+                    '1 or more user ids',
+                    VALUE_REQUIRED),
+                'dates' => new external_multiple_structure(
+                    new external_value(PARAM_INT, 'dates'),
+                    '1 or more extension dates (timestamp)',
+                    VALUE_REQUIRED),
+            )
+        );
+    }
+
+    /**
+     * Grant extension dates to students for an assignment.
+     *
+     * @param int $assignmentid The id of the assignment
+     * @param array $userids Array of user ids to grant extensions to
+     * @param array $dates Array of extension dates
+     * @return array of warnings for each extension date that could not be granted
+     * @since Moodle 2.5
+     */
+    public static function save_user_extensions($assignmentid, $userids, $dates) {
+        global $CFG;
+        require_once("$CFG->dirroot/mod/assign/locallib.php");
+
+        $params = self::validate_parameters(self::save_user_extensions_parameters(),
+                        array('assignmentid' => $assignmentid,
+                              'userids' => $userids,
+                              'dates' => $dates));
+
+        if (count($userids) != count($dates)) {
+            $detail = 'Length of userids and dates parameters differ.';
+            $warnings[] = self::generate_warning($assignmentid,
+                                                 'invalidparameters',
+                                                 $detail);
+
+            return $warnings;
+        }
+
+        $cm = get_coursemodule_from_instance('assign', $assignmentid, 0, false, MUST_EXIST);
+        $context = context_module::instance($cm->id);
+
+        $assignment = new assign($context, $cm, null);
+
+        $warnings = array();
+        foreach ($userids as $idx => $userid) {
+            $duedate = $dates[$idx];
+            if (!$assignment->save_user_extension($userid, $duedate)) {
+                $detail = 'User id: ' . $userid . ', Assignment id: ' . $assignmentid . ', Extension date: ' . $duedate;
+                $warnings[] = self::generate_warning($assignmentid,
+                                                     'couldnotgrantextensions',
+                                                     $detail);
+            }
+        }
+
+        return $warnings;
+    }
+
+    /**
+     * Describes the return value for save_user_extensions
+     *
+     * @return external_single_structure
+     * @since Moodle 2.5
+     */
+    public static function save_user_extensions_returns() {
+        return new external_multiple_structure(
+           new external_warnings()
+        );
+    }
+
+    /**
+     * Describes the parameters for reveal_identities
+     * @return external_external_function_parameters
+     * @since  Moodle 2.5
+     */
+    public static function reveal_identities_parameters() {
+        return new external_function_parameters(
+            array(
+                'assignmentid' => new external_value(PARAM_INT, 'The assignment id to operate on')
+            )
+        );
+    }
+
+    /**
+     * Reveal the identities of anonymous students to markers for a single assignment.
+     *
+     * @param int $assignmentid The id of the assignment
+     * @return array of warnings to indicate any errors.
+     * @since Moodle 2.5
+     */
+    public static function reveal_identities($assignmentid) {
+        global $CFG, $USER;
+        require_once("$CFG->dirroot/mod/assign/locallib.php");
+
+        $params = self::validate_parameters(self::reveal_identities_parameters(),
+                                            array('assignmentid' => $assignmentid));
+
+        $cm = get_coursemodule_from_instance('assign', $assignmentid, 0, false, MUST_EXIST);
+        $context = context_module::instance($cm->id);
+
+        $assignment = new assign($context, $cm, null);
+
+        $warnings = array();
+        if (!$assignment->reveal_identities()) {
+            $detail = 'User id: ' . $USER->id . ', Assignment id: ' . $assignmentid;
+            $warnings[] = self::generate_warning($assignmentid,
+                                                 'couldnotrevealidentities',
+                                                 $detail);
+        }
+
+        return $warnings;
+    }
+
+    /**
+     * Describes the return value for reveal_identities
+     *
+     * @return external_single_structure
+     * @since Moodle 2.5
+     */
+    public static function reveal_identities_returns() {
+        return new external_multiple_structure(
+           new external_warnings()
+        );
+    }
+
+    /**
+     * Describes the parameters for prepare_submission
+     * @return external_external_function_parameters
+     * @since  Moodle 2.5
+     */
+    public static function prepare_submission_parameters() {
+        return new external_function_parameters(
+            array(
+                'assignmentid' => new external_value(PARAM_INT, 'The assignment id to operate on')
+            )
+        );
+    }
+
+    /**
+     * Reveal the identities of anonymous students to markers for a single assignment.
+     *
+     * @param int $assignmentid The id of the assignment
+     * @return array of parameters with the details of the current users submission
+     * @since Moodle 2.5
+     */
+    public static function prepare_submission($assignmentid) {
+        global $CFG, $USER;
+        require_once($CFG->dirroot . '/mod/assign/locallib.php');
+        require_once($CFG->dirroot . '/mod/assign/submission_form.php');
+
+        $params = self::validate_parameters(self::prepare_submission_parameters(),
+                                            array('assignmentid' => $assignmentid));
+
+        $cm = get_coursemodule_from_instance('assign', $assignmentid, 0, false, MUST_EXIST);
+        $context = context_module::instance($cm->id);
+
+        $assignment = new assign($context, $cm, null);
+
+        $params = array();
+        $params = $assignment->prepare_submission($params);
+        $data = new stdClass();
+
+        $mform = new mod_assign_submission_form(null, array($assignment, $data));
+
+        return $data;
+    }
+
+    /**
+     * Describes the return value for prepare_submission
+     *
+     * @return external_single_structure
+     * @since Moodle 2.5
+     */
+    public static function prepare_submission_returns() {
+        return new external_multiple_structure(
+            new external_single_structure(
+                array(
+                    'name' => new external_value(PARAM_TEXT, 'parameter name'),
+                    'value' => new external_value(PARAM_TEXT, 'parameter value')
+                )
             )
         );
     }
