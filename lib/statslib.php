@@ -145,9 +145,24 @@ function stats_cron_daily($maxdays=1) {
     if (isset($CFG->statslastexecution) && ((time() - 20*60*60) < $CFG->statslastexecution)) {
         mtrace("...preventing stats to run, last execution was less than 20 hours ago.");
         return false;
-    // also check that we are a max of 4 hours after scheduled time, stats won't run after that
-    } else if (time() > $scheduledtime + 4*60*60) {
-        mtrace("...preventing stats to run, more than 4 hours since scheduled time.");
+    }
+
+    $inwindow = false;
+    $previousscheduledtime = $scheduledtime;
+    if ($CFG->statsruntimestarthour > 20 ||
+            ($CFG->statsruntimestarthour == 20 && $CFG->statsruntimestartminute > 0)) {
+        $previousscheduledtime -= 24*60*60;
+    }
+    if ($previousscheduledtime < time() &&
+            time() < $previousscheduledtime + 4*60*60) {
+        $inwindow = true;
+    } else if ($scheduledtime < time() &&
+            time() < $scheduledtime + 4*60*60) {
+        $inwindow = true;
+    }
+
+    if (!$inwindow) {
+        mtrace("...preventing stats to run, not in scheduled window.");
         return false;
     } else {
         set_config('statslastexecution', time()); /// Grab this execution as last one
