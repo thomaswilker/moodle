@@ -614,4 +614,58 @@ class statslib_daily_testcase extends advanced_testcase {
 
         $this->verify_stats($dataset[1], $output);
     }
+
+    /**
+     * Run cron at the specified time and return true if cron actually ran (wasn't skipped).
+     *
+     * @param int $starttime Set the current time before calling cron
+     * @return boolean - Did the cron run or was it skipped?
+     */
+    private function run_single_cron_daily($starttime) {
+        // Stats cron daily uses mtrace, turn on buffering to silence output.
+        $datagen = self::getDataGenerator();
+        ob_start();
+        $datagen->set_current_time($starttime);
+        $result = stats_cron_daily(1);
+        $output = ob_get_contents();
+        ob_end_clean();
+        return $result;
+    }
+
+    /**
+     * Test the daily stats function to see that it only executes once every 24 hours and
+     * that it only executes within 4 hours of the scheduled execution start time.
+     */
+    public function test_statslib_cron_daily_scheduling() {
+        global $CFG;
+
+        $onehour = 3600;
+        // Lets start this test at 10pm.
+        $start = stats_get_next_day_start(time()) + 12*$onehour;
+        // Set the initial state so it looks like we just ran cron
+        // Note that this test is specifically testing the case when the cron
+        // window crosses midnight.
+        $CFG->statslastdaily          = 0;
+        $CFG->statslastexecution      = 0;
+        $CFG->statsruntimestarthour      = 22;
+
+
+        // This time try every hour for a week (cron time set to 1 hour)
+        // Cron start hour is automatically set to the start of the current hour.
+        // So this first run should return true.
+
+        // Now call cron every hour till right before the next scheduled time - should not run as it is
+        // not scheduled yet.
+        $validhours = array(10, 34, 58, 82);
+        foreach (range(0, 100) as $elapsed) {
+            $result = $this->run_single_cron_daily($start + ($elapsed*$onehour) + 1);
+            if (in_array($elapsed, $validhours)) {
+                $this->assertEquals(true, $result, 'Cron for hour: ' . $elapsed);
+                // We want to simulate a long running cron.
+                set_cron_lock('statsrunning', $start + ($elapsed*$onehour) + (8*$onehour));
+            } else {
+                $this->assertEquals(false, $result, 'Cron for hour: ' . $elapsed);
+            }
+        }
+    }
 }
