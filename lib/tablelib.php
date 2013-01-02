@@ -1220,8 +1220,13 @@ class flexible_table {
         }
 
         $this->wrap_html_start();
-        // Start of main data table
 
+        // If the table contains collapsable columns, insert the aria-live="polite" attribute.
+        if ($this->is_collapsible && !isset($this->attributes['aria-live'])) {
+            $this->attributes['aria-live'] = 'polite';
+        }
+
+        // Start of main data table
         echo html_writer::start_tag('div', array('class' => 'no-overflow'));
         echo html_writer::start_tag('table', $this->attributes);
 
