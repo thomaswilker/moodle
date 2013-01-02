@@ -109,7 +109,7 @@ class plugin_defective_exception extends moodle_exception {
 function upgrade_set_timeout($max_execution_time=300) {
     global $CFG;
 
-    if (!isset($CFG->upgraderunning) or $CFG->upgraderunning < time()) {
+    if (!isset($CFG->upgraderunning) or $CFG->upgraderunning < current_time()) {
         $upgraderunning = get_config(null, 'upgraderunning');
     } else {
         $upgraderunning = $CFG->upgraderunning;
@@ -130,7 +130,7 @@ function upgrade_set_timeout($max_execution_time=300) {
         $max_execution_time = 60;
     }
 
-    $expected_end = time() + $max_execution_time;
+    $expected_end = current_time() + $max_execution_time;
 
     if ($expected_end < $upgraderunning + 10 and $expected_end > $upgraderunning - 10) {
         // no need to store new end, it is nearly the same ;-)
@@ -1074,7 +1074,7 @@ function external_update_descriptions($component) {
         $dbservice->downloadfiles      = !isset($service['downloadfiles']) ? 0 : $service['downloadfiles'];
         $dbservice->shortname          = !isset($service['shortname']) ? null : $service['shortname'];
         $dbservice->component          = $component;
-        $dbservice->timecreated        = time();
+        $dbservice->timecreated        = current_time();
         $dbservice->id = $DB->insert_record('external_services', $dbservice);
         foreach ($service['functions'] as $fname) {
             $newf = new stdClass();
@@ -1191,7 +1191,7 @@ function upgrade_log($type, $plugin, $info, $details=null, $backtrace=null) {
     $log->details       = $details;
     $log->backtrace     = $backtrace;
     $log->userid        = $USER->id;
-    $log->timemodified  = time();
+    $log->timemodified  = current_time();
     try {
         $DB->insert_record('upgrade_log', $log);
     } catch (Exception $ignored) {
@@ -1234,7 +1234,7 @@ function upgrade_started($preinstall=false) {
         ignore_user_abort(true);
         register_shutdown_function('upgrade_finished_handler');
         upgrade_setup_debug(true);
-        set_config('upgraderunning', time()+300);
+        set_config('upgraderunning', current_time()+300);
         $started = true;
     }
 }
@@ -1857,7 +1857,7 @@ function upgrade_course_completion_remove_duplicates($table, $uniques, $fieldsto
         if ($needsupdate || isset($origrecord->reaggregate)) {
             // If this table has a reaggregate field, update to force recheck on next cron run
             if (isset($origrecord->reaggregate)) {
-                $origrecord->reaggregate = time();
+                $origrecord->reaggregate = current_time();
             }
             $DB->update_record($table, $origrecord);
         }

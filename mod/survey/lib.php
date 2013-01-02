@@ -75,7 +75,7 @@ function survey_add_instance($survey) {
     }
 
     $survey->questions    = $template->questions;
-    $survey->timecreated  = time();
+    $survey->timecreated  = current_time();
     $survey->timemodified = $survey->timecreated;
 
     return $DB->insert_record("survey", $survey);
@@ -100,7 +100,7 @@ function survey_update_instance($survey) {
 
     $survey->id           = $survey->instance;
     $survey->questions    = $template->questions;
-    $survey->timemodified = time();
+    $survey->timemodified = current_time();
 
     return $DB->update_record("survey", $survey);
 }

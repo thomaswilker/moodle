@@ -51,7 +51,7 @@ require_login($attemptobj->get_course(), false, $attemptobj->get_cm());
 $attemptobj->check_review_capability();
 
 // Create an object to manage all the other (non-roles) access rules.
-$accessmanager = $attemptobj->get_access_manager(time());
+$accessmanager = $attemptobj->get_access_manager(current_time());
 $accessmanager->setup_attempt_page($PAGE);
 
 $options = $attemptobj->get_display_options(true);

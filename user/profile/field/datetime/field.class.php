@@ -37,7 +37,7 @@ class profile_field_datetime extends profile_field_base {
         }
 
         $mform->setType($this->inputname, PARAM_INT);
-        $mform->setDefault($this->inputname, time());
+        $mform->setDefault($this->inputname, current_time());
     }
 
     /**

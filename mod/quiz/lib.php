@@ -80,7 +80,7 @@ function quiz_add_instance($quiz) {
     $cmid = $quiz->coursemodule;
 
     // Process the options from the form.
-    $quiz->created = time();
+    $quiz->created = current_time();
     $quiz->questions = '';
     $result = quiz_process_options($quiz);
     if ($result && is_string($result)) {
@@ -470,7 +470,7 @@ function quiz_cron() {
     require_once($CFG->dirroot . '/mod/quiz/cronlib.php');
     mtrace('');
 
-    $timenow = time();
+    $timenow = current_time();
     $overduehander = new mod_quiz_overdue_attempt_updater();
 
     $processto = $timenow - get_config('quiz', 'graceperiodmin');
@@ -967,7 +967,7 @@ function quiz_process_options($quiz) {
     require_once($CFG->dirroot . '/mod/quiz/locallib.php');
     require_once($CFG->libdir . '/questionlib.php');
 
-    $quiz->timemodified = time();
+    $quiz->timemodified = current_time();
 
     // Quiz name.
     if (!empty($quiz->name)) {
@@ -1402,7 +1402,7 @@ function quiz_print_overview($courses, &$htmlarray) {
 
     // We want to list quizzes that are currently available, and which have a close date.
     // This is the same as what the lesson does, and the dabate is in MDL-10568.
-    $now = time();
+    $now = current_time();
     foreach ($quizzes as $quiz) {
         if ($quiz->timeclose >= $now && $quiz->timeopen < $now) {
             // Give a link to the quiz, and the deadline.

@@ -38,7 +38,7 @@ if ($id) { // if entry is specified
         print_error('invalidentry');
     }
 
-    $ineditperiod = ((time() - $entry->timecreated <  $CFG->maxeditingtime) || $glossary->editalways);
+    $ineditperiod = ((current_time() - $entry->timecreated <  $CFG->maxeditingtime) || $glossary->editalways);
     if (!has_capability('mod/glossary:manageentries', $context) and !($entry->userid == $USER->id and ($ineditperiod and has_capability('mod/glossary:write', $context)))) {
         if ($USER->id != $fromdb->userid) {
             print_error('errcannoteditothers', 'glossary', "view.php?id=$cm->id&amp;mode=entry&amp;hook=$id");
@@ -86,7 +86,7 @@ if ($mform->is_cancelled()){
     }
 
 } else if ($entry = $mform->get_data()) {
-    $timenow = time();
+    $timenow = current_time();
 
     $categories = empty($entry->categories) ? array() : $entry->categories;
     unset($entry->categories);

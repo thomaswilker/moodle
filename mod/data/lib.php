@@ -790,7 +790,7 @@ function data_add_record($data, $groupid=0){
     $record->userid = $USER->id;
     $record->dataid = $data->id;
     $record->groupid = $groupid;
-    $record->timecreated = $record->timemodified = time();
+    $record->timecreated = $record->timemodified = current_time();
     if (has_capability('mod/data:approve', $context)) {
         $record->approved = 1;
     } else {
@@ -841,7 +841,7 @@ function data_add_instance($data, $mform = null) {
         $data->assessed = 0;
     }
 
-    $data->timemodified = time();
+    $data->timemodified = current_time();
 
     $data->id = $DB->insert_record('data', $data);
 
@@ -860,7 +860,7 @@ function data_add_instance($data, $mform = null) {
 function data_update_instance($data) {
     global $DB, $OUTPUT;
 
-    $data->timemodified = time();
+    $data->timemodified = current_time();
     $data->id           = $data->instance;
 
     if (empty($data->assessed)) {
@@ -2045,7 +2045,7 @@ function data_user_can_add_entry($data, $currentgroup, $groupmode, $context = nu
  * @return bool returns true if the time fields in $data indicate a read-only period; false otherwise
  */
 function data_in_readonly_period($data) {
-    $now = time();
+    $now = current_time();
     if (!$data->timeviewfrom && !$data->timeviewto) {
         return false;
     } else if (($data->timeviewfrom && $now < $data->timeviewfrom) || ($data->timeviewto && $now > $data->timeviewto)) {

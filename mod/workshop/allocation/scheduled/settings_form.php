@@ -118,7 +118,7 @@ class workshop_scheduled_allocator_form extends workshop_random_allocator_form {
                     html_writer::empty_tag('br').
                     get_string('resultfaileddeadline', 'workshopallocation_scheduled'));
 
-            } else if ($workshop->submissionend < time()) {
+            } else if ($workshop->submissionend < current_time()) {
                 // next cron will execute it
                 $mform->addElement('static', 'infostatus', get_string('currentstatusexecution', 'workshopallocation_scheduled'),
                     get_string('currentstatusexecution4', 'workshopallocation_scheduled').' '.

@@ -76,13 +76,13 @@ $earliestweek  = $DB->get_field_sql('SELECT MIN(timeend) FROM {stats_user_weekly
 $earliestmonth = $DB->get_field_sql('SELECT MIN(timeend) FROM {stats_user_monthly}');
 
 if (empty($earliestday)) {
-    $earliestday = time();
+    $earliestday = current_time();
 }
 if (empty($earliestweek)) {
-    $earliestweek = time();
+    $earliestweek = current_time();
 }
 if (empty($earliestmonth)) {
-    $earliestmonth = time();
+    $earliestmonth = current_time();
 }
 
 $now = stats_get_base_daily();

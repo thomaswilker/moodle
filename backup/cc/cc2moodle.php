@@ -265,7 +265,7 @@ class cc2moodle {
         $replace_values = array(entities::safexml($course_title),
                                 entities::safexml($course_short_name),
                                 entities::safexml($course_description),
-                                time(),
+                                current_time(),
                                 $section_count);
 
         $node_course_header = str_replace($find_tags, $replace_values, $sheet_course_header);
@@ -494,7 +494,7 @@ class cc2moodle {
                     $replace_values = array($child['index'],
                                             $child['instance'],
                                             $child['moodle_type'],
-                                            time(),
+                                            current_time(),
                                             $indent,
                                             $this->get_module_visible($child['resource_indentifier']));
 

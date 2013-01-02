@@ -60,7 +60,7 @@ function user_create_user($user) {
         unset($user->password);
     }
 
-    $user->timecreated = time();
+    $user->timecreated = current_time();
     $user->timemodified = $user->timecreated;
 
     // insert the user into the database
@@ -123,7 +123,7 @@ function user_update_user($user) {
         unset($user->password);
     }
 
-    $user->timemodified = time();
+    $user->timemodified = current_time();
     $DB->update_record('user', $user);
 
     // trigger user_updated event on the full database user row

@@ -125,7 +125,7 @@ class course_publish_manager {
         $publication->courseid = $courseid;
         $publication->hubcourseid = $hubcourseid;
         $publication->enrollable = (int) $enrollable;
-        $publication->timepublished = time();
+        $publication->timepublished = current_time();
         $DB->insert_record('course_published', $publication);
     }
 
@@ -137,7 +137,7 @@ class course_publish_manager {
         global $DB;
         $publication = new stdClass();
         $publication->id = $publicationid;
-        $publication->timepublished = time();
+        $publication->timepublished = current_time();
         $DB->update_record('course_published', $publication);
     }
 

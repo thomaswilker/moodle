@@ -193,7 +193,7 @@ class assignment_online extends assignment_base {
         $update->id           = $submission->id;
         $update->data1        = $data->text;
         $update->data2        = $data->textformat;
-        $update->timemodified = time();
+        $update->timemodified = current_time();
 
         $DB->update_record('assignment_submissions', $update);
 

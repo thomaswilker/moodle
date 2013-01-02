@@ -363,7 +363,7 @@ class grade_export_update_buffer {
      */
     public function grade_export_update_buffer() {
         $this->update_list = array();
-        $this->export_time = time();
+        $this->export_time = current_time();
     }
 
     public function flush($buffersize) {

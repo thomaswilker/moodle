@@ -61,7 +61,7 @@ if (!isloggedin()) { // Prevent login page from being shown in iframe.
 require_login($course, false, $cm, false); // Call require_login anyway to set up globals correctly.
 
 //check if scorm closed
-$timenow = time();
+$timenow = current_time();
 if ($scorm->timeclose !=0) {
     if ($scorm->timeopen > $timenow) {
         print_error('notopenyet', 'scorm', null, userdate($scorm->timeopen));

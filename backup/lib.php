@@ -31,7 +31,7 @@
         $hours = 4;
         //End change this
         $seconds = $hours * 60 * 60;
-        $delete_from = time()-$seconds;
+        $delete_from = current_time()-$seconds;
         //Now delete from tables
         $status = $DB->execute("DELETE FROM {backup_ids}
                                  WHERE backup_code < ?", array($delete_from));
@@ -455,7 +455,7 @@
             return;
         }
         if ($time) {
-            $ti = strftime("%X",time());
+            $ti = strftime("%X",current_time());
         } else {
             $ti = "";
         }

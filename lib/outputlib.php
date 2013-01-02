@@ -46,7 +46,7 @@ function theme_reset_all_caches() {
     global $CFG;
     require_once("$CFG->libdir/filelib.php");
 
-    $next = time();
+    $next = current_time();
     if (isset($CFG->themerev) and $next <= $CFG->themerev and $CFG->themerev - $next < 60*60) {
         // This resolves problems when reset is requested repeatedly within 1s,
         // the < 1h condition prevents accidental switching to future dates
@@ -664,7 +664,7 @@ class theme_config {
                 $candidatesheet = "$candidatedir/designer_nosvg.ser";
             }
             $rebuild = true;
-            if (file_exists($candidatesheet) and filemtime($candidatesheet) > time() - THEME_DESIGNER_CACHE_LIFETIME) {
+            if (file_exists($candidatesheet) and filemtime($candidatesheet) > current_time() - THEME_DESIGNER_CACHE_LIFETIME) {
                 if ($css = file_get_contents($candidatesheet)) {
                     $css = unserialize($css);
                     if (is_array($css)) {

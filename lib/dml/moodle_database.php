@@ -466,7 +466,7 @@ abstract class moodle_database {
                 $log->info       = $iserror ? $error : null;
                 $log->backtrace  = format_backtrace($backtrace, true);
                 $log->exectime   = $time;
-                $log->timelogged = time();
+                $log->timelogged = current_time();
                 $this->insert_record('log_queries', $log);
             } catch (Exception $ignored) {
             }

@@ -78,7 +78,7 @@ function message_send($eventdata) {
     }
 
     // Work out if the user is logged in or not
-    if (!empty($eventdata->userto->lastaccess) && (time()-$timetoshowusers) < $eventdata->userto->lastaccess) {
+    if (!empty($eventdata->userto->lastaccess) && (current_time()-$timetoshowusers) < $eventdata->userto->lastaccess) {
         $userstate = 'loggedin';
     } else {
         $userstate = 'loggedoff';
@@ -112,7 +112,7 @@ function message_send($eventdata) {
         $savemessage->contexturlname = null;
     }
 
-    $savemessage->timecreated = time();
+    $savemessage->timecreated = current_time();
 
     if (PHPUNIT_TEST and class_exists('phpunit_util')) {
         // Add some more tests to make sure the normal code can actually work.
@@ -132,7 +132,7 @@ function message_send($eventdata) {
         unset($messageproviders);
         // Now ask phpunit if it wants to catch this message.
         if (phpunit_util::is_redirecting_messages()) {
-            $savemessage->timeread = time();
+            $savemessage->timeread = current_time();
             $messageid = $DB->insert_record('message_read', $savemessage);
             $message = $DB->get_record('message_read', array('id'=>$messageid));
             phpunit_util::message_sent($message);
@@ -199,7 +199,7 @@ function message_send($eventdata) {
 
     if (empty($processorlist) && $savemessage->notification) {
         //if they have deselected all processors and its a notification mark it read. The user doesnt want to be bothered
-        $savemessage->timeread = time();
+        $savemessage->timeread = current_time();
         $messageid = $DB->insert_record('message_read', $savemessage);
     } else {                        // Process the message
         // Store unread message just in case we can not send it
@@ -220,11 +220,11 @@ function message_send($eventdata) {
             //unread. To prevent this mark the message read if messaging is disabled
             if (empty($CFG->messaging)) {
                 require_once($CFG->dirroot.'/message/lib.php');
-                $messageid = message_mark_message_read($savemessage, time());
+                $messageid = message_mark_message_read($savemessage, current_time());
             } else if ( $DB->count_records('message_working', array('unreadmessageid' => $savemessage->id)) == 0){
                 //if there is no more processors that want to process this we can move message to message_read
                 require_once($CFG->dirroot.'/message/lib.php');
-                $messageid = message_mark_message_read($savemessage, time(), true);
+                $messageid = message_mark_message_read($savemessage, current_time(), true);
             }
         }
     }

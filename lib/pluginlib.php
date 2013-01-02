@@ -884,7 +884,7 @@ class available_update_checker {
      */
     protected function store_response($response) {
 
-        set_config('recentfetch', time(), 'core_plugin');
+        set_config('recentfetch', current_time(), 'core_plugin');
         set_config('recentresponse', $response, 'core_plugin');
 
         $this->restore_response(true);
@@ -1102,7 +1102,7 @@ class available_update_checker {
      * @return int the timestamp
      */
     protected function cron_current_timestamp() {
-        return time();
+        return current_time();
     }
 
     /**
@@ -1837,7 +1837,7 @@ class available_update_deployer {
 
             $passfile = $this->generate_passfile();
             $password = $this->generate_password();
-            $now = time();
+            $now = current_time();
 
             $filepath = $CFG->dataroot.'/mdeploy/auth/'.$passfile;
 

@@ -270,7 +270,7 @@ class grade_item extends grade_object {
             $this->force_regrading();
         }
 
-        $this->timemodified = time();
+        $this->timemodified = current_time();
 
         $this->grademin        = grade_floatval($this->grademin);
         $this->grademax        = grade_floatval($this->grademax);
@@ -411,7 +411,7 @@ class grade_item extends grade_object {
             $this->outcomeid = null;
         }
 
-        $this->timecreated = $this->timemodified = time();
+        $this->timecreated = $this->timemodified = current_time();
 
         if (parent::insert($source)) {
             // force regrading of items if needed
@@ -497,7 +497,7 @@ class grade_item extends grade_object {
                 return false; // can not lock grade without first having final grade
             }
 
-            $this->locked = time();
+            $this->locked = current_time();
             $this->update();
 
             if ($cascade) {
@@ -513,7 +513,7 @@ class grade_item extends grade_object {
 
         } else {
         /// removing lock
-            if (!empty($this->locked) and $this->locktime < time()) {
+            if (!empty($this->locked) and $this->locktime < current_time()) {
                 //we have to reset locktime or else it would lock up again
                 $this->locktime = 0;
             }
@@ -547,8 +547,8 @@ class grade_item extends grade_object {
             return; // already locked
         }
 
-        if ($this->locktime and $this->locktime < time()) {
-            $this->locked = time();
+        if ($this->locktime and $this->locktime < current_time()) {
+            $this->locked = current_time();
             $this->update('locktime');
         }
     }
@@ -1491,7 +1491,7 @@ class grade_item extends grade_object {
         }
 
         $locktime = $grade->get_locktime();
-        if ($locktime and $locktime < time()) {
+        if ($locktime and $locktime < current_time()) {
             // do not update grades that should be already locked, force regrade instead
             $this->force_regrading();
             return false;
@@ -1506,7 +1506,7 @@ class grade_item extends grade_object {
         // changed grade?
         if ($finalgrade !== false) {
             if ($this->is_overridable_item()) {
-                $grade->overridden = time();
+                $grade->overridden = current_time();
             }
 
             $grade->finalgrade = $this->bounded_grade($finalgrade);
@@ -1516,7 +1516,7 @@ class grade_item extends grade_object {
         if ($feedback !== false) {
             if ($this->is_overridable_item_feedback()) {
                 // external items (modules, plugins) may have own feedback
-                $grade->overridden = time();
+                $grade->overridden = current_time();
             }
 
             $grade->feedback       = $feedback;
@@ -1525,14 +1525,14 @@ class grade_item extends grade_object {
 
         if (empty($grade->id)) {
             $grade->timecreated  = null;   // hack alert - date submitted - no submission yet
-            $grade->timemodified = time(); // hack alert - date graded
+            $grade->timemodified = current_time(); // hack alert - date graded
             $result = (bool)$grade->insert($source);
 
         } else if (grade_floats_different($grade->finalgrade, $oldgrade->finalgrade)
                 or $grade->feedback       !== $oldgrade->feedback
                 or $grade->feedbackformat != $oldgrade->feedbackformat
                 or ($oldgrade->overridden == 0 and $grade->overridden > 0)) {
-            $grade->timemodified = time(); // hack alert - date graded
+            $grade->timemodified = current_time(); // hack alert - date graded
             $result = $grade->update($source);
         } else {
             // no grade change
@@ -1607,7 +1607,7 @@ class grade_item extends grade_object {
         }
 
         $locktime = $grade->get_locktime();
-        if ($locktime and $locktime < time()) {
+        if ($locktime and $locktime < current_time()) {
             // do not update grades that should be already locked and force regrade
             $this->force_regrading();
             return false;
@@ -1669,7 +1669,7 @@ class grade_item extends grade_object {
         } else if (grade_floats_different($grade->finalgrade, $oldgrade->finalgrade)
                    or $grade->feedback !== $oldgrade->feedback) {
             // guess - if either grade or feedback changed set new graded date
-            $grade->timemodified = time();
+            $grade->timemodified = current_time();
 
         } else {
             //keep original graded date
@@ -1892,7 +1892,7 @@ class grade_item extends grade_object {
 
         // update in db if changed
         if (grade_floats_different($grade->finalgrade, $oldfinalgrade)) {
-            $grade->timemodified = time();
+            $grade->timemodified = current_time();
             $grade->update('compute');
         }
 

@@ -131,7 +131,7 @@ class move_updown_key extends XMLDBAction {
         // and mark the structure as changed
         $origstructure = $dbdir->xml_file->getStructure();
         if ($structure->getHash() != $origstructure->getHash()) {
-            $structure->setVersion(userdate(time(), '%Y%m%d', 99, false));
+            $structure->setVersion(userdate(current_time(), '%Y%m%d', 99, false));
             $structure->setChanged(true);
         }
 

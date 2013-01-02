@@ -44,7 +44,7 @@
     }
 
 
-    $timenow = time();
+    $timenow = current_time();
 
     $table = new html_table();
 

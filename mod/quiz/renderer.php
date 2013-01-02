@@ -231,7 +231,7 @@ class mod_quiz_renderer extends plugin_renderer_base {
     public function finish_review_link(quiz_attempt $attemptobj) {
         $url = $attemptobj->view_url();
 
-        if ($attemptobj->get_access_manager(time())->attempt_must_be_in_popup()) {
+        if ($attemptobj->get_access_manager(current_time())->attempt_must_be_in_popup()) {
             $this->page->requires->js_init_call('M.mod_quiz.secure_window.init_close_button',
                     array($url), quiz_get_js_module());
             return html_writer::empty_tag('input', array('type' => 'button',
@@ -658,7 +658,7 @@ class mod_quiz_renderer extends plugin_renderer_base {
             $message = get_string('mustbesubmittedby', 'quiz', userdate($duedate));
         }
 
-        $output .= $this->countdown_timer($attemptobj, time());
+        $output .= $this->countdown_timer($attemptobj, current_time());
         $output .= $this->container($message . $this->container(
                 $this->render($button), 'controls'), 'submitbtns mdl-align');
 

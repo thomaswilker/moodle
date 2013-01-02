@@ -15,7 +15,7 @@
 class Bennu {
     static function timestamp_to_datetime($t = NULL) {
         if($t === NULL) {
-            $t = time();
+            $t = current_time();
         }
         return gmstrftime('%Y%m%dT%H%M%SZ', $t);
     }

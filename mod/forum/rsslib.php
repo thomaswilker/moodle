@@ -74,7 +74,7 @@ function forum_rss_get_feed($context, $args) {
         $cachedfilelastmodified = filemtime($cachedfilepath);
     }
     //if the cache is more than 60 seconds old and there's new stuff
-    $dontrecheckcutoff = time()-60;
+    $dontrecheckcutoff = current_time()-60;
     if ( $dontrecheckcutoff > $cachedfilelastmodified && forum_rss_newstuff($forum, $cm, $cachedfilelastmodified)) {
         //need to regenerate the cached version
         $result = forum_rss_feed_contents($forum, $sql, $modcontext);
@@ -154,7 +154,7 @@ function forum_rss_feed_discussions_sql($forum, $cm, $newsince=0) {
 
     $modcontext = null;
 
-    $now = round(time(), -2);
+    $now = round(current_time(), -2);
     $params = array($cm->instance);
 
     $modcontext = context_module::instance($cm->id);

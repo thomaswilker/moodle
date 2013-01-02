@@ -49,9 +49,9 @@ class mod_assignment_mod_form extends moodleform_mod {
         $this->add_intro_editor(true, get_string('description', 'assignment'));
 
         $mform->addElement('date_time_selector', 'timeavailable', get_string('availabledate', 'assignment'), array('optional'=>true));
-        $mform->setDefault('timeavailable', time());
+        $mform->setDefault('timeavailable', current_time());
         $mform->addElement('date_time_selector', 'timedue', get_string('duedate', 'assignment'), array('optional'=>true));
-        $mform->setDefault('timedue', time()+7*24*3600);
+        $mform->setDefault('timedue', current_time()+7*24*3600);
 
         $ynoptions = array( 0 => get_string('no'), 1 => get_string('yes'));
 

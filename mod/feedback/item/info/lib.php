@@ -212,7 +212,7 @@ class feedback_item_info extends feedback_item_base {
         }
         switch($presentation) {
             case 1:
-                $itemvalue = time();
+                $itemvalue = current_time();
                 $itemshowvalue = userdate($itemvalue);
                 break;
             case 2:
@@ -289,7 +289,7 @@ class feedback_item_info extends feedback_item_base {
 
         switch($presentation) {
             case 1:
-                $itemvalue = time();
+                $itemvalue = current_time();
                 $itemshowvalue = userdate($itemvalue);
                 break;
             case 2:

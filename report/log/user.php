@@ -78,7 +78,7 @@ if ($mode === 'today') {
     echo '<div class="graph">';
     report_log_print_graph($course, $user->id, "userday.png");
     echo '</div>';
-    print_log($course, $user->id, usergetmidnight(time()), "l.time DESC", $page, $perpage,
+    print_log($course, $user->id, usergetmidnight(current_time()), "l.time DESC", $page, $perpage,
               "user.php?course=$course->id&amp;id=$user->id&amp;mode=$mode");
 } else {
     echo '<div class="graph">';

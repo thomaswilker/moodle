@@ -57,7 +57,7 @@ function quiz_statistics_questiontext_preview_pluginfile($context, $questionid, 
 function quiz_statistics_cron() {
     global $DB;
 
-    $expiretime = time() - 5*HOURSECS;
+    $expiretime = current_time() - 5*HOURSECS;
     $todelete = $DB->get_records_select_menu('quiz_statistics',
             'timemodified < ?', array($expiretime), '', 'id, 1');
 

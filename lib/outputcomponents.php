@@ -1342,7 +1342,7 @@ class html_writer {
      */
     public static function select_time($type, $name, $currenttime = 0, $step = 5, array $attributes = null) {
         if (!$currenttime) {
-            $currenttime = time();
+            $currenttime = current_time();
         }
         $currentdate = usergetdate($currenttime);
         $userdatetype = $type;

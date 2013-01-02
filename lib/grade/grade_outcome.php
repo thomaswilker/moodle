@@ -128,7 +128,7 @@ class grade_outcome extends grade_object {
     public function insert($source=null) {
         global $DB;
 
-        $this->timecreated = $this->timemodified = time();
+        $this->timecreated = $this->timemodified = current_time();
 
         if ($result = parent::insert($source)) {
             if (!empty($this->courseid)) {
@@ -148,7 +148,7 @@ class grade_outcome extends grade_object {
      * @return bool success
      */
     public function update($source=null) {
-        $this->timemodified = time();
+        $this->timemodified = current_time();
 
         if ($result = parent::update($source)) {
             if (!empty($this->courseid)) {

@@ -992,7 +992,7 @@ class cache implements cache_loader {
      */
     public static function now() {
         if (self::$now === null) {
-            self::$now = time();
+            self::$now = current_time();
         }
         return self::$now;
     }

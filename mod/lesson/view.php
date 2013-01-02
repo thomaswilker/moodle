@@ -74,7 +74,7 @@ if ($userhasgrade && !$lesson->retake) {
 if (!$canmanage) {
     if (!$lesson->is_accessible()) {  // Deadline restrictions
         echo $lessonoutput->header($lesson, $cm, '', false, null, get_string('notavailable'));
-        if ($lesson->deadline != 0 && time() > $lesson->deadline) {
+        if ($lesson->deadline != 0 && current_time() > $lesson->deadline) {
             echo $lessonoutput->lesson_inaccessible(get_string('lessonclosed', 'lesson', userdate($lesson->deadline)));
         } else {
             echo $lessonoutput->lesson_inaccessible(get_string('lessonopen', 'lesson', userdate($lesson->available)));
@@ -297,7 +297,7 @@ if ($pageid != LESSON_EOL) {
         $timer = $lesson->update_timer($continue, $restart);
 
         if ($lesson->timed) {
-            $timeleft = ($timer->starttime + $lesson->maxtime * 60) - time();
+            $timeleft = ($timer->starttime + $lesson->maxtime * 60) - current_time();
             if ($timeleft <= 0) {
                 // Out of time
                 $lesson->add_message(get_string('eolstudentoutoftime', 'lesson'));
@@ -457,7 +457,7 @@ if ($pageid != LESSON_EOL) {
             $grade->lessonid = $lesson->id;
             $grade->userid = $USER->id;
             $grade->grade = $gradeinfo->grade;
-            $grade->completed = time();
+            $grade->completed = current_time();
             if (!$lesson->practice) {
                 if (isset($USER->modattempts[$lesson->id])) { // if reviewing, make sure update old grade record
                     if (!$grades = $DB->get_records("lesson_grades", array("lessonid" => $lesson->id, "userid" => $USER->id), "completed DESC", '*', 0, 1)) {
@@ -479,7 +479,7 @@ if ($pageid != LESSON_EOL) {
                     $grade->lessonid = $lesson->id;
                     $grade->userid = $USER->id;
                     $grade->grade = 0;
-                    $grade->completed = time();
+                    $grade->completed = current_time();
                     if (!$lesson->practice) {
                         $newgradeid = $DB->insert_record("lesson_grades", $grade);
                     }

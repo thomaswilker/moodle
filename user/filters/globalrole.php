@@ -62,7 +62,7 @@ class user_filter_globalrole extends user_filter_type {
         global $CFG;
         $value = (int)$data['value'];
 
-        $timenow = round(time(), 100);
+        $timenow = round(current_time(), 100);
 
         $sql = "id IN (SELECT userid
                          FROM {role_assignments} a

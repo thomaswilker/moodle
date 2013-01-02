@@ -112,7 +112,7 @@ $timeoptions = array();
 // get minimum log time for this course
 $minlog = $DB->get_field_sql('SELECT min(time) FROM {log} WHERE course = ?', array($course->id));
 
-$now = usergetmidnight(time());
+$now = usergetmidnight(current_time());
 
 // days
 for ($i = 1; $i < 7; $i++) {

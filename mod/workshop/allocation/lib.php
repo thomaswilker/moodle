@@ -108,7 +108,7 @@ class workshop_allocation_result implements renderable {
      */
     public function __construct(workshop_allocator $allocator) {
         $this->allocator = $allocator;
-        $this->timestart = time();
+        $this->timestart = current_time();
     }
 
     /**
@@ -120,7 +120,7 @@ class workshop_allocation_result implements renderable {
     public function set_status($status, $message = null) {
         $this->status = $status;
         $this->message = is_null($message) ? $this->message : $message;
-        $this->timeend = time();
+        $this->timeend = current_time();
     }
 
     /**

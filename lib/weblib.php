@@ -1100,7 +1100,7 @@ function format_text($text, $format = FORMAT_MOODLE, $options = NULL, $courseid_
                 (int)$format.(int)$options['trusted'].(int)$options['noclean'].
                 (int)$options['para'].(int)$options['newlines'];
 
-        $time = time() - $CFG->cachetext;
+        $time = current_time() - $CFG->cachetext;
         $md5key = md5($hashstr);
         if (CLI_SCRIPT) {
             if (isset($croncache[$md5key])) {
@@ -1198,7 +1198,7 @@ function format_text($text, $format = FORMAT_MOODLE, $options = NULL, $courseid_
         $newcacheitem = new stdClass();
         $newcacheitem->md5key = $md5key;
         $newcacheitem->formattedtext = $text;
-        $newcacheitem->timemodified = time();
+        $newcacheitem->timemodified = current_time();
         if ($oldcacheitem) {                               // See bug 4677 for discussion
             $newcacheitem->id = $oldcacheitem->id;
             try {
@@ -3062,7 +3062,7 @@ EOT;
             $es = "?";
         } else if ($es == 0) {
             // always do the last updates
-        } else if ($this->lastupdate + 20 < time()) {
+        } else if ($this->lastupdate + 20 < current_time()) {
             // we must update otherwise browser would time out
         } else if (round($this->percent, 2) === round($percent, 2)) {
             // no significant change, no need to update anything

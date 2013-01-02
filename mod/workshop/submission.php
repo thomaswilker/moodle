@@ -167,7 +167,7 @@ if ($edit) {
         } else {
             throw new coding_exception('Invalid submission form data value: example');
         }
-        $timenow = time();
+        $timenow = current_time();
         if (is_null($submission->id)) {
             $formdata->workshopid     = $workshop->id;
             $formdata->example        = 0;
@@ -181,7 +181,7 @@ if ($edit) {
         $formdata->contentformat      = FORMAT_HTML; // updated later
         $formdata->contenttrust       = 0;           // updated later
         $formdata->late               = 0x0;         // bit mask
-        if (!empty($workshop->submissionend) and ($workshop->submissionend < time())) {
+        if (!empty($workshop->submissionend) and ($workshop->submissionend < current_time())) {
             $formdata->late = $formdata->late | 0x1;
         }
         if ($workshop->phase == workshop::PHASE_ASSESSMENT) {

@@ -221,7 +221,7 @@ function blog_sync_external_entries($externalblog) {
 
         $timestamp = null;
         if (empty($entrydate)) {
-            $timestamp = time();
+            $timestamp = current_time();
         } else {
             $timestamp = $entrydate;
         }
@@ -276,7 +276,7 @@ function blog_sync_external_entries($externalblog) {
     }
     $DB->delete_records_list('post', 'id', $todelete);
 
-    $DB->update_record('blog_external', array('id' => $externalblog->id, 'timefetched' => time()));
+    $DB->update_record('blog_external', array('id' => $externalblog->id, 'timefetched' => current_time()));
 }
 
 /**

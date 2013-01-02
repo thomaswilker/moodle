@@ -428,7 +428,7 @@ function scorm_insert_track($userid, $scormid, $scoid, $attempt, $element, $valu
                                                                         'attempt' => $attempt,
                                                                         'element' => 'objectiveprogressstatus'))) {
                     $track->value = $objectiveprogressstatus;
-                    $track->timemodified = time();
+                    $track->timemodified = current_time();
                     $DB->update_record('scorm_scoes_track', $track);
                     $id = $track->id;
                 } else {
@@ -439,7 +439,7 @@ function scorm_insert_track($userid, $scormid, $scoid, $attempt, $element, $valu
                     $track->attempt = $attempt;
                     $track->element = 'objectiveprogressstatus';
                     $track->value = $objectiveprogressstatus;
-                    $track->timemodified = time();
+                    $track->timemodified = current_time();
                     $id = $DB->insert_record('scorm_scoes_track', $track);
                 }
                 if ($objectivesatisfiedstatus) {
@@ -449,7 +449,7 @@ function scorm_insert_track($userid, $scormid, $scoid, $attempt, $element, $valu
                                                                             'attempt' => $attempt,
                                                                             'element' => 'objectivesatisfiedstatus'))) {
                         $track->value = $objectivesatisfiedstatus;
-                        $track->timemodified = time();
+                        $track->timemodified = current_time();
                         $DB->update_record('scorm_scoes_track', $track);
                         $id = $track->id;
                     } else {
@@ -460,7 +460,7 @@ function scorm_insert_track($userid, $scormid, $scoid, $attempt, $element, $valu
                         $track->attempt = $attempt;
                         $track->element = 'objectivesatisfiedstatus';
                         $track->value = $objectivesatisfiedstatus;
-                        $track->timemodified = time();
+                        $track->timemodified = current_time();
                         $id = $DB->insert_record('scorm_scoes_track', $track);
                         ob_start();
                         $filepath = $CFG->dataroot."\\temp\\tempfile.txt";
@@ -483,7 +483,7 @@ function scorm_insert_track($userid, $scormid, $scoid, $attempt, $element, $valu
                                                             'element' => $element))) {
         if ($element != 'x.start.time' ) { // Don't update x.start.time - keep the original value.
             $track->value = $value;
-            $track->timemodified = time();
+            $track->timemodified = current_time();
             $DB->update_record('scorm_scoes_track', $track);
             $id = $track->id;
         }
@@ -495,7 +495,7 @@ function scorm_insert_track($userid, $scormid, $scoid, $attempt, $element, $valu
         $track->attempt = $attempt;
         $track->element = $element;
         $track->value = $value;
-        $track->timemodified = time();
+        $track->timemodified = current_time();
         $id = $DB->insert_record('scorm_scoes_track', $track);
     }
 

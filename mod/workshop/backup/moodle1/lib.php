@@ -375,7 +375,7 @@ function workshop_upgrade_transform_instance(stdClass $old) {
     $new->grade         = $old->grade;
     $new->gradinggrade  = $old->gradinggrade;
     $new->phase         = workshop::PHASE_CLOSED;
-    $new->timemodified  = time();
+    $new->timemodified  = current_time();
     if ($old->ntassessments > 0) {
         $new->useexamples = 1;
     } else {

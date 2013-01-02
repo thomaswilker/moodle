@@ -224,7 +224,7 @@ class ChatDaemon {
             return false;
         }
 
-        $now = time();
+        $now = current_time();
 
         // We 'll be cheating a little, and NOT updating the record data as
         // often as we can, so that we save on DB queries (imagine MANY users)
@@ -243,7 +243,7 @@ class ChatDaemon {
 
         $info = &$this->sets_info[$sessionid];
 
-        $timenow = time();
+        $timenow = current_time();
 
         if (empty($str)) {
             $str->idle  = get_string("idle", "chat");
@@ -352,7 +352,7 @@ EOD;
                 $msg->groupid   = $this->sets_info[$sessionid]['groupid'];
                 $msg->system    = 0;
                 $msg->message   = 'beep '.$customdata['beep'];
-                $msg->timestamp = time();
+                $msg->timestamp = current_time();
 
                 // Commit to DB
                 $DB->insert_record('chat_messages', $msg, false);
@@ -411,7 +411,7 @@ EOD;
                 $this->write_data($handle, $header . $content);
 
                 // Update that user's lastping
-                $this->sets_info[$sessionid]['chatuser']->lastping = time();
+                $this->sets_info[$sessionid]['chatuser']->lastping = current_time();
                 $this->user_lazy_update($sessionid);
 
             break;
@@ -438,7 +438,7 @@ EOD;
                 $msg->groupid   = $this->sets_info[$sessionid]['groupid'];
                 $msg->system    = 0;
                 $msg->message   = urldecode($customdata['message']); // have to undo the browser's encoding
-                $msg->timestamp = time();
+                $msg->timestamp = current_time();
 
                 if(empty($msg->message)) {
                     // Someone just hit ENTER, send them on their way
@@ -571,7 +571,7 @@ EOD;
         $msg->groupid = $chatuser->groupid;
         $msg->system = 1;
         $msg->message = 'enter';
-        $msg->timestamp = time();
+        $msg->timestamp = current_time();
 
         $DB->insert_record('chat_messages', $msg, false);
         $DB->insert_record('chat_messages_current', $msg, false);
@@ -733,7 +733,7 @@ EOD;
             return true;
         }
 
-        $now = time();
+        $now = current_time();
 
         // First of all, mark this chatroom as having had activity now
         $this->chatrooms[$message->chatid]['lastactivity'] = $now;
@@ -778,7 +778,7 @@ EOD;
         $msg->groupid = $info['groupid'];
         $msg->system = 1;
         $msg->message = 'exit';
-        $msg->timestamp = time();
+        $msg->timestamp = current_time();
 
         $this->trace('User has disconnected, destroying uid '.$info['userid'].' with SID '.$sessionid, E_USER_WARNING);
         $DB->insert_record('chat_messages', $msg, false);
@@ -1080,7 +1080,7 @@ while(true) {
         }
     }
 
-    $now = time();
+    $now = current_time();
 
     // Clean up chatrooms with no activity as required
     if($now - $DAEMON->_last_idle_poll >= $DAEMON->_freq_poll_idle_chat) {

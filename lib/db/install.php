@@ -75,7 +75,7 @@ function xmldb_main_install() {
     $newsite->numsections  = 1;
     $newsite->category     = 0;
     $newsite->format       = 'site';  // Only for this course
-    $newsite->timecreated  = time();
+    $newsite->timecreated  = current_time();
     $newsite->timemodified = $newsite->timecreated;
 
     if (defined('SITEID')) {
@@ -108,7 +108,7 @@ function xmldb_main_install() {
     $cat->name         = get_string('miscellaneous');
     $cat->depth        = 1;
     $cat->sortorder    = MAX_COURSES_IN_CATEGORY;
-    $cat->timemodified = time();
+    $cat->timemodified = current_time();
     $catid = $DB->insert_record('course_categories', $cat);
     $DB->set_field('course_categories', 'path', '/'.$catid, array('id'=>$catid));
     // Make sure category context exists
@@ -206,7 +206,7 @@ function xmldb_main_install() {
     $guest->mnethostid  = $CFG->mnet_localhost_id;
     $guest->confirmed   = 1;
     $guest->lang        = $CFG->lang;
-    $guest->timemodified= time();
+    $guest->timemodified= current_time();
     $guest->id = $DB->insert_record('user', $guest);
     if ($guest->id != 1) {
         echo $OUTPUT->notification('Unexpected id generated for the Guest account. Your database configuration or clustering setup may not be fully supported', 'notifyproblem');
@@ -229,7 +229,7 @@ function xmldb_main_install() {
     $admin->mnethostid   = $CFG->mnet_localhost_id;
     $admin->lang         = $CFG->lang;
     $admin->maildisplay  = 1;
-    $admin->timemodified = time();
+    $admin->timemodified = current_time();
     $admin->lastip       = CLI_SCRIPT ? '0.0.0.0' : getremoteaddr(); // installation hijacking prevention
     $admin->id = $DB->insert_record('user', $admin);
 
@@ -324,8 +324,8 @@ function xmldb_main_install() {
     set_role_contextlevels($userrole,           get_default_contextlevels('user'));
 
     // Init theme and JS revisions
-    set_config('themerev', time());
-    set_config('jsrev', time());
+    set_config('themerev', current_time());
+    set_config('jsrev', current_time());
 
     // Install licenses
     require_once($CFG->libdir . '/licenselib.php');

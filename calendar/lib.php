@@ -162,7 +162,7 @@ function calendar_get_mini($courses, $groups, $users, $cal_month = false, $cal_y
     $content = '';
 
     if(!empty($cal_month) && !empty($cal_year)) {
-        $thisdate = usergetdate(time()); // Date and time the user sees at his location
+        $thisdate = usergetdate(current_time()); // Date and time the user sees at his location
         if($cal_month == $thisdate['mon'] && $cal_year == $thisdate['year']) {
             // Navigated to this month
             $date = $thisdate;
@@ -178,7 +178,7 @@ function calendar_get_mini($courses, $groups, $users, $cal_month = false, $cal_y
             }
         }
     } else {
-        $date = usergetdate(time()); // Date and time the user sees at his location
+        $date = usergetdate(current_time()); // Date and time the user sees at his location
         $display->thismonth = true;
     }
 
@@ -394,7 +394,7 @@ function calendar_get_mini($courses, $groups, $users, $cal_month = false, $cal_y
         //Accessibility: hidden text for today, and popup.
         if($display->thismonth && $day == $d) {
             $class .= ' today';
-            $today = get_string('today', 'calendar').' '.userdate(time(), get_string('strftimedayshort'));
+            $today = get_string('today', 'calendar').' '.userdate(current_time(), get_string('strftimedayshort'));
 
             if(! isset($eventsbyday[$day])) {
                 $class .= ' eventnone';
@@ -444,7 +444,7 @@ function calendar_get_popup($is_today, $event_timestart, $popupcontent='') {
         $popupcaption = get_string('today', 'calendar').' ';
     }
     if (false === $event_timestart) {
-        $popupcaption .= userdate(time(), get_string('strftimedayshort'));
+        $popupcaption .= userdate(current_time(), get_string('strftimedayshort'));
         $popupcontent = get_string('eventnone', 'calendar');
 
     } else {
@@ -481,7 +481,7 @@ function calendar_get_upcoming($courses, $groups, $users, $daysinfuture, $maxeve
     $coursecache = array();
 
     $processed = 0;
-    $now = time(); // We 'll need this later
+    $now = current_time(); // We 'll need this later
     $usermidnighttoday = usergetmidnight($now);
 
     if ($fromtime) {
@@ -759,7 +759,7 @@ function calendar_top_controls($type, $data) {
     }
 
     if(!checkdate($data['m'], $data['d'], $data['y'])) {
-        $time = time();
+        $time = current_time();
     }
     else {
         $time = make_timestamp($data['y'], $data['m'], $data['d']);
@@ -992,7 +992,7 @@ function calendar_day_representation($tstamp, $now = false, $usecommonwords = tr
     }
 
     if($now === false) {
-        $now = time();
+        $now = current_time();
     }
 
     // To have it in one place, if a change is needed
@@ -2106,7 +2106,7 @@ class calendar_event {
             $this->properties->$key = $value;
         }
 
-        $this->properties->timemodified = time();
+        $this->properties->timemodified = current_time();
         $usingeditor = (!empty($this->properties->description) && is_array($this->properties->description));
 
         if (empty($this->properties->id) || $this->properties->id < 1) {
@@ -2250,10 +2250,10 @@ class calendar_event {
                                    timeduration = ?,
                                    timemodified = ?
                              WHERE repeatid = ?";
-                    $params = array($this->properties->name, $this->properties->description, $timestartoffset, $this->properties->timeduration, time(), $event->repeatid);
+                    $params = array($this->properties->name, $this->properties->description, $timestartoffset, $this->properties->timeduration, current_time(), $event->repeatid);
                 } else {
                     $sql = "UPDATE {event} SET name = ?, description = ?, timeduration = ?, timemodified = ? WHERE repeatid = ?";
-                    $params = array($this->properties->name, $this->properties->description, $this->properties->timeduration, time(), $event->repeatid);
+                    $params = array($this->properties->name, $this->properties->description, $this->properties->timeduration, current_time(), $event->repeatid);
                 }
                 $DB->execute($sql, $params);
 
@@ -2580,7 +2580,7 @@ class calendar_information {
      */
     public function __construct($day=0, $month=0, $year=0) {
 
-        $date = usergetdate(time());
+        $date = usergetdate(current_time());
 
         if (empty($day)) {
             $day = $date['mday'];
@@ -2626,7 +2626,7 @@ class calendar_information {
     public function checkdate($defaultonow = true) {
         if (!checkdate($this->month, $this->day, $this->year)) {
             if ($defaultonow) {
-                $now = usergetdate(time());
+                $now = usergetdate(current_time());
                 $this->day = intval($now['mday']);
                 $this->month = intval($now['mon']);
                 $this->year = intval($now['year']);
@@ -2802,7 +2802,7 @@ function calendar_add_icalendar_event($event, $courseid, $subscriptionid = null)
         $eventrecord->timeduration = strtotime($event->properties['DTEND'][0]->value) - $eventrecord->timestart;
     }
     $eventrecord->uuid = $event->properties['UID'][0]->value;
-    $eventrecord->timemodified = time();
+    $eventrecord->timemodified = current_time();
 
     // Add the iCal subscription details if required.
     if ($sub = $DB->get_record('event_subscriptions', array('id' => $subscriptionid))) {
@@ -2972,7 +2972,7 @@ function calendar_update_subscription_events($subscriptionid) {
     }
     $ical = calendar_get_icalendar($sub->url);
     $return = calendar_import_icalendar_events($ical, $sub->courseid, $subscriptionid);
-    $sub->lastupdated = time();
+    $sub->lastupdated = current_time();
     $DB->update_record('event_subscriptions', $sub);
     return $return;
 }
@@ -2990,7 +2990,7 @@ function calendar_cron() {
 
     mtrace('Updating calendar subscriptions:');
 
-    $time = time();
+    $time = current_time();
     $subscriptions = $DB->get_records_sql('SELECT * FROM {event_subscriptions} WHERE pollinterval > 0 AND lastupdated + pollinterval < ?', array($time));
     foreach ($subscriptions as $sub) {
         mtrace("Updating calendar subscription {$sub->name} in course {$sub->courseid}");

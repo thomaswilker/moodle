@@ -76,7 +76,7 @@ if (!empty($course->summary)) {
 $error = '';
 
 $lastfetchenrolments = get_config('mnetservice_enrol', 'lastfetchenrolments');
-if (!$usecache or empty($lastfetchenrolments) or (time()-$lastfetchenrolments > 600)) {
+if (!$usecache or empty($lastfetchenrolments) or (current_time()-$lastfetchenrolments > 600)) {
     // fetch fresh data from remote if we just came from the course selection screen
     // or every 10 minutes
     $usecache = false;

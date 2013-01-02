@@ -211,7 +211,7 @@ switch ($action) {
                 $record->filepath = '/'.$record->filepath.'/';
             }
             $usercontext = context_user::instance($USER->id);
-            $now = time();
+            $now = current_time();
             $record->contextid = $usercontext->id;
             $record->timecreated = $now;
             $record->timemodified = $now;

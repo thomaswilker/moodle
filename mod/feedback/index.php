@@ -64,7 +64,7 @@ $usesections = course_format_uses_sections($course->format);
 
 /// Print the list of instances (your module will probably extend this)
 
-$timenow = time();
+$timenow = current_time();
 $strname  = get_string("name");
 $strsectionname = get_string('sectionname', 'format_'.$course->format);
 $strresponses = get_string('responses', 'feedback');

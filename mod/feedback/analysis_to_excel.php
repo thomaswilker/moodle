@@ -133,7 +133,7 @@ $worksheet1->set_column(2, 20, 15);
 
 //writing the table header
 $row_offset1 = 0;
-$worksheet1->write_string($row_offset1, 0, userdate(time()), $xls_formats->head1);
+$worksheet1->write_string($row_offset1, 0, userdate(current_time()), $xls_formats->head1);
 
 ////////////////////////////////////////////////////////////////////////
 //print the analysed sheet

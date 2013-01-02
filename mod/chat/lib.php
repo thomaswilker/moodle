@@ -108,7 +108,7 @@ function padding($n){
 function chat_add_instance($chat) {
     global $DB;
 
-    $chat->timemodified = time();
+    $chat->timemodified = current_time();
 
     $returnid = $DB->insert_record("chat", $chat);
 
@@ -141,7 +141,7 @@ function chat_add_instance($chat) {
 function chat_update_instance($chat) {
     global $DB;
 
-    $chat->timemodified = time();
+    $chat->timemodified = current_time();
     $chat->id = $chat->instance;
 
 
@@ -281,7 +281,7 @@ function chat_print_recent_activity($course, $viewfullnames, $timestart) {
 
         if (groups_get_activity_groupmode($cm) != SEPARATEGROUPS
          or has_capability('moodle/site:accessallgroups', context_module::instance($cm->id))) {
-            if ($timeout > time() - $cm->lasttime) {
+            if ($timeout > current_time() - $cm->lasttime) {
                 $current[] = $cm;
             } else {
                 $past[] = $cm;
@@ -315,7 +315,7 @@ function chat_print_recent_activity($course, $viewfullnames, $timestart) {
         }
 
         $cm->lasttime = $mcm->lasttime;
-        if ($timeout > time() - $cm->lasttime) {
+        if ($timeout > current_time() - $cm->lasttime) {
             $current[] = $cm;
         } else {
             $past[] = $cm;
@@ -342,11 +342,11 @@ function chat_print_recent_activity($course, $viewfullnames, $timestart) {
     if ($current) {
         echo $OUTPUT->heading(get_string("currentchats", 'chat').':');
 
-        $oldest = floor((time()-$CFG->chat_old_ping)/10)*10;  // better db caching
+        $oldest = floor((current_time()-$CFG->chat_old_ping)/10)*10;  // better db caching
 
-        $timeold    = time() - $CFG->chat_old_ping;
+        $timeold    = current_time() - $CFG->chat_old_ping;
         $timeold    = floor($timeold/10)*10;  // better db caching
-        $timeoldext = time() - ($CFG->chat_old_ping*10); // JSless gui_basic needs much longer timeouts
+        $timeoldext = current_time() - ($CFG->chat_old_ping*10); // JSless gui_basic needs much longer timeouts
         $timeoldext = floor($timeoldext/10)*10;  // better db caching
 
         $params = array('timeold'=>$timeold, 'timeoldext'=>$timeoldext, 'cmid'=>$cm->id);
@@ -413,13 +413,13 @@ function chat_cron () {
 
     $sql = "DELETE
               FROM {chat_messages}
-             WHERE ($subselect) > 0 AND timestamp < ( ".time()." -($subselect) * 24 * 3600)";
+             WHERE ($subselect) > 0 AND timestamp < ( ".current_time()." -($subselect) * 24 * 3600)";
 
     $DB->execute($sql);
 
     $sql = "DELETE
               FROM {chat_messages_current}
-             WHERE timestamp < ( ".time()." - 8 * 3600)";
+             WHERE timestamp < ( ".current_time()." - 8 * 3600)";
 
     $DB->execute($sql);
 
@@ -562,7 +562,7 @@ function chat_login_user($chatid, $version, $groupid, $course) {
         // this will update logged user information
         $chatuser->version  = $version;
         $chatuser->ip       = $USER->lastip;
-        $chatuser->lastping = time();
+        $chatuser->lastping = current_time();
         $chatuser->lang     = current_language();
 
         // Sometimes $USER->lastip is not setup properly
@@ -584,7 +584,7 @@ function chat_login_user($chatid, $version, $groupid, $course) {
         $chatuser->groupid  = $groupid;
         $chatuser->version  = $version;
         $chatuser->ip       = $USER->lastip;
-        $chatuser->lastping = $chatuser->firstping = $chatuser->lastmessageping = time();
+        $chatuser->lastping = $chatuser->firstping = $chatuser->lastmessageping = current_time();
         $chatuser->sid      = random_string(32);
         $chatuser->course   = $course->id; //caching - needed for current_language too
         $chatuser->lang     = current_language(); //caching - to resource intensive to find out later
@@ -608,7 +608,7 @@ function chat_login_user($chatid, $version, $groupid, $course) {
             $message->groupid   = $groupid;
             $message->message   = 'enter';
             $message->system    = 1;
-            $message->timestamp = time();
+            $message->timestamp = current_time();
 
             $DB->insert_record('chat_messages', $message);
             $DB->insert_record('chat_messages_current', $message);
@@ -628,8 +628,8 @@ function chat_delete_old_users() {
 // Delete the old and in the way
     global $CFG, $DB;
 
-    $timeold = time() - $CFG->chat_old_ping;
-    $timeoldext = time() - ($CFG->chat_old_ping*10); // JSless gui_basic needs much longer timeouts
+    $timeold = current_time() - $CFG->chat_old_ping;
+    $timeoldext = current_time() - ($CFG->chat_old_ping*10); // JSless gui_basic needs much longer timeouts
 
     $query = "(version<>'basic' AND lastping<?) OR (version='basic' AND lastping<?)";
     $params = array($timeold, $timeoldext);
@@ -643,7 +643,7 @@ function chat_delete_old_users() {
             $message->groupid   = $olduser->groupid;
             $message->message   = 'exit';
             $message->system    = 1;
-            $message->timestamp = time();
+            $message->timestamp = current_time();
 
             $DB->insert_record('chat_messages', $message);
             $DB->insert_record('chat_messages_current', $message);
@@ -662,7 +662,7 @@ function chat_update_chat_times($chatid=0) {
 /// Updates chat records so that the next chat time is correct
     global $DB;
 
-    $timenow = time();
+    $timenow = current_time();
 
     $params = array('timenow'=>$timenow, 'chatid'=>$chatid);
 
@@ -1237,7 +1237,7 @@ function chat_extend_navigation($navigation, $course, $module, $cm) {
         $users = $navigation->add(get_string('currentusers', 'chat'));
         foreach ($chatusers as $chatuser) {
             $userlink = new moodle_url('/user/view.php', array('id'=>$chatuser->id,'course'=>$course->id));
-            $users->add(fullname($chatuser).' '.format_time(time() - $chatuser->lastmessageping), $userlink, navigation_node::TYPE_USER, null, null, new pix_icon('i/user', ''));
+            $users->add(fullname($chatuser).' '.format_time(current_time() - $chatuser->lastmessageping), $userlink, navigation_node::TYPE_USER, null, null, new pix_icon('i/user', ''));
         }
     }
 }

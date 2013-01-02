@@ -91,7 +91,7 @@ if ($mform->is_cancelled()) {
         $instance->expirynotify    = $data->expirynotify;
         $instance->notifyall       = $data->notifyall;
         $instance->expirythreshold = $data->expirythreshold;
-        $instance->timemodified    = time();
+        $instance->timemodified    = current_time();
 
         $DB->update_record('enrol', $instance);
 

@@ -739,7 +739,7 @@ class file_storage {
             $contenthash = sha1('');
         }
 
-        $now = time();
+        $now = current_time();
 
         $dir_record = new stdClass();
         $dir_record->contextid = $contextid;
@@ -1007,7 +1007,7 @@ class file_storage {
             throw new file_exception('storedfileproblem', 'Invalid file name');
         }
 
-        $now = time();
+        $now = current_time();
         if (isset($filerecord->timecreated)) {
             if (!is_number($filerecord->timecreated)) {
                 throw new file_exception('storedfileproblem', 'Invalid file timecreated');
@@ -1122,7 +1122,7 @@ class file_storage {
             throw new file_exception('storedfileproblem', 'Invalid file name');
         }
 
-        $now = time();
+        $now = current_time();
         if (isset($filerecord->timecreated)) {
             if (!is_number($filerecord->timecreated)) {
                 throw new file_exception('storedfileproblem', 'Invalid file timecreated');
@@ -1251,7 +1251,7 @@ class file_storage {
             throw new file_exception('storedfileproblem', 'Invalid file name');
         }
 
-        $now = time();
+        $now = current_time();
         if (isset($filerecord->timecreated)) {
             if (!is_number($filerecord->timecreated)) {
                 throw new file_exception('storedfileproblem', 'Invalid file timecreated');
@@ -1855,7 +1855,7 @@ class file_storage {
                  WHERE referencehash = ? and reference = ?";
         $rs = $DB->get_recordset_sql($sql, array($referencehash, $reference));
 
-        $now = time();
+        $now = current_time();
         foreach ($rs as $record) {
             require_once($CFG->dirroot.'/repository/lib.php');
             $repo = repository::get_instance($record->repositoryid);
@@ -1913,7 +1913,7 @@ class file_storage {
         // find out all stale draft areas (older than 4 days) and purge them
         // those are identified by time stamp of the /. root dir
         mtrace('Deleting old draft files... ', '');
-        $old = time() - 60*60*24*4;
+        $old = current_time() - 60*60*24*4;
         $sql = "SELECT *
                   FROM {files}
                  WHERE component = 'user' AND filearea = 'draft' AND filepath = '/' AND filename = '.'
@@ -1945,8 +1945,8 @@ class file_storage {
         mtrace('done.');
 
         // remove trash pool files once a day
-        // if you want to disable purging of trash put $CFG->fileslastcleanup=time(); into config.php
-        if (empty($CFG->fileslastcleanup) or $CFG->fileslastcleanup < time() - 60*60*24) {
+        // if you want to disable purging of trash put $CFG->fileslastcleanup=current_time(); into config.php
+        if (empty($CFG->fileslastcleanup) or $CFG->fileslastcleanup < current_time() - 60*60*24) {
             require_once($CFG->libdir.'/filelib.php');
             // Delete files that are associated with a context that no longer exists.
             mtrace('Cleaning up files from deleted contexts... ', '');
@@ -1966,7 +1966,7 @@ class file_storage {
 
             mtrace('Deleting trash files... ', '');
             fulldelete($this->trashdir);
-            set_config('fileslastcleanup', time());
+            set_config('fileslastcleanup', current_time());
             mtrace('done.');
         }
     }

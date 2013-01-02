@@ -111,7 +111,7 @@ class question_attempt_step {
         $this->state = question_state::$unprocessed;
         $this->data = $data;
         if (is_null($timecreated)) {
-            $this->timecreated = time();
+            $this->timecreated = current_time();
         } else {
             $this->timecreated = $timecreated;
         }

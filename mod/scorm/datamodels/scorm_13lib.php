@@ -599,19 +599,19 @@ function scorm_limit_cond_check ($activity, $userid) {
     if (!isset($activity->limitbegincontrol) || ($activity->limitbegincontrol == 1)) {
         $r = $DB->get_record('scorm_scoes_track',
             array('scoid'=>$activity->id, 'userid'=>$userid, 'element'=>'begintime'));
-        if (isset($activity->limitbegintime) && time() >= $activity->limitbegintime) {
+        if (isset($activity->limitbegintime) && current_time() >= $activity->limitbegintime) {
             return true;
         }
     }
 
     if (!isset($activity->limitbegincontrol) || ($activity->limitbegincontrol == 1)) {
-        if (isset($activity->limitbegintime) && time() < $activity->limitbegintime) {
+        if (isset($activity->limitbegintime) && current_time() < $activity->limitbegintime) {
             return true;
         }
     }
 
     if (!isset($activity->limitendcontrol) || ($activity->limitendcontrol == 1)) {
-        if (isset($activity->limitendtime) && time() > $activity->limitendtime) {
+        if (isset($activity->limitendtime) && current_time() > $activity->limitendtime) {
             return true;
         }
     }

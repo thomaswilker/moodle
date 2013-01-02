@@ -881,7 +881,7 @@ function file_save_draft_area_files($draftitemid, $contextid, $component, $filea
         // Add fresh file or the file which has changed status
         // the size and subdirectory tests are extra safety only, the UI should prevent it
         foreach ($newhashes as $file) {
-            $file_record = array('contextid'=>$contextid, 'component'=>$component, 'filearea'=>$filearea, 'itemid'=>$itemid, 'timemodified'=>time());
+            $file_record = array('contextid'=>$contextid, 'component'=>$component, 'filearea'=>$filearea, 'itemid'=>$itemid, 'timemodified'=>current_time());
             if (!$options['subdirs']) {
                 if ($file->get_filepath() !== '/' or $file->is_directory()) {
                     continue;
@@ -2105,7 +2105,7 @@ function readstring_accel($string, $mimetype, $accelerate) {
     } else {
         header('Content-Type: '.$mimetype);
     }
-    header('Last-Modified: '. gmdate('D, d M Y H:i:s', time()) .' GMT');
+    header('Last-Modified: '. gmdate('D, d M Y H:i:s', current_time()) .' GMT');
     header('Accept-Ranges: none');
 
     if ($accelerate and !empty($CFG->xsendfile)) {
@@ -2244,7 +2244,7 @@ function send_file($path, $filename, $lifetime = 'default' , $filter=0, $pathiss
     if ($lifetime > 0) {
         $nobyteserving = false;
         header('Cache-Control: max-age='.$lifetime);
-        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $lifetime) .' GMT');
+        header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + $lifetime) .' GMT');
         header('Pragma: ');
 
     } else { // Do not cache files in proxies and browsers
@@ -2407,7 +2407,7 @@ function send_stored_file($stored_file, $lifetime=86400 , $filter=0, $forcedownl
 
     if ($lifetime > 0) {
         header('Cache-Control: max-age='.$lifetime);
-        header('Expires: '. gmdate('D, d M Y H:i:s', time() + $lifetime) .' GMT');
+        header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + $lifetime) .' GMT');
         header('Pragma: ');
 
     } else { // Do not cache files in proxies and browsers
@@ -3458,7 +3458,7 @@ class curl_cache {
         $filename = 'u'.$USER->id.'_'.md5(serialize($param));
         if(file_exists($this->dir.$filename)) {
             $lasttime = filemtime($this->dir.$filename);
-            if (time()-$lasttime > $this->ttl) {
+            if (current_time()-$lasttime > $this->ttl) {
                 return false;
             } else {
                 $fp = fopen($this->dir.$filename, 'r');
@@ -3496,7 +3496,7 @@ class curl_cache {
             while (false !== ($file = readdir($dir))) {
                 if(!is_dir($file) && $file != '.' && $file != '..') {
                     $lasttime = @filemtime($this->dir.$file);
-                    if (time() - $lasttime > $expire) {
+                    if (current_time() - $lasttime > $expire) {
                         @unlink($this->dir.$file);
                     }
                 }

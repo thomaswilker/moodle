@@ -4365,9 +4365,9 @@ class navigation_cache {
      * @param int $timeout The number of seconds to time the information out after
      */
     public function __construct($area, $timeout=1800) {
-        $this->creation = time();
+        $this->creation = current_time();
         $this->area = $area;
-        $this->timeout = time() - $timeout;
+        $this->timeout = current_time() - $timeout;
         if (rand(0,100) === 0) {
             $this->garbage_collection();
         }
@@ -4426,7 +4426,7 @@ class navigation_cache {
         global $USER;
         $this->ensure_session_cache_initialised();
         $information = serialize($information);
-        $this->session[$key]= array(self::CACHETIME=>time(), self::CACHEUSERID=>$USER->id, self::CACHEVALUE=>$information);
+        $this->session[$key]= array(self::CACHETIME=>current_time(), self::CACHEUSERID=>$USER->id, self::CACHEVALUE=>$information);
     }
     /**
      * Check the existence of the identifier in the cache

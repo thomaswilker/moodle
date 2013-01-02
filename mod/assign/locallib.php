@@ -161,7 +161,7 @@ class assign {
      */
     private function show_intro() {
         if ($this->get_instance()->alwaysshowdescription ||
-                time() > $this->get_instance()->allowsubmissionsfromdate) {
+                current_time() > $this->get_instance()->allowsubmissionsfromdate) {
             return true;
         }
         return false;
@@ -443,8 +443,8 @@ class assign {
         // add the database record
         $update = new stdClass();
         $update->name = $formdata->name;
-        $update->timemodified = time();
-        $update->timecreated = time();
+        $update->timemodified = current_time();
+        $update->timecreated = current_time();
         $update->course = $formdata->course;
         $update->courseid = $formdata->course;
         $update->intro = $formdata->intro;
@@ -746,7 +746,7 @@ class assign {
         $update = new stdClass();
         $update->id = $formdata->instance;
         $update->name = $formdata->name;
-        $update->timemodified = time();
+        $update->timemodified = current_time();
         $update->course = $formdata->course;
         $update->intro = $formdata->intro;
         $update->introformat = $formdata->introformat;
@@ -1341,8 +1341,8 @@ class assign {
         global $DB;
 
         // only ever send a max of one days worth of updates
-        $yesterday = time() - (24 * 3600);
-        $timenow   = time();
+        $yesterday = current_time() - (24 * 3600);
+        $timenow   = current_time();
 
         // Collect all submissions from the past 24 hours that require mailing.
         $sql = "SELECT s.*, a.course, a.name, a.blindmarking, a.revealidentities,
@@ -1485,7 +1485,7 @@ class assign {
     public function update_grade($grade) {
         global $DB;
 
-        $grade->timemodified = time();
+        $grade->timemodified = current_time();
 
         if ($grade->grade && $grade->grade != -1) {
             if ($this->get_instance()->grade > 0) {
@@ -1650,7 +1650,7 @@ class assign {
                 $submission->assignment   = $this->get_instance()->id;
                 $submission->userid       = $userid;
                 $submission->groupid      = 0;
-                $submission->timecreated  = time();
+                $submission->timecreated  = current_time();
                 $submission->timemodified = $submission->timecreated;
 
                 if ($this->get_instance()->submissiondrafts) {
@@ -1673,7 +1673,7 @@ class assign {
             $submission->assignment   = $this->get_instance()->id;
             $submission->userid       = 0;
             $submission->groupid       = $groupid;
-            $submission->timecreated = time();
+            $submission->timecreated = current_time();
             $submission->timemodified = $submission->timecreated;
 
             if ($this->get_instance()->submissiondrafts) {
@@ -1716,7 +1716,7 @@ class assign {
         }
         $courseindexsummary = new assign_course_index_summary($usesections, $strsectionname);
 
-        $timenow = time();
+        $timenow = current_time();
 
         $currentsection = '';
         foreach ($modinfo->instances['assign'] as $cm) {
@@ -2123,7 +2123,7 @@ class assign {
             $submission = new stdClass();
             $submission->assignment   = $this->get_instance()->id;
             $submission->userid       = $userid;
-            $submission->timecreated = time();
+            $submission->timecreated = current_time();
             $submission->timemodified = $submission->timecreated;
             $submission->status = ASSIGN_SUBMISSION_STATUS_DRAFT;
             $sid = $DB->insert_record('assign_submission', $submission);
@@ -2169,7 +2169,7 @@ class assign {
             $grade = new stdClass();
             $grade->assignment   = $this->get_instance()->id;
             $grade->userid       = $userid;
-            $grade->timecreated = time();
+            $grade->timecreated = current_time();
             $grade->timemodified = $grade->timecreated;
             $grade->locked = 0;
             $grade->grade = -1;
@@ -3059,7 +3059,7 @@ class assign {
         global $DB;
 
         if ($updatetime) {
-            $submission->timemodified = time();
+            $submission->timemodified = current_time();
         }
 
         // First update the submission for the current user.
@@ -3123,7 +3123,7 @@ class assign {
         }
 
         if ($updatetime) {
-            $submission->timemodified = time();
+            $submission->timemodified = current_time();
         }
         $result= $DB->update_record('assign_submission', $submission);
         if ($result) {
@@ -3150,7 +3150,7 @@ class assign {
             $userid = $USER->id;
         }
 
-        $time = time();
+        $time = current_time();
         $dateopen = true;
         $finaldate = false;
         if ($this->get_instance()->cutoffdate) {
@@ -3419,7 +3419,7 @@ class assign {
     private function notify_graders(stdClass $submission) {
         global $DB, $USER;
 
-        $late = $this->get_instance()->duedate && ($this->get_instance()->duedate < time());
+        $late = $this->get_instance()->duedate && ($this->get_instance()->duedate < current_time());
 
         if (!$this->get_instance()->sendnotifications && !($late && $this->get_instance()->sendlatenotifications)) {          // No need to do anything
             return;
@@ -3528,7 +3528,7 @@ class assign {
 
         $grade = $this->get_user_grade($userid, true);
         $grade->extensionduedate = $extensionduedate;
-        $grade->timemodified = time();
+        $grade->timemodified = current_time();
 
         $result = $DB->update_record('assign_grades', $grade);
 

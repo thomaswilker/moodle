@@ -115,7 +115,7 @@ if (!empty($shareform)) {
         $targetarea = get_grading_manager($newareaid);
         $targetcontroller = $targetarea->get_controller($method);
         $targetcontroller->update_definition($controller->get_definition_copy($targetcontroller));
-        $DB->set_field('grading_definitions', 'timecopied', time(), array('id' => $definition->id));
+        $DB->set_field('grading_definitions', 'timecopied', current_time(), array('id' => $definition->id));
         redirect(new moodle_url($PAGE->url, array('message' => get_string('manageactionsharedone', 'core_grading'))));
     }
 }

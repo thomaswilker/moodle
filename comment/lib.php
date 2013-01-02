@@ -612,7 +612,7 @@ class comment {
         if (!$this->can_post()) {
             throw new comment_exception('nopermissiontocomment');
         }
-        $now = time();
+        $now = current_time();
         $newcmt = new stdClass;
         $newcmt->contextid    = $this->contextid;
         $newcmt->commentarea  = $this->commentarea;

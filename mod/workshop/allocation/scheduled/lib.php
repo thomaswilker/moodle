@@ -149,7 +149,7 @@ class workshop_scheduled_allocator implements workshop_allocator {
             return $result;
         }
 
-        if ($this->workshop->submissionend > time()) {
+        if ($this->workshop->submissionend > current_time()) {
             $result->set_status(workshop_allocation_result::STATUS_VOID,
                 get_string('resultvoiddeadline', 'workshopallocation_scheduled'));
             return $result;
@@ -263,7 +263,7 @@ function workshopallocation_scheduled_cron() {
                    AND w.submissionend < ?
                    AND (a.timeallocated IS NULL OR a.timeallocated < w.submissionend)";
 
-    $workshops = $DB->get_records_sql($sql, array(time()));
+    $workshops = $DB->get_records_sql($sql, array(current_time()));
 
     if (empty($workshops)) {
         mtrace('... no workshops awaiting scheduled allocation. ', '');

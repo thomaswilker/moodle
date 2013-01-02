@@ -88,10 +88,10 @@ function cron() {
 
     if ( file_exists($filename) ) {
         @set_time_limit(0);
-        $starttime = time();
+        $starttime = current_time();
 
         $this->log_line('----------------------------------------------------------------------');
-        $this->log_line("IMS Enterprise enrol cron process launched at " . userdate(time()));
+        $this->log_line("IMS Enterprise enrol cron process launched at " . userdate(current_time()));
         $this->log_line('Found file '.$filename);
         $this->xmlcache = '';
 
@@ -198,7 +198,7 @@ function cron() {
 
            */
 
-            $timeelapsed = time() - $starttime;
+            $timeelapsed = current_time() - $starttime;
             $this->log_line('Process has completed. Time taken: '.$timeelapsed.' seconds.');
 
 
@@ -417,8 +417,8 @@ function process_group_tag($tagcontents) {
                     } else {
                         $course->category = 1;
                     }
-                    $course->timecreated = time();
-                    $course->startdate = time();
+                    $course->timecreated = current_time();
+                    $course->startdate = current_time();
                     // Choose a sort order that puts us at the start of the list!
                     $course->sortorder = 0;
 
@@ -537,7 +537,7 @@ function process_person_tag($tagcontents){
             $person->lang = 'manual'; //TODO: this needs more work due tu multiauth changes
             $person->auth = $CFG->auth;
             $person->confirmed = 1;
-            $person->timemodified = time();
+            $person->timemodified = current_time();
             $person->mnethostid = $CFG->mnet_localhost_id;
             $id = $DB->insert_record('user', $person);
     /*
@@ -645,8 +645,8 @@ function process_membership_tag($tagcontents){
             $memberstoreobj->userid = $DB->get_field('user', 'id', array('idnumber'=>$member->idnumber));
             $memberstoreobj->enrol = 'imsenterprise';
             $memberstoreobj->course = $ship->courseid;
-            $memberstoreobj->time = time();
-            $memberstoreobj->timemodified = time();
+            $memberstoreobj->time = current_time();
+            $memberstoreobj->timemodified = current_time();
             if($memberstoreobj->userid){
 
                 // Decide the "real" role (i.e. the Moodle role) that this user should be assigned to.
@@ -687,8 +687,8 @@ function process_membership_tag($tagcontents){
                                 $group = new stdClass();
                                 $group->name = $member->groupname;
                                 $group->courseid = $ship->courseid;
-                                $group->timecreated = time();
-                                $group->timemodified = time();
+                                $group->timecreated = current_time();
+                                $group->timemodified = current_time();
                                 $groupid = $DB->insert_record('groups', $group);
                                 $this->log_line('Added a new group for this course: '.$group->name);
                                 $groupids[$member->groupname] = $groupid; // Store ID in cache

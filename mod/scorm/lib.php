@@ -225,7 +225,7 @@ function scorm_update_instance($scorm, $mform=null) {
     $scorm = scorm_option2text($scorm);
     $scorm->width        = (int)str_replace('%', '', $scorm->width);
     $scorm->height       = (int)str_replace('%', '', $scorm->height);
-    $scorm->timemodified = time();
+    $scorm->timemodified = current_time();
 
     if (!isset($scorm->whatgrade)) {
         $scorm->whatgrade = 0;
@@ -364,7 +364,7 @@ function scorm_user_complete($course, $user, $mod, $scorm) {
     require_once("$CFG->libdir/gradelib.php");
 
     $liststyle = 'structlist';
-    $now = time();
+    $now = current_time();
     $firstmodify = $now;
     $lastmodify = 0;
     $sometoreport = false;
@@ -522,7 +522,7 @@ function scorm_cron () {
         set_config('scorm_updatetimelast', 0);
     }
 
-    $timenow = time();
+    $timenow = current_time();
     $updatetime = usergetmidnight($timenow, $sitetimezone);
 
     if ($CFG->scorm_updatetimelast < $updatetime and $timenow > $updatetime) {
@@ -539,7 +539,7 @@ function scorm_cron () {
         //now clear out AICC session table with old session data
         $cfg_scorm = get_config('scorm');
         if (!empty($cfg_scorm->allowaicchacp)) {
-            $expiretime = time() - ($cfg_scorm->aicchacpkeepsessiondata*24*60*60);
+            $expiretime = current_time() - ($cfg_scorm->aicchacpkeepsessiondata*24*60*60);
             $DB->delete_records_select('scorm_aicc_session', 'timemodified < ?', array($expiretime));
         }
     }
@@ -1070,7 +1070,7 @@ function scorm_print_overview($courses, &$htmlarray) {
     $strduedate = get_string('duedate', 'scorm');
 
     foreach ($scorms as $scorm) {
-        $time = time();
+        $time = current_time();
         $showattemptstatus = false;
         if ($scorm->timeopen) {
             $isopen = ($scorm->timeopen <= $time && $time <= $scorm->timeclose);

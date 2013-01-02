@@ -59,7 +59,7 @@ if (!$quizobj->has_questions()) {
 }
 
 // Create an object to manage all the other (non-roles) access rules.
-$timenow = time();
+$timenow = current_time();
 $accessmanager = $quizobj->get_access_manager($timenow);
 if ($quizobj->is_preview_user() && $forcenew) {
     $accessmanager->current_attempt_finished();
@@ -164,7 +164,7 @@ $quba = question_engine::make_questions_usage_by_activity('mod_quiz', $quizobj->
 $quba->set_preferred_behaviour($quizobj->get_quiz()->preferredbehaviour);
 
 // Create the new attempt and initialize the question sessions
-$timenow = time(); // Update time now, in case the server is running really slowly.
+$timenow = current_time(); // Update time now, in case the server is running really slowly.
 $attempt = quiz_create_attempt($quizobj, $attemptnumber, $lastattempt, $timenow,
         $quizobj->is_preview_user());
 

@@ -59,7 +59,7 @@ $rolenames = role_fix_names(get_profile_roles($context), $context, ROLENAME_ALIA
 
 /// Create the form
 $editform = new autogroup_form(null, array('roles' => $rolenames));
-$editform->set_data(array('courseid' => $courseid, 'seed' => time()));
+$editform->set_data(array('courseid' => $courseid, 'seed' => current_time()));
 
 /// Handle form submission
 if ($editform->is_cancelled()) {

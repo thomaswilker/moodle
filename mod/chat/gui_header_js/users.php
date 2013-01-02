@@ -43,15 +43,15 @@ if ($beep) {
     $message->groupid   = $chatuser->groupid;
     $message->message   = "beep $beep";
     $message->system    = 0;
-    $message->timestamp = time();
+    $message->timestamp = current_time();
 
     $DB->insert_record('chat_messages', $message);
     $DB->insert_record('chat_messages_current', $message);
 
-    $chatuser->lastmessageping = time();          // A beep is a ping  ;-)
+    $chatuser->lastmessageping = current_time();          // A beep is a ping  ;-)
 }
 
-$chatuser->lastping = time();
+$chatuser->lastping = current_time();
 $DB->set_field('chat_users', 'lastping', $chatuser->lastping, array('id'=>$chatuser->id));
 
 $refreshurl = "users.php?chat_sid=$chat_sid";
@@ -75,7 +75,7 @@ $module = array(
 $PAGE->requires->js_init_call('M.mod_chat_header.init_users', array($uidles), false, $module);
 
 /// Print user panel body
-$timenow    = time();
+$timenow    = current_time();
 $stridle    = get_string('idle', 'chat');
 $strbeep    = get_string('beep', 'chat');
 

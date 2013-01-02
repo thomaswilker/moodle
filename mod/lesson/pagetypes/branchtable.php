@@ -171,7 +171,7 @@ class lesson_page_type_branchtable extends lesson_page {
         $branch->pageid = $this->properties->id;
         $branch->retry = $retries;
         $branch->flag = $branchflag;
-        $branch->timeseen = time();
+        $branch->timeseen = current_time();
 
         $DB->insert_record("lesson_branch", $branch);
 

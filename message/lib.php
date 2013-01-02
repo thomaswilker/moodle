@@ -321,7 +321,7 @@ function message_get_contacts($user1=null, $user2=null) {
     }
 
     // time which a user is counting as being active since
-    $timefrom = time()-$timetoshowusers;
+    $timefrom = current_time()-$timetoshowusers;
 
     // people in our contactlist who are online
     $onlinecontacts  = array();
@@ -2029,7 +2029,7 @@ function message_post_message($userfrom, $userto, $message, $format) {
         $eventdata->fullmessagehtml .= "<br /><br />---------------------------------------------------------------------<br />".$emailtagline;
     }
 
-    $eventdata->timecreated     = time();
+    $eventdata->timecreated     = current_time();
     return message_send($eventdata);
 }
 
@@ -2186,7 +2186,7 @@ function message_mark_messages_read($touserid, $fromuserid){
     $messages = $DB->get_recordset_sql($sql, array('useridto' => $touserid,'useridfrom' => $fromuserid));
 
     foreach ($messages as $message) {
-        message_mark_message_read($message, time());
+        message_mark_message_read($message, current_time());
     }
 
     $messages->close();
@@ -2196,7 +2196,7 @@ function message_mark_messages_read($touserid, $fromuserid){
  * Mark a single message as read
  *
  * @param stdClass $message An object with an object property ie $message->id which is an id in the message table
- * @param int $timeread the timestamp for when the message should be marked read. Usually time().
+ * @param int $timeread the timestamp for when the message should be marked read. Usually current_time().
  * @param bool $messageworkingempty Is the message_working table already confirmed empty for this message?
  * @return int the ID of the message in the message_read table
  */

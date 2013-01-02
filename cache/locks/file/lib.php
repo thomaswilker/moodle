@@ -137,7 +137,7 @@ class cachelock_file implements cache_lock_interface {
             // Lock exists already.
             if ($this->maxlife !== null && !array_key_exists($key, $this->locks)) {
                 $mtime = filemtime($lockfile);
-                if ($mtime < time() - $this->maxlife) {
+                if ($mtime < current_time() - $this->maxlife) {
                     $this->unlock($key, true);
                     $result = $this->lock($key, false);
                     if ($result) {

@@ -257,8 +257,8 @@ if (!empty($forum)) {      // User is starting a new discussion in a forum
 
     $PAGE->set_cm($cm, $course, $forum);
 
-    if (!($forum->type == 'news' && !$post->parent && $discussion->timestart > time())) {
-        if (((time() - $post->created) > $CFG->maxeditingtime) and
+    if (!($forum->type == 'news' && !$post->parent && $discussion->timestart > current_time())) {
+        if (((current_time() - $post->created) > $CFG->maxeditingtime) and
                     !has_capability('mod/forum:editanypost', $modcontext)) {
             print_error('maxtimehaspassed', 'forum', '', format_time($CFG->maxeditingtime));
         }
@@ -311,7 +311,7 @@ if (!empty($forum)) {      // User is starting a new discussion in a forum
 
     if (!empty($confirm) && confirm_sesskey()) {    // User has confirmed the delete
         //check user capability to delete post.
-        $timepassed = time() - $post->created;
+        $timepassed = current_time() - $post->created;
         if (($timepassed > $CFG->maxeditingtime) && !has_capability('mod/forum:deleteanypost', $modcontext)) {
             print_error("cannotdeletepost", "forum",
                       forum_go_back_to("discuss.php?d=$post->discussion"));
@@ -644,7 +644,7 @@ if ($fromform = $mform_post->get_data()) {
         // MDL-11818
         if (($forum->type == 'single') && ($updatepost->parent == '0')){ // updating first post of single discussion type -> updating forum intro
             $forum->intro = $updatepost->message;
-            $forum->timemodified = time();
+            $forum->timemodified = current_time();
             $DB->update_record("forum", $forum);
         }
 

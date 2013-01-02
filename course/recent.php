@@ -41,7 +41,7 @@ add_to_log($course->id, "course", "recent", "recent.php?id=$course->id", $course
 
 $context = context_course::instance($course->id);
 
-$lastlogin = time() - COURSE_MAX_RECENT_PERIOD;
+$lastlogin = current_time() - COURSE_MAX_RECENT_PERIOD;
 if (!isguestuser() and !empty($USER->lastcourseaccess[$COURSE->id])) {
     if ($USER->lastcourseaccess[$COURSE->id] > $lastlogin) {
         $lastlogin = $USER->lastcourseaccess[$COURSE->id];

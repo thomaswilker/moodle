@@ -36,7 +36,7 @@ class create_and_clean_temp_stuff extends backup_execution_step {
     protected function define_execution() {
         backup_helper::check_and_create_backup_dir($this->get_backupid());// Create backup temp dir
         backup_helper::clear_backup_dir($this->get_backupid());           // Empty temp dir, just in case
-        backup_helper::delete_old_backup_dirs(time() - (4 * 60 * 60));    // Delete > 4 hours temp dirs
+        backup_helper::delete_old_backup_dirs(current_time() - (4 * 60 * 60));    // Delete > 4 hours temp dirs
         backup_controller_dbops::create_backup_ids_temp_table($this->get_backupid()); // Create ids temp table
     }
 }
@@ -56,7 +56,7 @@ class drop_and_clean_temp_stuff extends backup_execution_step {
         global $CFG;
 
         backup_controller_dbops::drop_backup_ids_temp_table($this->get_backupid()); // Drop ids temp table
-        backup_helper::delete_old_backup_dirs(time() - (4 * 60 * 60));              // Delete > 4 hours temp dirs
+        backup_helper::delete_old_backup_dirs(current_time() - (4 * 60 * 60));              // Delete > 4 hours temp dirs
         // Delete temp dir conditionally:
         // 1) If $CFG->keeptempdirectoriesonbackup is not enabled
         // 2) If backup temp dir deletion has been marked to be avoided
@@ -1496,7 +1496,7 @@ class backup_main_structure_step extends backup_structure_step {
         $info['moodle_release'] = $CFG->release;
         $info['backup_version'] = $CFG->backup_version;
         $info['backup_release'] = $CFG->backup_release;
-        $info['backup_date']    = time();
+        $info['backup_date']    = current_time();
         $info['backup_uniqueid']= $this->get_backupid();
         $info['mnet_remoteusers']=backup_controller_dbops::backup_includes_mnet_remote_users($this->get_backupid());
         $info['include_file_references_to_external_content'] =

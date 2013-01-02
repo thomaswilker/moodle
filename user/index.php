@@ -220,7 +220,7 @@
             $lastaccess0exists = $DB->record_exists('user', array('lastaccess'=>0));
         }
 
-        $now = usergetmidnight(time());
+        $now = usergetmidnight(current_time());
         $timeaccess = array();
         $baseurl->remove_params('accesssince');
 
@@ -640,7 +640,7 @@
                     if (!isset($hiddenfields['lastaccess'])) {
                         if ($user->lastaccess) {
                             $row->cells[1]->text .= get_string('lastaccess').get_string('labelsep', 'langconfig').userdate($user->lastaccess);
-                            $row->cells[1]->text .= '&nbsp; ('. format_time(time() - $user->lastaccess, $datestring) .')';
+                            $row->cells[1]->text .= '&nbsp; ('. format_time(current_time() - $user->lastaccess, $datestring) .')';
                         } else {
                             $row->cells[1]->text .= get_string('lastaccess').get_string('labelsep', 'langconfig').get_string('never');
                         }
@@ -703,7 +703,7 @@
                 context_instance_preload($user);
 
                 if ($user->lastaccess) {
-                    $lastaccess = format_time(time() - $user->lastaccess, $datestring);
+                    $lastaccess = format_time(current_time() - $user->lastaccess, $datestring);
                 } else {
                     $lastaccess = $strnever;
                 }

@@ -178,7 +178,7 @@ class filter_tex extends moodle_text_filter {
                 $texcache->version = 1;
                 $texcache->md5key = $md5;
                 $texcache->rawtext = $texexp;
-                $texcache->timemodified = time();
+                $texcache->timemodified = current_time();
                 $DB->insert_record("cache_filters", $texcache, false);
             }
             $filename = $md5 . ".{$CFG->filter_tex_convertformat}";

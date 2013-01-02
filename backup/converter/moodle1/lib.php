@@ -1362,7 +1362,7 @@ class moodle1_file_manager implements loggable {
             'userid'        => $this->userid,
             'mimetype'      => null,
             'status'        => 0,
-            'timecreated'   => $now = time(),
+            'timecreated'   => $now = current_time(),
             'timemodified'  => $now,
             'source'        => null,
             'author'        => null,

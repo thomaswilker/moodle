@@ -164,7 +164,7 @@ class xmldb_structure extends xmldb_object {
         // Recalculate the hash
         $this->calculateHash(true);
         // We have one new table, so the structure has changed
-        $this->setVersion(userdate(time(), '%Y%m%d', 99, false));
+        $this->setVersion(userdate(current_time(), '%Y%m%d', 99, false));
         $this->setChanged(true);
     }
 
@@ -194,7 +194,7 @@ class xmldb_structure extends xmldb_object {
             // Recalculate the hash
             $this->calculateHash(true);
             // We have one deleted table, so the structure has changed
-            $this->setVersion(userdate(time(), '%Y%m%d', 99, false));
+            $this->setVersion(userdate(current_time(), '%Y%m%d', 99, false));
             $this->setChanged(true);
         }
     }

@@ -92,7 +92,7 @@ class new_field extends XMLDBAction {
             $table->addField($field);
 
             // We have one new field, so the structure has changed
-            $structure->setVersion(userdate(time(), '%Y%m%d', 99, false));
+            $structure->setVersion(userdate(current_time(), '%Y%m%d', 99, false));
             $structure->setChanged(true);
         }
 

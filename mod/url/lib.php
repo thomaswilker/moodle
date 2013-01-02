@@ -116,7 +116,7 @@ function url_add_instance($data, $mform) {
 
     $data->externalurl = url_fix_submitted_url($data->externalurl);
 
-    $data->timemodified = time();
+    $data->timemodified = current_time();
     $data->id = $DB->insert_record('url', $data);
 
     return $data->id;
@@ -157,7 +157,7 @@ function url_update_instance($data, $mform) {
 
     $data->externalurl = url_fix_submitted_url($data->externalurl);
 
-    $data->timemodified = time();
+    $data->timemodified = current_time();
     $data->id           = $data->instance;
 
     $DB->update_record('url', $data);
@@ -355,7 +355,7 @@ function url_dndupload_handle($uploadinfo) {
     $data->intro = '<p>'.$uploadinfo->displayname.'</p>';
     $data->introformat = FORMAT_HTML;
     $data->externalurl = clean_param($uploadinfo->content, PARAM_URL);
-    $data->timemodified = time();
+    $data->timemodified = current_time();
 
     // Set the display options to the site defaults.
     $config = get_config('url');

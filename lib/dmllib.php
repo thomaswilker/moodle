@@ -348,13 +348,13 @@ function setup_DB() {
                 $fp = @fopen($CFG->dataroot.'/emailcount', 'r');
                 $content = @fread($fp, 24);
                 @fclose($fp);
-                if((time() - (int)$content) > 600){
+                if((current_time() - (int)$content) > 600){
                     //email directly rather than using messaging
                     @mail($CFG->emailconnectionerrorsto,
                         'WARNING: Database connection error: '.$CFG->wwwroot,
                         'Connection error: '.$CFG->wwwroot);
                     $fp = @fopen($CFG->dataroot.'/emailcount', 'w');
-                    @fwrite($fp, time());
+                    @fwrite($fp, current_time());
                 }
             } else {
                //email directly rather than using messaging
@@ -362,7 +362,7 @@ function setup_DB() {
                     'WARNING: Database connection error: '.$CFG->wwwroot,
                     'Connection error: '.$CFG->wwwroot);
                $fp = @fopen($CFG->dataroot.'/emailcount', 'w');
-               @fwrite($fp, time());
+               @fwrite($fp, current_time());
             }
         }
         // rethrow the exception

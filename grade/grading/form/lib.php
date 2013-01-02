@@ -296,7 +296,7 @@ abstract class gradingform_controller {
             unset($record->method);
             unset($record->timecreated);
             // set the modification flags
-            $record->timemodified = time();
+            $record->timemodified = current_time();
             $record->usermodified = $usermodified;
 
             $DB->update_record('grading_definitions', $record);
@@ -319,7 +319,7 @@ abstract class gradingform_controller {
             unset($record->id);
             $record->areaid       = $this->areaid;
             $record->method       = $this->get_method_name();
-            $record->timecreated  = time();
+            $record->timecreated  = current_time();
             $record->usercreated  = $usermodified;
             $record->timemodified = $record->timecreated;
             $record->usermodified = $record->usercreated;
@@ -659,7 +659,7 @@ abstract class gradingform_instance {
         $instance->raterid = $raterid;
         $instance->itemid = $itemid;
         $instance->status = self::INSTANCE_STATUS_INCOMPLETE;
-        $instance->timemodified = time();
+        $instance->timemodified = current_time();
         $instance->feedbackformat = FORMAT_MOODLE;
         $instanceid = $DB->insert_record('grading_instances', $instance);
         return $instanceid;
@@ -680,7 +680,7 @@ abstract class gradingform_instance {
         unset($data['id']);
         $data['raterid'] = $raterid;
         $data['itemid'] = $itemid;
-        $data['timemodified'] = time();
+        $data['timemodified'] = current_time();
         $data['status'] = self::INSTANCE_STATUS_INCOMPLETE;
         $instanceid = $DB->insert_record('grading_instances', $data);
         return $instanceid;
@@ -784,7 +784,7 @@ abstract class gradingform_instance {
         global $DB;
         $newdata = new stdClass();
         $newdata->id = $this->get_id();
-        $newdata->timemodified = time();
+        $newdata->timemodified = current_time();
         if (isset($elementvalue['itemid']) && $elementvalue['itemid'] != $this->data->itemid) {
             $newdata->itemid = $elementvalue['itemid'];
         }

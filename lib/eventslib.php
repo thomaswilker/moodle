@@ -258,7 +258,7 @@ function events_queue_handler($handler, $event, $errormessage) {
     $qhandler->queuedeventid  = $event->id;
     $qhandler->handlerid      = $handler->id;
     $qhandler->errormessage   = $errormessage;
-    $qhandler->timemodified   = time();
+    $qhandler->timemodified   = current_time();
     if ($handler->schedule === 'instant' and $handler->status == 1) {
         $qhandler->status     = 1; //already one failed attempt to dispatch this event
     } else {
@@ -359,7 +359,7 @@ function events_process_queued_handler($qhandler) {
     $qh = new stdClass();
     $qh->id           = $qhandler->id;
     $qh->errormessage = $errormessage;
-    $qh->timemodified = time();
+    $qh->timemodified = current_time();
     $qh->status       = $qhandler->status + 1;
     $DB->update_record('events_queue_handlers', $qh);
 
@@ -549,7 +549,7 @@ function events_trigger($eventname, $eventdata) {
             $event = new stdClass();
             $event->userid      = $USER->id;
             $event->eventdata   = base64_encode(serialize($eventdata));
-            $event->timecreated = time();
+            $event->timecreated = current_time();
             if (debugging()) {
                 $dump = '';
                 $callers = debug_backtrace();

@@ -493,7 +493,7 @@ function lesson_clock_block_contents($cmid, $lesson, $timer, $page) {
     $content .=  $lesson->time_remaining($timer->starttime);
     $content .= '</div>';
 
-    $clocksettings = array('starttime'=>$timer->starttime, 'servertime'=>time(),'testlength'=>($lesson->maxtime * 60));
+    $clocksettings = array('starttime'=>$timer->starttime, 'servertime'=>current_time(),'testlength'=>($lesson->maxtime * 60));
     $page->requires->data_for_js('clocksettings', $clocksettings);
     $page->requires->js('/mod/lesson/timer.js');
     $page->requires->js_function_call('show_clock');
@@ -1179,7 +1179,7 @@ class lesson extends lesson_base {
     public function is_accessible() {
         $available = $this->properties->available;
         $deadline = $this->properties->deadline;
-        return (($available == 0 || time() >= $available) && ($deadline == 0 || time() < $deadline));
+        return (($available == 0 || current_time() >= $available) && ($deadline == 0 || current_time() < $deadline));
     }
 
     /**
@@ -1192,8 +1192,8 @@ class lesson extends lesson_base {
         $startlesson = new stdClass;
         $startlesson->lessonid = $this->properties->id;
         $startlesson->userid = $USER->id;
-        $startlesson->starttime = time();
-        $startlesson->lessontime = time();
+        $startlesson->starttime = current_time();
+        $startlesson->lessontime = current_time();
         $DB->insert_record('lesson_timer', $startlesson);
         if ($this->properties->timed) {
             $this->add_message(get_string('maxtimewarning', 'lesson', $this->properties->maxtime), 'center');
@@ -1221,14 +1221,14 @@ class lesson extends lesson_base {
         if ($restart) {
             if ($continue) {
                 // continue a previous test, need to update the clock  (think this option is disabled atm)
-                $timer->starttime = time() - ($timer->lessontime - $timer->starttime);
+                $timer->starttime = current_time() - ($timer->lessontime - $timer->starttime);
             } else {
                 // starting over, so reset the clock
-                $timer->starttime = time();
+                $timer->starttime = current_time();
             }
         }
 
-        $timer->lessontime = time();
+        $timer->lessontime = current_time();
         $DB->update_record('lesson_timer', $timer);
         return $timer;
     }
@@ -1352,7 +1352,7 @@ class lesson extends lesson_base {
      * @return string
      */
     public function time_remaining($starttime) {
-        $timeleft = $starttime + $this->maxtime * 60 - time();
+        $timeleft = $starttime + $this->maxtime * 60 - current_time();
         $hours = floor($timeleft/3600);
         $timeleft = $timeleft - ($hours * 3600);
         $minutes = floor($timeleft/60);
@@ -1726,7 +1726,7 @@ abstract class lesson_page extends lesson_base {
         $newpage->contents = $properties->contents_editor['text'];
         $newpage->contentsformat = $properties->contents_editor['format'];
         $newpage->lessonid = $lesson->id;
-        $newpage->timecreated = time();
+        $newpage->timecreated = current_time();
         $newpage->qtype = $properties->qtype;
         $newpage->qoption = (isset($properties->qoption))?1:0;
         $newpage->layout = (isset($properties->layout))?1:0;
@@ -1942,7 +1942,7 @@ abstract class lesson_page extends lesson_base {
                     $attempt->useranswer = $result->userresponse;
                 }
 
-                $attempt->timeseen = time();
+                $attempt->timeseen = current_time();
                 // if allow modattempts, then update the old attempt record, otherwise, insert new answer record
                 if (isset($USER->modattempts[$this->lesson->id])) {
                     $attempt->retry = $nretakes - 1; // they are going through on review, $nretakes will be too high

@@ -49,8 +49,8 @@ if ($mform_signup->is_cancelled()) {
 } else if ($user = $mform_signup->get_data()) {
     $user->confirmed   = 0;
     $user->lang        = current_language();
-    $user->firstaccess = time();
-    $user->timecreated = time();
+    $user->firstaccess = current_time();
+    $user->timecreated = current_time();
     $user->mnethostid  = $CFG->mnet_localhost_id;
     $user->secret      = random_string(15);
     $user->auth        = $CFG->registerauth;

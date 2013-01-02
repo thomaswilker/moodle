@@ -85,7 +85,7 @@ class edit_xml_file_save extends XMLDBAction {
         $origdir = $XMLDB->dbdirs[$dirpath];
         $origstructure = $origdir->xml_file->getStructure();
         if ($structure->getHash() != $origstructure->getHash()) {
-            $structure->setVersion(userdate(time(), '%Y%m%d', 99, false));
+            $structure->setVersion(userdate(current_time(), '%Y%m%d', 99, false));
             $structure->setChanged(true);
         }
 

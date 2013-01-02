@@ -245,7 +245,7 @@ abstract class grade_object {
             $data->action       = GRADE_HISTORY_UPDATE;
             $data->oldid        = $this->id;
             $data->source       = $source;
-            $data->timemodified = time();
+            $data->timemodified = current_time();
             $data->loggeduser   = $USER->id;
             $DB->insert_record($this->table.'_history', $data);
         }
@@ -277,7 +277,7 @@ abstract class grade_object {
                 $data->action       = GRADE_HISTORY_DELETE;
                 $data->oldid        = $this->id;
                 $data->source       = $source;
-                $data->timemodified = time();
+                $data->timemodified = current_time();
                 $data->loggeduser   = $USER->id;
                 $DB->insert_record($this->table.'_history', $data);
             }
@@ -339,7 +339,7 @@ abstract class grade_object {
             $data->action       = GRADE_HISTORY_INSERT;
             $data->oldid        = $this->id;
             $data->source       = $source;
-            $data->timemodified = time();
+            $data->timemodified = current_time();
             $data->loggeduser   = $USER->id;
             $DB->insert_record($this->table.'_history', $data);
         }
@@ -407,7 +407,7 @@ abstract class grade_object {
      * @return bool Current hidden state
      */
     function is_hidden() {
-        return ($this->hidden == 1 or ($this->hidden != 0 and $this->hidden > time()));
+        return ($this->hidden == 1 or ($this->hidden != 0 and $this->hidden > current_time()));
     }
 
     /**

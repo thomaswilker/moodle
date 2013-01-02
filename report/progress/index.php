@@ -311,7 +311,7 @@ if (!$csv) {
 
 // Activities
 foreach($activities as $activity) {
-    $activity->datepassed = $activity->completionexpected && $activity->completionexpected <= time();
+    $activity->datepassed = $activity->completionexpected && $activity->completionexpected <= current_time();
     $activity->datepassedclass=$activity->datepassed ? 'completion-expired' : '';
 
     if ($activity->completionexpected) {

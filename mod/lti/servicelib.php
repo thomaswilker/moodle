@@ -143,7 +143,7 @@ function lti_update_grade($ltiinstance, $userid, $launchid, $gradeval) {
     if (!empty($id)) {
         $DB->update_record('lti_submission', array(
             'id' => $id,
-            'dateupdated' => time(),
+            'dateupdated' => current_time(),
             'gradepercent' => $gradeval,
             'state' => 2
         ));
@@ -151,8 +151,8 @@ function lti_update_grade($ltiinstance, $userid, $launchid, $gradeval) {
         $DB->insert_record('lti_submission', array(
             'ltiid' => $ltiinstance->id,
             'userid' => $userid,
-            'datesubmitted' => time(),
-            'dateupdated' => time(),
+            'datesubmitted' => current_time(),
+            'dateupdated' => current_time(),
             'gradepercent' => $gradeval,
             'originalgrade' => $gradeval,
             'launchid' => $launchid,

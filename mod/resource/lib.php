@@ -90,7 +90,7 @@ function resource_add_instance($data, $mform) {
     require_once("$CFG->libdir/resourcelib.php");
     require_once("$CFG->dirroot/mod/resource/locallib.php");
     $cmid = $data->coursemodule;
-    $data->timemodified = time();
+    $data->timemodified = current_time();
 
     resource_set_display_options($data);
 
@@ -111,7 +111,7 @@ function resource_add_instance($data, $mform) {
 function resource_update_instance($data, $mform) {
     global $CFG, $DB;
     require_once("$CFG->libdir/resourcelib.php");
-    $data->timemodified = time();
+    $data->timemodified = current_time();
     $data->id           = $data->instance;
     $data->revision++;
 
@@ -418,7 +418,7 @@ function resource_pluginfile($course, $cm, $context, $filearea, $args, $forcedow
                 return false;
             }
             // file migrate - update flag
-            $resource->legacyfileslast = time();
+            $resource->legacyfileslast = current_time();
             $DB->update_record('resource', $resource);
         }
     } while (false);

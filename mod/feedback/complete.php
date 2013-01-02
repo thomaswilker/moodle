@@ -175,7 +175,7 @@ if ((empty($cm->visible) AND
 }
 
 //check, if the feedback is open (timeopen, timeclose)
-$checktime = time();
+$checktime = current_time();
 $feedback_is_closed = ($feedback->timeopen > $checktime) OR
                       ($feedback->timeclose < $checktime AND
                             $feedback->timeclose > 0);

@@ -118,7 +118,7 @@ if (has_capability('mod/chat:chat', $context)) {
     /// Print the main part of the page
     echo $OUTPUT->box_start('generalbox', 'enterlink');
 
-    $now = time();
+    $now = current_time();
     $span = $chat->chattime - $now;
     if ($chat->chattime and $chat->schedule and ($span>0)) {  // A chat is scheduled
         echo '<p>';
@@ -159,7 +159,7 @@ if (has_capability('mod/chat:chat', $context)) {
 chat_delete_old_users();
 
 if ($chatusers = chat_get_users($chat->id, $currentgroup, $cm->groupingid)) {
-    $timenow = time();
+    $timenow = current_time();
     echo $OUTPUT->box_start('generalbox', 'chatcurrentusers');
     echo $OUTPUT->heading($strcurrentusers, 4);
     echo '<table>';

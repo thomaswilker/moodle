@@ -949,7 +949,7 @@ function portfolio_cron() {
     global $DB, $CFG;
 
     require_once($CFG->libdir . '/portfolio/exporter.php');
-    if ($expired = $DB->get_records_select('portfolio_tempdata', 'expirytime < ?', array(time()), '', 'id')) {
+    if ($expired = $DB->get_records_select('portfolio_tempdata', 'expirytime < ?', array(current_time()), '', 'id')) {
         foreach ($expired as $d) {
             try {
                 $e = portfolio_exporter::rewaken_object($d->id);

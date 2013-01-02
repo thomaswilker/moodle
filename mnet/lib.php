@@ -220,7 +220,7 @@ function mnet_sign_message($message, $privatekey = null) {
         </Signature>
         <object ID="XMLRPC-MSG">'.base64_encode($message).'</object>
         <wwwroot>'.$mnet->wwwroot.'</wwwroot>
-        <timestamp>'.time().'</timestamp>
+        <timestamp>'.current_time().'</timestamp>
     </signedMessage>';
     return $message;
 }

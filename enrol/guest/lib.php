@@ -128,7 +128,7 @@ class enrol_guest_plugin extends enrol_plugin {
             return null;
         }
 
-        if (isset($USER->enrol['tempguest'][$instance->courseid]) and $USER->enrol['tempguest'][$instance->courseid] > time()) {
+        if (isset($USER->enrol['tempguest'][$instance->courseid]) and $USER->enrol['tempguest'][$instance->courseid] > current_time()) {
             // no need to show the guest access when user can already enter course as guest
             return null;
         }
@@ -308,7 +308,7 @@ class enrol_guest_plugin extends enrol_plugin {
                         $reset = ($instance->status != $data->{'enrol_guest_status_'.$i});
 
                         $instance->status       = $data->{'enrol_guest_status_'.$i};
-                        $instance->timemodified = time();
+                        $instance->timemodified = current_time();
                         if ($instance->status == ENROL_INSTANCE_ENABLED) {
                             if ($instance->password !== $data->{'enrol_guest_password_'.$i}) {
                                 $reset = true;

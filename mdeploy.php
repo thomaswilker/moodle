@@ -849,7 +849,7 @@ class worker extends singleton_pattern {
             throw new unauthorized_access_exception('Invalid format of the passphrase file.');
         }
 
-        if (time() - (int)$stored[1] > 30 * 60) {
+        if (current_time() - (int)$stored[1] > 30 * 60) {
             throw new unauthorized_access_exception('Passphrase timeout.');
         }
 
@@ -932,7 +932,7 @@ class worker extends singleton_pattern {
             mkdir($pool, 02777, true);
         }
 
-        $target = $pool.'/'.basename($path).'_'.time();
+        $target = $pool.'/'.basename($path).'_'.current_time();
 
         $suffix = 0;
         while (file_exists($target.'.'.$suffix)) {

@@ -111,7 +111,7 @@ if ($rev > -1) {
             $lifetime = 60*60*24*60; // 60 days only - the revision may get incremented quite often
             $mimetype = get_contenttype_from_ext($ext);
             header('HTTP/1.1 304 Not Modified');
-            header('Expires: '. gmdate('D, d M Y H:i:s', time() + $lifetime) .' GMT');
+            header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + $lifetime) .' GMT');
             header('Cache-Control: public, max-age='.$lifetime);
             header('Content-Type: '.$mimetype);
             header('Etag: '.$etag);
@@ -209,7 +209,7 @@ function send_cached_image($imagepath, $etag) {
     header('Etag: '.$etag);
     header('Content-Disposition: inline; filename="'.$imagename.'"');
     header('Last-Modified: '. gmdate('D, d M Y H:i:s', filemtime($imagepath)) .' GMT');
-    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $lifetime) .' GMT');
+    header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + $lifetime) .' GMT');
     header('Pragma: ');
     header('Cache-Control: public, max-age='.$lifetime);
     header('Accept-Ranges: none');
@@ -233,8 +233,8 @@ function send_uncached_image($imagepath) {
     $mimetype = get_contenttype_from_ext($pathinfo['extension']);
 
     header('Content-Disposition: inline; filename="'.$imagename.'"');
-    header('Last-Modified: '. gmdate('D, d M Y H:i:s', time()) .' GMT');
-    header('Expires: '. gmdate('D, d M Y H:i:s', time() + 15) .' GMT');
+    header('Last-Modified: '. gmdate('D, d M Y H:i:s', current_time()) .' GMT');
+    header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + 15) .' GMT');
     header('Pragma: ');
     header('Accept-Ranges: none');
     header('Content-Type: '.$mimetype);

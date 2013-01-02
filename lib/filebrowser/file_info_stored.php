@@ -508,7 +508,7 @@ class file_info_stored extends file_info {
 
         $fs = get_file_storage();
 
-        $now = time();
+        $now = current_time();
 
         $newrecord = new stdClass();
         $newrecord->contextid = $this->lf->get_contextid();
@@ -555,7 +555,7 @@ class file_info_stored extends file_info {
 
         $fs = get_file_storage();
 
-        $now = time();
+        $now = current_time();
 
         $newrecord = new stdClass();
         $newrecord->contextid = $this->lf->get_contextid();
@@ -602,7 +602,7 @@ class file_info_stored extends file_info {
 
         $fs = get_file_storage();
 
-        $now = time();
+        $now = current_time();
 
         $newrecord = new stdClass();
         $newrecord->contextid = $this->lf->get_contextid();

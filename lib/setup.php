@@ -522,7 +522,7 @@ if (PHPUNIT_TEST) {
 
 // Verify upgrade is not running unless we are in a script that needs to execute in any case
 if (!defined('NO_UPGRADE_CHECK') and isset($CFG->upgraderunning)) {
-    if ($CFG->upgraderunning < time()) {
+    if ($CFG->upgraderunning < current_time()) {
         unset_config('upgraderunning');
     } else {
         print_error('upgraderunning');

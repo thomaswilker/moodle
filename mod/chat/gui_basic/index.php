@@ -72,14 +72,14 @@ if (!$chatusers = chat_get_users($chat->id, $groupid, $cm->groupingid)) {
     print_error('errornousers', 'chat');
 }
 
-$DB->set_field('chat_users', 'lastping', time(), array('sid'=>$chat_sid));
+$DB->set_field('chat_users', 'lastping', current_time(), array('sid'=>$chat_sid));
 
 if (!isset($SESSION->chatprefs)) {
     $SESSION->chatprefs = array();
 }
 if (!isset($SESSION->chatprefs[$chat->id])) {
     $SESSION->chatprefs[$chat->id] = array();
-    $SESSION->chatprefs[$chat->id]['chatentered'] = time();
+    $SESSION->chatprefs[$chat->id]['chatentered'] = current_time();
 }
 $chatentered = $SESSION->chatprefs[$chat->id]['chatentered'];
 
@@ -99,11 +99,11 @@ if (!empty($refresh) and data_submitted()) {
         $newmessage->groupid = $groupid;
         $newmessage->systrem = 0;
         $newmessage->message = $message;
-        $newmessage->timestamp = time();
+        $newmessage->timestamp = current_time();
         $DB->insert_record('chat_messages', $newmessage);
         $DB->insert_record('chat_messages_current', $newmessage);
 
-        $DB->set_field('chat_users', 'lastmessageping', time(), array('sid'=>$chat_sid));
+        $DB->set_field('chat_users', 'lastmessageping', current_time(), array('sid'=>$chat_sid));
 
         add_to_log($course->id, 'chat', 'talk', "view.php?id=$cm->id", $chat->id, $cm->id);
     }
@@ -126,7 +126,7 @@ foreach($chatusers as $chu) {
     echo $OUTPUT->user_picture($chu, array('size'=>24, 'courseid'=>$course->id));
     echo '<div class="userinfo">';
     echo fullname($chu).' ';
-    if ($idle = time() - $chu->lastmessageping) {
+    if ($idle = current_time() - $chu->lastmessageping) {
         echo '<span class="idle">'.$stridle.' '.format_time($idle).'</span>';
     } else {
         echo '<span class="idle" />';
@@ -145,7 +145,7 @@ echo '<input type="text" id="message" name="message" value="'.s($refreshedmessag
 echo '</div><div>';
 echo '<input type="hidden" name="id" value="'.$id.'" />';
 echo '<input type="hidden" name="groupid" value="'.$groupid.'" />';
-echo '<input type="hidden" name="last" value="'.time().'" />';
+echo '<input type="hidden" name="last" value="'.current_time().'" />';
 echo '<input type="hidden" name="sesskey" value="'.sesskey().'" />';
 echo '<input type="submit" value="'.get_string('submit').'" />&nbsp;';
 echo '<input type="submit" name="refresh" value="'.get_string('refresh').'" />';

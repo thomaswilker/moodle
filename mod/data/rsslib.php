@@ -69,7 +69,7 @@
             $cachedfilelastmodified = filemtime($cachedfilepath);
         }
         //if the cache is more than 60 seconds old and there's new stuff
-        $dontrecheckcutoff = time()-60;
+        $dontrecheckcutoff = current_time()-60;
         if ( $dontrecheckcutoff > $cachedfilelastmodified && data_rss_newstuff($data, $cachedfilelastmodified)) {
             require_once($CFG->dirroot . '/mod/data/lib.php');
 

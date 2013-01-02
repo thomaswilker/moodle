@@ -103,7 +103,7 @@ class mnet_review_host_form extends moodleform {
         // finished with form controls, now the static informational stuff
         if ($mnet_peer && !empty($mnet_peer->bootstrapped)) {
             $expires = '';
-            if ($mnet_peer->public_key_expires < time()) {
+            if ($mnet_peer->public_key_expires < current_time()) {
                 $expires = get_string('expired', 'mnet')  . ' ';
             }
             $expires .= userdate($mnet_peer->public_key_expires);

@@ -72,7 +72,7 @@ class generator {
     public function __construct($settings = array(), $generate=false) {
         global $CFG;
 
-        $this->starttime = time()+microtime();
+        $this->starttime = current_time()+microtime();
 
         $arguments = array(
              array('short'=>'u', 'long'=>'username',
@@ -256,7 +256,7 @@ class generator {
             $user->auth        = 'manual';
             $user->confirmed   = 1;
             $user->lang        = $CFG->lang;
-            $user->timemodified= time();
+            $user->timemodified= current_time();
 
             $user->id = $DB->insert_record("user", $user);
             $users_count++;
@@ -328,7 +328,7 @@ class generator {
         /**
          * FINISHING SCRIPT
          */
-        $stoptimer = time()+microtime();
+        $stoptimer = current_time()+microtime();
         $timer = round($stoptimer-$this->starttime,4);
         if (!$this->get('quiet')) {
             echo "End of script! ($timer seconds taken){$this->eolchar}";
@@ -348,7 +348,7 @@ class generator {
         $base_course->summary = 'Blah Blah';
         $base_course->format = 'weeks';
         $base_course->numsections = '10';
-        $base_course->startdate = time();
+        $base_course->startdate = current_time();
         $base_course->id = '0';
 
         $courses_count = 0;
@@ -461,7 +461,7 @@ class generator {
                             case 'assignment':
                                 $module->intro = $description;
                                 $module->assignmenttype = $this->get_module_type('assignment');
-                                $module->timedue = time() + 89487321;
+                                $module->timedue = current_time() + 89487321;
                                 $module->grade = rand(50,100);
                                 break;
                             case 'chat':
@@ -505,8 +505,8 @@ class generator {
                                 break;
                             case 'lesson':
                                 $module->lessondefault = 1;
-                                $module->available = time();
-                                $module->deadline = time() + 719891987;
+                                $module->available = current_time();
+                                $module->deadline = current_time() + 719891987;
                                 $module->grade = 100;
                                 break;
                             case 'quiz':
@@ -515,8 +515,8 @@ class generator {
                                 $module->feedback = 1;
                                 $module->feedbackboundaries = array(2, 1);
                                 $module->grade = 10;
-                                $module->timeopen = time();
-                                $module->timeclose = time() + 68854;
+                                $module->timeopen = current_time();
+                                $module->timeclose = current_time() + 68854;
                                 $module->shufflequestions = true;
                                 $module->shuffleanswers = true;
                                 $module->quizpassword = '';
@@ -887,8 +887,8 @@ class generator {
                     $entry->concept = "Test concept";
                     $entry->definition = "A test concept is nothing to write home about: just a test concept.";
                     $entry->format = 1;
-                    $entry->timecreated = time();
-                    $entry->timemodified = time();
+                    $entry->timecreated = current_time();
+                    $entry->timemodified = current_time();
                     $entry->teacherentry = 0;
                     $entry->approved = 1;
                     $DB->insert_record('glossary_entries', $entry);

@@ -91,7 +91,7 @@ function page_add_instance($data, $mform = null) {
 
     $cmid = $data->coursemodule;
 
-    $data->timemodified = time();
+    $data->timemodified = current_time();
     $displayoptions = array();
     if ($data->display == RESOURCELIB_DISPLAY_POPUP) {
         $displayoptions['popupwidth']  = $data->popupwidth;
@@ -134,7 +134,7 @@ function page_update_instance($data, $mform) {
     $cmid        = $data->coursemodule;
     $draftitemid = $data->page['itemid'];
 
-    $data->timemodified = time();
+    $data->timemodified = current_time();
     $data->id           = $data->instance;
     $data->revision++;
 
@@ -402,7 +402,7 @@ function page_pluginfile($course, $cm, $context, $filearea, $args, $forcedownloa
                 return false;
             }
             //file migrate - update flag
-            $page->legacyfileslast = time();
+            $page->legacyfileslast = current_time();
             $DB->update_record('page', $page);
         }
 

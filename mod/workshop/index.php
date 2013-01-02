@@ -56,7 +56,7 @@ if (! $workshops = get_all_instances_in_course('workshop', $course)) {
 
 $usesections = course_format_uses_sections($course->format);
 
-$timenow        = time();
+$timenow        = current_time();
 $strsectionname = get_string('sectionname', 'format_'.$course->format);
 $strname        = get_string('name');
 $table          = new html_table();

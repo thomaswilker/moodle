@@ -87,6 +87,8 @@ EOD;
         foreach($this->generators as $generator) {
             $generator->reset();
         }
+
+        $this->reset_current_time();
     }
 
     /**
@@ -601,4 +603,29 @@ EOD;
 
         return true;
     }
+
+    private function reset_current_time() {
+        global $CORE_TIME_FORCED, $CORE_TIME_FORCED_TIME;
+
+        $CORE_TIME_FORCED = 0;
+        $CORE_TIME_FORCED_TIME = 0;
+    }
+
+    /**
+     * Callable from unit tests only, this will set the current time
+     * to whatever is passed in. Calls to current_time() after
+     * this function will return the time relative to this time.
+     *
+     * @package core
+     * @category time
+     * @param int $time This is the new time
+     * @return none
+     */
+    public function set_current_time($time) {
+        global $CORE_TIME_FORCED, $CORE_TIME_FORCED_TIME;
+
+        $CORE_TIME_FORCED = $time;
+        $CORE_TIME_FORCED_TIME = time();
+    }
+
 }

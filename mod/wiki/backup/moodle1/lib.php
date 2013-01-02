@@ -74,7 +74,7 @@ class moodle1_mod_wiki_handler extends moodle1_mod_handler {
                         'forceformat' => '1',
                         'editbegin' => '0',
                         'editend' => '0',
-                        'timecreated' => time(), //2.x time of creation since theres no 1.9 time of creation
+                        'timecreated' => current_time(), //2.x time of creation since theres no 1.9 time of creation
                     ),
                     'renamefields' => array(
                         'summary' => 'intro',
@@ -271,7 +271,7 @@ class moodle1_mod_wiki_handler extends moodle1_mod_handler {
                 'title'         => $this->initialcontentfilename,
                 'content'       => $this->initialcontent,
                 'userid'        => $USER->id,
-                'timecreated'   => time(),
+                'timecreated'   => current_time(),
                 'timemodified'  => 0,
                 'pageviews'     => 0,
                 'cachedcontent' => '**reparse needed**',

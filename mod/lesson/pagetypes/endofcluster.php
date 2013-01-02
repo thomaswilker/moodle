@@ -91,7 +91,7 @@ class lesson_page_type_endofcluster extends lesson_page {
             $answer = new stdClass;
         }
 
-        $answer->timemodified = time();;
+        $answer->timemodified = current_time();;
         if (isset($properties->jumpto[0])) {
             $answer->jumpto = $properties->jumpto[0];
         }
@@ -164,7 +164,7 @@ class lesson_add_page_form_endofcluster extends lesson_add_page_form_base {
         global $CFG, $PAGE, $DB;
         require_sesskey();
 
-        $timenow = time();
+        $timenow = current_time();
 
         // the new page is not the first page (end of cluster always comes after an existing page)
         if (!$page = $DB->get_record("lesson_pages", array("id" => $pageid))) {

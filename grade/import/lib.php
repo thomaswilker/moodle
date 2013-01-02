@@ -24,7 +24,7 @@ require_once($CFG->libdir.'/gradelib.php');
 function get_new_importcode() {
     global $USER, $DB;
 
-    $importcode = time();
+    $importcode = current_time();
     while ($DB->get_record('grade_import_values', array('importcode' => $importcode, 'importer' => $USER->id))) {
         $importcode--;
     }
@@ -45,7 +45,7 @@ function get_new_importcode() {
 function grade_import_commit($courseid, $importcode, $importfeedback=true, $verbose=true) {
     global $CFG, $USER, $DB, $OUTPUT;
 
-    $commitstart = time(); // start time in case we need to roll back
+    $commitstart = current_time(); // start time in case we need to roll back
     $newitemids = array(); // array to hold new grade_item ids from grade_import_newitem table, mapping array
 
     /// first select distinct new grade_items with this batch

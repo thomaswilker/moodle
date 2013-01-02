@@ -75,7 +75,7 @@ if ($attemptobj->is_finished()) {
 }
 
 // Check the access rules.
-$accessmanager = $attemptobj->get_access_manager(time());
+$accessmanager = $attemptobj->get_access_manager(current_time());
 $accessmanager->setup_attempt_page($PAGE);
 $output = $PAGE->get_renderer('mod_quiz');
 $messages = $accessmanager->prevent_access();

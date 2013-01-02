@@ -282,7 +282,7 @@ class enrol_authorize_form extends moodleform
             $WorkDate = strtotime($WorkDate);
             $LastDay  = date("t", $WorkDate);
             $Expires  = strtotime("$Month/$LastDay/$Year 11:59:59");
-            if ($Expires < time()) return 0;
+            if ($Expires < current_time()) return 0;
         }
 
         //  Innocent until proven guilty

@@ -87,7 +87,7 @@ function note_save(&$note) {
 
     // setup & clean fields
     $note->module       = 'notes';
-    $note->lastmodified = time();
+    $note->lastmodified = current_time();
     $note->usermodified = $USER->id;
     if (empty($note->format)) {
         $note->format = FORMAT_PLAIN;

@@ -159,7 +159,7 @@ foreach ($modinfo->sections as $sectionnum=>$section) {
             $lastaccesscell->attributes['class'] = 'lastaccess';
 
             if (isset($views[$cm->id]->lasttime)) {
-                $timeago = format_time(time() - $views[$cm->id]->lasttime);
+                $timeago = format_time(current_time() - $views[$cm->id]->lasttime);
                 $lastaccesscell->text = userdate($views[$cm->id]->lasttime)." ($timeago)";
             }
             $reportrow->cells[] = $lastaccesscell;

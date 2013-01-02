@@ -71,7 +71,7 @@ add_to_log($course->id, 'course', 'report log', "report/log/graph.php?user=$user
 
 $logs = array();
 
-$timenow = time();
+$timenow = current_time();
 
 if ($type === "usercourse.png") {
 
@@ -172,7 +172,7 @@ if ($type === "usercourse.png") {
    if ($date) {
        $daystart = usergetmidnight($date);
    } else {
-       $daystart = usergetmidnight(time());
+       $daystart = usergetmidnight(current_time());
    }
    $dayfinish = $daystart + 86400;
 

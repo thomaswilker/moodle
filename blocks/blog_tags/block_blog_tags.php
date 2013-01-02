@@ -112,7 +112,7 @@ class block_blog_tags extends block_base {
         $this->content->footer = '';
 
         /// Get a list of tags
-        $timewithin = time() - $this->config->timewithin * 24 * 60 * 60; /// convert to seconds
+        $timewithin = current_time() - $this->config->timewithin * 24 * 60 * 60; /// convert to seconds
 
         $context = $this->page->context;
 

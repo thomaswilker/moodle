@@ -1021,7 +1021,7 @@ abstract class condition_info_base {
 
         // Test dates
         if ($this->item->availablefrom) {
-            if (time() < $this->item->availablefrom) {
+            if (current_time() < $this->item->availablefrom) {
                 $available = false;
 
                 $information .= get_string('requires_date', 'condition',
@@ -1031,7 +1031,7 @@ abstract class condition_info_base {
         }
 
         if ($this->item->availableuntil) {
-            if (time() >= $this->item->availableuntil) {
+            if (current_time() >= $this->item->availableuntil) {
                 $available = false;
                 // But we don't display any information about this case. This is
                 // because the only reason to set a 'disappear' date is usually

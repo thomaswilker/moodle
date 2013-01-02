@@ -56,7 +56,7 @@ class cc_label extends entities {
         $replace_values = array($instance['instance'],
                                 self::safexml($title),
                                 self::safexml($content),
-                                time());
+                                current_time());
 
         return str_replace($find_tags, $replace_values, $sheet_mod_label);
     }

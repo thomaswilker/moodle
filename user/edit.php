@@ -199,7 +199,7 @@ if ($usernew = $userform->get_data()) {
 
     $authplugin = get_auth_plugin($user->auth);
 
-    $usernew->timemodified = time();
+    $usernew->timemodified = current_time();
 
     // description editor element may not exist!
     if (isset($usernew->description_editor)) {

@@ -54,7 +54,7 @@ class database_logger extends base_logger {
     protected function action($message, $level, $options = null) {
         $columns = $this->columns;
         if ($this->datecol) {
-            $columns[$this->datecol] = time();
+            $columns[$this->datecol] = current_time();
         }
         if ($this->levelcol) {
             $columns[$this->levelcol] = $level;

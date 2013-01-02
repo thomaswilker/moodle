@@ -34,7 +34,7 @@ require_once($CFG->dirroot . '/mod/quiz/locallib.php');
 
 // Remember the current time as the time any responses were submitted
 // (so as to make sure students don't get penalized for slow processing on this page).
-$timenow = time();
+$timenow = current_time();
 
 // Get submitted parameters.
 $attemptid     = required_param('attempt',  PARAM_INT);

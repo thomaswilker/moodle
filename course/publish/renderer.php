@@ -111,7 +111,7 @@ class core_publish_renderer extends plugin_renderer_base {
                                     . $courseid . "&updatestatusid=" . $publication->id
                                     . "&sesskey=" . sesskey())) .
                         $brtag . get_string('lasttimechecked', 'hub') . ": "
-                        . format_time(time() - $publication->timechecked);
+                        . format_time(current_time() - $publication->timechecked);
             } else {
                 $status = get_string('neverchecked', 'hub') . $brtag
                         . html_writer::tag('a', get_string('updatestatus', 'hub'),

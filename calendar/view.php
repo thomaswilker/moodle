@@ -83,7 +83,7 @@ require_course_login($course);
 $calendar = new calendar_information($day, $mon, $yr);
 $calendar->prepare_for_view($course, $courses);
 
-$now = usergetdate(time());
+$now = usergetdate(current_time());
 $pagetitle = '';
 
 $strcalendar = get_string('calendar', 'calendar');

@@ -346,7 +346,7 @@ class backup_controller extends backup implements loggable {
     protected function calculate_backupid() {
         // Current epoch time + type + id + format + interactive + mode + userid + operation
         // should be unique enough. Add one random part at the end
-        $this->backupid = md5(time() . '-' . $this->type . '-' . $this->id . '-' . $this->format . '-' .
+        $this->backupid = md5(current_time() . '-' . $this->type . '-' . $this->id . '-' . $this->format . '-' .
                               $this->interactive . '-' . $this->mode . '-' . $this->userid . '-' .
                               $this->operation . '-' . random_string(20));
     }

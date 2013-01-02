@@ -26,7 +26,7 @@ class assignment_offline extends assignment_base {
         $submission = new stdClass();
         $submission->assignment   = $this->assignment->id;
         $submission->userid       = $userid;
-        $submission->timecreated  = time(); // needed for offline assignments
+        $submission->timecreated  = current_time(); // needed for offline assignments
         $submission->timemodified = $submission->timecreated;
         $submission->numfiles     = 0;
         $submission->data1        = '';
@@ -79,13 +79,13 @@ class assignment_offline extends assignment_base {
             } else {
                 $submission->mailed = 0;       // Make sure mail goes out (again, even)
             }
-            $submission->timemarked = time();
+            $submission->timemarked = current_time();
 
             unset($submission->data1);  // Don't need to update this.
             unset($submission->data2);  // Don't need to update this.
 
             if (empty($submission->timemodified)) {   // eg for offline assignments
-                $submission->timemodified = time();
+                $submission->timemodified = current_time();
             }
 
             $DB->update_record('assignment_submissions', $submission);

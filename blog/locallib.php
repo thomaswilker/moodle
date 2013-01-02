@@ -236,8 +236,8 @@ class blog_entry implements renderable {
         unset($this->id);
         $this->module       = 'blog';
         $this->userid       = (empty($this->userid)) ? $USER->id : $this->userid;
-        $this->lastmodified = time();
-        $this->created      = time();
+        $this->lastmodified = current_time();
+        $this->created      = current_time();
 
         // Insert the new blog entry.
         $this->id = $DB->insert_record('post', $this);
@@ -277,7 +277,7 @@ class blog_entry implements renderable {
             $entry->add_associations();
         }
 
-        $entry->lastmodified = time();
+        $entry->lastmodified = current_time();
 
         // Update record
         $DB->update_record('post', $entry);
@@ -983,13 +983,13 @@ class blog_filter_entry extends blog_filter {
 }
 
 /**
- * This filter restricts the results to a time interval in seconds up to time()
+ * This filter restricts the results to a time interval in seconds up to current_time()
  */
 class blog_filter_since extends blog_filter {
     public function __construct($interval) {
         $this->conditions[] = 'p.lastmodified >= ? AND p.lastmodified <= ?';
-        $this->params[] = time() - $interval;
-        $this->params[] = time();
+        $this->params[] = current_time() - $interval;
+        $this->params[] = current_time();
     }
 }
 

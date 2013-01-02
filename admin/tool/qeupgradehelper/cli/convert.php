@@ -74,11 +74,11 @@ if (!tool_qeupgradehelper_is_upgraded()) {
 require_once(dirname(dirname(__FILE__)) . '/afterupgradelib.php');
 
 
-$starttime = time();
+$starttime = current_time();
 
 // Setup the stop time.
 if ($options['timelimit']) {
-    $stoptime = time() + $options['timelimit'];
+    $stoptime = current_time() + $options['timelimit'];
 } else {
     $stoptime = false;
 }
@@ -98,7 +98,7 @@ mtrace('qeupgradehelper: processing ...');
  * true, and will short circuit the test condition for that option, and always
  * being true. Both options are anded together, so either one can trigger to stop.
  */
-while ((!$stoptime || (time() < $stoptime)) && (!$options['countlimit'] || ($count < $options['countlimit']))) {
+while ((!$stoptime || (current_time() < $stoptime)) && (!$options['countlimit'] || ($count < $options['countlimit']))) {
     if ($options['quiz']) {
         $quizid = $options['quiz'];
     } else {
@@ -125,5 +125,5 @@ while ((!$stoptime || (time() < $stoptime)) && (!$options['countlimit'] || ($cou
 }
 
 
-mtrace('qeupgradehelper: Done. Processed '.$count.' quizes in '.(time()-$starttime).' seconds');
+mtrace('qeupgradehelper: Done. Processed '.$count.' quizes in '.(current_time()-$starttime).' seconds');
 return;

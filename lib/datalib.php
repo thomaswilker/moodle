@@ -1053,7 +1053,7 @@ function get_course_category($catid=0) {
             $cat->name         = get_string('miscellaneous');
             $cat->depth        = 1;
             $cat->sortorder    = MAX_COURSES_IN_CATEGORY;
-            $cat->timemodified = time();
+            $cat->timemodified = current_time();
             $catid = $DB->insert_record('course_categories', $cat);
             // make sure category context exists
             context_coursecat::instance($catid);
@@ -1374,7 +1374,7 @@ function make_default_scale() {
     $defaultscale->scale = get_string('postrating1', 'forum').','.
                            get_string('postrating2', 'forum').','.
                            get_string('postrating3', 'forum');
-    $defaultscale->timemodified = time();
+    $defaultscale->timemodified = current_time();
 
     $defaultscale->id = $DB->insert_record('scale', $defaultscale);
     $DB->execute("UPDATE {forum} SET scale = ?", array($defaultscale->id));
@@ -1799,7 +1799,7 @@ function add_to_log($courseid, $module, $action, $url='', $info='', $cm=0, $user
 
     $REMOTE_ADDR = getremoteaddr();
 
-    $timenow = time();
+    $timenow = current_time();
     $info = $info;
     if (!empty($url)) { // could break doing html_entity_decode on an empty var.
         $url = html_entity_decode($url, ENT_QUOTES, 'UTF-8');
@@ -1842,10 +1842,10 @@ function add_to_log($courseid, $module, $action, $url='', $info='', $cm=0, $user
             $message .= "The failed query parameters are:\n\n" . var_export($log, true);
 
             $lasttime = get_config('admin', 'lastloginserterrormail');
-            if(empty($lasttime) || time() - $lasttime > 60*60*24) { // limit to 1 email per day
+            if(empty($lasttime) || current_time() - $lasttime > 60*60*24) { // limit to 1 email per day
                 //using email directly rather than messaging as they may not be able to log in to access a message
                 mail($CFG->supportemail, $subject, $message);
-                set_config('lastloginserterrormail', time(), 'admin');
+                set_config('lastloginserterrormail', current_time(), 'admin');
             }
         }
     }
@@ -1881,7 +1881,7 @@ function user_accesstime_log($courseid=0) {
         $courseid = SITEID;
     }
 
-    $timenow = time();
+    $timenow = current_time();
 
 /// Store site lastaccess time for the current user
     if ($timenow - $USER->lastaccess > LASTACCESS_UPDATE_SECS) {

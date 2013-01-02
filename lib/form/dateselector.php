@@ -146,7 +146,7 @@ class MoodleQuickForm_date_selector extends MoodleQuickForm_group
                 }
                 $requestvalue=$value;
                 if ($value == 0) {
-                    $value = time();
+                    $value = current_time();
                 }
                 if (!is_array($value)) {
                     $currentdate = usergetdate($value, $this->_options['timezone']);

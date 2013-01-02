@@ -48,7 +48,7 @@ function report_outline_print_row($mod, $instance, $result) {
     echo "</td>";
     echo "<td>&nbsp;&nbsp;&nbsp;</td>";
     if (!empty($result->time)) {
-        $timeago = format_time(time() - $result->time);
+        $timeago = format_time(current_time() - $result->time);
         echo "<td valign=\"top\" style=\"white-space: nowrap\">".userdate($result->time)." ($timeago)</td>";
     }
     echo "</tr>";

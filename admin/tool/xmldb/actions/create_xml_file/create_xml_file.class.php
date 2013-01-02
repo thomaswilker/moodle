@@ -72,7 +72,7 @@ class create_xml_file extends XMLDBAction {
 
         // Some variables
         $xmlpath = dirname(str_replace($CFG->dirroot . '/', '', $file));
-        $xmlversion = userdate(time(), '%Y%m%d', 99, false);
+        $xmlversion = userdate(current_time(), '%Y%m%d', 99, false);
         $xmlcomment = 'XMLDB file for Moodle ' . dirname($xmlpath);
 
         $xmltable = strtolower(basename(dirname($xmlpath)));

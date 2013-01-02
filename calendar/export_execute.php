@@ -34,7 +34,7 @@ if (!$authuserid && !$authusername) {
 $what = optional_param('preset_what', 'all', PARAM_ALPHA);
 $time = optional_param('preset_time', 'weeknow', PARAM_ALPHA);
 
-$now = usergetdate(time());
+$now = usergetdate(current_time());
 // Let's see if we have sufficient and correct data
 $allowed_what = array('all', 'courses');
 $allowed_time = array('weeknow', 'weeknext', 'monthnow', 'monthnext', 'recentupcoming');
@@ -124,8 +124,8 @@ if(!empty($what) && !empty($time)) {
             break;
             case 'recentupcoming':
                 //Events in the last 5 or next 60 days
-                $timestart = time() - 432000;
-                $timeend = time() + 5184000;
+                $timestart = current_time() - 432000;
+                $timeend = current_time() + 5184000;
             break;
         }
     }
@@ -176,7 +176,7 @@ if(empty($serialized)) {
 
 $filename = 'icalexport.ics';
 
-header('Last-Modified: '. gmdate('D, d M Y H:i:s', time()) .' GMT');
+header('Last-Modified: '. gmdate('D, d M Y H:i:s', current_time()) .' GMT');
 header('Cache-Control: private, must-revalidate, pre-check=0, post-check=0, max-age=0');
 header('Expires: '. gmdate('D, d M Y H:i:s', 0) .'GMT');
 header('Pragma: no-cache');

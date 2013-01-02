@@ -266,7 +266,7 @@ function lesson_print_overview($courses, &$htmlarray) {
     $strnotattempted = get_string('nolessonattempts', 'lesson');
     $strattempted    = get_string('lessonattempted', 'lesson');
 
-    $now = time();
+    $now = current_time();
     foreach ($lessons as $lesson) {
         if ($lesson->deadline != 0                                         // The lesson has a deadline
             and $lesson->deadline >= $now                                  // And it is before the deadline has been met
@@ -536,7 +536,7 @@ function lesson_get_post_actions() {
 function lesson_process_pre_save(&$lesson) {
     global $DB;
 
-    $lesson->timemodified = time();
+    $lesson->timemodified = current_time();
 
     if (empty($lesson->timed)) {
         $lesson->timed = 0;

@@ -74,7 +74,7 @@ class MoodleODSWorkbook {
         global $CFG;
         require_once($CFG->libdir.'/filelib.php');
 
-        $dir = 'ods/'.time();
+        $dir = 'ods/'.current_time();
         make_temp_directory($dir);
         make_temp_directory($dir.'/META-INF');
         $dir = "$CFG->tempdir/$dir";

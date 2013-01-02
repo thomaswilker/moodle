@@ -25,7 +25,7 @@ if (!$entry->approved and confirm_sesskey()) {
     $newentry = new stdClass();
     $newentry->id           = $entry->id;
     $newentry->approved     = 1;
-    $newentry->timemodified = time(); // wee need this date here to speed up recent activity, TODO: use timestamp in approved field instead in 2.0
+    $newentry->timemodified = current_time(); // wee need this date here to speed up recent activity, TODO: use timestamp in approved field instead in 2.0
     $DB->update_record("glossary_entries", $newentry);
 
     // Update completion state

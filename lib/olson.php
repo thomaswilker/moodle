@@ -51,7 +51,7 @@ function olson_to_timezones ($filename) {
      *** before that, anyway.
      ***
      **/
-    $maxyear = localtime(time(), true);
+    $maxyear = localtime(current_time(), true);
     $maxyear = $maxyear['tm_year'] + 1900 + 10;
 
     foreach ($zones as $zname => $zbyyear) { // loop over zones

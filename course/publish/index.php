@@ -85,7 +85,7 @@ if (has_capability('moodle/course:publish', context_course::instance($id))) {
                 $publication = $publicationmanager->get_publication($sitecourse['id'], $hub->huburl);
                 if (!empty($publication)) {
                     $publication->status = $sitecourse['privacy'];
-                    $publication->timechecked = time();
+                    $publication->timechecked = current_time();
                     $publicationmanager->update_publication($publication);
                 } else {
                     $msgparams = new stdClass();

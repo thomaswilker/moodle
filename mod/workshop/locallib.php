@@ -375,10 +375,10 @@ class workshop {
             $a->{$format} = userdate($timestamp, get_string('strftime'.$format, 'langconfig'));
         }
         $day = userdate($timestamp, '%Y%m%d', 99, false);
-        $today = userdate(time(), '%Y%m%d', 99, false);
-        $tomorrow = userdate(time() + DAYSECS, '%Y%m%d', 99, false);
-        $yesterday = userdate(time() - DAYSECS, '%Y%m%d', 99, false);
-        $distance = (int)round(abs(time() - $timestamp) / DAYSECS);
+        $today = userdate(current_time(), '%Y%m%d', 99, false);
+        $tomorrow = userdate(current_time() + DAYSECS, '%Y%m%d', 99, false);
+        $yesterday = userdate(current_time() - DAYSECS, '%Y%m%d', 99, false);
+        $distance = (int)round(abs(current_time() - $timestamp) / DAYSECS);
         if ($day == $today) {
             $a->distanceday = get_string('daystoday', 'workshop');
         } elseif ($day == $yesterday) {
@@ -1193,7 +1193,7 @@ class workshop {
             $weight = 16;
         }
 
-        $now = time();
+        $now = current_time();
         $assessment = new stdclass();
         $assessment->submissionid           = $submission->id;
         $assessment->reviewerid             = $reviewerid;
@@ -1487,7 +1487,7 @@ class workshop {
      */
     public function creating_submission_allowed($userid) {
 
-        $now = time();
+        $now = current_time();
         $ignoredeadlines = has_capability('mod/workshop:ignoredeadlines', $this->context, $userid);
 
         if ($this->latesubmissions) {
@@ -1526,7 +1526,7 @@ class workshop {
      */
     public function modifying_submission_allowed($userid) {
 
-        $now = time();
+        $now = current_time();
         $ignoredeadlines = has_capability('mod/workshop:ignoredeadlines', $this->context, $userid);
 
         if ($this->phase != self::PHASE_SUBMISSION) {
@@ -1560,7 +1560,7 @@ class workshop {
             }
         }
 
-        $now = time();
+        $now = current_time();
         $ignoredeadlines = has_capability('mod/workshop:ignoredeadlines', $this->context, $userid);
 
         if (!$ignoredeadlines and !empty($this->assessmentstart) and $this->assessmentstart > $now) {
@@ -1658,7 +1658,7 @@ class workshop {
         $data = new stdclass();
         $data->id = $assessmentid;
         $data->grade = $grade;
-        $data->timemodified = time();
+        $data->timemodified = current_time();
         $DB->update_record('workshop_assessments', $data);
         return $grade;
     }
@@ -2307,7 +2307,7 @@ class workshop {
             $record = new stdclass();
             $record->id = $submissionid;
             $record->grade = $finalgrade;
-            $record->timegraded = time();
+            $record->timegraded = current_time();
             $DB->update_record('workshop_submissions', $record);
         }
     }
@@ -2333,7 +2333,7 @@ class workshop {
         $count      = 0;
 
         if (is_null($timegraded)) {
-            $timegraded = time();
+            $timegraded = current_time();
         }
 
         foreach ($assessments as $assessment) {
@@ -2641,7 +2641,7 @@ class workshop_user_plan implements renderable {
                     $task->completed = false;
                 } else if ($allocator->enabled and is_null($allocator->resultstatus)) {
                     $task->completed = true;
-                } else if ($workshop->submissionend > time()) {
+                } else if ($workshop->submissionend > current_time()) {
                     $task->completed = null;
                 } else {
                     $task->completed = false;
@@ -2698,7 +2698,7 @@ class workshop_user_plan implements renderable {
             $task->completed = 'info';
             $phase->tasks['submissionenddatetime'] = $task;
         }
-        if (($workshop->submissionstart < time()) and $workshop->latesubmissions) {
+        if (($workshop->submissionstart < current_time()) and $workshop->latesubmissions) {
             $task = new stdclass();
             $task->title = get_string('latesubmissionsallowed', 'workshop');
             $task->completed = 'info';

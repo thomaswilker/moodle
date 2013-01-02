@@ -44,7 +44,7 @@
             }
         } elseif (!empty($form->submit) && $form->submit == get_string('delete')) {
             $mnet->get_private_key();
-            $SESSION->mnet_confirm_delete_key = md5(sha1($mnet->keypair['keypair_PEM'])).':'.time();
+            $SESSION->mnet_confirm_delete_key = md5(sha1($mnet->keypair['keypair_PEM'])).':'.current_time();
 
             $formcontinue = new single_button(new moodle_url('index.php', array('confirm' => md5($mnet->public_key))), get_string('yes'));
             $formcancel = new single_button(new moodle_url('index.php', array()), get_string('no'));
@@ -63,7 +63,7 @@
             @list($key, $time) = explode(':',$SESSION->mnet_confirm_delete_key);
             $mnet->get_private_key();
 
-            if($time < time() - 60) {
+            if($time < current_time() - 60) {
                 // fail - you're out of time.
                 print_error ('deleteoutoftime', 'mnet', 'index.php');
                 exit;

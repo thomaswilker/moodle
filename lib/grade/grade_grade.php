@@ -306,7 +306,7 @@ class grade_grade extends grade_object {
      */
     public function set_overridden($state, $refresh = true) {
         if (empty($this->overridden) and $state) {
-            $this->overridden = time();
+            $this->overridden = current_time();
             $this->update();
             return true;
 
@@ -341,7 +341,7 @@ class grade_grade extends grade_object {
      */
     public function set_excluded($state) {
         if (empty($this->excluded) and $state) {
-            $this->excluded = time();
+            $this->excluded = current_time();
             $this->update();
             return true;
 
@@ -370,13 +370,13 @@ class grade_grade extends grade_object {
                 return false;
             }
 
-            $this->locked = time();
+            $this->locked = current_time();
             $this->update();
 
             return true;
 
         } else {
-            if (!empty($this->locked) and $this->locktime < time()) {
+            if (!empty($this->locked) and $this->locktime < current_time()) {
                 //we have to reset locktime or else it would lock up again
                 $this->locktime = 0;
             }
@@ -403,13 +403,13 @@ class grade_grade extends grade_object {
     public static function check_locktime_all($items) {
         global $CFG, $DB;
 
-        $now = time(); // no rounding needed, this is not supposed to be called every 10 seconds
+        $now = current_time(); // no rounding needed, this is not supposed to be called every 10 seconds
         list($usql, $params) = $DB->get_in_or_equal($items);
         $params[] = $now;
         $rs = $DB->get_recordset_select('grade_grades', "itemid $usql AND locked = 0 AND locktime > 0 AND locktime < ?", $params);
         foreach ($rs as $grade) {
             $grade_grade = new grade_grade($grade, false);
-            $grade_grade->locked = time();
+            $grade_grade->locked = current_time();
             $grade_grade->update('locktime');
         }
         $rs->close();
@@ -452,9 +452,9 @@ class grade_grade extends grade_object {
     public function is_hidden() {
         $this->load_grade_item();
         if (empty($this->grade_item)) {
-            return $this->hidden == 1 or ($this->hidden != 0 and $this->hidden > time());
+            return $this->hidden == 1 or ($this->hidden != 0 and $this->hidden > current_time());
         } else {
-            return $this->hidden == 1 or ($this->hidden != 0 and $this->hidden > time()) or $this->grade_item->is_hidden();
+            return $this->hidden == 1 or ($this->hidden != 0 and $this->hidden > current_time()) or $this->grade_item->is_hidden();
         }
     }
 
@@ -746,7 +746,7 @@ class grade_grade extends grade_object {
      */
     public function insert($source=null) {
         // TODO: dategraded hack - do not update times, they are used for submission and grading (MDL-31379)
-        //$this->timecreated = $this->timemodified = time();
+        //$this->timecreated = $this->timemodified = current_time();
         return parent::insert($source);
     }
 

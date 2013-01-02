@@ -94,7 +94,7 @@ $calendar = new calendar_information($day, $mon, $yr);
 $calendar->prepare_for_view($course, $courses);
 
 $pagetitle = get_string('export', 'calendar');
-$now = usergetdate(time());
+$now = usergetdate(current_time());
 
 // Print title and header
 if ($issite) {

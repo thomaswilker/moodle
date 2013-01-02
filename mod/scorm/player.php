@@ -105,7 +105,7 @@ if (!$cm->visible and !has_capability('moodle/course:viewhiddenactivities', $cou
 }
 
 //check if scorm closed
-$timenow = time();
+$timenow = current_time();
 if ($scorm->timeclose !=0) {
     if ($scorm->timeopen > $timenow) {
         echo $OUTPUT->header();

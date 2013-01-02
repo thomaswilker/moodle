@@ -115,7 +115,7 @@ class question_engine_data_mapper {
         }
         $record->rightanswer = $qa->get_right_answer_summary();
         $record->responsesummary = $qa->get_response_summary();
-        $record->timemodified = time();
+        $record->timemodified = current_time();
         $record->id = $this->db->insert_record('question_attempts', $record);
         $qa->set_database_id($record->id);
 
@@ -701,7 +701,7 @@ ORDER BY
         $record->questionsummary = $qa->get_question_summary();
         $record->rightanswer = $qa->get_right_answer_summary();
         $record->responsesummary = $qa->get_response_summary();
-        $record->timemodified = time();
+        $record->timemodified = current_time();
 
         $this->db->update_record('question_attempts', $record);
     }

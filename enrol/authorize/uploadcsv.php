@@ -54,7 +54,7 @@ echo $OUTPUT->heading($struploadcsv);
 if (!$form->get_data()) {
     $form->display();
 } else {
-    $filename = $CFG->tempdir . '/enrolauthorize/importedfile_'.time().'.csv';
+    $filename = $CFG->tempdir . '/enrolauthorize/importedfile_'.current_time().'.csv';
     make_temp_directory('enrolauthorize');
     // Fix mac/dos newlines
     $text = $form->get_file_content('csvfile');
@@ -222,7 +222,7 @@ function authorize_process_csv($filename) {
             if (! user_has_role_assignment($user->id, $role->id, $coursecontext->id)) {
                 $timestart = $timeend = 0;
                 if ($course->enrolperiod) {
-                    $timestart = time();
+                    $timestart = current_time();
                     $timeend = $timestart + $course->enrolperiod;
                 }
                 // Enrol user

@@ -244,7 +244,7 @@ class enrol_manual_editselectedusers_operation extends enrol_bulk_enrolment_oper
 
         // Update the time modified.
         $updatesql[] = 'timemodified = :timemodified';
-        $params['timemodified'] = time();
+        $params['timemodified'] = current_time();
 
         // Build the SQL statement.
         $updatesql = join(', ', $updatesql);

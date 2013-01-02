@@ -93,7 +93,7 @@ function imscp_add_instance($data, $mform) {
 
     $cmid = $data->coursemodule;
 
-    $data->timemodified = time();
+    $data->timemodified = current_time();
     $data->revision     = 1;
     $data->structure    = null;
 
@@ -130,7 +130,7 @@ function imscp_update_instance($data, $mform) {
 
     $cmid = $data->coursemodule;
 
-    $data->timemodified = time();
+    $data->timemodified = current_time();
     $data->id           = $data->instance;
     $data->structure   = null; // better reparse structure after each update
 

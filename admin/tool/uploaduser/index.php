@@ -80,7 +80,7 @@ $stryesnooptions = array(0=>$strno, 1=>$stryes);
 $returnurl = new moodle_url('/admin/tool/uploaduser/index.php');
 $bulknurl  = new moodle_url('/admin/user/user_bulk.php');
 
-$today = time();
+$today = current_time();
 $today = make_timestamp(date('Y', $today), date('m', $today), date('d', $today), 0, 0, 0);
 
 // array of all valid fields for validation
@@ -460,7 +460,7 @@ if ($formdata = $mform2->is_cancelled()) {
                 continue;
             }
 
-            $existinguser->timemodified = time();
+            $existinguser->timemodified = current_time();
             // do NOT mess with timecreated or firstaccess here!
 
             //load existing profile data
@@ -627,8 +627,8 @@ if ($formdata = $mform2->is_cancelled()) {
         } else {
             // save the new user to the database
             $user->confirmed    = 1;
-            $user->timemodified = time();
-            $user->timecreated  = time();
+            $user->timemodified = current_time();
+            $user->timecreated  = current_time();
             $user->mnethostid   = $CFG->mnet_localhost_id; // we support ONLY local accounts here, sorry
 
             if (!isset($user->suspended) or $user->suspended === '') {

@@ -364,7 +364,7 @@ function scorm_aicc_get_hacp_session($scormid) {
     if (empty($cfg_scorm->allowaicchacp)) {
         return false;
     }
-    $now = time();
+    $now = current_time();
 
     $hacpsession = $SESSION->scorm;
     $hacpsession->scormid = $scormid;
@@ -390,11 +390,11 @@ function scorm_aicc_confirm_hacp_session($hacpsession) {
     if (empty($cfg_scorm->allowaicchacp)) {
         return false;
     }
-    $time = time()-($cfg_scorm->aicchacptimeout * 60);
+    $time = current_time()-($cfg_scorm->aicchacptimeout * 60);
     $sql = "hacpsession = ? AND timemodified > ?";
     $hacpsession = $DB->get_record_select('scorm_aicc_session', $sql, array($hacpsession, $time));
     if (!empty($hacpsession)) { //update timemodified as this is still an active session - resets the timeout.
-        $hacpsession->timemodified = time();
+        $hacpsession->timemodified = current_time();
         $DB->update_record('scorm_aicc_session', $hacpsession);
     }
     return $hacpsession;

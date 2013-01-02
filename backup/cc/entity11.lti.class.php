@@ -60,7 +60,7 @@ class cc11_lti extends entities11 {
             $replace_values = array($instance['instance'],
                                     $topic_data['title'],
                                     $topic_data['description'],
-                                    time(),time(),
+                                    current_time(),current_time(),
                                     $topic_data['launchurl'],
                                     $topic_data['icon']
                                     );

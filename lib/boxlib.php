@@ -229,7 +229,7 @@ class boxclient {
                 $o = $sax[$k];
                 foreach($o->folder as $z){
                     $tmp = array('title'=>(string)$z->attributes()->name,
-                        'size'=>0, 'date'=>userdate(time()),
+                        'size'=>0, 'date'=>userdate(current_time()),
                         'thumbnail'=>'https://www.box.com/img/small_folder_icon.gif',
                         'path'=>array('name'=>(string)$z->attributes()->name, 'path'=>(int)$z->attributes()->id));
                     $tmp['children'] = array();

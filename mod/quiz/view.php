@@ -63,7 +63,7 @@ $canreviewmine = has_capability('mod/quiz:reviewmyattempts', $context);
 $canpreview = has_capability('mod/quiz:preview', $context);
 
 // Create an object to manage all the other (non-roles) access rules.
-$timenow = time();
+$timenow = current_time();
 $quizobj = quiz::create($cm->instance, $USER->id);
 $accessmanager = new quiz_access_manager($quizobj, $timenow,
         has_capability('mod/quiz:ignoretimelimits', $context, null, false));
@@ -92,7 +92,7 @@ if ($unfinishedattempt = quiz_get_user_attempt_unfinished($quiz->id, $USER->id))
 
     // If the attempt is now overdue, deal with that - and pass isonline = false.
     // We want the student notified in this case.
-    $quizobj->create_attempt_object($unfinishedattempt)->handle_if_time_expired(time(), false);
+    $quizobj->create_attempt_object($unfinishedattempt)->handle_if_time_expired(current_time(), false);
 
     $unfinished = $unfinishedattempt->state == quiz_attempt::IN_PROGRESS ||
             $unfinishedattempt->state == quiz_attempt::OVERDUE;

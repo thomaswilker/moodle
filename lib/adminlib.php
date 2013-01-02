@@ -520,7 +520,7 @@ function set_cron_lock($name, $until, $ignorecurrent=false) {
         // read value from db - other processes might have changed it
         $value = $DB->get_field('config', 'value', array('name'=>$name));
 
-        if ($value and $value > time()) {
+        if ($value and $value > current_time()) {
             //lock active
             return false;
         }
@@ -1552,7 +1552,7 @@ abstract class admin_setting {
         // log change
         $log = new stdClass();
         $log->userid       = during_initial_install() ? 0 :$USER->id; // 0 as user id during install
-        $log->timemodified = time();
+        $log->timemodified = current_time();
         $log->plugin       = $this->plugin;
         $log->name         = $name;
         $log->value        = $value;
@@ -3203,7 +3203,7 @@ class admin_setting_sitesetselect extends admin_setting_configselect {
         $record->id           = SITEID;
         $temp                 = $this->name;
         $record->$temp        = $data;
-        $record->timemodified = time();
+        $record->timemodified = current_time();
         // update $SITE
         $SITE->{$this->name} = $data;
         course_get_format($SITE)->update_course_format_options($record);
@@ -3392,7 +3392,7 @@ class admin_setting_sitesetcheckbox extends admin_setting_configcheckbox {
         $record = new stdClass();
         $record->id            = $SITE->id;
         $record->{$this->name} = ($data == '1' ? 1 : 0);
-        $record->timemodified  = time();
+        $record->timemodified  = current_time();
         // update $SITE
         $SITE->{$this->name} = $data;
         course_get_format($SITE)->update_course_format_options($record);
@@ -3455,7 +3455,7 @@ class admin_setting_sitesettext extends admin_setting_configtext {
         $record = new stdClass();
         $record->id            = $SITE->id;
         $record->{$this->name} = $data;
-        $record->timemodified  = time();
+        $record->timemodified  = current_time();
         // update $SITE
         $SITE->{$this->name} = $data;
         course_get_format($SITE)->update_course_format_options($record);
@@ -3501,7 +3501,7 @@ class admin_setting_special_frontpagedesc extends admin_setting {
         $record = new stdClass();
         $record->id            = $SITE->id;
         $record->{$this->name} = $data;
-        $record->timemodified  = time();
+        $record->timemodified  = current_time();
         $SITE->{$this->name} = $data;
         course_get_format($SITE)->update_course_format_options($record);
         $DB->update_record('course', $record);

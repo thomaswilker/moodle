@@ -190,12 +190,12 @@ class enrol_self_plugin extends enrol_plugin {
             return null;
         }
 
-        if ($instance->enrolstartdate != 0 and $instance->enrolstartdate > time()) {
+        if ($instance->enrolstartdate != 0 and $instance->enrolstartdate > current_time()) {
             //TODO: inform that we can not enrol yet
             return null;
         }
 
-        if ($instance->enrolenddate != 0 and $instance->enrolenddate < time()) {
+        if ($instance->enrolenddate != 0 and $instance->enrolenddate < current_time()) {
             //TODO: inform that enrolment is not possible any more
             return null;
         }
@@ -221,7 +221,7 @@ class enrol_self_plugin extends enrol_plugin {
         if ($instance->id == $instanceid) {
             if ($data = $form->get_data()) {
                 $enrol = enrol_get_plugin('self');
-                $timestart = time();
+                $timestart = current_time();
                 if ($instance->enrolperiod) {
                     $timeend = $timestart + $instance->enrolperiod;
                 } else {
@@ -386,7 +386,7 @@ class enrol_self_plugin extends enrol_plugin {
             mtrace('Verifying self-enrolments...');
         }
 
-        $params = array('now'=>time(), 'useractive'=>ENROL_USER_ACTIVE, 'courselevel'=>CONTEXT_COURSE);
+        $params = array('now'=>current_time(), 'useractive'=>ENROL_USER_ACTIVE, 'courselevel'=>CONTEXT_COURSE);
         $coursesql = "";
         if ($courseid) {
             $coursesql = "AND e.courseid = :courseid";

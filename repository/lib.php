@@ -1586,7 +1586,7 @@ abstract class repository {
         global $CFG;
         $dir = make_temp_directory('download/'.get_class($this).'/');
         while (empty($filename) || file_exists($dir.$filename)) {
-            $filename = uniqid('', true).'_'.time().'.tmp';
+            $filename = uniqid('', true).'_'.current_time().'.tmp';
         }
         return $dir.$filename;
     }
@@ -1684,7 +1684,7 @@ abstract class repository {
                 // content for the file that was not actually downloaded
                 $contentexists = false;
             }
-            $now = time();
+            $now = current_time();
             if ($file->get_referencelastsync() + $file->get_referencelifetime() >= $now &&
                         !$file->get_status() &&
                         $contentexists) {
@@ -1835,8 +1835,8 @@ abstract class repository {
             $record = new stdClass();
             $record->name = $params['name'];
             $record->typeid = $repo->id;
-            $record->timecreated  = time();
-            $record->timemodified = time();
+            $record->timecreated  = current_time();
+            $record->timemodified = current_time();
             $record->contextid = $context->id;
             $record->readonly = $readonly;
             $record->userid    = $userid;
@@ -2431,7 +2431,7 @@ abstract class repository {
             return false;
         }
 
-        if (!empty($reference->lastsync) and ($reference->lastsync + $reference->lifetime > time())) {
+        if (!empty($reference->lastsync) and ($reference->lastsync + $reference->lifetime > current_time())) {
             $synchronized[$file->get_id()] = true;
             return true;
         }

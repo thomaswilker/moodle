@@ -63,7 +63,7 @@ class auth_plugin_mnet extends auth_plugin_base {
         }
 
         // check session confirm timeout
-        if ($mnet_session->confirm_timeout < time()) {
+        if ($mnet_session->confirm_timeout < current_time()) {
             throw new mnet_server_exception(2, 'authfail_sessiontimedout');
         }
 
@@ -117,7 +117,7 @@ class auth_plugin_mnet extends auth_plugin_base {
      * Generate a random string for use as an RPC session token.
      */
     function generate_token() {
-        return sha1(str_shuffle('' . mt_rand() . time()));
+        return sha1(str_shuffle('' . mt_rand() . current_time()));
     }
 
     /**
@@ -170,15 +170,15 @@ class auth_plugin_mnet extends auth_plugin_base {
             $mnet_session->username = $USER->username;
             $mnet_session->useragent = sha1($_SERVER['HTTP_USER_AGENT']);
             $mnet_session->token = $this->generate_token();
-            $mnet_session->confirm_timeout = time() + $this->config->rpc_negotiation_timeout;
-            $mnet_session->expires = time() + (integer)ini_get('session.gc_maxlifetime');
+            $mnet_session->confirm_timeout = current_time() + $this->config->rpc_negotiation_timeout;
+            $mnet_session->expires = current_time() + (integer)ini_get('session.gc_maxlifetime');
             $mnet_session->session_id = session_id();
             $mnet_session->id = $DB->insert_record('mnet_session', $mnet_session);
         } else {
             $mnet_session->useragent = sha1($_SERVER['HTTP_USER_AGENT']);
             $mnet_session->token = $this->generate_token();
-            $mnet_session->confirm_timeout = time() + $this->config->rpc_negotiation_timeout;
-            $mnet_session->expires = time() + (integer)ini_get('session.gc_maxlifetime');
+            $mnet_session->confirm_timeout = current_time() + $this->config->rpc_negotiation_timeout;
+            $mnet_session->expires = current_time() + (integer)ini_get('session.gc_maxlifetime');
             $mnet_session->session_id = session_id();
             $DB->update_record('mnet_session', $mnet_session);
         }
@@ -279,7 +279,7 @@ class auth_plugin_mnet extends auth_plugin_base {
             } See MDL-21327   for why this is commented out
             */
             $remoteuser->mnethostid = $remotehost->id;
-            $remoteuser->firstaccess = time(); // First time user in this server, grab it here
+            $remoteuser->firstaccess = current_time(); // First time user in this server, grab it here
             $remoteuser->confirmed = 1;
 
             $remoteuser->id = $DB->insert_record('user', $remoteuser);
@@ -350,7 +350,7 @@ class auth_plugin_mnet extends auth_plugin_base {
 
         $localuser->mnethostid = $remotepeer->id;
         if (empty($localuser->firstaccess)) { // Now firstaccess, grab it here
-            $localuser->firstaccess = time();
+            $localuser->firstaccess = current_time();
         }
 
         $DB->update_record('user', $localuser);
@@ -443,12 +443,12 @@ class auth_plugin_mnet extends auth_plugin_base {
             $mnet_session->useragent = sha1($_SERVER['HTTP_USER_AGENT']);
             $mnet_session->token = $token; // Needed to support simultaneous sessions
                                            // and preserving DB rec uniqueness
-            $mnet_session->confirm_timeout = time();
-            $mnet_session->expires = time() + (integer)$session_gc_maxlifetime;
+            $mnet_session->confirm_timeout = current_time();
+            $mnet_session->expires = current_time() + (integer)$session_gc_maxlifetime;
             $mnet_session->session_id = session_id();
             $mnet_session->id = $DB->insert_record('mnet_session', $mnet_session);
         } else {
-            $mnet_session->expires = time() + (integer)$session_gc_maxlifetime;
+            $mnet_session->expires = current_time() + (integer)$session_gc_maxlifetime;
             $DB->update_record('mnet_session', $mnet_session);
         }
     }
@@ -700,7 +700,7 @@ class auth_plugin_mnet extends auth_plugin_base {
      */
     function keepalive_client() {
         global $CFG, $DB;
-        $cutoff = time() - 300; // TODO - find out what the remote server's session
+        $cutoff = current_time() - 300; // TODO - find out what the remote server's session
                                 // cutoff is, and preempt that
 
         $sql = "
@@ -945,7 +945,7 @@ class auth_plugin_mnet extends auth_plugin_base {
         $random100 = rand(0,100);
         if ($random100 < 10) {     // Approximately 10% of the time.
             // nuke olden sessions
-            $longtime = time() - (1 * 3600 * 24);
+            $longtime = current_time() - (1 * 3600 * 24);
             $DB->delete_records_select('mnet_session', "expires < ?", array($longtime));
         }
     }

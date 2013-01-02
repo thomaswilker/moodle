@@ -1065,7 +1065,7 @@ abstract class restore_dbops {
 
             // Set time created if empty
             if (empty($user->timecreated)) {
-                $user->timecreated = time();
+                $user->timecreated = current_time();
             }
 
             // Done, let's create the user and annotate its id
@@ -1215,7 +1215,7 @@ abstract class restore_dbops {
             if ($user->deleted) {
                 // Note: for DB deleted users email is stored in username field, hence we
                 //       are looking there for emails. See delete_user()
-                // Trim time() from email
+                // Trim current_time() from email
                 $trimemail = preg_replace('/(.*?)\.[0-9]+.?$/', '\\1', $user->username);
                 if ($rec = $DB->get_record_sql("SELECT *
                                                   FROM {user} u
@@ -1299,7 +1299,7 @@ abstract class restore_dbops {
             if ($user->deleted) {
                 // Note: for DB deleted users email is stored in username field, hence we
                 //       are looking there for emails. See delete_user()
-                // Trim time() from email
+                // Trim current_time() from email
                 $trimemail = preg_replace('/(.*?)\.[0-9]+.?$/', '\\1', $user->username);
                 if ($rec = $DB->get_record_sql("SELECT *
                                                   FROM {user} u
@@ -1561,7 +1561,7 @@ abstract class restore_dbops {
         $course->shortname = $shortname;
         $course->category = $category->id;
         $course->sortorder = 0;
-        $course->timecreated  = time();
+        $course->timecreated  = current_time();
         $course->timemodified = $course->timecreated;
         // forcing skeleton courses to be hidden instead of going by $category->visible , until MDL-27790 is resolved.
         $course->visible = 0;

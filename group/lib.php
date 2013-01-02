@@ -76,7 +76,7 @@ function groups_add_member($grouporid, $userorid, $component=null, $itemid=0) {
     $member = new stdClass();
     $member->groupid   = $groupid;
     $member->userid    = $userid;
-    $member->timeadded = time();
+    $member->timeadded = current_time();
     $member->component = '';
     $member->itemid = 0;
 
@@ -195,7 +195,7 @@ function groups_remove_member($grouporid, $userorid) {
     $DB->delete_records('groups_members', array('groupid'=>$groupid, 'userid'=>$userid));
 
     //update group info
-    $DB->set_field('groups', 'timemodified', time(), array('id'=>$groupid));
+    $DB->set_field('groups', 'timemodified', current_time(), array('id'=>$groupid));
 
     //trigger groups events
     $eventdata = new stdClass();
@@ -221,7 +221,7 @@ function groups_create_group($data, $editform = false, $editoroptions = false) {
     $course = $DB->get_record('course', array('id' => $data->courseid), '*', MUST_EXIST);
     $context = context_course::instance($course->id);
 
-    $data->timecreated  = time();
+    $data->timecreated  = current_time();
     $data->timemodified = $data->timecreated;
     $data->name         = trim($data->name);
     if (isset($data->idnumber)) {
@@ -270,7 +270,7 @@ function groups_create_group($data, $editform = false, $editoroptions = false) {
 function groups_create_grouping($data, $editoroptions=null) {
     global $DB;
 
-    $data->timecreated  = time();
+    $data->timecreated  = current_time();
     $data->timemodified = $data->timecreated;
     $data->name         = trim($data->name);
     if (isset($data->idnumber)) {
@@ -346,7 +346,7 @@ function groups_update_group($data, $editform = false, $editoroptions = false) {
 
     $context = context_course::instance($data->courseid);
 
-    $data->timemodified = time();
+    $data->timemodified = current_time();
     $data->name         = trim($data->name);
     if (isset($data->idnumber)) {
         $data->idnumber = trim($data->idnumber);
@@ -383,7 +383,7 @@ function groups_update_group($data, $editform = false, $editoroptions = false) {
  */
 function groups_update_grouping($data, $editoroptions=null) {
     global $DB;
-    $data->timemodified = time();
+    $data->timemodified = current_time();
     $data->name         = trim($data->name);
     if (isset($data->idnumber)) {
         $data->idnumber = trim($data->idnumber);
@@ -724,7 +724,7 @@ function groups_assign_grouping($groupingid, $groupid) {
     $assign = new stdClass();
     $assign->groupingid = $groupingid;
     $assign->groupid    = $groupid;
-    $assign->timeadded  = time();
+    $assign->timeadded  = current_time();
     $DB->insert_record('groupings_groups', $assign);
 
     return true;

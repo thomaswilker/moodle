@@ -355,7 +355,7 @@ class oauth_helper {
             unset($this->timestamp);
             return $timestamp;
         }
-        return time();
+        return current_time();
     }
     /**
      * Generate nonce for oauth request
@@ -432,7 +432,7 @@ abstract class oauth2_client extends curl {
      */
     public function is_logged_in() {
         // Has the token expired?
-        if (isset($this->accesstoken->expires) && time() >= $this->accesstoken->expires) {
+        if (isset($this->accesstoken->expires) && current_time() >= $this->accesstoken->expires) {
             $this->log_out();
             return false;
         }
@@ -517,7 +517,7 @@ abstract class oauth2_client extends curl {
         // Store the token an expiry time.
         $accesstoken = new stdClass;
         $accesstoken->token = $r->access_token;
-        $accesstoken->expires = (time() + ($r->expires_in - 10)); // Expires 10 seconds before actual expiry.
+        $accesstoken->expires = (current_time() + ($r->expires_in - 10)); // Expires 10 seconds before actual expiry.
         $this->store_token($accesstoken);
 
         return true;

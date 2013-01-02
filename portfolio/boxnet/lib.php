@@ -131,7 +131,7 @@ class portfolio_plugin_boxnet extends portfolio_plugin_push_base {
         }
         $token = $this->get_user_config('authtoken', $this->get('user')->id);
         $ctime= $this->get_user_config('authtokenctime', $this->get('user')->id);
-        if (!empty($token) && (($ctime + 60*60*20) > time())) {
+        if (!empty($token) && (($ctime + 60*60*20) > current_time())) {
             $this->authtoken = $token;
             $this->boxclient->auth_token = $token;
             return false;
@@ -148,7 +148,7 @@ class portfolio_plugin_boxnet extends portfolio_plugin_push_base {
         }
         $this->authtoken = $params['auth_token'];
         $this->boxclient->auth_token = $this->authtoken;
-        $this->set_user_config(array('authtoken' => $this->authtoken, 'authtokenctime' => time()), $this->get('user')->id);
+        $this->set_user_config(array('authtoken' => $this->authtoken, 'authtokenctime' => current_time()), $this->get('user')->id);
     }
 
     private function ensure_ticket() {

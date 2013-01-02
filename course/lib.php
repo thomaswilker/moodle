@@ -343,7 +343,7 @@ function print_log($course, $user=0, $date=0, $order="l.time ASC", $page=0, $per
     $totalcount = $logs['totalcount'];
     $count=0;
     $ldcache = array();
-    $tt = getdate(time());
+    $tt = getdate(current_time());
     $today = mktime (0, 0, 0, $tt["mon"], $tt["mday"], $tt["year"]);
 
     $strftimedatetime = get_string("strftimedatetime");
@@ -456,7 +456,7 @@ function print_mnet_log($hostid, $course, $user=0, $date=0, $order="l.time ASC",
     $totalcount = $logs['totalcount'];
     $count=0;
     $ldcache = array();
-    $tt = getdate(time());
+    $tt = getdate(current_time());
     $today = mktime (0, 0, 0, $tt["mon"], $tt["mday"], $tt["year"]);
 
     $strftimedatetime = get_string("strftimedatetime");
@@ -573,13 +573,13 @@ function print_log_csv($course, $user, $date, $order='l.time DESC', $modname,
 
     $count=0;
     $ldcache = array();
-    $tt = getdate(time());
+    $tt = getdate(current_time());
     $today = mktime (0, 0, 0, $tt["mon"], $tt["mday"], $tt["year"]);
 
     $strftimedatetime = get_string("strftimedatetime");
 
     $csvexporter->set_filename('logs', '.txt');
-    $title = array(get_string('savedat').userdate(time(), $strftimedatetime));
+    $title = array(get_string('savedat').userdate(current_time(), $strftimedatetime));
     $csvexporter->add_data($title);
     $csvexporter->add_data($header);
 
@@ -646,13 +646,13 @@ function print_log_xls($course, $user, $date, $order='l.time DESC', $modname,
 
     $count=0;
     $ldcache = array();
-    $tt = getdate(time());
+    $tt = getdate(current_time());
     $today = mktime (0, 0, 0, $tt["mon"], $tt["mday"], $tt["year"]);
 
     $strftimedatetime = get_string("strftimedatetime");
 
     $nroPages = ceil(count($logs)/(EXCELROWS-FIRSTUSEDEXCELROW+1));
-    $filename = 'logs_'.userdate(time(),get_string('backupnameformat', 'langconfig'),99,false);
+    $filename = 'logs_'.userdate(current_time(),get_string('backupnameformat', 'langconfig'),99,false);
     $filename .= '.xls';
 
     $workbook = new MoodleExcelWorkbook('-');
@@ -668,7 +668,7 @@ function print_log_xls($course, $user, $date, $order='l.time DESC', $modname,
         $worksheet[$wsnumber] = $workbook->add_worksheet($sheettitle);
         $worksheet[$wsnumber]->set_column(1, 1, 30);
         $worksheet[$wsnumber]->write_string(0, 0, get_string('savedat').
-                                    userdate(time(), $strftimedatetime));
+                                    userdate(current_time(), $strftimedatetime));
         $col = 0;
         foreach ($headers as $item) {
             $worksheet[$wsnumber]->write(FIRSTUSEDEXCELROW-1,$col,$item,'');
@@ -760,13 +760,13 @@ function print_log_ods($course, $user, $date, $order='l.time DESC', $modname,
 
     $count=0;
     $ldcache = array();
-    $tt = getdate(time());
+    $tt = getdate(current_time());
     $today = mktime (0, 0, 0, $tt["mon"], $tt["mday"], $tt["year"]);
 
     $strftimedatetime = get_string("strftimedatetime");
 
     $nroPages = ceil(count($logs)/(EXCELROWS-FIRSTUSEDEXCELROW+1));
-    $filename = 'logs_'.userdate(time(),get_string('backupnameformat', 'langconfig'),99,false);
+    $filename = 'logs_'.userdate(current_time(),get_string('backupnameformat', 'langconfig'),99,false);
     $filename .= '.ods';
 
     $workbook = new MoodleODSWorkbook('-');
@@ -782,7 +782,7 @@ function print_log_ods($course, $user, $date, $order='l.time DESC', $modname,
         $worksheet[$wsnumber] = $workbook->add_worksheet($sheettitle);
         $worksheet[$wsnumber]->set_column(1, 1, 30);
         $worksheet[$wsnumber]->write_string(0, 0, get_string('savedat').
-                                    userdate(time(), $strftimedatetime));
+                                    userdate(current_time(), $strftimedatetime));
         $col = 0;
         foreach ($headers as $item) {
             $worksheet[$wsnumber]->write(FIRSTUSEDEXCELROW-1,$col,$item,'');
@@ -907,7 +907,7 @@ function print_recent_activity($course) {
 
     $viewfullnames = has_capability('moodle/site:viewfullnames', $context);
 
-    $timestart = round(time() - COURSE_MAX_RECENT_PERIOD, -2); // better db caching for guests - 100 seconds
+    $timestart = round(current_time() - COURSE_MAX_RECENT_PERIOD, -2); // better db caching for guests - 100 seconds
 
     if (!isguestuser()) {
         if (!empty($USER->lastcourseaccess[$course->id])) {
@@ -1431,8 +1431,8 @@ function print_section($course, $section, $mods, $modnamesused, $absolute=false,
             if ($canviewhidden) {
                 $accessiblebutdim = !$mod->visible;
                 if (!empty($CFG->enableavailability)) {
-                    $conditionalhidden = $mod->availablefrom > time() ||
-                        ($mod->availableuntil && $mod->availableuntil < time()) ||
+                    $conditionalhidden = $mod->availablefrom > current_time() ||
+                        ($mod->availableuntil && $mod->availableuntil < current_time()) ||
                         count($mod->conditionsgrade) > 0 ||
                         count($mod->conditionscompletion) > 0;
                 }
@@ -2734,7 +2734,7 @@ function print_remote_host($host, $width="100%") {
 function add_course_module($mod) {
     global $DB;
 
-    $mod->added = time();
+    $mod->added = current_time();
     unset($mod->id);
 
     $cmid = $DB->insert_record("course_modules", $mod);
@@ -3731,7 +3731,7 @@ function can_delete_course($courseid) {
         return false;
     }
 
-    $since = time() - 60*60*24;
+    $since = current_time() - 60*60*24;
 
     $params = array('userid'=>$USER->id, 'url'=>"view.php?id=$courseid", 'since'=>$since);
     $select = "module = 'course' AND action = 'new' AND userid = :userid AND url = :url AND time > :since";
@@ -3803,7 +3803,7 @@ function create_course($data, $editoroptions = NULL) {
         }
     }
 
-    $data->timecreated  = time();
+    $data->timecreated  = current_time();
     $data->timemodified = $data->timecreated;
 
     // place at beginning of any category
@@ -3876,7 +3876,7 @@ function create_course($data, $editoroptions = NULL) {
 function create_course_category($category) {
     global $DB;
 
-    $category->timemodified = time();
+    $category->timemodified = current_time();
     $category->id = $DB->insert_record('course_categories', $category);
     $category = $DB->get_record('course_categories', array('id' => $category->id));
 
@@ -3900,7 +3900,7 @@ function create_course_category($category) {
 function update_course($data, $editoroptions = NULL) {
     global $CFG, $DB;
 
-    $data->timemodified = time();
+    $data->timemodified = current_time();
 
     $oldcourse = course_get_format($data->id)->get_course();
     $context   = context_course::instance($oldcourse->id);

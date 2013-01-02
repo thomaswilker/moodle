@@ -60,7 +60,7 @@ function book_get_extra_capabilities() {
 function book_add_instance($data, $mform) {
     global $DB;
 
-    $data->timecreated = time();
+    $data->timecreated = current_time();
     $data->timemodified = $data->timecreated;
     if (!isset($data->customtitles)) {
         $data->customtitles = 0;
@@ -79,7 +79,7 @@ function book_add_instance($data, $mform) {
 function book_update_instance($data, $mform) {
     global $DB;
 
-    $data->timemodified = time();
+    $data->timemodified = current_time();
     $data->id = $data->instance;
     if (!isset($data->customtitles)) {
         $data->customtitles = 0;

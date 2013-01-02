@@ -76,7 +76,7 @@ class block_section_links extends block_base {
         $context = context_course::instance($course->id);
 
         if ($course->format == 'weeks' or $course->format == 'weekscss') {
-            $highlight = ceil((time()-$course->startdate)/604800);
+            $highlight = ceil((current_time()-$course->startdate)/604800);
             $linktext = get_string('jumptocurrentweek', 'block_section_links');
             $sectionname = 'week';
         }

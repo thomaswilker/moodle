@@ -91,7 +91,7 @@ if (!empty($user)) {
             throw new moodle_exception('usernotallowed', 'webservice', '', $serviceshortname);
         }
 
-        if (!empty($authoriseduser->validuntil) and $authoriseduser->validuntil < time()) {
+        if (!empty($authoriseduser->validuntil) and $authoriseduser->validuntil < current_time()) {
             throw new moodle_exception('invalidtimedtoken', 'webservice');
         }
 
@@ -127,7 +127,7 @@ if (!empty($user)) {
         //remove token if no valid anymore
         //Also delete this wrong token (similar logic to the web service servers
         //    /webservice/lib.php/webservice_server::authenticate_by_token())
-        if (!empty($token->validuntil) and $token->validuntil < time()) {
+        if (!empty($token->validuntil) and $token->validuntil < current_time()) {
             $DB->delete_records('external_tokens', array('token'=>$token->token, 'tokentype'=> EXTERNAL_TOKEN_PERMANENT));
             $unsettoken = true;
         }
@@ -158,7 +158,7 @@ if (!empty($user)) {
             $token->tokentype = EXTERNAL_TOKEN_PERMANENT;
             $token->contextid = context_system::instance()->id;
             $token->creatorid = $user->id;
-            $token->timecreated = time();
+            $token->timecreated = current_time();
             $token->externalserviceid = $service_record->id;
             $tokenid = $DB->insert_record('external_tokens', $token);
             add_to_log(SITEID, 'webservice', 'automatically create user token', '' , 'User ID: ' . $user->id);
@@ -169,7 +169,7 @@ if (!empty($user)) {
     }
 
     // log token access
-    $DB->set_field('external_tokens', 'lastaccess', time(), array('id'=>$token->id));
+    $DB->set_field('external_tokens', 'lastaccess', current_time(), array('id'=>$token->id));
 
     add_to_log(SITEID, 'webservice', 'sending requested user token', '' , 'User ID: ' . $user->id);
 

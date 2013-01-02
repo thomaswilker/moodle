@@ -54,7 +54,7 @@
 
 /// Submit any new data if there is any
     if (data_submitted() && is_enrolled($context, NULL, 'mod/choice:choose') && confirm_sesskey()) {
-        $timenow = time();
+        $timenow = current_time();
         if (has_capability('mod/choice:deleteresponses', $context)) {
             if ($action == 'delete') { //some responses need to be deleted
                 choice_delete_responses($attemptids, $choice, $cm, $course); //delete responses.
@@ -98,7 +98,7 @@
         echo $OUTPUT->box(format_module_intro('choice', $choice, $cm->id), 'generalbox', 'intro');
     }
 
-    $timenow = time();
+    $timenow = current_time();
     $current = false;  // Initialise for later
     //if user has already made a selection, and they are not allowed to update it or if choice is not open, show their selected answer.
     if (isloggedin() && ($current = $DB->get_record('choice_answers', array('choiceid' => $choice->id, 'userid' => $USER->id))) &&

@@ -56,7 +56,7 @@ function lesson_save_question_options($question, $lesson) {
     }
     $manager = lesson_page_type_manager::get($lesson);
 
-    $timenow = time();
+    $timenow = current_time();
     $result = new stdClass();
     switch ($question->qtype) {
         case LESSON_PAGE_SHORTANSWER:
@@ -306,7 +306,7 @@ class qformat_default {
         global $DB, $OUTPUT;
 
     /// Processes a given file.  There's probably little need to change this
-        $timenow = time();
+        $timenow = current_time();
 
         if (! $lines = $this->readdata($filename)) {
             echo $OUTPUT->notification("File could not be read, or was empty");

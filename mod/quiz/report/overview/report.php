@@ -329,7 +329,7 @@ class quiz_overview_report extends quiz_attempts_report {
                 $qqr->questionusageid = $quba->get_id();
                 $qqr->slot = $slot;
                 $qqr->regraded = empty($dryrun);
-                $qqr->timemodified = time();
+                $qqr->timemodified = current_time();
                 $DB->insert_record('quiz_overview_regrades', $qqr, false);
             }
         }

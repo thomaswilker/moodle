@@ -160,7 +160,7 @@ if ($usernew = $userform->get_data()) {
         $authplugin = get_auth_plugin($usernew->auth);
     }
 
-    $usernew->timemodified = time();
+    $usernew->timemodified = current_time();
 
     if ($usernew->id == -1) {
         //TODO check out if it makes sense to create account with this auth plugin and what to do with the password
@@ -168,7 +168,7 @@ if ($usernew = $userform->get_data()) {
         $usernew = file_postupdate_standard_editor($usernew, 'description', $editoroptions, null, 'user', 'profile', null);
         $usernew->mnethostid = $CFG->mnet_localhost_id; // always local user
         $usernew->confirmed  = 1;
-        $usernew->timecreated = time();
+        $usernew->timecreated = current_time();
         $usernew->password = hash_internal_user_password($usernew->newpassword);
         $usernew->id = $DB->insert_record('user', $usernew);
         $usercreated = true;

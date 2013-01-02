@@ -281,7 +281,7 @@ function authorize_verify_account() {
     $order->status = AN_STATUS_NONE;
     $order->settletime = 0;
     $order->transid = 0;
-    $order->timecreated = time();
+    $order->timecreated = current_time();
     $order->amount = '0.01';
     $order->currency = 'USD';
 

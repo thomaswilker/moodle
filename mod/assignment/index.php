@@ -38,7 +38,7 @@ if (!$cms = get_coursemodules_in_course('assignment', $course->id, 'cm.idnumber,
 
 $usesections = course_format_uses_sections($course->format);
 
-$timenow = time();
+$timenow = current_time();
 
 $table = new html_table();
 

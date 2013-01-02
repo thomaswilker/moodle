@@ -122,7 +122,7 @@ class lesson_page_type_endofbranch extends lesson_page {
             $answer = new stdClass;
         }
 
-        $answer->timemodified = time();;
+        $answer->timemodified = current_time();;
         if (isset($properties->jumpto[0])) {
             $answer->jumpto = $properties->jumpto[0];
         }
@@ -184,7 +184,7 @@ class lesson_add_page_form_endofbranch extends lesson_add_page_form_base {
 
         // first get the preceeding page
 
-        $timenow = time();
+        $timenow = current_time();
 
         // the new page is not the first page (end of branch always comes after an existing page)
         if (!$page = $DB->get_record("lesson_pages", array("id" => $pageid))) {

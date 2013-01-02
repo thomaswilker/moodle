@@ -58,7 +58,7 @@ if (substr($parts, -3) === '.js') {
 if (strpos($parts, '/-1/') === false and (!empty($_SERVER['HTTP_IF_NONE_MATCH']) || !empty($_SERVER['HTTP_IF_MODIFIED_SINCE']))) {
     $lifetime = 60*60*24*360; // 1 year, we do not change YUI versions often, there are a few custom yui modules
     header('HTTP/1.1 304 Not Modified');
-    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $lifetime) .' GMT');
+    header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + $lifetime) .' GMT');
     header('Cache-Control: public, max-age='.$lifetime);
     header('Content-Type: '.$mimetype);
     header('Etag: '.$etag);
@@ -160,7 +160,7 @@ foreach ($parts as $part) {
 }
 
 if ($lastmodified == 0) {
-    $lastmodified = time();
+    $lastmodified = current_time();
 }
 
 if ($cache) {
@@ -182,7 +182,7 @@ function combo_send_cached($content, $mimetype, $etag, $lastmodified) {
 
     header('Content-Disposition: inline; filename="combo"');
     header('Last-Modified: '. gmdate('D, d M Y H:i:s', $lastmodified) .' GMT');
-    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $lifetime) .' GMT');
+    header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + $lifetime) .' GMT');
     header('Pragma: ');
     header('Cache-Control: public, max-age='.$lifetime);
     header('Accept-Ranges: none');
@@ -203,8 +203,8 @@ function combo_send_cached($content, $mimetype, $etag, $lastmodified) {
  */
 function combo_send_uncached($content, $mimetype) {
     header('Content-Disposition: inline; filename="combo"');
-    header('Last-Modified: '. gmdate('D, d M Y H:i:s', time()) .' GMT');
-    header('Expires: '. gmdate('D, d M Y H:i:s', time() + 2) .' GMT');
+    header('Last-Modified: '. gmdate('D, d M Y H:i:s', current_time()) .' GMT');
+    header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + 2) .' GMT');
     header('Pragma: ');
     header('Accept-Ranges: none');
     header('Content-Type: '.$mimetype);

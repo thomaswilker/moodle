@@ -898,7 +898,7 @@ class stored_file {
         if (!$this->is_external_file()) {
             return;
         }
-        $now = time();
+        $now = current_time();
         if ($contenthash != $this->file_record->contenthash) {
             $oldcontenthash = $this->file_record->contenthash;
         }

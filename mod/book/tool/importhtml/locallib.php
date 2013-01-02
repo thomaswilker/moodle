@@ -73,8 +73,8 @@ function toolbook_importhtml_import_chapters($package, $type, $book, $context, $
                 $chapter->title         = toolbook_importhtml_parse_title($htmlcontent, $chapterfile->pathname);
                 $chapter->contentformat = FORMAT_HTML;
                 $chapter->hidden        = 0;
-                $chapter->timecreated   = time();
-                $chapter->timemodified  = time();
+                $chapter->timecreated   = current_time();
+                $chapter->timemodified  = current_time();
                 if (preg_match('/_sub(\/|\.htm)/i', $chapter->importsrc)) { // If filename or directory ends with *_sub treat as subchapters
                     $chapter->subchapter = 1;
                 } else {

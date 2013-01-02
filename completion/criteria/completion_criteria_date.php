@@ -66,7 +66,7 @@ class completion_criteria_date extends completion_criteria {
             $mform->setDefault('criteria_date', 1);
             $mform->setDefault('criteria_date_value', $this->timeend);
         } else {
-            $mform->setDefault('criteria_date_value', time() + 3600 * 24);
+            $mform->setDefault('criteria_date_value', current_time() + 3600 * 24);
         }
     }
 
@@ -92,7 +92,7 @@ class completion_criteria_date extends completion_criteria {
      */
     public function review($completion, $mark = true) {
         // If current time is past timeend
-        if ($this->timeend && $this->timeend < time()) {
+        if ($this->timeend && $this->timeend < current_time()) {
             if ($mark) {
                 $completion->mark_complete();
             }
@@ -177,7 +177,7 @@ class completion_criteria_date extends completion_criteria {
         ';
 
         // Loop through completions, and mark as complete
-        $rs = $DB->get_recordset_sql($sql, array(time()));
+        $rs = $DB->get_recordset_sql($sql, array(current_time()));
         foreach ($rs as $record) {
             $completion = new completion_criteria_completion((array) $record, DATA_OBJECT_FETCH_BY_KEY);
             $completion->mark_complete($record->timeend);

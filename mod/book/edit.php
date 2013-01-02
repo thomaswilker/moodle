@@ -80,8 +80,8 @@ if ($mform->is_cancelled()) {
         // adding new chapter
         $data->bookid        = $book->id;
         $data->hidden        = 0;
-        $data->timecreated   = time();
-        $data->timemodified  = time();
+        $data->timecreated   = current_time();
+        $data->timemodified  = current_time();
         $data->importsrc     = '';
         $data->content       = '';          // updated later
         $data->contentformat = FORMAT_HTML; // updated later

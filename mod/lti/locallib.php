@@ -880,7 +880,7 @@ function lti_prepare_type_for_save($type, $config) {
     $type->forcessl = !empty($config->lti_forcessl) ? $config->lti_forcessl : 0;
     $config->lti_forcessl = $type->forcessl;
 
-    $type->timemodified = time();
+    $type->timemodified = current_time();
 
     unset ($config->lti_typename);
     unset ($config->lti_toolurl);
@@ -915,7 +915,7 @@ function lti_add_type($type, $config) {
     }
 
     if (!isset($type->timecreated)) {
-        $type->timecreated = time();
+        $type->timecreated = current_time();
     }
 
     if (!isset($type->createdby)) {

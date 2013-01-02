@@ -146,7 +146,7 @@ if ($chapter) {
     <td><?php echo fullname($USER, true) ?></td>
     </tr><tr>
     <td><?php echo get_string('printdate', 'booktool_print') ?>:</td>
-    <td><?php echo userdate(time()) ?></td>
+    <td><?php echo userdate(current_time()) ?></td>
     </tr>
     </table></div>
 

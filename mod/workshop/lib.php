@@ -74,7 +74,7 @@ function workshop_add_instance(stdclass $workshop) {
     require_once(dirname(__FILE__) . '/locallib.php');
 
     $workshop->phase                 = workshop::PHASE_SETUP;
-    $workshop->timecreated           = time();
+    $workshop->timecreated           = current_time();
     $workshop->timemodified          = $workshop->timecreated;
     $workshop->useexamples           = (int)!empty($workshop->useexamples);
     $workshop->usepeerassessment     = (int)!empty($workshop->usepeerassessment);
@@ -135,7 +135,7 @@ function workshop_update_instance(stdclass $workshop) {
     global $CFG, $DB;
     require_once(dirname(__FILE__) . '/locallib.php');
 
-    $workshop->timemodified          = time();
+    $workshop->timemodified          = current_time();
     $workshop->id                    = $workshop->instance;
     $workshop->useexamples           = (int)!empty($workshop->useexamples);
     $workshop->usepeerassessment     = (int)!empty($workshop->usepeerassessment);
@@ -929,7 +929,7 @@ function workshop_print_recent_mod_activity($activity, $courseid, $detail, $modn
 function workshop_cron() {
     global $CFG, $DB;
 
-    $now = time();
+    $now = current_time();
 
     mtrace(' processing workshop subplugins ...');
     cron_execute_plugin_type('workshopallocation', 'workshop allocation methods');

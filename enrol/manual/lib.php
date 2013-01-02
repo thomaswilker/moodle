@@ -227,7 +227,7 @@ class enrol_manual_plugin extends enrol_plugin {
         if ($startdate > 0) {
             $startdateoptions[2] = get_string('coursestart') . ' (' . userdate($startdate, $timeformat) . ')';
         }
-        $today = time();
+        $today = current_time();
         $today = make_timestamp(date('Y', $today), date('m', $today), date('d', $today), 0, 0, 0);
         $startdateoptions[3] = get_string('today') . ' (' . userdate($today, $timeformat) . ')' ;
         $defaultduration = $instance->enrolperiod > 0 ? $instance->enrolperiod / 86400 : '';
@@ -305,7 +305,7 @@ class enrol_manual_plugin extends enrol_plugin {
             mtrace('Verifying manual enrolment expiration...');
         }
 
-        $params = array('now'=>time(), 'useractive'=>ENROL_USER_ACTIVE, 'courselevel'=>CONTEXT_COURSE);
+        $params = array('now'=>current_time(), 'useractive'=>ENROL_USER_ACTIVE, 'courselevel'=>CONTEXT_COURSE);
         $coursesql = "";
         if ($courseid) {
             $coursesql = "AND e.courseid = :courseid";

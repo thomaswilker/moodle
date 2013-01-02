@@ -73,7 +73,7 @@
             $cachedfilelastmodified = filemtime($cachedfilepath);
         }
         //if the cache is more than 60 seconds old and there's new stuff
-        $dontrecheckcutoff = time()-60;
+        $dontrecheckcutoff = current_time()-60;
         if ( $dontrecheckcutoff > $cachedfilelastmodified && glossary_rss_newstuff($glossary, $cachedfilelastmodified)) {
             if (!$recs = $DB->get_records_sql($sql, array(), 0, $glossary->rssarticles)) {
                 return null;

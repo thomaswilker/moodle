@@ -636,7 +636,7 @@ class core_media_player_mp3 extends core_media_player {
 
         // Unique id even across different http requests made at the same time
         // (for AJAX, iframes).
-        $id = 'core_media_mp3_' . md5(time() . '_' . rand());
+        $id = 'core_media_mp3_' . md5(current_time() . '_' . rand());
 
         // When Flash or JavaScript are not available only the fallback is displayed,
         // using span not div because players are inline elements.
@@ -678,7 +678,7 @@ class core_media_player_flv extends core_media_player {
 
         // Unique id even across different http requests made at the same time
         // (for AJAX, iframes).
-        $id = 'core_media_flv_' . md5(time() . '_' . rand());
+        $id = 'core_media_flv_' . md5(current_time() . '_' . rand());
 
         // Compute width and height.
         $autosize = false;
@@ -1024,7 +1024,7 @@ class core_media_player_html5video extends core_media_player {
         $idtag = '';
         if ($oldandroid) {
             // Old Android does not support 'controls' option.
-            $id = 'core_media_html5v_' . md5(time() . '_' . rand());
+            $id = 'core_media_html5v_' . md5(current_time() . '_' . rand());
             $idtag = 'id="' . $id . '"';
             $sillyscript = <<<OET
 <script type="text/javascript">

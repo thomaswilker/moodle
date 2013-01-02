@@ -332,7 +332,7 @@ class repository_equella extends repository {
      * @return string
      */
     private static function getssotoken_raw($username, $shareid, $sharedsecret) {
-        $time = time() . '000';
+        $time = current_time() . '000';
         return urlencode($username)
             . ':'
             . $shareid

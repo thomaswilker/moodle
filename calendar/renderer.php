@@ -249,7 +249,7 @@ class core_calendar_renderer extends plugin_renderer_base {
                 $event = new calendar_event($event);
                 $event->calendarcourseid = $calendar->courseid;
                 if ($event->timestart >= $calendar->timestamp_today() && $event->timestart <= $calendar->timestamp_tomorrow()-1) {  // Print it now
-                    $event->time = calendar_format_event_time($event, time(), null, false, $calendar->timestamp_today());
+                    $event->time = calendar_format_event_time($event, current_time(), null, false, $calendar->timestamp_today());
                     $output .= $this->event($event);
                 } else {                                                                 // Save this for later
                     $underway[] = $event;
@@ -260,7 +260,7 @@ class core_calendar_renderer extends plugin_renderer_base {
             if (!empty($underway)) {
                 $output .= $this->output->heading(get_string('spanningevents', 'calendar'), 3);
                 foreach ($underway as $event) {
-                    $event->time = calendar_format_event_time($event, time(), null, false, $calendar->timestamp_today());
+                    $event->time = calendar_format_event_time($event, current_time(), null, false, $calendar->timestamp_today());
                     $output .= $this->event($event);
                 }
             }
@@ -363,7 +363,7 @@ class core_calendar_renderer extends plugin_renderer_base {
             $returnurl = $this->page->url;
         }
 
-        $date = usergetdate(time());
+        $date = usergetdate(current_time());
 
         $display = new stdClass;
         $display->minwday = get_user_preferences('calendar_startwday', calendar_get_starting_weekday());

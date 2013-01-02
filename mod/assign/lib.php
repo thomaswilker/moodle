@@ -242,7 +242,7 @@ function assign_get_coursemodule_info($coursemodule) {
     $result = new cached_cm_info();
     $result->name = $assignment->name;
     if ($coursemodule->showdescription) {
-        if ($assignment->alwaysshowdescription || time() > $assignment->allowsubmissionsfromdate) {
+        if ($assignment->alwaysshowdescription || current_time() > $assignment->allowsubmissionsfromdate) {
             // Convert intro to html. Do not filter cached version, filters run at display time.
             $result->content = format_module_intro('assign', $assignment, $coursemodule->id, false);
         }
@@ -287,7 +287,7 @@ function assign_print_overview($courses, &$htmlarray) {
 
     // Do assignment_base::isopen() here without loading the whole thing for speed
     foreach ($assignments as $key => $assignment) {
-        $time = time();
+        $time = current_time();
         $isopen = false;
         if ($assignment->duedate) {
             $duedate = false;

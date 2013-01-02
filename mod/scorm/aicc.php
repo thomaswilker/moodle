@@ -384,7 +384,7 @@ if (!empty($command)) {
                             // Add session_time to total_time
                             $value = scorm_add_time($track->value, $scormsession->sessiontime);
                             $track->value = $value;
-                            $track->timemodified = time();
+                            $track->timemodified = current_time();
                             $DB->update_record('scorm_scoes_track', $track);
                         } else {
                             $track = new stdClass();
@@ -394,7 +394,7 @@ if (!empty($command)) {
                             $track->element = 'cmi.core.total_time';
                             $track->value = $scormsession->sessiontime;
                             $track->attempt = $attempt;
-                            $track->timemodified = time();
+                            $track->timemodified = current_time();
                             $id = $DB->insert_record('scorm_scoes_track', $track);
                         }
                         scorm_update_grades($scorm, $aiccuser->id);
@@ -423,7 +423,7 @@ if (!empty($command)) {
 if (empty($cfg_scorm->allowaicchacp)) {
     $SESSION->scorm = $scormsession;
 } else {
-    $scormsession->timemodified = time();
+    $scormsession->timemodified = current_time();
     $DB->update_record('scorm_aicc_session', $scormsession);
 }
 

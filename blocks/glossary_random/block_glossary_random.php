@@ -37,7 +37,7 @@ class block_glossary_random extends block_base {
         }
 
         //check if it's time to put a new entry in cache
-        if (time() > $this->config->nexttime) {
+        if (current_time() > $this->config->nexttime) {
 
             // place glossary concept and definition in $pref->cache
             if (!$numberofentries = $DB->count_records('glossary_entries',
@@ -102,7 +102,7 @@ class block_glossary_random extends block_base {
                 $entry->definition = file_rewrite_pluginfile_urls($entry->definition, 'pluginfile.php', $glossaryctx->id, 'mod_glossary', 'entry', $entry->id);
                 $text .= format_text($entry->definition, $entry->definitionformat, $options);
 
-                $this->config->nexttime = usergetmidnight(time()) + DAYSECS * $this->config->refresh;
+                $this->config->nexttime = usergetmidnight(current_time()) + DAYSECS * $this->config->refresh;
                 $this->config->previous = $i;
 
             } else {

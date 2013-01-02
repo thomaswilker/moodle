@@ -281,7 +281,7 @@ class auth_plugin_db extends auth_plugin_base {
                         $updateuser = new stdClass();
                         $updateuser->id   = $user->id;
                         $updateuser->suspended = 1;
-                        $updateuser->timemodified = time();
+                        $updateuser->timemodified = current_time();
                         $DB->update_record('user', $updateuser);
                         if ($verbose) {
                             mtrace("\t".get_string('auth_dbsuspenduser', 'auth_db', array('name'=>$user->username, 'id'=>$user->id)));
@@ -400,7 +400,7 @@ class auth_plugin_db extends auth_plugin_base {
                 if (empty($user->lang)) {
                     $user->lang = $CFG->lang;
                 }
-                $user->timecreated = time();
+                $user->timecreated = current_time();
                 $user->timemodified = $user->timecreated;
                 if ($collision = $DB->get_record_select('user', "username = :username AND mnethostid = :mnethostid AND auth <> :auth", array('username'=>$user->username, 'mnethostid'=>$CFG->mnet_localhost_id, 'auth'=>$this->authtype), 'id,username,auth')) {
                     if ($verbose) {
@@ -548,7 +548,7 @@ class auth_plugin_db extends auth_plugin_base {
             }
         }
         if ($updated) {
-            $DB->set_field('user', 'timemodified', time(), array('id'=>$userid));
+            $DB->set_field('user', 'timemodified', current_time(), array('id'=>$userid));
         }
         return $DB->get_record('user', array('id'=>$userid, 'deleted'=>0));
     }

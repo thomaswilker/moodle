@@ -95,7 +95,7 @@ if ($pick) {
     } else {
         require_sesskey();
         $targetcontroller->update_definition($sourcecontroller->get_definition_copy($targetcontroller));
-        $DB->set_field('grading_definitions', 'timecopied', time(), array('id' => $definition->id));
+        $DB->set_field('grading_definitions', 'timecopied', current_time(), array('id' => $definition->id));
         redirect(new moodle_url('/grade/grading/manage.php', array('areaid' => $targetid)));
     }
 }

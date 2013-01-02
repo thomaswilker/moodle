@@ -562,7 +562,7 @@ class auth_plugin_ldap extends auth_plugin_base {
                 }
                 $DB->set_field('user', 'confirmed', 1, array('id'=>$user->id));
                 if ($user->firstaccess == 0) {
-                    $DB->set_field('user', 'firstaccess', time(), array('id'=>$user->id));
+                    $DB->set_field('user', 'firstaccess', current_time(), array('id'=>$user->id));
                 }
                 return AUTH_CONFIRM_OK;
             }
@@ -596,7 +596,7 @@ class auth_plugin_ldap extends auth_plugin_base {
                 if (!empty($info[$this->config->expireattr][0])) {
                     $expiretime = $this->ldap_expirationtime2unix($info[$this->config->expireattr][0], $ldapconnection, $user_dn);
                     if ($expiretime != 0) {
-                        $now = time();
+                        $now = current_time();
                         if ($expiretime > $now) {
                             $result = ceil(($expiretime - $now) / DAYSECS);
                         } else {
@@ -861,7 +861,7 @@ class auth_plugin_ldap extends auth_plugin_base {
                 $user = $this->get_userinfo_asobj($user->username);
 
                 // Prep a few params
-                $user->modified   = time();
+                $user->modified   = current_time();
                 $user->confirmed  = 1;
                 $user->auth       = $this->authtype;
                 $user->mnethostid = $CFG->mnet_localhost_id;
@@ -1272,7 +1272,7 @@ class auth_plugin_ldap extends auth_plugin_base {
                     if (!empty($info[$this->config->expireattr][0])) {
                         // Set expiration time only if passwordExpirationInterval is defined
                         if (!empty($info['passwordexpirationinterval'][0])) {
-                           $expirationtime = time() + $info['passwordexpirationinterval'][0];
+                           $expirationtime = current_time() + $info['passwordexpirationinterval'][0];
                            $ldapexpirationtime = $this->ldap_unix2expirationtime($expirationtime);
                            $newattrs['passwordExpirationTime'] = $ldapexpirationtime;
                         }

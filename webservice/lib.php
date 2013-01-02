@@ -70,7 +70,7 @@ class webservice {
         }
 
         // Validate token date
-        if ($token->validuntil and $token->validuntil < time()) {
+        if ($token->validuntil and $token->validuntil < current_time()) {
             add_to_log(SITEID, 'webservice', get_string('tokenauthlog', 'webservice'), '', get_string('invalidtimedtoken', 'webservice'), 0);
             $DB->delete_records('external_tokens', array('token' => $token->token));
             throw new webservice_access_exception('Invalid token - token expired - check validuntil time for the token');
@@ -130,7 +130,7 @@ class webservice {
                         . $service->name . '\'s allowed users administration page.');
             }
 
-            if (!empty($authoriseduser->validuntil) and $authoriseduser->validuntil < time()) {
+            if (!empty($authoriseduser->validuntil) and $authoriseduser->validuntil < current_time()) {
                 throw new webservice_access_exception('Invalid service - service expired - check validuntil time for this allowed user');
             }
 
@@ -169,7 +169,7 @@ class webservice {
         }
 
         // log token access
-        $DB->set_field('external_tokens', 'lastaccess', time(), array('id' => $token->id));
+        $DB->set_field('external_tokens', 'lastaccess', current_time(), array('id' => $token->id));
 
         return array('user' => $user, 'token' => $token, 'service' => $service);
     }
@@ -181,7 +181,7 @@ class webservice {
      */
     public function add_ws_authorised_user($user) {
         global $DB;
-        $user->timecreated = time();
+        $user->timecreated = current_time();
         $DB->insert_record('external_services_users', $user);
     }
 
@@ -300,7 +300,7 @@ class webservice {
                     // TODO MDL-31190 find a way to get the context - UPDATE FOLLOWING LINE
                     $newtoken->contextid = context_system::instance()->id;
                     $newtoken->creatorid = $userid;
-                    $newtoken->timecreated = time();
+                    $newtoken->timecreated = current_time();
 
                     $DB->insert_record('external_tokens', $newtoken);
                 }
@@ -642,7 +642,7 @@ class webservice {
      */
     public function add_external_service($service) {
         global $DB;
-        $service->timecreated = time();
+        $service->timecreated = current_time();
         $serviceid = $DB->insert_record('external_services', $service);
         return $serviceid;
     }
@@ -655,7 +655,7 @@ class webservice {
      */
     public function update_external_service($service) {
         global $DB;
-        $service->timemodified = time();
+        $service->timemodified = current_time();
         $DB->update_record('external_services', $service);
     }
 
@@ -930,7 +930,7 @@ abstract class webservice_server implements webservice_server_interface {
             throw new moodle_exception('invalidtoken', 'webservice');
         }
 
-        if ($token->validuntil and $token->validuntil < time()) {
+        if ($token->validuntil and $token->validuntil < current_time()) {
             $DB->delete_records('external_tokens', array('token'=>$this->token, 'tokentype'=>$tokentype));
             throw new webservice_access_exception('Invalid token - token expired - check validuntil time for the token');
         }
@@ -955,7 +955,7 @@ abstract class webservice_server implements webservice_server_interface {
         $user = $DB->get_record('user', array('id'=>$token->userid), '*', MUST_EXIST);
 
         // log token access
-        $DB->set_field('external_tokens', 'lastaccess', time(), array('id'=>$token->id));
+        $DB->set_field('external_tokens', 'lastaccess', current_time(), array('id'=>$token->id));
 
         return $user;
 
@@ -1112,7 +1112,7 @@ abstract class webservice_zend_server extends webservice_server {
                   JOIN {external_services_users} su ON (su.externalserviceid = s.id AND su.userid = :userid)
                  WHERE s.enabled = 1 AND (su.validuntil IS NULL OR su.validuntil < :now) $wscond2";
 
-        $params = array_merge($params, array('userid'=>$USER->id, 'now'=>time()));
+        $params = array_merge($params, array('userid'=>$USER->id, 'now'=>current_time()));
 
         $serviceids = array();
         $rs = $DB->get_recordset_sql($sql, $params);
@@ -1613,7 +1613,7 @@ abstract class webservice_base_server extends webservice_server {
                   JOIN {external_services_functions} sf ON (sf.externalserviceid = s.id AND s.restrictedusers = 1 AND sf.functionname = :name2)
                   JOIN {external_services_users} su ON (su.externalserviceid = s.id AND su.userid = :userid)
                  WHERE s.enabled = 1 AND (su.validuntil IS NULL OR su.validuntil < :now) $wscond2";
-        $params = array_merge($params, array('userid'=>$USER->id, 'name1'=>$function->name, 'name2'=>$function->name, 'now'=>time()));
+        $params = array_merge($params, array('userid'=>$USER->id, 'name1'=>$function->name, 'name2'=>$function->name, 'now'=>current_time()));
 
         $rs = $DB->get_recordset_sql($sql, $params);
         // now make sure user may access at least one service

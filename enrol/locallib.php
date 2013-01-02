@@ -809,7 +809,7 @@ class course_enrolment_manager {
         $roles = $this->get_all_roles();
 
         $context    = $this->get_context();
-        $now = time();
+        $now = current_time();
         $extrafields = get_extra_user_fields($context);
 
         $users = array();
@@ -865,7 +865,7 @@ class course_enrolment_manager {
         $pageurl = $manager->get_moodlepage()->url;
         $users = $this->get_users($sort, $direction, $page, $perpage);
 
-        $now = time();
+        $now = current_time();
         $straddgroup = get_string('addgroup', 'group');
         $strunenrol = get_string('unenrol', 'enrol');
         $stredit = get_string('edit');

@@ -64,7 +64,7 @@ $USER->description = '';
 $PAGE->set_course($course);
 
 // force deleting of timed out users if there is a silence in room or just entering
-if ((time() - $chat_lasttime) > $CFG->chat_old_ping) {
+if ((current_time() - $chat_lasttime) > $CFG->chat_old_ping) {
     // must be done before chat_get_latest_message!!!
     chat_delete_old_users();
 }
@@ -124,7 +124,7 @@ $refreshurl = "{$CFG->wwwroot}/mod/chat/gui_header_js/jsupdated.php?chat_sid=$ch
     for ($n=0; $n <= CHAT_MAX_CLIENT_UPDATES; $n++) {
 
         // ping first so we can later shortcut as needed.
-        $chatuser->lastping = time();
+        $chatuser->lastping = current_time();
         $DB->set_field('chat_users', 'lastping', $chatuser->lastping, array('id'=>$chatuser->id));
 
         if ($message = chat_get_latest_message($chatuser->chatid, $chatuser->groupid)) {
@@ -139,7 +139,7 @@ $refreshurl = "{$CFG->wwwroot}/mod/chat/gui_header_js/jsupdated.php?chat_sid=$ch
             continue;
         }
 
-        $timenow    = time();
+        $timenow    = current_time();
 
         $params = array('groupid'=>$chatuser->groupid, 'lastid'=>$chat_lastid, 'lasttime'=>$chat_lasttime, 'chatid'=>$chatuser->chatid);
         $groupselect = $chatuser->groupid ? " AND (groupid=:groupid OR groupid=0) " : "";

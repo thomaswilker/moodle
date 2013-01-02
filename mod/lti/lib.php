@@ -83,7 +83,7 @@ function lti_add_instance($lti, $mform) {
     global $DB, $CFG;
     require_once($CFG->dirroot.'/mod/lti/locallib.php');
 
-    $lti->timecreated = time();
+    $lti->timecreated = current_time();
     $lti->timemodified = $lti->timecreated;
     $lti->servicesalt = uniqid('', true);
 
@@ -116,7 +116,7 @@ function lti_update_instance($lti, $mform) {
     global $DB, $CFG;
     require_once($CFG->dirroot.'/mod/lti/locallib.php');
 
-    $lti->timemodified = time();
+    $lti->timemodified = current_time();
     $lti->id = $lti->instance;
 
     if (!isset($lti->showtitlelaunch)) {

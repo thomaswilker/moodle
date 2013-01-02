@@ -85,7 +85,7 @@ $starttime = microtime();
 cron_setup_user();
 
 /// Start output log
-$timenow = time();
+$timenow = current_time();
 
 mtrace("Server Time: ".date('r',$timenow)."\n\n");
 

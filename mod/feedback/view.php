@@ -257,7 +257,7 @@ if (has_capability('mod/feedback:mapcourse', $context)) {
 if ($feedback_complete_cap) {
     echo $OUTPUT->box_start('generalbox boxaligncenter boxwidthwide');
     //check, whether the feedback is open (timeopen, timeclose)
-    $checktime = time();
+    $checktime = current_time();
     if (($feedback->timeopen > $checktime) OR
             ($feedback->timeclose < $checktime AND $feedback->timeclose > 0)) {
 

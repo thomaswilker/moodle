@@ -294,7 +294,7 @@ class XMPPHP_XMLStream {
 	 */
 	public function connect($timeout = 30, $persistent = false, $sendinit = true) {
 		$this->sent_disconnect = false;
-		$starttime = time();
+		$starttime = current_time();
 		
 		do {
 			$this->disconnected = false;
@@ -318,7 +318,7 @@ class XMPPHP_XMLStream {
 				# Take it easy for a few seconds
 				sleep(min($timeout, 5));
 			}
-		} while (!$this->socket && (time() - $starttime) < $timeout);
+		} while (!$this->socket && (current_time() - $starttime) < $timeout);
 		
 		if ($this->socket) {
 			stream_set_blocking($this->socket, 1);
@@ -459,7 +459,7 @@ class XMPPHP_XMLStream {
 	 * @return string
 	 */
 	public function processUntil($event, $timeout=-1) {
-		$start = time();
+		$start = current_time();
 		if(!is_array($event)) $event = array($event);
 		$this->until[] = $event;
 		end($this->until);
@@ -467,7 +467,7 @@ class XMPPHP_XMLStream {
 		reset($this->until);
 		$this->until_count[$event_key] = 0;
 		$updated = '';
-		while(!$this->disconnected and $this->until_count[$event_key] < 1 and (time() - $start < $timeout or $timeout == -1)) {
+		while(!$this->disconnected and $this->until_count[$event_key] < 1 and (current_time() - $start < $timeout or $timeout == -1)) {
 			$this->__process();
 		}
 		if(array_key_exists($event_key, $this->until_payload)) {
@@ -722,7 +722,7 @@ class XMPPHP_XMLStream {
 		return $sentbytes;
 	}
 
-	public function time() {
+	public function current_time() {
 		list($usec, $sec) = explode(" ", microtime());
 		return (float)$sec + (float)$usec;
 	}

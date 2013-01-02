@@ -57,7 +57,7 @@ echo $OUTPUT->heading(format_string($attemptobj->get_question_name($slot)));
 if (data_submitted() && confirm_sesskey()) {
     if (optional_param('submit', false, PARAM_BOOL) && question_behaviour::is_manual_grade_in_range($attemptobj->get_uniqueid(), $slot)) {
         $transaction = $DB->start_delegated_transaction();
-        $attemptobj->process_submitted_actions(time());
+        $attemptobj->process_submitted_actions(current_time());
         $transaction->allow_commit();
         echo $OUTPUT->notification(get_string('changessaved'), 'notifysuccess');
         close_window(2, true);

@@ -73,7 +73,7 @@ class AuthorizeNet
      */
     public static function settled($order)
     {
-        return ((AN_STATUS_AUTHCAPTURE == $order->status || AN_STATUS_CREDIT == $order->status) and ($order->settletime > 0) and ($order->settletime < time()));
+        return ((AN_STATUS_AUTHCAPTURE == $order->status || AN_STATUS_CREDIT == $order->status) and ($order->settletime > 0) and ($order->settletime < current_time()));
     }
 
     /**
@@ -95,7 +95,7 @@ class AuthorizeNet
         }
 
         if (0 == $timediff30) {
-            $timediff30 = self::getsettletime(time()) - (30 * 24 * 3600);
+            $timediff30 = self::getsettletime(current_time()) - (30 * 24 * 3600);
         }
 
         $expired = self::getsettletime($order->timecreated) < $timediff30;
@@ -229,7 +229,7 @@ class AuthorizeNet
                         $message = "No valid amount!";
                         return AN_RETURNZERO;
                     }
-                    $timenowsettle = self::getsettletime(time());
+                    $timenowsettle = self::getsettletime(current_time());
                     $timediff = $timenowsettle - (120 * 3600 * 24);
                     if ($order->settletime < $timediff) {
                         $message = "Order must be credited within 120 days!";
@@ -318,7 +318,7 @@ class AuthorizeNet
                                 $order->status = AN_STATUS_AUTH;
                             } else {
                                 $order->status = AN_STATUS_AUTHCAPTURE;
-                                $order->settletime = self::getsettletime(time());
+                                $order->settletime = self::getsettletime(current_time());
                             }
                         }
                         elseif ($method == AN_METHOD_ECHECK) {
@@ -335,7 +335,7 @@ class AuthorizeNet
                         // So, $extra must be updated, not $order.
                         $extra->status = AN_STATUS_CREDIT;
                         $extra->transid = $transid;
-                        $extra->settletime = self::getsettletime(time());
+                        $extra->settletime = self::getsettletime(current_time());
                         $extra->id = $DB->insert_record('enrol_authorize_refunds', $extra);
                     }
                     break;

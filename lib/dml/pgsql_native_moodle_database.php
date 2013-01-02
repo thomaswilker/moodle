@@ -1258,9 +1258,9 @@ class pgsql_native_moodle_database extends moodle_database {
 
         $sql = "SELECT pg_advisory_lock($rowid)";
         $this->query_start($sql, null, SQL_QUERY_AUX);
-        $start = time();
+        $start = current_time();
         $result = pg_query($this->pgsql, $sql);
-        $end = time();
+        $end = current_time();
         try {
             $this->query_end($result);
         } catch (dml_exception $ex) {

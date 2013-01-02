@@ -121,7 +121,7 @@ echo $OUTPUT->box($buttons, 'buttons');
 echo $OUTPUT->box_end();
 
 // Print the event so that people can visually confirm they have the correct event
-$event->time = calendar_format_event_time($event, time(), null, false);
+$event->time = calendar_format_event_time($event, current_time(), null, false);
 $renderer = $PAGE->get_renderer('core_calendar');
 echo $renderer->start_layout();
 echo $renderer->event($event, false);

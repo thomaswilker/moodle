@@ -53,7 +53,7 @@ $strareyousuredelete = get_string("areyousuredelete","glossary");
 if (($entry->userid != $USER->id) and !$manageentries) { // guest id is never matched, no need for special check here
     print_error('nopermissiontodelentry');
 }
-$ineditperiod = ((time() - $entry->timecreated <  $CFG->maxeditingtime) || $glossary->editalways);
+$ineditperiod = ((current_time() - $entry->timecreated <  $CFG->maxeditingtime) || $glossary->editalways);
 if (!$ineditperiod and !$manageentries) {
     print_error('errdeltimeexpired', 'glossary');
 }

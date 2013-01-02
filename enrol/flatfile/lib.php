@@ -70,7 +70,7 @@ class enrol_flatfile_plugin extends enrol_plugin {
         }
 
         if ( file_exists($filename) ) {
-            $this->log  = userdate(time()) . "\n";
+            $this->log  = userdate(current_time()) . "\n";
             $this->log .= "Flatfile enrol cron found file: $filename\n\n";
 
             if (($fh = fopen($filename, "r")) != false) {
@@ -210,7 +210,7 @@ class enrol_flatfile_plugin extends enrol_plugin {
         $mailteachers = $this->get_config('mailteachers');
 
         // check if timestart is for future processing.
-        if ($timestart > time()) {
+        if ($timestart > current_time()) {
             if ($store_to_buffer) {
                 // populate into enrol_flatfile table as a future role to be assigned by cron.
                 $future_en = new stdClass();
@@ -220,7 +220,7 @@ class enrol_flatfile_plugin extends enrol_plugin {
                 $future_en->courseid = $course->id;
                 $future_en->timestart = $timestart;
                 $future_en->timeend     = $timeend;
-                $future_en->timemodified  = time();
+                $future_en->timemodified  = current_time();
                 $future_en->id = $DB->insert_record('enrol_flatfile', $future_en);
             }
             return false;

@@ -274,7 +274,7 @@ function report_log_print_mnet_selector_form($hostid, $course, $selecteduser=0, 
     // Note that we are keeping track of real (GMT) time and user time
     // User time is only used in displays - all calcs and passing is GMT
 
-    $timenow = time(); // GMT
+    $timenow = current_time(); // GMT
 
     // What day is it now for the user, and when is midnight that day (in GMT).
     $timemidnight = $today = usergetmidnight($timenow);
@@ -526,7 +526,7 @@ function report_log_print_selector_form($course, $selecteduser=0, $selecteddate=
     // Note that we are keeping track of real (GMT) time and user time
     // User time is only used in displays - all calcs and passing is GMT
 
-    $timenow = time(); // GMT
+    $timenow = current_time(); // GMT
 
     // What day is it now for the user, and when is midnight that day (in GMT).
     $timemidnight = $today = usergetmidnight($timenow);

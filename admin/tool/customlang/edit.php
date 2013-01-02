@@ -72,7 +72,7 @@ if ($translatorsubmitted) {
         $strings = array();
     }
     $current = $DB->get_records_list('tool_customlang', 'id', array_keys($strings));
-    $now = time();
+    $now = current_time();
 
     foreach ($strings as $recordid => $customization) {
         $customization = trim($customization);

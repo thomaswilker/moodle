@@ -65,7 +65,7 @@ if (!defined('FORUM_CRON_USER_CACHE')) {
 function forum_add_instance($forum, $mform = null) {
     global $CFG, $DB;
 
-    $forum->timemodified = time();
+    $forum->timemodified = current_time();
 
     if (empty($forum->assessed)) {
         $forum->assessed = 0;
@@ -131,7 +131,7 @@ function forum_add_instance($forum, $mform = null) {
 function forum_update_instance($forum, $mform) {
     global $DB, $OUTPUT, $USER;
 
-    $forum->timemodified = time();
+    $forum->timemodified = current_time();
     $forum->id           = $forum->instance;
 
     if (empty($forum->assessed)) {
@@ -441,7 +441,7 @@ function forum_cron() {
     // Posts older than 2 days will not be mailed.  This is to avoid the problem where
     // cron has not been running for a long time, and then suddenly people are flooded
     // with mail from the past few weeks or months
-    $timenow   = time();
+    $timenow   = current_time();
     $endtime   = $timenow - $CFG->maxeditingtime;
     $starttime = $endtime - 48 * 3600;   // Two days earlier
 
@@ -768,7 +768,7 @@ function forum_cron() {
         set_config('digestmailtimelast', 0);
     }
 
-    $timenow = time();
+    $timenow = current_time();
     $digesttime = usergetmidnight($timenow, $sitetimezone) + ($CFG->digestmailtime * 3600);
 
     // Delete any really old ones (normally there shouldn't be any)
@@ -1035,14 +1035,14 @@ function forum_cron() {
     }
 
     if (!empty($CFG->forum_lastreadclean)) {
-        $timenow = time();
+        $timenow = current_time();
         if ($CFG->forum_lastreadclean + (24*3600) < $timenow) {
             set_config('forum_lastreadclean', $timenow);
             mtrace('Removing old forum read tracking info...');
             forum_tp_clean_read_records();
         }
     } else {
-        set_config('forum_lastreadclean', time());
+        set_config('forum_lastreadclean', current_time());
     }
 
 
@@ -1345,7 +1345,7 @@ function forum_print_overview($courses,&$htmlarray) {
     }
 
     if (count($trackingforums) > 0) {
-        $cutoffdate = isset($CFG->forum_oldpostdays) ? (time() - ($CFG->forum_oldpostdays*24*60*60)) : 0;
+        $cutoffdate = isset($CFG->forum_oldpostdays) ? (current_time() - ($CFG->forum_oldpostdays*24*60*60)) : 0;
         $sql = 'SELECT d.forum,d.course,COUNT(p.id) AS count '.
             ' FROM {forum_posts} p '.
             ' JOIN {forum_discussions} d ON p.discussion = d.id '.
@@ -1478,7 +1478,7 @@ function forum_print_recent_activity($course, $viewfullnames, $timestart) {
         }
 
         if (!empty($CFG->forum_enabletimedposts) and $USER->id != $post->duserid
-          and (($post->timestart > 0 and $post->timestart > time()) or ($post->timeend > 0 and $post->timeend < time()))) {
+          and (($post->timestart > 0 and $post->timestart > current_time()) or ($post->timeend > 0 and $post->timeend < current_time()))) {
             if (!has_capability('mod/forum:viewhiddentimedposts', $context)) {
                 continue;
             }
@@ -1783,7 +1783,7 @@ function forum_get_all_discussion_posts($discussionid, $sort, $tracking=false) {
     $params = array();
 
     if ($tracking) {
-        $now = time();
+        $now = current_time();
         $cutoffdate = $now - ($CFG->forum_oldpostdays * 24 * 3600);
         $tr_sel  = ", fr.id AS postread";
         $tr_join = "LEFT JOIN {forum_read} fr ON (fr.postid = p.id AND fr.userid = ?)";
@@ -1976,7 +1976,7 @@ function forum_search_posts($searchterms, $courseid=0, $limitfrom=0, $limitnum=5
         return false;
     }
 
-    $now = round(time(), -2); // db friendly
+    $now = round(current_time(), -2); // db friendly
 
     $fullaccess = array();
     $where = array();
@@ -2131,7 +2131,7 @@ function forum_get_unmailed_posts($starttime, $endtime, $now=null) {
     $params = array($starttime, $endtime);
     if (!empty($CFG->forum_enabletimedposts)) {
         if (empty($now)) {
-            $now = time();
+            $now = current_time();
         }
         $timedsql = "AND (d.timestart < ? AND (d.timeend = 0 OR d.timeend > ?))";
         $params[] = $now;
@@ -2156,13 +2156,13 @@ function forum_get_unmailed_posts($starttime, $endtime, $now=null) {
  * @global object
  * @global object
  * @param int $endtime
- * @param int $now Defaults to time()
+ * @param int $now Defaults to current_time()
  * @return bool
  */
 function forum_mark_old_posts_as_mailed($endtime, $now=null) {
     global $CFG, $DB;
     if (empty($now)) {
-        $now = time();
+        $now = current_time();
     }
 
     if (empty($CFG->forum_enabletimedposts)) {
@@ -2199,7 +2199,7 @@ function forum_get_user_posts($forumid, $userid) {
     if (!empty($CFG->forum_enabletimedposts)) {
         $cm = get_coursemodule_from_instance('forum', $forumid);
         if (!has_capability('mod/forum:viewhiddentimedposts' , context_module::instance($cm->id))) {
-            $now = time();
+            $now = current_time();
             $timedsql = "AND (d.timestart < ? AND (d.timeend = 0 OR d.timeend > ?))";
             $params[] = $now;
             $params[] = $now;
@@ -2235,7 +2235,7 @@ function forum_get_user_involved_discussions($forumid, $userid) {
     if (!empty($CFG->forum_enabletimedposts)) {
         $cm = get_coursemodule_from_instance('forum', $forumid);
         if (!has_capability('mod/forum:viewhiddentimedposts' , context_module::instance($cm->id))) {
-            $now = time();
+            $now = current_time();
             $timedsql = "AND (d.timestart < ? AND (d.timeend = 0 OR d.timeend > ?))";
             $params[] = $now;
             $params[] = $now;
@@ -2268,7 +2268,7 @@ function forum_count_user_posts($forumid, $userid) {
     if (!empty($CFG->forum_enabletimedposts)) {
         $cm = get_coursemodule_from_instance('forum', $forumid);
         if (!has_capability('mod/forum:viewhiddentimedposts' , context_module::instance($cm->id))) {
-            $now = time();
+            $now = current_time();
             $timedsql = "AND (d.timestart < ? AND (d.timeend = 0 OR d.timeend > ?))";
             $params[] = $now;
             $params[] = $now;
@@ -2417,7 +2417,7 @@ function forum_count_discussions($forum, $cm, $course) {
 
     static $cache = array();
 
-    $now = round(time(), -2); // db cache friendliness
+    $now = round(current_time(), -2); // db cache friendliness
 
     $params = array($course->id);
 
@@ -2566,7 +2566,7 @@ function forum_get_discussions($cm, $forumsort="d.timemodified DESC", $fullpost=
 
     $timelimit = '';
 
-    $now = round(time(), -2);
+    $now = round(current_time(), -2);
     $params = array($cm->instance);
 
     $modcontext = context_module::instance($cm->id);
@@ -2672,7 +2672,7 @@ function forum_get_discussions($cm, $forumsort="d.timemodified DESC", $fullpost=
 function forum_get_discussions_unread($cm) {
     global $CFG, $DB, $USER;
 
-    $now = round(time(), -2);
+    $now = round(current_time(), -2);
     $cutoffdate = $now - ($CFG->forum_oldpostdays*24*60*60);
 
     $params = array();
@@ -2744,7 +2744,7 @@ function forum_get_discussions_unread($cm) {
 function forum_get_discussions_count($cm) {
     global $CFG, $DB, $USER;
 
-    $now = round(time(), -2);
+    $now = round(current_time(), -2);
     $params = array($cm->instance);
     $groupmode    = groups_get_activity_groupmode($cm);
     $currentgroup = groups_get_activity_group($cm);
@@ -2987,7 +2987,7 @@ function forum_get_course_forum($courseid, $type) {
             break;
     }
 
-    $forum->timemodified = time();
+    $forum->timemodified = current_time();
     $forum->id = $DB->insert_record("forum", $forum);
 
     if (! $module = $DB->get_record("modules", array("name" => "forum"))) {
@@ -3321,8 +3321,8 @@ function forum_print_post($post, $discussion, $forum, &$cm, $course, $ownpost=fa
     }
 
     // Hack for allow to edit news posts those are not displayed yet until they are displayed
-    $age = time() - $post->created;
-    if (!$post->parent && $forum->type == 'news' && $discussion->timestart > time()) {
+    $age = current_time() - $post->created;
+    if (!$post->parent && $forum->type == 'news' && $discussion->timestart > current_time()) {
         $age = 0;
     }
 
@@ -4301,7 +4301,7 @@ function forum_add_new_post($post, $mform, &$message) {
     $cm         = get_coursemodule_from_instance('forum', $forum->id);
     $context    = context_module::instance($cm->id);
 
-    $post->created    = $post->modified = time();
+    $post->created    = $post->modified = current_time();
     $post->mailed     = "0";
     $post->userid     = $USER->id;
     $post->attachment = "";
@@ -4345,7 +4345,7 @@ function forum_update_post($post, $mform, &$message) {
     $cm         = get_coursemodule_from_instance('forum', $forum->id);
     $context    = context_module::instance($cm->id);
 
-    $post->modified = time();
+    $post->modified = current_time();
 
     $DB->update_record('forum_posts', $post);
 
@@ -4391,7 +4391,7 @@ function forum_update_post($post, $mform, &$message) {
 function forum_add_discussion($discussion, $mform=null, &$message=null, $userid=null) {
     global $USER, $CFG, $DB;
 
-    $timenow = time();
+    $timenow = current_time();
 
     if (is_null($userid)) {
         $userid = $USER->id;
@@ -5250,7 +5250,7 @@ function forum_user_can_see_timed_discussion($discussion, $user, $context) {
 
     // Check that the user can view a discussion that is normally hidden due to access times.
     if (!empty($CFG->forum_enabletimedposts)) {
-        $time = time();
+        $time = current_time();
         if (($discussion->timestart != 0 && $discussion->timestart > $time)
             || ($discussion->timeend != 0 && $discussion->timeend < $time)) {
             if (!has_capability('mod/forum:viewhiddentimedposts', $context, $user->id)) {
@@ -5416,7 +5416,7 @@ function forum_user_can_see_post($forum, $discussion, $post, $user=NULL, $cm=NUL
         $firstpost = forum_get_firstpost_from_discussion($discussion->id);
         $userfirstpost = forum_get_user_posted_time($discussion->id, $user->id);
 
-        return (($userfirstpost !== false && (time() - $userfirstpost >= $CFG->maxeditingtime)) ||
+        return (($userfirstpost !== false && (current_time() - $userfirstpost >= $CFG->maxeditingtime)) ||
                 $firstpost->id == $post->id || $post->userid == $user->id || $firstpost->userid == $user->id ||
                 has_capability('mod/forum:viewqandawithoutposting', $modcontext, $user->id));
     }
@@ -6027,7 +6027,7 @@ function forum_get_recent_mod_activity(&$activities, &$index, $timestart, $cours
     foreach ($posts as $post) {
 
         if (!empty($CFG->forum_enabletimedposts) and $USER->id != $post->duserid
-          and (($post->timestart > 0 and $post->timestart > time()) or ($post->timeend > 0 and $post->timeend < time()))) {
+          and (($post->timestart > 0 and $post->timestart > current_time()) or ($post->timeend > 0 and $post->timeend < current_time()))) {
             if (!$viewhiddentimed) {
                 continue;
             }
@@ -6276,7 +6276,7 @@ function forum_tp_mark_posts_read($user, $postids) {
 
     $status = true;
 
-    $now = time();
+    $now = current_time();
     $cutoffdate = $now - ($CFG->forum_oldpostdays * 24 * 3600);
 
     if (empty($postids)) {
@@ -6347,7 +6347,7 @@ function forum_tp_mark_posts_read($user, $postids) {
 function forum_tp_add_read_record($userid, $postid) {
     global $CFG, $DB;
 
-    $now = time();
+    $now = current_time();
     $cutoffdate = $now - ($CFG->forum_oldpostdays * 24 * 3600);
 
     if (!$DB->record_exists('forum_read', array('userid' => $userid, 'postid' => $postid))) {
@@ -6447,7 +6447,7 @@ function forum_tp_mark_post_read($userid, $post, $forumid) {
 function forum_tp_mark_forum_read($user, $forumid, $groupid=false) {
     global $CFG, $DB;
 
-    $cutoffdate = time() - ($CFG->forum_oldpostdays*24*60*60);
+    $cutoffdate = current_time() - ($CFG->forum_oldpostdays*24*60*60);
 
     $groupsel = "";
     $params = array($user->id, $forumid, $cutoffdate);
@@ -6485,7 +6485,7 @@ function forum_tp_mark_forum_read($user, $forumid, $groupid=false) {
 function forum_tp_mark_discussion_read($user, $discussionid) {
     global $CFG, $DB;
 
-    $cutoffdate = time() - ($CFG->forum_oldpostdays*24*60*60);
+    $cutoffdate = current_time() - ($CFG->forum_oldpostdays*24*60*60);
 
     $sql = "SELECT p.id
               FROM {forum_posts} p
@@ -6515,13 +6515,13 @@ function forum_tp_is_post_read($userid, $post) {
 /**
  * @global object
  * @param object $post
- * @param int $time Defautls to time()
+ * @param int $time Defautls to current_time()
  */
 function forum_tp_is_post_old($post, $time=null) {
     global $CFG;
 
     if (is_null($time)) {
-        $time = time();
+        $time = current_time();
     }
     return ($post->modified < ($time - ($CFG->forum_oldpostdays * 24 * 3600)));
 }
@@ -6538,7 +6538,7 @@ function forum_tp_is_post_old($post, $time=null) {
 function forum_tp_count_discussion_read_records($userid, $discussionid) {
     global $CFG, $DB;
 
-    $cutoffdate = isset($CFG->forum_oldpostdays) ? (time() - ($CFG->forum_oldpostdays*24*60*60)) : 0;
+    $cutoffdate = isset($CFG->forum_oldpostdays) ? (current_time() - ($CFG->forum_oldpostdays*24*60*60)) : 0;
 
     $sql = 'SELECT COUNT(DISTINCT p.id) '.
            'FROM {forum_discussions} d '.
@@ -6562,7 +6562,7 @@ function forum_tp_count_discussion_read_records($userid, $discussionid) {
 function forum_tp_count_discussion_unread_posts($userid, $discussionid) {
     global $CFG, $DB;
 
-    $cutoffdate = isset($CFG->forum_oldpostdays) ? (time() - ($CFG->forum_oldpostdays*24*60*60)) : 0;
+    $cutoffdate = isset($CFG->forum_oldpostdays) ? (current_time() - ($CFG->forum_oldpostdays*24*60*60)) : 0;
 
     $sql = 'SELECT COUNT(p.id) '.
            'FROM {forum_posts} p '.
@@ -6609,7 +6609,7 @@ function forum_tp_count_forum_posts($forumid, $groupid=false) {
 function forum_tp_count_forum_read_records($userid, $forumid, $groupid=false) {
     global $CFG, $DB;
 
-    $cutoffdate = time() - ($CFG->forum_oldpostdays*24*60*60);
+    $cutoffdate = current_time() - ($CFG->forum_oldpostdays*24*60*60);
 
     $groupsel = '';
     $params = array($userid, $forumid, $cutoffdate);
@@ -6642,7 +6642,7 @@ function forum_tp_count_forum_read_records($userid, $forumid, $groupid=false) {
 function forum_tp_get_course_unread_posts($userid, $courseid) {
     global $CFG, $DB;
 
-    $now = round(time(), -2); // db cache friendliness
+    $now = round(current_time(), -2); // db cache friendliness
     $cutoffdate = $now - ($CFG->forum_oldpostdays*24*60*60);
     $params = array($userid, $userid, $courseid, $cutoffdate);
 
@@ -6734,7 +6734,7 @@ function forum_tp_count_forum_unread_posts($cm, $course) {
 
     list ($groups_sql, $groups_params) = $DB->get_in_or_equal($mygroups);
 
-    $now = round(time(), -2); // db cache friendliness
+    $now = round(current_time(), -2); // db cache friendliness
     $cutoffdate = $now - ($CFG->forum_oldpostdays*24*60*60);
     $params = array($USER->id, $forumid, $cutoffdate);
 
@@ -6971,7 +6971,7 @@ function forum_tp_clean_read_records() {
         return;
     }
 // Look for records older than the cutoffdate that are still in the forum_read table.
-    $cutoffdate = time() - ($CFG->forum_oldpostdays*24*60*60);
+    $cutoffdate = current_time() - ($CFG->forum_oldpostdays*24*60*60);
 
     //first get the oldest tracking present - we need tis to speedup the next delete query
     $sql = "SELECT MIN(fp.modified) AS first
@@ -7082,7 +7082,7 @@ function forum_check_throttling($forum, $cm=null) {
     }
 
     // get the number of posts in the last period we care about
-    $timenow = time();
+    $timenow = current_time();
     $timeafter = $timenow - $forum->blockperiod;
 
     $numposts = $DB->count_records_sql('SELECT COUNT(p.id) FROM {forum_posts} p'
@@ -7645,7 +7645,7 @@ function forum_extend_navigation($navref, $course, $module, $cm) {
 
     $index = 0;
     $recentposts = array();
-    $lastlogin = time() - COURSE_MAX_RECENT_PERIOD;
+    $lastlogin = current_time() - COURSE_MAX_RECENT_PERIOD;
     if (!isguestuser() and !empty($USER->lastcourseaccess[$course->id])) {
         if ($USER->lastcourseaccess[$course->id] > $lastlogin) {
             $lastlogin = $USER->lastcourseaccess[$course->id];
@@ -8324,7 +8324,7 @@ function forum_get_posts_by_user($user, array $courses, $musthaveaccess = false,
     // Will record forums where the user can freely access everything
     $forumsearchfullaccess = array();
     // DB caching friendly
-    $now = round(time(), -2);
+    $now = round(current_time(), -2);
     // For each course to search we want to find the forums the user has posted in
     // and providing the current user can access the forum create a search condition
     // for the forum to get the requested users posts.

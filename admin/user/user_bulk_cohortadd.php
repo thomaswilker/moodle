@@ -127,7 +127,7 @@ foreach ($users as $user) {
         $user->email,
         $user->city,
         $user->country,
-        $user->lastaccess ? format_time(time() - $user->lastaccess) : $strnever
+        $user->lastaccess ? format_time(current_time() - $user->lastaccess) : $strnever
     );
 }
 

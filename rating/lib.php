@@ -161,7 +161,7 @@ class rating implements renderable {
     public function update_rating($rating) {
         global $DB;
 
-        $time = time();
+        $time = current_time();
 
         $data = new stdClass;
         $data->rating       = $rating;

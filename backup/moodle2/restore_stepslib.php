@@ -65,7 +65,7 @@ class restore_drop_and_clean_temp_stuff extends restore_execution_step {
     protected function define_execution() {
         global $CFG;
         restore_controller_dbops::drop_restore_temp_tables($this->get_restoreid()); // Drop ids temp table
-        backup_helper::delete_old_backup_dirs(time() - (4 * 60 * 60));              // Delete > 4 hours temp dirs
+        backup_helper::delete_old_backup_dirs(current_time() - (4 * 60 * 60));              // Delete > 4 hours temp dirs
         if (empty($CFG->keeptempdirectoriesonbackup)) { // Conditionally
             backup_helper::delete_backup_dir($this->task->get_tempdir()); // Empty restore dir
         }
@@ -2389,7 +2389,7 @@ class restore_activity_grading_structure_step extends restore_structure_step {
         $oldid = $data->id;
         $data->areaid = $this->get_new_parentid('grading_area');
         $data->copiedfromid = null;
-        $data->timecreated = time();
+        $data->timecreated = current_time();
         $data->usercreated = $task->get_userid();
         $data->timemodified = $data->timecreated;
         $data->usermodified = $data->usercreated;

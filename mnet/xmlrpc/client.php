@@ -140,11 +140,11 @@ class mnet_xmlrpc_client {
         $httprequest = $this->prepare_http_request($mnet_peer);
         curl_setopt($httprequest, CURLOPT_POSTFIELDS, $this->encryptedrequest);
 
-        $timestamp_send    = time();
+        $timestamp_send    = current_time();
         mnet_debug("about to send the curl request");
         $this->rawresponse = curl_exec($httprequest);
         mnet_debug("managed to complete a curl request");
-        $timestamp_receive = time();
+        $timestamp_receive = current_time();
 
         if ($this->rawresponse === false) {
             $this->error[] = curl_errno($httprequest) .':'. curl_error($httprequest);
@@ -231,7 +231,7 @@ class mnet_xmlrpc_client {
         $margin_of_error  = $timestamp_receive - $timestamp_send;
 
         // Guess the time gap between sending the request and the remote machine
-        // executing the time() function. Marginally better than nothing.
+        // executing the current_time() function. Marginally better than nothing.
         $hysteresis       = ($margin_of_error) / 2;
 
         $remote_timestamp = $sig_parser->remote_timestamp - $hysteresis;

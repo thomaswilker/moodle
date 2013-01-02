@@ -91,7 +91,7 @@
 
 // Now store the data.
 
-    $timenow = time();
+    $timenow = current_time();
     foreach ($answers as $key => $val) {
         if ($key != 'sesskey') {
             $newdata = new stdClass();

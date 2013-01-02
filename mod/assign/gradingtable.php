@@ -677,7 +677,7 @@ class assign_grading_table extends table_sql implements renderable {
                 $o .= $this->output->container(get_string('graded', 'assign'), 'submissiongraded');
             }
             if (!$row->timesubmitted) {
-                $now = time();
+                $now = current_time();
                 $due = $this->assignment->get_instance()->duedate;
                 if ($row->extensionduedate) {
                     $due = $row->extensionduedate;

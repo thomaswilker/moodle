@@ -446,7 +446,7 @@ function quiz_update_sumgrades($quiz) {
 function quiz_update_all_attempt_sumgrades($quiz) {
     global $DB;
     $dm = new question_engine_data_mapper();
-    $timenow = time();
+    $timenow = current_time();
 
     $sql = "UPDATE {quiz_attempts}
             SET
@@ -495,7 +495,7 @@ function quiz_set_grade($newgrade, $quiz) {
 
     } else {
         // We can rescale the grades efficiently.
-        $timemodified = time();
+        $timemodified = current_time();
         $DB->execute("
                 UPDATE {quiz_grades}
                 SET grade = ? * grade, timemodified = ?
@@ -554,7 +554,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
     } else if ($grade = $DB->get_record('quiz_grades',
             array('quiz' => $quiz->id, 'userid' => $userid))) {
         $grade->grade = $bestgrade;
-        $grade->timemodified = time();
+        $grade->timemodified = current_time();
         $DB->update_record('quiz_grades', $grade);
 
     } else {
@@ -562,7 +562,7 @@ function quiz_save_best_grade($quiz, $userid = null, $attempts = array()) {
         $grade->quiz = $quiz->id;
         $grade->userid = $userid;
         $grade->grade = $bestgrade;
-        $grade->timemodified = time();
+        $grade->timemodified = current_time();
         $DB->insert_record('quiz_grades', $grade);
     }
 
@@ -731,7 +731,7 @@ function quiz_update_all_final_grades($quiz) {
                 // (newgrades.newgrade IS NULL) <> (qg.grade IS NULL).
             $param);
 
-    $timenow = time();
+    $timenow = current_time();
     $todelete = array();
     foreach ($changedgrades as $changedgrade) {
 
@@ -1133,9 +1133,9 @@ function quiz_get_flag_option($attempt, $context) {
 function quiz_attempt_state($quiz, $attempt) {
     if ($attempt->state == quiz_attempt::IN_PROGRESS) {
         return mod_quiz_display_options::DURING;
-    } else if (time() < $attempt->timefinish + 120) {
+    } else if (current_time() < $attempt->timefinish + 120) {
         return mod_quiz_display_options::IMMEDIATELY_AFTER;
-    } else if (!$quiz->timeclose || time() < $quiz->timeclose) {
+    } else if (!$quiz->timeclose || current_time() < $quiz->timeclose) {
         return mod_quiz_display_options::LATER_WHILE_OPEN;
     } else {
         return mod_quiz_display_options::AFTER_CLOSE;

@@ -62,7 +62,7 @@ $data->courseid         = (int)$custom[1];
 $data->instanceid       = (int)$custom[2];
 $data->payment_gross    = $data->mc_gross;
 $data->payment_currency = $data->mc_currency;
-$data->timeupdated      = time();
+$data->timeupdated      = current_time();
 
 
 /// get the user and course records
@@ -210,7 +210,7 @@ if (strlen($result) > 0) {
         $DB->insert_record("enrol_paypal", $data);
 
         if ($plugin_instance->enrolperiod) {
-            $timestart = time();
+            $timestart = current_time();
             $timeend   = $timestart + $plugin_instance->enrolperiod;
         } else {
             $timestart = 0;

@@ -54,9 +54,9 @@ $earliestday = $DB->get_field_sql('SELECT MIN(timeend) FROM {stats_daily}');
 $earliestweek = $DB->get_field_sql('SELECT MIN(timeend) FROM {stats_weekly}');
 $earliestmonth = $DB->get_field_sql('SELECT MIN(timeend) FROM {stats_monthly}');
 
-if (empty($earliestday)) $earliestday = time();
-if (empty($earliestweek)) $earliestweek = time();
-if (empty($earliestmonth)) $earliestmonth = time();
+if (empty($earliestday)) $earliestday = current_time();
+if (empty($earliestweek)) $earliestweek = current_time();
+if (empty($earliestmonth)) $earliestmonth = current_time();
 
 $now = stats_get_base_daily();
 $lastweekend = stats_get_base_weekly();

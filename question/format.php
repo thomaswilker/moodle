@@ -382,9 +382,9 @@ class qformat_default {
             $question->stamp = make_unique_id_code();  // Set the unique code (not to be changed)
 
             $question->createdby = $USER->id;
-            $question->timecreated = time();
+            $question->timecreated = current_time();
             $question->modifiedby = $USER->id;
-            $question->timemodified = time();
+            $question->timemodified = current_time();
             $fileoptions = array(
                     'subdirs' => false,
                     'maxfiles' => -1,

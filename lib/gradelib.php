@@ -1332,7 +1332,7 @@ function grade_user_unenrol($courseid, $userid) {
 function grade_cron() {
     global $CFG, $DB;
 
-    $now = time();
+    $now = current_time();
 
     $sql = "SELECT i.*
               FROM {grade_items} i

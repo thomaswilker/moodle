@@ -537,7 +537,7 @@ class portfolio_exporter {
             'continueurl' => $this->instance->get_static_continue_url(),
             'returnurl' => $this->caller->get_return_url(),
             'tempdataid' => $this->id,
-            'time' => time(),
+            'time' => current_time(),
         );
         $DB->insert_record('portfolio_log', $l);
     }
@@ -643,7 +643,7 @@ class portfolio_exporter {
         if (empty($this->id)) {
             $r = (object)array(
                 'data' => base64_encode(serialize($this)),
-                'expirytime' => time() + (60*60*24),
+                'expirytime' => current_time() + (60*60*24),
                 'userid' => $this->user->id,
                 'instance' => (empty($this->instance)) ? null : $this->instance->get('id'),
             );

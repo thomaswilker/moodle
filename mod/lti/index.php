@@ -75,7 +75,7 @@ if (! $basicltis = get_all_instances_in_course("lti", $course)) {
 }
 
 // Print the list of instances (your module will probably extend this)
-$timenow = time();
+$timenow = current_time();
 $strname = get_string("name");
 $strsectionname  = get_string('sectionname', 'format_'.$course->format);
 $usesections = course_format_uses_sections($course->format);

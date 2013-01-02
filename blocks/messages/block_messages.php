@@ -44,7 +44,7 @@ class block_messages extends block_base {
         if (!empty($users)) {
             $this->content->text .= '<ul class="list">';
             foreach ($users as $user) {
-                $timeago = format_time(time() - $user->lastaccess);
+                $timeago = format_time(current_time() - $user->lastaccess);
                 $this->content->text .= '<li class="listentry"><div class="user"><a href="'.$CFG->wwwroot.'/user/view.php?id='.$user->id.'&amp;course='.SITEID.'" title="'.$timeago.'">';
                 $this->content->text .= $OUTPUT->user_picture($user, array('courseid'=>SITEID)); //TODO: user might not have capability to view frontpage profile :-(
                 $this->content->text .= fullname($user).'</a></div>';

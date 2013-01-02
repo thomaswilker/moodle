@@ -232,7 +232,7 @@ class assignment_uploadsingle extends assignment_base {
                         $submission->id, '/', $newfilename);
 
                     $updates = new stdClass(); //just enough data for updating the submission
-                    $updates->timemodified = time();
+                    $updates->timemodified = current_time();
                     $updates->numfiles     = 1;
                     $updates->id     = $submission->id;
                     $DB->update_record('assignment_submissions', $updates);

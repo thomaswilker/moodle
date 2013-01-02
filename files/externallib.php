@@ -244,7 +244,7 @@ class core_files_external extends external_api {
         $dir = make_temp_directory('wsupload');
 
         if (empty($fileinfo['filename'])) {
-            $filename = uniqid('wsupload', true).'_'.time().'.tmp';
+            $filename = uniqid('wsupload', true).'_'.current_time().'.tmp';
         } else {
             $filename = $fileinfo['filename'];
         }

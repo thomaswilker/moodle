@@ -233,7 +233,7 @@ function tag_type_set($tagid, $type) {
 
     if ($tag = $DB->get_record('tag', array('id'=>$tagid), 'id')) {
         $tag->tagtype = $type;
-        $tag->timemodified = time();
+        $tag->timemodified = current_time();
         return $DB->update_record('tag', $tag);
     }
     return false;
@@ -257,7 +257,7 @@ function tag_description_set($tagid, $description, $descriptionformat) {
     if ($tag = $DB->get_record('tag', array('id'=>$tagid),'id')) {
         $tag->description = $description;
         $tag->descriptionformat = $descriptionformat;
-        $tag->timemodified = time();
+        $tag->timemodified = current_time();
         return $DB->update_record('tag', $tag);
     }
     return false;
@@ -577,7 +577,7 @@ function tag_rename($tagid, $newrawname) {
     if ($tag = tag_get('id', $tagid, 'id, name, rawname')) {
         $tag->rawname      = $newrawname_clean;
         $tag->name         = $newname_clean;
-        $tag->timemodified = time();
+        $tag->timemodified = current_time();
         return $DB->update_record('tag', $tag);
     }
     return false;
@@ -747,7 +747,7 @@ function tag_add($tags, $type="default") {
     $tag_object = new StdClass;
     $tag_object->tagtype      = $type;
     $tag_object->userid       = $USER->id;
-    $tag_object->timemodified = time();
+    $tag_object->timemodified = current_time();
 
     $clean_tags = tag_normalize($tags, TAG_CASE_ORIGINAL);
 
@@ -787,7 +787,7 @@ function tag_assign($record_type, $record_id, $tagid, $ordering, $userid = 0) {
 
     if ( $tag_instance_object = $DB->get_record('tag_instance', array('tagid'=>$tagid, 'itemtype'=>$record_type, 'itemid'=>$record_id, 'tiuserid'=>$userid), 'id')) {
         $tag_instance_object->ordering     = $ordering;
-        $tag_instance_object->timemodified = time();
+        $tag_instance_object->timemodified = current_time();
         return $DB->update_record('tag_instance', $tag_instance_object);
     } else {
         $tag_instance_object = new StdClass;
@@ -795,7 +795,7 @@ function tag_assign($record_type, $record_id, $tagid, $ordering, $userid = 0) {
         $tag_instance_object->itemid       = $record_id;
         $tag_instance_object->itemtype     = $record_type;
         $tag_instance_object->ordering     = $ordering;
-        $tag_instance_object->timemodified = time();
+        $tag_instance_object->timemodified = current_time();
         $tag_instance_object->tiuserid     = $userid;
         return $DB->insert_record('tag_instance', $tag_instance_object);
     }
@@ -1184,7 +1184,7 @@ function tag_set_flag($tagids) {
     foreach ($tagids as $tagid) {
         $tag = $DB->get_record('tag', array('id'=>$tagid), 'id, flag');
         $tag->flag++;
-        $tag->timemodified = time();
+        $tag->timemodified = current_time();
         $DB->update_record('tag', $tag);
     }
 }
@@ -1203,7 +1203,7 @@ function tag_unset_flag($tagids) {
     if ( is_array($tagids) ) {
         $tagids = implode(',', $tagids);
     }
-    $timemodified = time();
+    $timemodified = current_time();
     return $DB->execute("UPDATE {tag} SET flag = 0, timemodified = ? WHERE id IN ($tagids)", array($timemodified));
 }
 

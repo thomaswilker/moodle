@@ -311,7 +311,7 @@ case 'download':
     $record->license  = '';
     $record->author   = '';
 
-    $now = time();
+    $now = current_time();
     $record->timecreated  = $now;
     $record->timemodified = $now;
     $record->userid       = $USER->id;

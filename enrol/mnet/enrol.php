@@ -188,7 +188,7 @@ class enrol_mnet_mnetservice_enrol {
         }
 
         try {
-            $enrol->enrol_user($instance, $user->id, $instance->roleid, time());
+            $enrol->enrol_user($instance, $user->id, $instance->roleid, current_time());
 
         } catch (Exception $e) {
             throw new mnet_server_exception(5019, 'couldnotenrol', 'enrol_mnet', $e->getMessage());

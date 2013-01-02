@@ -38,7 +38,7 @@ $USER->description = '';
 $PAGE->set_course($course);
 
 // force deleting of timed out users if there is a silence in room or just entering
-if ((time() - $chat_lasttime) > $CFG->chat_old_ping) {
+if ((current_time() - $chat_lasttime) > $CFG->chat_old_ping) {
     // must be done before chat_get_latest_message!!!
     chat_delete_old_users();
 }
@@ -50,10 +50,10 @@ if ($message = chat_get_latest_message($chatuser->chatid, $chatuser->groupid)) {
 }
 
 if ($chat_lasttime == 0) { //display some previous messages
-    $chat_lasttime = time() - $CFG->chat_old_ping; //TO DO - any better value??
+    $chat_lasttime = current_time() - $CFG->chat_old_ping; //TO DO - any better value??
 }
 
-$timenow    = time();
+$timenow    = current_time();
 
 $params = array('groupid'=>$chatuser->groupid, 'chatid'=>$chatuser->chatid, 'lasttime'=>$chat_lasttime);
 
@@ -139,7 +139,7 @@ ob_start();
              }
         }
 
-        $chatuser->lastping = time();
+        $chatuser->lastping = current_time();
         $DB->set_field('chat_users', 'lastping', $chatuser->lastping, array('id'=>$chatuser->id));
 
         if ($refreshusers) {

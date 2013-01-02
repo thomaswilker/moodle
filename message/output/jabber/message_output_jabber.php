@@ -164,7 +164,7 @@ $savemessage = new stdClass();
     $savemessage->useridto          = 2;
     $savemessage->subject           = 'IM';
     $savemessage->fullmessage       = 'full';
-    $savemessage->timecreated       = time();
+    $savemessage->timecreated       = current_time();
 
 
 $a = new message_output_jabber();

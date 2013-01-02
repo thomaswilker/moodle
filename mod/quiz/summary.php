@@ -55,7 +55,7 @@ if ($attemptobj->is_preview_user()) {
 }
 
 // Check access.
-$accessmanager = $attemptobj->get_access_manager(time());
+$accessmanager = $attemptobj->get_access_manager(current_time());
 $accessmanager->setup_attempt_page($PAGE);
 $output = $PAGE->get_renderer('mod_quiz');
 $messages = $accessmanager->prevent_access();
@@ -70,7 +70,7 @@ if ($accessmanager->is_preflight_check_required($attemptobj->get_attemptid())) {
 $displayoptions = $attemptobj->get_display_options(false);
 
 // If the attempt is now overdue, or abandoned, deal with that.
-$attemptobj->handle_if_time_expired(time(), true);
+$attemptobj->handle_if_time_expired(current_time(), true);
 
 // If the attempt is already closed, redirect them to the review page.
 if ($attemptobj->is_finished()) {

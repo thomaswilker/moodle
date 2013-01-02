@@ -127,7 +127,7 @@ function stats_run_query($sql, $parameters = array()) {
 function stats_cron_daily($maxdays=1) {
     global $CFG, $DB;
 
-    $now = time();
+    $now = current_time();
 
     $fpcontext = context_course::instance(SITEID, MUST_EXIST);
 
@@ -142,15 +142,15 @@ function stats_cron_daily($maxdays=1) {
 
     // Note: This will work fine for sites running cron each 4 hours or less (hopefully, 99.99% of sites). MDL-16709
     // check to make sure we're due to run, at least 20 hours after last run
-    if (isset($CFG->statslastexecution) && ((time() - 20*60*60) < $CFG->statslastexecution)) {
+    if (isset($CFG->statslastexecution) && ((current_time() - 20*60*60) < $CFG->statslastexecution)) {
         mtrace("...preventing stats to run, last execution was less than 20 hours ago.");
         return false;
     // also check that we are a max of 4 hours after scheduled time, stats won't run after that
-    } else if (time() > $scheduledtime + 4*60*60) {
+    } else if (current_time() > $scheduledtime + 4*60*60) {
         mtrace("...preventing stats to run, more than 4 hours since scheduled time.");
         return false;
     } else {
-        set_config('statslastexecution', time()); /// Grab this execution as last one
+        set_config('statslastexecution', current_time()); /// Grab this execution as last one
     }
 
     $nextmidnight = stats_get_next_day_start($timestart);
@@ -211,10 +211,10 @@ function stats_cron_daily($maxdays=1) {
 
         if ($days > 1) {
             // move the lock
-            set_cron_lock('statsrunning', time() + $timeout, true);
+            set_cron_lock('statsrunning', current_time() + $timeout, true);
         }
 
-        $daystart = time();
+        $daystart = current_time();
 
         stats_progress('init');
 
@@ -611,7 +611,7 @@ function stats_cron_daily($maxdays=1) {
 
         // remember processed days
         set_config('statslastdaily', $nextmidnight);
-        $elapsed = time()-$daystart;
+        $elapsed = current_time()-$daystart;
         mtrace("  finished until $nextmidnight: ".userdate($nextmidnight)." (in $elapsed s)");
         $total += $elapsed;
 
@@ -646,7 +646,7 @@ function stats_cron_daily($maxdays=1) {
 function stats_cron_weekly() {
     global $CFG, $DB;
 
-    $now = time();
+    $now = current_time();
 
     // read last execution date from db
     if (!$timestart = get_config(NULL, 'statslastweekly')) {
@@ -680,13 +680,13 @@ function stats_cron_weekly() {
 
         if ($weeks > 1) {
             // move the lock
-            set_cron_lock('statsrunning', time() + $timeout, true);
+            set_cron_lock('statsrunning', current_time() + $timeout, true);
         }
 
         $logtimesql  = "l.time >= $timestart AND l.time < $nextstartweek";
         $stattimesql = "timeend > $timestart AND timeend <= $nextstartweek";
 
-        $weekstart = time();
+        $weekstart = current_time();
         stats_progress('init');
 
     /// process login info first
@@ -766,7 +766,7 @@ function stats_cron_weekly() {
         stats_progress('5');
 
         set_config('statslastweekly', $nextstartweek);
-        $elapsed = time()-$weekstart;
+        $elapsed = current_time()-$weekstart;
         mtrace(" finished until $nextstartweek: ".userdate($nextstartweek) ." (in $elapsed s)");
 
         $timestart     = $nextstartweek;
@@ -785,7 +785,7 @@ function stats_cron_weekly() {
 function stats_cron_monthly() {
     global $CFG, $DB;
 
-    $now = time();
+    $now = current_time();
 
     // read last execution date from db
     if (!$timestart = get_config(NULL, 'statslastmonthly')) {
@@ -822,13 +822,13 @@ function stats_cron_monthly() {
 
         if ($months > 1) {
             // move the lock
-            set_cron_lock('statsrunning', time() + $timeout, true);
+            set_cron_lock('statsrunning', current_time() + $timeout, true);
         }
 
         $logtimesql  = "l.time >= $timestart AND l.time < $nextstartmonth";
         $stattimesql = "timeend > $timestart AND timeend <= $nextstartmonth";
 
-        $monthstart = time();
+        $monthstart = current_time();
         stats_progress('init');
 
     /// process login info first
@@ -907,7 +907,7 @@ function stats_cron_monthly() {
         stats_progress('5');
 
         set_config('statslastmonthly', $nextstartmonth);
-        $elapsed = time() - $monthstart;
+        $elapsed = current_time() - $monthstart;
         mtrace(" finished until $nextstartmonth: ".userdate($nextstartmonth) ." (in $elapsed s)");
 
         $timestart      = $nextstartmonth;
@@ -939,11 +939,11 @@ function stats_get_start_from($str) {
             }
         default:
             if (is_numeric($CFG->statsfirstrun)) {
-                return time() - $CFG->statsfirstrun;
+                return current_time() - $CFG->statsfirstrun;
             }
             // not a number? use next instead
         case 'none':
-            return strtotime('-3 day', time());
+            return strtotime('-3 day', current_time());
     }
 }
 
@@ -956,7 +956,7 @@ function stats_get_base_daily($time=0) {
     global $CFG;
 
     if (empty($time)) {
-        $time = time();
+        $time = current_time();
     }
     if ($CFG->timezone == 99) {
         $time = strtotime(date('d-M-Y', $time));
@@ -1003,7 +1003,7 @@ function stats_get_base_monthly($time=0) {
     global $CFG;
 
     if (empty($time)) {
-        $time = time();
+        $time = current_time();
     }
     if ($CFG->timezone == 99) {
         return strtotime(date('1-M-Y', $time));
@@ -1335,7 +1335,7 @@ function stats_get_action_names($str) {
 
 function stats_get_time_options($now,$lastweekend,$lastmonthend,$earliestday,$earliestweek,$earliestmonth) {
 
-    $now = stats_get_base_daily(time());
+    $now = stats_get_base_daily(current_time());
     // it's really important that it's TIMEEND in the table. ie, tuesday 00:00:00 is monday night.
     // so we need to take a day off here (essentially add a day to $now
     $now += 60*60*24;
@@ -1519,7 +1519,7 @@ function stats_check_uptodate($courseid=0) {
 
     $latestday = stats_get_start_from('daily');
 
-    if ((time() - 60*60*24*2) < $latestday) { // we're ok
+    if ((current_time() - 60*60*24*2) < $latestday) { // we're ok
         return NULL;
     }
 

@@ -98,7 +98,7 @@ class completion_completion extends data_object {
         if ($this->timeenrolled === null) {
 
             if ($timeenrolled === null) {
-                $timeenrolled = time();
+                $timeenrolled = current_time();
             }
 
             $this->timeenrolled = $timeenrolled;
@@ -116,7 +116,7 @@ class completion_completion extends data_object {
      */
     public function mark_inprogress($timestarted = null) {
 
-        $timenow = time();
+        $timenow = current_time();
 
         // Set reaggregate flag
         $this->reaggregate = $timenow;
@@ -151,7 +151,7 @@ class completion_completion extends data_object {
 
         // Use current time if nothing supplied
         if (!$timecomplete) {
-            $timecomplete = time();
+            $timecomplete = current_time();
         }
 
         // Set time complete

@@ -246,7 +246,7 @@ function wiki_save_page($wikipage, $newcontent, $userid) {
         $version->content = $newcontent;
         $version->userid = $userid;
         $version->version++;
-        $version->timecreated = time();
+        $version->timecreated = current_time();
         $versionid = $DB->insert_record('wiki_versions', $version);
 
         $wikipage->timemodified = $version->timecreated;
@@ -273,7 +273,7 @@ function wiki_refresh_cachedcontent($page, $newcontent = null) {
     $options = array('swid' => $page->subwikiid, 'pageid' => $page->id);
     $parseroutput = wiki_parse_content($version->contentformat, $newcontent, $options);
     $page->cachedcontent = $parseroutput['toc'] . $parseroutput['parsed_text'];
-    $page->timerendered = time();
+    $page->timerendered = current_time();
     $DB->update_record('wiki_pages', $page);
 
     wiki_refresh_page_links($page, $parseroutput['link_count']);
@@ -336,7 +336,7 @@ function wiki_create_page($swid, $title, $format, $userid) {
     $version->content = '';
     $version->contentformat = $format;
     $version->version = 0;
-    $version->timecreated = time();
+    $version->timecreated = current_time();
     $version->userid = $userid;
 
     $versionid = null;
@@ -952,7 +952,7 @@ function wiki_is_page_section_locked($pageid, $userid, $section = null) {
     global $DB;
 
     $sql = "pageid = ? AND lockedat > ? AND userid != ?";
-    $params = array($pageid, time(), $userid);
+    $params = array($pageid, current_time(), $userid);
 
     if (!empty($section)) {
         $sql .= " AND (sectionname = ? OR sectionname IS null)";
@@ -977,9 +977,9 @@ function wiki_set_lock($pageid, $userid, $section = null, $insert = false) {
     $lock = $DB->get_record('wiki_locks', $params);
 
     if (!empty($lock)) {
-        $DB->update_record('wiki_locks', array('id' => $lock->id, 'lockedat' => time() + LOCK_TIMEOUT));
+        $DB->update_record('wiki_locks', array('id' => $lock->id, 'lockedat' => current_time() + LOCK_TIMEOUT));
     } else if ($insert) {
-        $DB->insert_record('wiki_locks', array('pageid' => $pageid, 'sectionname' => $section, 'userid' => $userid, 'lockedat' => time() + 30));
+        $DB->insert_record('wiki_locks', array('pageid' => $pageid, 'sectionname' => $section, 'userid' => $userid, 'lockedat' => current_time() + 30));
     }
 
     return true;
@@ -1008,7 +1008,7 @@ function wiki_delete_locks($pageid, $userid = null, $section = null, $delete_fro
             $DB->delete_records('wiki_locks', $params);
         }
     } else {
-        $DB->set_field('wiki_locks', 'lockedat', time(), $params);
+        $DB->set_field('wiki_locks', 'lockedat', current_time(), $params);
     }
 }
 
@@ -1018,7 +1018,7 @@ function wiki_delete_locks($pageid, $userid = null, $section = null, $delete_fro
 function wiki_delete_old_locks() {
     global $DB;
 
-    $DB->delete_records_select('wiki_locks', "lockedat < ?", array(time() - 3600));
+    $DB->delete_records_select('wiki_locks', "lockedat < ?", array(current_time() - 3600));
 }
 
 /**
@@ -1258,7 +1258,7 @@ function wiki_get_wiki_page_id($pageid, $id) {
 function wiki_print_page_content($page, $context, $subwikiid) {
     global $OUTPUT, $CFG;
 
-    if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < time()) {
+    if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < current_time()) {
         $content = wiki_refresh_cachedcontent($page);
         $page = $content['page'];
     }

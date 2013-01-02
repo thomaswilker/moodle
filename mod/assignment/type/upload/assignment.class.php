@@ -50,7 +50,7 @@ class assignment_upload extends assignment_base {
 
         $this->view_header();
 
-        if ($this->assignment->timeavailable > time()
+        if ($this->assignment->timeavailable > current_time()
           and !has_capability('mod/assignment:grade', $this->context)      // grading user can see it anytime
           and $this->assignment->var3) {                                   // force hiding before available date
             echo $OUTPUT->box_start('generalbox boxaligncenter', 'intro');
@@ -204,7 +204,7 @@ class assignment_upload extends assignment_base {
      *@return boolean
      */
     function description_is_hidden() {
-        return ($this->assignment->var3 && (time() <= $this->assignment->timeavailable));
+        return ($this->assignment->var3 && (current_time() <= $this->assignment->timeavailable));
     }
 
     function print_student_answer($userid, $return=false){
@@ -439,7 +439,7 @@ class assignment_upload extends assignment_base {
             $submission = $this->get_submission($USER->id, true); // get or create submission
             $updated = new stdClass();
             $updated->id           = $submission->id;
-            $updated->timemodified = time();
+            $updated->timemodified = current_time();
             $updated->data1        = $data->text;
 
             $DB->update_record('assignment_submissions', $updated);
@@ -507,7 +507,7 @@ class assignment_upload extends assignment_base {
             $updates = new stdClass();
             $updates->id = $submission->id;
             $updates->numfiles = count($fs->get_area_files($this->context->id, 'mod_assignment', 'submission', $submission->id, 'sortorder', false));
-            $updates->timemodified = time();
+            $updates->timemodified = current_time();
             $DB->update_record('assignment_submissions', $updates);
             add_to_log($this->course->id, 'assignment', 'upload',
                     'view.php?a='.$this->assignment->id, $this->assignment->id, $this->cm->id);
@@ -627,7 +627,7 @@ class assignment_upload extends assignment_base {
         $updated = new stdClass();
         $updated->id           = $submission->id;
         $updated->data2        = ASSIGNMENT_STATUS_SUBMITTED;
-        $updated->timemodified = time();
+        $updated->timemodified = current_time();
 
         $DB->update_record('assignment_submissions', $updated);
         add_to_log($this->course->id, 'assignment', 'upload', //TODO: add finalize action to log
@@ -812,7 +812,7 @@ class assignment_upload extends assignment_base {
         $fs = get_file_storage();
         if ($file = $fs->get_file($this->context->id, 'mod_assignment', 'submission', $submission->id, '/', $file)) {
             $file->delete();
-            $submission->timemodified = time();
+            $submission->timemodified = current_time();
             $DB->update_record('assignment_submissions', $submission);
             add_to_log($this->course->id, 'assignment', 'upload', //TODO: add delete action to log
                     'view.php?a='.$this->assignment->id, $this->assignment->id, $this->cm->id);

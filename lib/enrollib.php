@@ -589,7 +589,7 @@ function enrol_get_my_courses($fields = NULL, $sort = 'visible DESC,sortorder AS
     $params['userid']  = $USER->id;
     $params['active']  = ENROL_USER_ACTIVE;
     $params['enabled'] = ENROL_INSTANCE_ENABLED;
-    $params['now1']    = round(time(), -2); // improves db caching
+    $params['now1']    = round(current_time(), -2); // improves db caching
     $params['now2']    = $params['now1'];
 
     $courses = $DB->get_records_sql($sql, $params, 0, $limit);
@@ -737,7 +737,7 @@ function enrol_user_sees_own_courses($user = null) {
     if ($USER->id == $userid) {
         if (!empty($USER->enrol['enrolled'])) {
             foreach ($USER->enrol['enrolled'] as $until) {
-                if ($until > time()) {
+                if ($until > current_time()) {
                     return true;
                 }
             }
@@ -821,7 +821,7 @@ function enrol_get_all_users_courses($userid, $onlyactive = false, $fields = NUL
 
     if ($onlyactive) {
         $subwhere = "WHERE ue.status = :active AND e.status = :enabled AND ue.timestart < :now1 AND (ue.timeend = 0 OR ue.timeend > :now2)";
-        $params['now1']    = round(time(), -2); // improves db caching
+        $params['now1']    = round(current_time(), -2); // improves db caching
         $params['now2']    = $params['now1'];
         $params['active']  = ENROL_USER_ACTIVE;
         $params['enabled'] = ENROL_INSTANCE_ENABLED;
@@ -1002,7 +1002,7 @@ function enrol_get_enrolment_end($courseid, $userid) {
     // looking for current status and the next future end of enrolment
     ksort($changes);
 
-    $now = time();
+    $now = current_time();
     $current = 0;
     $present = null;
 
@@ -1272,7 +1272,7 @@ abstract class enrol_plugin {
                     $ue->status   = $status;
                 }
                 $ue->modifierid   = $USER->id;
-                $ue->timemodified = time();
+                $ue->timemodified = current_time();
                 $DB->update_record('user_enrolments', $ue);
 
                 $updated = true;
@@ -1285,7 +1285,7 @@ abstract class enrol_plugin {
             $ue->timestart    = $timestart;
             $ue->timeend      = $timeend;
             $ue->modifierid   = $USER->id;
-            $ue->timecreated  = time();
+            $ue->timecreated  = current_time();
             $ue->timemodified = $ue->timecreated;
             $ue->id = $DB->insert_record('user_enrolments', $ue);
 
@@ -1608,7 +1608,7 @@ abstract class enrol_plugin {
         $instance->courseid       = $course->id;
         $instance->enrolstartdate = 0;
         $instance->enrolenddate   = 0;
-        $instance->timemodified   = time();
+        $instance->timemodified   = current_time();
         $instance->timecreated    = $instance->timemodified;
         $instance->sortorder      = $DB->get_field('enrol', 'COALESCE(MAX(sortorder), -1) + 1', array('courseid'=>$course->id));
 
@@ -1738,7 +1738,7 @@ abstract class enrol_plugin {
             return false;
         }
         $lastexecuted = $this->get_config('lastcron', 0);
-        if ($lastexecuted + $plugin->cron < time()) {
+        if ($lastexecuted + $plugin->cron < current_time()) {
             return true;
         } else {
             return false;
@@ -1852,7 +1852,7 @@ abstract class enrol_plugin {
             return;
         }
 
-        $timenow = time();
+        $timenow = current_time();
         $notifytime = usergetmidnight($timenow, $CFG->timezone) + ($expirynotifyhour * 3600);
 
         if ($expirynotifylast > $notifytime) {

@@ -46,7 +46,7 @@
 function wiki_add_instance($wiki) {
     global $DB;
 
-    $wiki->timemodified = time();
+    $wiki->timemodified = current_time();
     # May have to add extra stuff in here #
     if (empty($wiki->forceformat)) {
         $wiki->forceformat = 0;
@@ -65,7 +65,7 @@ function wiki_add_instance($wiki) {
 function wiki_update_instance($wiki) {
     global $DB;
 
-    $wiki->timemodified = time();
+    $wiki->timemodified = current_time();
     $wiki->id = $wiki->instance;
     if (empty($wiki->forceformat)) {
         $wiki->forceformat = 0;

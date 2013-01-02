@@ -89,7 +89,7 @@ class qformat_blackboard_six extends qformat_blackboard_six_base {
         }
         // We are importing a zip file.
         // Create name for temporary directory.
-        $unique_code = time();
+        $unique_code = current_time();
         $this->tempdir = make_temp_directory('bbquiz_import/' . $unique_code);
         if (is_readable($filename)) {
             if (!copy($filename, $this->tempdir . '/bboard.zip')) {

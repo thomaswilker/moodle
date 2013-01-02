@@ -46,7 +46,7 @@ $attemptobj = quiz_attempt::create($attemptid);
 require_login($attemptobj->get_course(), false, $attemptobj->get_cm());
 $attemptobj->check_review_capability();
 
-$accessmanager = $attemptobj->get_access_manager(time());
+$accessmanager = $attemptobj->get_access_manager(current_time());
 $options = $attemptobj->get_display_options(true);
 
 $PAGE->set_pagelayout('popup');

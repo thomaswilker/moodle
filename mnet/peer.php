@@ -128,7 +128,7 @@ class mnet_peer {
 
     function delete_expired_sessions() {
         global $DB;
-        $now = time();
+        $now = current_time();
         return $DB->delete_records_select('mnet_session', " mnethostid = ? AND expires < ? ", array($this->id, $now));
     }
 
@@ -203,7 +203,7 @@ class mnet_peer {
     }
 
     function touch() {
-        $this->last_connect_time = time();
+        $this->last_connect_time = current_time();
         $this->commit();
     }
 

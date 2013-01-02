@@ -64,7 +64,7 @@ function glossary_add_instance($glossary) {
         $glossary->globalglossary = 0;
     }
 
-    $glossary->timecreated  = time();
+    $glossary->timecreated  = current_time();
     $glossary->timemodified = $glossary->timecreated;
 
     //Check displayformat is a valid one
@@ -102,7 +102,7 @@ function glossary_update_instance($glossary) {
         unset($glossary->globalglossary);
     }
 
-    $glossary->timemodified = time();
+    $glossary->timemodified = current_time();
     $glossary->id           = $glossary->instance;
 
     if (empty($glossary->ratingtime) or empty($glossary->assessed)) {
@@ -1259,7 +1259,7 @@ function glossary_print_entry_icons($course, $cm, $glossary, $entry, $mode='',$h
         //Decide if an entry is editable:
         // -It isn't a imported entry (so nobody can edit a imported (from secondary to main) entry)) and
         // -The user is teacher or he is a student with time permissions (edit period or editalways defined).
-        $ineditperiod = ((time() - $entry->timecreated <  $CFG->maxeditingtime) || $glossary->editalways);
+        $ineditperiod = ((current_time() - $entry->timecreated <  $CFG->maxeditingtime) || $glossary->editalways);
         if ( !$importedentry and (has_capability('mod/glossary:manageentries', $context) or ($entry->userid == $USER->id and ($ineditperiod and has_capability('mod/glossary:write', $context))))) {
             $output = true;
             $return .= "<a class='action-icon' title=\"" . get_string("delete") . "\" href=\"deleteentry.php?id=$cm->id&amp;mode=delete&amp;entry=$entry->id&amp;prevmode=$mode&amp;hook=".urlencode($hook)."\"><img src=\"";

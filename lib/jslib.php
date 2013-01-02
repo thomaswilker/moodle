@@ -39,7 +39,7 @@ function js_send_cached($jspath, $etag, $filename = 'javascript.php') {
     header('Etag: '.$etag);
     header('Content-Disposition: inline; filename="'.$filename.'"');
     header('Last-Modified: '. gmdate('D, d M Y H:i:s', filemtime($jspath)) .' GMT');
-    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $lifetime) .' GMT');
+    header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + $lifetime) .' GMT');
     header('Pragma: ');
     header('Cache-Control: public, max-age='.$lifetime);
     header('Accept-Ranges: none');
@@ -64,8 +64,8 @@ function js_send_cached($jspath, $etag, $filename = 'javascript.php') {
  */
 function js_send_uncached($js, $filename = 'javascript.php') {
     header('Content-Disposition: inline; filename="'.$filename.'"');
-    header('Last-Modified: '. gmdate('D, d M Y H:i:s', time()) .' GMT');
-    header('Expires: '. gmdate('D, d M Y H:i:s', time() + 2) .' GMT');
+    header('Last-Modified: '. gmdate('D, d M Y H:i:s', current_time()) .' GMT');
+    header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + 2) .' GMT');
     header('Pragma: ');
     header('Accept-Ranges: none');
     header('Content-Type: application/javascript; charset=utf-8');
@@ -83,7 +83,7 @@ function js_send_uncached($js, $filename = 'javascript.php') {
 function js_send_unmodified($lastmodified, $etag) {
     $lifetime = 60*60*24*60; // 60 days only - the revision may get incremented quite often
     header('HTTP/1.1 304 Not Modified');
-    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $lifetime) .' GMT');
+    header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + $lifetime) .' GMT');
     header('Cache-Control: public, max-age='.$lifetime);
     header('Content-Type: application/javascript; charset=utf-8');
     header('Etag: '.$etag);

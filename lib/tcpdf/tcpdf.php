@@ -2096,7 +2096,7 @@ class TCPDF {
 		$serformat = (is_array($format) ? serialize($format) : $format);
 		$this->file_id = md5($this->getRandomSeed('TCPDF'.$orientation.$unit.$serformat.$encoding));
 		// set document creation and modification timestamp
-		$this->doc_creation_timestamp = time();
+		$this->doc_creation_timestamp = current_time();
 		$this->doc_modification_timestamp = $this->doc_creation_timestamp;
 		// get default graphic vars
 		$this->default_graphic_vars = $this->getGraphicVars();

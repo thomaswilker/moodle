@@ -82,9 +82,9 @@ case 'chat':
         $message->userid    = $chatuser->userid;
         $message->groupid   = $chatuser->groupid;
         $message->message   = $chat_message;
-        $message->timestamp = time();
+        $message->timestamp = current_time();
 
-        $chatuser->lastmessageping = time() - 2;
+        $chatuser->lastmessageping = current_time() - 2;
         $DB->update_record('chat_users', $chatuser);
 
         $DB->insert_record('chat_messages', $message);
@@ -98,7 +98,7 @@ case 'chat':
     break;
 
 case 'update':
-    if ((time() - $chat_lasttime) > $CFG->chat_old_ping) {
+    if ((current_time() - $chat_lasttime) > $CFG->chat_old_ping) {
         chat_delete_old_users();
     }
 
@@ -109,7 +109,7 @@ case 'update':
     }
 
     if ($chat_lasttime == 0) {
-        $chat_lasttime = time() - $CFG->chat_old_ping;
+        $chat_lasttime = current_time() - $CFG->chat_old_ping;
     }
 
     $params = array('groupid'=>$chatuser->groupid, 'chatid'=>$chatuser->chatid, 'lasttime'=>$chat_lasttime);
@@ -152,7 +152,7 @@ case 'update':
         $response['users'] = $users;
     }
 
-    $DB->set_field('chat_users', 'lastping', time(), array('id'=>$chatuser->id));
+    $DB->set_field('chat_users', 'lastping', current_time(), array('id'=>$chatuser->id));
 
     $response['lasttime'] = $chat_newlasttime;
     $response['lastrow']  = $chat_newrow;

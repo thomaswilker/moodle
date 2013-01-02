@@ -51,7 +51,7 @@ if (!$canmanage) {
     $lesson->displayleft = lesson_displayleftif($lesson);
     $timer = $lesson->update_timer();
     if ($lesson->timed) {
-        $timeleft = ($timer->starttime + $lesson->maxtime * 60) - time();
+        $timeleft = ($timer->starttime + $lesson->maxtime * 60) - current_time();
         if ($timeleft <= 0) {
             // Out of time
             $lesson->add_message(get_string('eolstudentoutoftime', 'lesson'));

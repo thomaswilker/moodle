@@ -69,7 +69,7 @@ abstract class backup_cron_automated_helper {
 
         $status = true;
         $emailpending = false;
-        $now = time();
+        $now = current_time();
         $config = get_config('backup');
 
         mtrace("Checking automated backup status",'...');
@@ -190,14 +190,14 @@ abstract class backup_cron_automated_helper {
                     // Only make the backup if laststatus isn't 2-UNFINISHED (uncontrolled error).
                     if ($backupcourse->laststatus != self::BACKUP_STATUS_UNFINISHED) {
                         // Set laststarttime.
-                        $starttime = time();
+                        $starttime = current_time();
 
-                        $backupcourse->laststarttime = time();
+                        $backupcourse->laststarttime = current_time();
                         $backupcourse->laststatus = self::BACKUP_STATUS_UNFINISHED;
                         $DB->update_record('backup_courses', $backupcourse);
 
                         $backupcourse->laststatus = backup_cron_automated_helper::launch_automated_backup($course, $backupcourse->laststarttime, $admin->id);
-                        $backupcourse->lastendtime = time();
+                        $backupcourse->lastendtime = current_time();
                         $backupcourse->nextstarttime = $nextstarttime;
 
                         $DB->update_record('backup_courses', $backupcourse);
@@ -314,7 +314,7 @@ abstract class backup_cron_automated_helper {
      * Works out the next time the automated backup should be run.
      *
      * @param mixed $timezone user timezone
-     * @param int $now timestamp, should not be in the past, most likely time()
+     * @param int $now timestamp, should not be in the past, most likely current_time()
      * @return int timestamp of the next execution at server time
      */
     public static function calculate_next_automated_backup($timezone, $now) {
@@ -351,8 +351,8 @@ abstract class backup_cron_automated_helper {
 
         // If that time is past, call the function recursively to obtain the next valid day.
         if ($result <= $now) {
-            // Checking time() in here works, but makes PHPUnit Tests extremely hard to predict.
-            // $now should never be earlier than time() anyway...
+            // Checking current_time() in here works, but makes PHPUnit Tests extremely hard to predict.
+            // $now should never be earlier than current_time() anyway...
             $result = self::calculate_next_automated_backup($timezone, $now + DAYSECS);
         }
 
@@ -502,7 +502,7 @@ abstract class backup_cron_automated_helper {
             // by looking for recent activity in the backup_controllers table
             // for backups of type backup::MODE_AUTOMATED
             $timetosee = 60 * 90; // Time to consider in order to clean the semaphore
-            $params = array( 'purpose'   => backup::MODE_AUTOMATED, 'timetolook' => (time() - $timetosee));
+            $params = array( 'purpose'   => backup::MODE_AUTOMATED, 'timetolook' => (current_time() - $timetosee));
             if ($DB->record_exists_select('backup_controllers',
                 "operation = 'backup' AND type = 'course' AND purpose = :purpose AND timemodified > :timetolook", $params)) {
                 return self::STATE_RUNNING; // Recent activity found, still running

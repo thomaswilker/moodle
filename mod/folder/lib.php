@@ -93,7 +93,7 @@ function folder_add_instance($data, $mform) {
     $cmid        = $data->coursemodule;
     $draftitemid = $data->files;
 
-    $data->timemodified = time();
+    $data->timemodified = current_time();
     $data->id = $DB->insert_record('folder', $data);
 
     // we need to use context now, so we need to make sure all needed info is already in db
@@ -119,7 +119,7 @@ function folder_update_instance($data, $mform) {
     $cmid        = $data->coursemodule;
     $draftitemid = $data->files;
 
-    $data->timemodified = time();
+    $data->timemodified = current_time();
     $data->id           = $data->instance;
     $data->revision++;
 

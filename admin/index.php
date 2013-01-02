@@ -420,7 +420,7 @@ if (empty($site->shortname)) {
 
 // Check if we are returning from moodle.org registration and if so, we mark that fact to remove reminders
 if (!empty($id) and $id == $CFG->siteidentifier) {
-    set_config('registered', time());
+    set_config('registered', current_time());
 }
 
 // setup critical warnings before printing admin tree block
@@ -440,7 +440,7 @@ if (any_new_admin_settings($adminroot)){
 $errorsdisplayed = defined('WARN_DISPLAY_ERRORS_ENABLED');
 
 $lastcron = $DB->get_field_sql('SELECT MAX(lastcron) FROM {modules}');
-$cronoverdue = ($lastcron < time() - 3600 * 24);
+$cronoverdue = ($lastcron < current_time() - 3600 * 24);
 $dbproblems = $DB->diagnose();
 $maintenancemode = !empty($CFG->maintenance_enabled);
 

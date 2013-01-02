@@ -162,7 +162,7 @@ class MoodleQuickForm_date_time_selector extends MoodleQuickForm_group{
                 if ($value == 0) {
                     $value = $this->_options['defaulttime'];
                     if (!$value) {
-                        $value = time();
+                        $value = current_time();
                     }
                 }
                 if (!is_array($value)) {

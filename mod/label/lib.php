@@ -61,7 +61,7 @@ function label_add_instance($label) {
     global $DB;
 
     $label->name = get_label_name($label);
-    $label->timemodified = time();
+    $label->timemodified = current_time();
 
     return $DB->insert_record("label", $label);
 }
@@ -79,7 +79,7 @@ function label_update_instance($label) {
     global $DB;
 
     $label->name = get_label_name($label);
-    $label->timemodified = time();
+    $label->timemodified = current_time();
     $label->id = $label->instance;
 
     return $DB->update_record("label", $label);

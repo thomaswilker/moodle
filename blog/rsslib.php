@@ -181,7 +181,7 @@ function blog_rss_get_feed($context, $args) {
     $filename = blog_rss_file_name($type, $id, $tagid);
 
     if (file_exists($filename)) {
-        if (filemtime($filename) + 3600 > time()) {
+        if (filemtime($filename) + 3600 > current_time()) {
             return $filename;   // It's already done so we return cached version
         }
     }

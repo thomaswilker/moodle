@@ -126,8 +126,8 @@ function css_send_ie_css($themename, $rev, $etag, $slasharguments) {
 
     header('Etag: '.$etag);
     header('Content-Disposition: inline; filename="styles.php"');
-    header('Last-Modified: '. gmdate('D, d M Y H:i:s', time()) .' GMT');
-    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $lifetime) .' GMT');
+    header('Last-Modified: '. gmdate('D, d M Y H:i:s', current_time()) .' GMT');
+    header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + $lifetime) .' GMT');
     header('Pragma: ');
     header('Cache-Control: public, max-age='.$lifetime);
     header('Accept-Ranges: none');
@@ -153,7 +153,7 @@ function css_send_cached_css($csspath, $etag) {
     header('Etag: '.$etag);
     header('Content-Disposition: inline; filename="styles.php"');
     header('Last-Modified: '. gmdate('D, d M Y H:i:s', filemtime($csspath)) .' GMT');
-    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $lifetime) .' GMT');
+    header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + $lifetime) .' GMT');
     header('Pragma: ');
     header('Cache-Control: public, max-age='.$lifetime);
     header('Accept-Ranges: none');
@@ -182,8 +182,8 @@ function css_send_uncached_css($css, $themesupportsoptimisation = true) {
     global $CFG;
 
     header('Content-Disposition: inline; filename="styles_debug.php"');
-    header('Last-Modified: '. gmdate('D, d M Y H:i:s', time()) .' GMT');
-    header('Expires: '. gmdate('D, d M Y H:i:s', time() + THEME_DESIGNER_CACHE_LIFETIME) .' GMT');
+    header('Last-Modified: '. gmdate('D, d M Y H:i:s', current_time()) .' GMT');
+    header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + THEME_DESIGNER_CACHE_LIFETIME) .' GMT');
     header('Pragma: ');
     header('Accept-Ranges: none');
     header('Content-Type: text/css; charset=utf-8');
@@ -205,7 +205,7 @@ function css_send_uncached_css($css, $themesupportsoptimisation = true) {
 function css_send_unmodified($lastmodified, $etag) {
     $lifetime = 60*60*24*60; // 60 days only - the revision may get incremented quite often
     header('HTTP/1.1 304 Not Modified');
-    header('Expires: '. gmdate('D, d M Y H:i:s', time() + $lifetime) .' GMT');
+    header('Expires: '. gmdate('D, d M Y H:i:s', current_time() + $lifetime) .' GMT');
     header('Cache-Control: public, max-age='.$lifetime);
     header('Content-Type: text/css; charset=utf-8');
     header('Etag: '.$etag);

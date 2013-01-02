@@ -341,7 +341,7 @@ class format_weeks extends format_base {
         if ($sectionnum < 1) {
             return false;
         }
-        $timenow = time();
+        $timenow = current_time();
         $dates = $this->get_section_dates($section);
         return (($timenow >= $dates->start) && ($timenow < $dates->end));
     }

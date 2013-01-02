@@ -964,7 +964,7 @@ class S3
 	*/
 	public static function getAuthenticatedURL($bucket, $uri, $lifetime, $hostBucket = false, $https = false)
 	{
-		$expires = time() + $lifetime;
+		$expires = current_time() + $lifetime;
 		$uri = str_replace(array('%2F', '%2B'), array('/', '+'), rawurlencode($uri));
 		return sprintf(($https ? 'https' : 'http').'://%s/%s?AWSAccessKeyId=%s&Expires=%u&Signature=%s',
 		// $hostBucket ? $bucket : $bucket.'.s3.amazonaws.com', $uri, self::$__accessKey, $expires,
@@ -1007,7 +1007,7 @@ class S3
 		return self::getSignedPolicyURL(array(
 			'Statement' => array(
 				array('Resource' => $url, 'Condition' => array(
-					'DateLessThan' => array('AWS:EpochTime' => time() + $lifetime)
+					'DateLessThan' => array('AWS:EpochTime' => current_time() + $lifetime)
 				))
 			)
 		));
@@ -1033,7 +1033,7 @@ class S3
 	{
 		// Create policy object
 		$policy = new stdClass;
-		$policy->expiration = gmdate('Y-m-d\TH:i:s\Z', (time() + $lifetime));
+		$policy->expiration = gmdate('Y-m-d\TH:i:s\Z', (current_time() + $lifetime));
 		$policy->conditions = array();
 		$obj = new stdClass; $obj->bucket = $bucket; array_push($policy->conditions, $obj);
 		$obj = new stdClass; $obj->acl = $acl; array_push($policy->conditions, $obj);

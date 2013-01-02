@@ -79,10 +79,10 @@ abstract class backup_controller_dbops extends backup_dbops {
         // Send it to DB
         if ($recexists = $DB->get_record('backup_controllers', array('backupid' => $rec->backupid))) {
             $rec->id = $recexists->id;
-            $rec->timemodified = time();
+            $rec->timemodified = current_time();
             $DB->update_record('backup_controllers', $rec);
         } else {
-            $rec->timecreated = time();
+            $rec->timecreated = current_time();
             $rec->timemodified = 0;
             $rec->id = $DB->insert_record('backup_controllers', $rec);
         }

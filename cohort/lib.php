@@ -50,7 +50,7 @@ function cohort_add_cohort($cohort) {
         $cohort->component = '';
     }
     if (!isset($cohort->timecreated)) {
-        $cohort->timecreated = time();
+        $cohort->timecreated = current_time();
     }
     if (!isset($cohort->timemodified)) {
         $cohort->timemodified = $cohort->timecreated;
@@ -74,7 +74,7 @@ function cohort_update_cohort($cohort) {
         // prevent NULLs
         $cohort->component = '';
     }
-    $cohort->timemodified = time();
+    $cohort->timemodified = current_time();
     $DB->update_record('cohort', $cohort);
 
     events_trigger('cohort_updated', $cohort);
@@ -139,7 +139,7 @@ function cohort_add_member($cohortid, $userid) {
     $record = new stdClass();
     $record->cohortid  = $cohortid;
     $record->userid    = $userid;
-    $record->timeadded = time();
+    $record->timeadded = current_time();
     $DB->insert_record('cohort_members', $record);
 
     events_trigger('cohort_member_added', (object)array('cohortid'=>$cohortid, 'userid'=>$userid));

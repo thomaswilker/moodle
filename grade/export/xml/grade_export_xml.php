@@ -48,7 +48,7 @@ class grade_export_xml extends grade_export {
         }
 
         /// time stamp to ensure uniqueness of batch export
-        fwrite($handle,  '<results batch="xml_export_'.time().'">'."\n");
+        fwrite($handle,  '<results batch="xml_export_'.current_time().'">'."\n");
 
         $export_buffer = array();
 

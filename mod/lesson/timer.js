@@ -10,7 +10,7 @@
 //    Below is the code that is used to call this page.
 //    echo "<script type=\"text/javascript\">\n";
 //        echo "var starttime = ". $timer->starttime . ";\n";
-//        echo "var servertime = ". time() . ";\n";
+//        echo "var servertime = ". current_time() . ";\n";
 //        echo "var testlength = ". $lesson->maxtime * 60 .";\n";
 //        echo "document.write('<script type=\"text/javascript\" src=\"liveclock_lite.js\"><\/script>');\n";
 //        echo "window.onload = function () { show_clock(); }";

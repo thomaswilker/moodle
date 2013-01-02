@@ -126,7 +126,7 @@ class cc11_quiz extends entities11 {
         $node_course_modules_quiz_feedback = $this->create_node_course_modules_mod_quiz_feedback($instance);
 
         $questions_strings = $this->get_questions_string($instance);
-        $quiz_stamp = 'localhost+' . time() . '+' . $this->generate_random_string(6);
+        $quiz_stamp = 'localhost+' . current_time() . '+' . $this->generate_random_string(6);
 
         $find_tags = array('[#mod_id#]',
                            '[#mod_name#]',
@@ -144,7 +144,7 @@ class cc11_quiz extends entities11 {
                                 self::safexml($instance['title']),
                                 self::safexml($quiz_stamp),
                                 self::safexml($questions_strings),
-                                time(),
+                                current_time(),
                                 $instance['options']['max_attempts'],
                                 $instance['options']['timelimit'],
                                 $node_course_modules_quiz_question_instances,
@@ -253,7 +253,7 @@ class cc11_quiz extends entities11 {
         $node_course_question_categories_questions = $this->create_node_course_question_categories_question_category_question($instance);
         $node_course_question_categories_questions = empty($node_course_question_categories_questions) ? '' : $node_course_question_categories_questions;
 
-        $quiz_stamp = 'localhost+' . time() . '+' . $this->generate_random_string(6);
+        $quiz_stamp = 'localhost+' . current_time() . '+' . $this->generate_random_string(6);
 
         $replace_values = array($instance['id'],
                                 self::safexml($instance['title']),
@@ -291,8 +291,8 @@ class cc11_quiz extends entities11 {
 
             foreach ($questions as $question) {
 
-                $quiz_stamp = 'localhost+' . time() . '+' . $this->generate_random_string(6);
-                $quiz_version = 'localhost+' . time() . '+' . $this->generate_random_string(6);
+                $quiz_stamp = 'localhost+' . current_time() . '+' . $this->generate_random_string(6);
+                $quiz_version = 'localhost+' . current_time() . '+' . $this->generate_random_string(6);
 
                 $question_moodle_type = $question['moodle_type'];
                 $question_cc_type = $question['cc_type'];
@@ -310,7 +310,7 @@ class cc11_quiz extends entities11 {
                                         $question_moodle_type,
                                         self::safexml($question['feedback']),
                                         $question['defaultgrade'],
-                                        time(),
+                                        current_time(),
                                         $question_type_node,
                                         $quiz_stamp,
                                         $quiz_version,

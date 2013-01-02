@@ -506,7 +506,7 @@ abstract class moodleform_mod extends moodleform {
             // Available from/to defaults to midnight because then the display
             // will be nicer where it tells users when they can access it (it
             // shows only the date and not time).
-            $date = usergetdate(time());
+            $date = usergetdate(current_time());
             $midnight = make_timestamp($date['year'], $date['mon'], $date['mday']);
 
             // From/until controls

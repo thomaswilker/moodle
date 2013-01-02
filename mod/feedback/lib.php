@@ -77,7 +77,7 @@ function feedback_supports($feature) {
 function feedback_add_instance($feedback) {
     global $DB;
 
-    $feedback->timemodified = time();
+    $feedback->timemodified = current_time();
     $feedback->id = '';
 
     //check if openenable and/or closeenable is set and set correctly to save in db
@@ -130,7 +130,7 @@ function feedback_add_instance($feedback) {
 function feedback_update_instance($feedback) {
     global $DB;
 
-    $feedback->timemodified = time();
+    $feedback->timemodified = current_time();
     $feedback->id = $feedback->instance;
 
     //check if openenable and/or closeenable is set and set correctly to save in db
@@ -1828,7 +1828,7 @@ function feedback_set_tmp_values($feedbackcompleted) {
         $tmpcpl->{$key} = $value;
     }
     unset($tmpcpl->id);
-    $tmpcpl->timemodified = time();
+    $tmpcpl->timemodified = current_time();
     $tmpcpl->id = $DB->insert_record('feedback_completedtmp', $tmpcpl);
     //get all values of original-completed
     if (!$values = $DB->get_records('feedback_value', array('completed'=>$feedbackcompleted->id))) {
@@ -1859,13 +1859,13 @@ function feedback_save_tmp_values($feedbackcompletedtmp, $feedbackcompleted, $us
         //first drop all existing values
         $DB->delete_records('feedback_value', array('completed'=>$feedbackcompleted->id));
         //update the current completed
-        $feedbackcompleted->timemodified = time();
+        $feedbackcompleted->timemodified = current_time();
         $DB->update_record('feedback_completed', $feedbackcompleted);
     } else {
         $feedbackcompleted = clone($feedbackcompletedtmp);
         $feedbackcompleted->id = '';
         $feedbackcompleted->userid = $userid;
-        $feedbackcompleted->timemodified = time();
+        $feedbackcompleted->timemodified = current_time();
         $feedbackcompleted->id = $DB->insert_record('feedback_completed', $feedbackcompleted);
     }
 
@@ -2078,7 +2078,7 @@ function feedback_save_values($usrid, $tmp = false) {
     $completedid = optional_param('completedid', 0, PARAM_INT);
 
     $tmpstr = $tmp ? 'tmp' : '';
-    $time = time();
+    $time = current_time();
     $timemodified = mktime(0, 0, 0, date('m', $time), date('d', $time), date('Y', $time));
 
     if ($usrid == 0) {
@@ -2105,7 +2105,7 @@ function feedback_save_guest_values($guestid) {
 
     $completedid = optional_param('completedid', false, PARAM_INT);
 
-    $timemodified = time();
+    $timemodified = current_time();
     if (!$completed = $DB->get_record('feedback_completedtmp', array('id'=>$completedid))) {
         return feedback_create_values(0, $timemodified, true, $guestid);
     } else {

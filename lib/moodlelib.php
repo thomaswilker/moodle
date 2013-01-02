@@ -1525,7 +1525,7 @@ function purge_all_caches() {
 function get_cache_flags($type, $changedsince=NULL) {
     global $DB;
 
-    $params = array('type'=>$type, 'expiry'=>time());
+    $params = array('type'=>$type, 'expiry'=>current_time());
     $sqlwhere = "flagtype = :type AND expiry >= :expiry";
     if ($changedsince !== NULL) {
         $params['changedsince'] = $changedsince;
@@ -1552,7 +1552,7 @@ function get_cache_flags($type, $changedsince=NULL) {
 function get_cache_flag($type, $name, $changedsince=NULL) {
     global $DB;
 
-    $params = array('type'=>$type, 'name'=>$name, 'expiry'=>time());
+    $params = array('type'=>$type, 'name'=>$name, 'expiry'=>current_time());
 
     $sqlwhere = "flagtype = :type AND name = :name AND expiry >= :expiry";
     if ($changedsince !== NULL) {
@@ -1575,7 +1575,7 @@ function get_cache_flag($type, $name, $changedsince=NULL) {
 function set_cache_flag($type, $name, $value, $expiry=NULL) {
     global $DB;
 
-    $timemodified = time();
+    $timemodified = current_time();
     if ($expiry===NULL || $expiry < $timemodified) {
         $expiry = $timemodified + 24 * 60 * 60;
     } else {
@@ -1628,7 +1628,7 @@ function unset_cache_flag($type, $name) {
  */
 function gc_cache_flags() {
     global $DB;
-    $DB->delete_records_select('cache_flags', 'expiry < ?', array(time()));
+    $DB->delete_records_select('cache_flags', 'expiry < ?', array(current_time()));
     return true;
 }
 
@@ -1664,7 +1664,7 @@ function check_user_preferences_loaded(stdClass $user, $cachelifetime = 120) {
         return;
     }
 
-    $timenow = time();
+    $timenow = current_time();
 
     if (isset($loadedusers[$user->id]) and isset($user->preference) and isset($user->preference['_lastloaded'])) {
         // Already loaded at least once on this page. Are we up to date?
@@ -1703,7 +1703,7 @@ function mark_user_preferences_changed($userid) {
         return;
     }
 
-    set_cache_flag('userpreferenceschanged', $userid, 1, time() + $CFG->sessiontimeout);
+    set_cache_flag('userpreferenceschanged', $userid, 1, current_time() + $CFG->sessiontimeout);
 }
 
 /**
@@ -1945,6 +1945,28 @@ function make_timestamp($year, $month=1, $day=1, $hour=0, $minute=0, $second=0, 
 
     return $time;
 
+}
+
+/**
+ * Get the current time (wrapper for current_time()).
+ * Use of this function allows unit tests to set the current time,
+ * e.g. for testing cron execution times.
+ *
+ * @package core
+ * @category time
+ * @return int
+ */
+function current_time() {
+    global $CORE_TIME_FORCED, $CORE_TIME_FORCED_TIME;
+
+    if (!defined('PHPUNIT_TEST')) {
+        return time();
+    }
+    if (empty($CORE_TIME_FORCED) || empty($CORE_TIME_FORCED_TIME)) {
+        return time();
+    }
+
+    return $CORE_TIME_FORCED + (time() - $CORE_TIME_FORCED_TIME);
 }
 
 /**
@@ -2992,7 +3014,7 @@ function require_login($courseorid = NULL, $autologinguest = true, $cm = NULL, $
 
         } else {
             if (isset($USER->enrol['enrolled'][$course->id])) {
-                if ($USER->enrol['enrolled'][$course->id] > time()) {
+                if ($USER->enrol['enrolled'][$course->id] > current_time()) {
                     $access = true;
                     if (isset($USER->enrol['tempguest'][$course->id])) {
                         unset($USER->enrol['tempguest'][$course->id]);
@@ -3006,7 +3028,7 @@ function require_login($courseorid = NULL, $autologinguest = true, $cm = NULL, $
             if (isset($USER->enrol['tempguest'][$course->id])) {
                 if ($USER->enrol['tempguest'][$course->id] == 0) {
                     $access = true;
-                } else if ($USER->enrol['tempguest'][$course->id] > time()) {
+                } else if ($USER->enrol['tempguest'][$course->id] > current_time()) {
                     $access = true;
                 } else {
                     //expired
@@ -3054,7 +3076,7 @@ function require_login($courseorid = NULL, $autologinguest = true, $cm = NULL, $
                             }
                             // Get a duration for the guest access, a timestamp in the future or false.
                             $until = $enrols[$instance->enrol]->try_guestaccess($instance);
-                            if ($until !== false and $until > time()) {
+                            if ($until !== false and $until > current_time()) {
                                 $USER->enrol['tempguest'][$course->id] = $until;
                                 $access = true;
                                 break;
@@ -3230,7 +3252,7 @@ function require_user_key_login($script, $instance=null) {
         print_error('invalidkey');
     }
 
-    if (!empty($key->validuntil) and $key->validuntil < time()) {
+    if (!empty($key->validuntil) and $key->validuntil < current_time()) {
         print_error('expiredkey');
     }
 
@@ -3278,12 +3300,12 @@ function create_user_key($script, $userid, $instance=null, $iprestriction=null, 
     $key->instance      = $instance;
     $key->iprestriction = $iprestriction;
     $key->validuntil    = $validuntil;
-    $key->timecreated   = time();
+    $key->timecreated   = current_time();
 
-    $key->value         = md5($userid.'_'.time().random_string(40)); // something long and unique
+    $key->value         = md5($userid.'_'.current_time().random_string(40)); // something long and unique
     while ($DB->record_exists('user_private_key', array('value'=>$key->value))) {
         // must be unique
-        $key->value     = md5($userid.'_'.time().random_string(40));
+        $key->value     = md5($userid.'_'.current_time().random_string(40));
     }
     $DB->insert_record('user_private_key', $key);
     return $key->value;
@@ -3342,7 +3364,7 @@ function update_user_login_times() {
         return true;
     }
 
-    $now = time();
+    $now = current_time();
 
     $user = new stdClass();
     $user->id = $USER->id;
@@ -3854,7 +3876,7 @@ function create_user_record($username, $password, $auth = 'manual') {
     }
     $newuser->confirmed = 1;
     $newuser->lastip = getremoteaddr();
-    $newuser->timecreated = time();
+    $newuser->timecreated = current_time();
     $newuser->timemodified = $newuser->timecreated;
     $newuser->mnethostid = $CFG->mnet_localhost_id;
 
@@ -3918,7 +3940,7 @@ function update_user_record($username) {
         }
         if ($newuser) {
             $newuser['id'] = $oldinfo->id;
-            $newuser['timemodified'] = time();
+            $newuser['timemodified'] = current_time();
             $DB->update_record('user', $newuser);
             // fetch full user record for the event, the complete user data contains too much info
             // and we want to be consistent with other places that trigger this event
@@ -4063,7 +4085,7 @@ function delete_user(stdClass $user) {
     delete_context(CONTEXT_USER, $user->id);
 
     // workaround for bulk deletes of users with the same email address
-    $delname = "$user->email.".time();
+    $delname = "$user->email.".current_time();
     while ($DB->record_exists('user', array('username'=>$delname))) { // no need to use mnethostid here
         $delname++;
     }
@@ -4076,7 +4098,7 @@ function delete_user(stdClass $user) {
     $updateuser->email        = md5($user->username);// Store hash of username, useful importing/restoring users
     $updateuser->idnumber     = '';                  // Clear this field to free it up
     $updateuser->picture      = 0;
-    $updateuser->timemodified = time();
+    $updateuser->timemodified = current_time();
 
     $DB->update_record('user', $updateuser);
     // Add this action to log
@@ -4570,7 +4592,7 @@ function delete_course($courseorid, $showfeedback = true) {
 
     // We will update the course's timemodified, as it will be passed to the course_deleted event,
     // which should know about this updated property, as this event is meant to pass the full course record
-    $course->timemodified = time();
+    $course->timemodified = current_time();
 
     $DB->delete_records("course", array("id" => $courseid));
     $DB->delete_records("course_format_options", array("courseid" => $courseid));
@@ -7012,7 +7034,7 @@ class core_string_manager implements string_manager {
         if (!$phpunitreset) {
             // Increment the revision counter.
             $langrev = get_config('core', 'langrev');
-            $next = time();
+            $next = current_time();
             if ($langrev !== false and $next <= $langrev and $langrev - $next < 60*60) {
                 // This resolves problems when reset is requested repeatedly within 1s,
                 // the < 1h condition prevents accidental switching to future dates
@@ -10220,7 +10242,7 @@ function message_popup_window() {
 
     if (!isset($USER->message_lastpopup)) {
         $USER->message_lastpopup = 0;
-    } else if ($USER->message_lastpopup > (time()-120)) {
+    } else if ($USER->message_lastpopup > (current_time()-120)) {
         //dont run the query to check whether to display a popup if its been run in the last 2 minutes
         return;
     }
@@ -10242,7 +10264,7 @@ function message_popup_window() {
 
     //if the user was last notified over an hour ago we can renotify them of old messages
     //so don't worry about when the new message was sent
-    $lastnotifiedlongago = $USER->message_lastpopup < (time()-3600);
+    $lastnotifiedlongago = $USER->message_lastpopup < (current_time()-3600);
     if (!$lastnotifiedlongago) {
         $messagesql .= 'AND m.timecreated > :lastpopuptime';
     }
@@ -10306,7 +10328,7 @@ function message_popup_window() {
 
         $PAGE->requires->js_init_call('M.core_message.init_notification', array('', $content, $url));
 
-        $USER->message_lastpopup = time();
+        $USER->message_lastpopup = current_time();
     }
 }
 

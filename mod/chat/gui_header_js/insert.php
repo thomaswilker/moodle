@@ -49,12 +49,12 @@ if (!empty($chat_message)) {
     $message->userid = $chatuser->userid;
     $message->groupid = $chatuser->groupid;
     $message->message = $chat_message;
-    $message->timestamp = time();
+    $message->timestamp = current_time();
 
     $DB->insert_record('chat_messages', $message);
     $DB->insert_record('chat_messages_current', $message);
 
-    $chatuser->lastmessageping = time() - 2;
+    $chatuser->lastmessageping = current_time() - 2;
     $DB->update_record('chat_users', $chatuser);
 
     if ($cm = get_coursemodule_from_instance('chat', $chat->id, $course->id)) {

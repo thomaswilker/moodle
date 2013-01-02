@@ -218,7 +218,7 @@ class edit_index_save extends XMLDBAction {
                 $table->setChanged(true);
                 // Recalculate the structure hash
                 $structure->calculateHash(true);
-                $structure->setVersion(userdate(time(), '%Y%m%d', 99, false));
+                $structure->setVersion(userdate(current_time(), '%Y%m%d', 99, false));
                 // Mark as changed
                 $structure->setChanged(true);
             }

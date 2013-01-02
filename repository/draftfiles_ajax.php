@@ -159,7 +159,7 @@ switch ($action) {
             $changes = array_diff(array_keys($updatedata), array('filepath'));
             if (!empty($changes)) {
                 // any change except for the moving to another folder alters 'Date modified' of the file
-                $file->set_timemodified(time());
+                $file->set_timemodified(current_time());
             }
         }
 
@@ -200,7 +200,7 @@ switch ($action) {
             $path = preg_replace("|^$xfilepath|", $newfilepath, $file->get_filepath());
             if ($dirname !== $newdirname && $file->get_filepath() === $filepath && $file->get_filename() === '.') {
                 // this is the main directory we move/rename AND it has actually been renamed
-                $file->set_timemodified(time());
+                $file->set_timemodified(current_time());
             }
             $file->rename($path, $file->get_filename());
         }

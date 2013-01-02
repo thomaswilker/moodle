@@ -1014,7 +1014,7 @@ function get_empty_accessdata() {
     $accessdata['rdef_count'] = 0;       // this bloody hack is necessary because count($array) is slooooowwww in PHP
     $accessdata['rdef_lcc']   = 0;       // rdef_count during the last compression
     $accessdata['loaded']     = array(); // loaded course contexts
-    $accessdata['time']       = time();
+    $accessdata['time']       = current_time();
     $accessdata['rsw']        = array();
 
     return $accessdata;
@@ -1481,7 +1481,7 @@ function assign_capability($capability, $permission, $roleid, $contextid, $overw
     $cap->roleid       = $roleid;
     $cap->capability   = $capability;
     $cap->permission   = $permission;
-    $cap->timemodified = time();
+    $cap->timemodified = current_time();
     $cap->modifierid   = empty($USER->id) ? 0 : $USER->id;
 
     if ($existing) {
@@ -1617,7 +1617,7 @@ function role_assign($roleid, $userid, $contextid, $component = '', $itemid = 0,
     }
 
     if (!$timemodified) {
-        $timemodified = time();
+        $timemodified = current_time();
     }
 
     // Check for existing entry
@@ -1960,7 +1960,7 @@ function is_enrolled(context $context, $user = null, $withcapability = '', $only
         if ($USER->id == $userid) {
             $coursecontext->reload_if_dirty();
             if (isset($USER->enrol['enrolled'][$coursecontext->instanceid])) {
-                if ($USER->enrol['enrolled'][$coursecontext->instanceid] > time()) {
+                if ($USER->enrol['enrolled'][$coursecontext->instanceid] > current_time()) {
                     if ($withcapability and !has_capability($withcapability, $context, $userid)) {
                         return false;
                     }
@@ -2089,12 +2089,12 @@ function can_access_course(stdClass $course, $user = null, $withcapability = '',
     $coursecontext->reload_if_dirty();
 
     if (isset($USER->enrol['enrolled'][$course->id])) {
-        if ($USER->enrol['enrolled'][$course->id] > time()) {
+        if ($USER->enrol['enrolled'][$course->id] > current_time()) {
             return true;
         }
     }
     if (isset($USER->enrol['tempguest'][$course->id])) {
-        if ($USER->enrol['tempguest'][$course->id] > time()) {
+        if ($USER->enrol['tempguest'][$course->id] > current_time()) {
             return true;
         }
     }
@@ -2112,7 +2112,7 @@ function can_access_course(stdClass $course, $user = null, $withcapability = '',
         }
         // Get a duration for the guest access, a timestamp in the future, 0 (always) or false.
         $until = $enrols[$instance->enrol]->try_guestaccess($instance);
-        if ($until !== false and $until > time()) {
+        if ($until !== false and $until > current_time()) {
             $USER->enrol['tempguest'][$course->id] = $until;
             return true;
         }
@@ -2276,7 +2276,7 @@ function get_enrolled_sql(context $context, $withcapability = '', $groupid = 0, 
         if ($onlyactive) {
             $wheres[] = "{$prefix}ue.status = :{$prefix}active AND {$prefix}e.status = :{$prefix}enabled";
             $wheres[] = "{$prefix}ue.timestart < :{$prefix}now1 AND ({$prefix}ue.timeend = 0 OR {$prefix}ue.timeend > :{$prefix}now2)";
-            $now = round(time(), -2); // rounding helps caching in DB
+            $now = round(current_time(), -2); // rounding helps caching in DB
             $params = array_merge($params, array($prefix.'enabled'=>ENROL_INSTANCE_ENABLED,
                                                  $prefix.'active'=>ENROL_USER_ACTIVE,
                                                  $prefix.'now1'=>$now, $prefix.'now2'=>$now));
@@ -5513,7 +5513,7 @@ abstract class context extends stdClass implements IteratorAggregate {
 
         // only if it is a non-empty string
         if (is_string($this->_path) && $this->_path !== '') {
-            set_cache_flag('accesslib/dirtycontexts', $this->_path, 1, time()+$CFG->sessiontimeout);
+            set_cache_flag('accesslib/dirtycontexts', $this->_path, 1, current_time()+$CFG->sessiontimeout);
             if (isset($ACCESSLIB_PRIVATE->dirtycontexts)) {
                 $ACCESSLIB_PRIVATE->dirtycontexts[$this->_path] = 1;
             } else {
@@ -7342,7 +7342,7 @@ function mark_context_dirty($path) {
 
     // only if it is a non-empty string
     if (is_string($path) && $path !== '') {
-        set_cache_flag('accesslib/dirtycontexts', $path, 1, time()+$CFG->sessiontimeout);
+        set_cache_flag('accesslib/dirtycontexts', $path, 1, current_time()+$CFG->sessiontimeout);
         if (isset($ACCESSLIB_PRIVATE->dirtycontexts)) {
             $ACCESSLIB_PRIVATE->dirtycontexts[$path] = 1;
         } else {

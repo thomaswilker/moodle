@@ -474,7 +474,7 @@ function url_get_variable_values($url, $cm, $course, $config) {
         'lang'            => current_language(),
         'sitename'        => format_string($site->fullname),
         'serverurl'       => $CFG->wwwroot,
-        'currenttime'     => time(),
+        'currenttime'     => current_time(),
         'urlinstance'     => $url->id,
         'urlcmid'         => $cm->id,
         'urlname'         => format_string($url->name),

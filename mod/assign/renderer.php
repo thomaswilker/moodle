@@ -260,7 +260,7 @@ class mod_assign_renderer extends plugin_renderer_base {
             }
         }
 
-        $time = time();
+        $time = current_time();
         if ($summary->duedate) {
             // due date
             // submitted for grading
@@ -378,7 +378,7 @@ class mod_assign_renderer extends plugin_renderer_base {
         $o = '';
         $o .= $this->output->container_start('submissionstatustable');
         $o .= $this->output->heading(get_string('submissionstatusheading', 'assign'), 3);
-        $time = time();
+        $time = current_time();
 
         if ($status->allowsubmissionsfromdate &&
                 $time <= $status->allowsubmissionsfromdate) {

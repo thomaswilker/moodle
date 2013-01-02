@@ -375,7 +375,7 @@ class question_type {
             // Set the unique code
             $question->stamp = make_unique_id_code();
             $question->createdby = $USER->id;
-            $question->timecreated = time();
+            $question->timecreated = current_time();
             $question->id = $DB->insert_record('question', $question);
         }
 
@@ -383,7 +383,7 @@ class question_type {
         // one, we have to do the files processing and update the record.
         /// Question already exists, update.
         $question->modifiedby = $USER->id;
-        $question->timemodified = time();
+        $question->timemodified = current_time();
 
         if (!empty($question->questiontext) && !empty($form->questiontext['itemid'])) {
             $question->questiontext = file_save_draft_area_files($form->questiontext['itemid'],

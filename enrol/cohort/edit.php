@@ -87,7 +87,7 @@ if ($mform->is_cancelled()) {
         $instance->status       = $data->status;
         $instance->roleid       = $data->roleid;
         $instance->customint2   = $data->customint2;
-        $instance->timemodified = time();
+        $instance->timemodified = current_time();
         $DB->update_record('enrol', $instance);
     }  else {
         $enrol->add_instance($course, array('name'=>$data->name, 'status'=>$data->status, 'customint1'=>$data->customint1, 'roleid'=>$data->roleid, 'customint2'=>$data->customint2));

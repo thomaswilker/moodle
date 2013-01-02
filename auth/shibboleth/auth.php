@@ -338,7 +338,7 @@ class auth_plugin_shibboleth extends auth_plugin_base {
             $IDPArray = array();
         }
         $IDPArray = appendCookieValue($selectedIDP, $IDPArray);
-        setcookie ('_saml_idp', generate_cookie_value($IDPArray), time() + (100*24*3600));
+        setcookie ('_saml_idp', generate_cookie_value($IDPArray), current_time() + (100*24*3600));
     }
 
      /**

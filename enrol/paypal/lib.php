@@ -142,11 +142,11 @@ class enrol_paypal_plugin extends enrol_plugin {
             return ob_get_clean();
         }
 
-        if ($instance->enrolstartdate != 0 && $instance->enrolstartdate > time()) {
+        if ($instance->enrolstartdate != 0 && $instance->enrolstartdate > current_time()) {
             return ob_get_clean();
         }
 
-        if ($instance->enrolenddate != 0 && $instance->enrolenddate < time()) {
+        if ($instance->enrolenddate != 0 && $instance->enrolenddate < current_time()) {
             return ob_get_clean();
         }
 

@@ -144,7 +144,7 @@ if (empty($launch) && ($scorm->displayattemptstatus == SCORM_DISPLAY_ATTEMPTSTAT
 echo $OUTPUT->box(format_module_intro('scorm', $scorm, $cm->id).$attemptstatus, 'generalbox boxaligncenter boxwidthwide', 'intro');
 
 $scormopen = true;
-$timenow = time();
+$timenow = current_time();
 if (!empty($scorm->timeopen) && $scorm->timeopen > $timenow) {
     echo $OUTPUT->box(get_string("notopenyet", "scorm", userdate($scorm->timeopen)), "generalbox boxaligncenter");
     $scormopen = false;

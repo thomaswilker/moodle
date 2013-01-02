@@ -60,7 +60,7 @@ function cron_run() {
     cron_setup_user();
 
     // Start output log
-    $timenow  = time();
+    $timenow  = current_time();
     mtrace("Server Time: ".date('r',$timenow)."\n\n");
 
 
@@ -133,7 +133,7 @@ function cron_run() {
 
         // Delete old cached texts
         if (!empty($CFG->cachetext)) {   // Defined in config.php
-            $cachelifetime = time() - $CFG->cachetext - 60;  // Add an extra minute to allow for really heavy sites
+            $cachelifetime = current_time() - $CFG->cachetext - 60;  // Add an extra minute to allow for really heavy sites
             $DB->delete_records_select('cache_text', "timemodified < ?", array($cachelifetime));
             mtrace(" Deleted old cache_text records");
         }
@@ -162,7 +162,7 @@ function cron_run() {
 
         // Cleanup messaging
         if (!empty($CFG->messagingdeletereadnotificationsdelay)) {
-            $notificationdeletetime = time() - $CFG->messagingdeletereadnotificationsdelay;
+            $notificationdeletetime = current_time() - $CFG->messagingdeletereadnotificationsdelay;
             $DB->delete_records_select('message_read', 'notification=1 AND timeread<:notificationdeletetime', array('notificationdeletetime'=>$notificationdeletetime));
             mtrace(' Cleaned up read notifications');
         }
@@ -238,7 +238,7 @@ function cron_run() {
         }
         mtrace("Running cron for enrol_$ename...");
         $enrol->cron();
-        $enrol->set_config('lastcron', time());
+        $enrol->set_config('lastcron', current_time());
     }
 
 
@@ -359,7 +359,7 @@ function cron_run() {
         require_once($CFG->dirroot . '/blog/lib.php');
         mtrace("Fetching external blog entries...", '');
         $sql = "timefetched < ? OR timefetched = 0";
-        $externalblogs = $DB->get_records_select('blog_external', $sql, array(time() - $CFG->externalblogcrontime));
+        $externalblogs = $DB->get_records_select('blog_external', $sql, array(current_time() - $CFG->externalblogcrontime));
 
         foreach ($externalblogs as $eb) {
             blog_sync_external_entries($eb);
@@ -401,7 +401,7 @@ function cron_run() {
     //deletes the session linked tokens that are over a day old.
     mtrace("Deleting session linked tokens more than one day old...", '');
     $DB->delete_records_select('external_tokens', 'lastaccess < :onedayago AND tokentype = :tokentype',
-                    array('onedayago' => time() - DAYSECS, 'tokentype' => EXTERNAL_TOKEN_EMBEDDED));
+                    array('onedayago' => current_time() - DAYSECS, 'tokentype' => EXTERNAL_TOKEN_EMBEDDED));
     mtrace('done.');
 
 
@@ -448,7 +448,7 @@ function cron_run() {
         // check we're not before our runtime
         $timetocheck = stats_get_base_daily() + $CFG->statsruntimestarthour*60*60 + $CFG->statsruntimestartminute*60;
 
-        if (time() > $timetocheck) {
+        if (current_time() > $timetocheck) {
             // process configured number of days as max (defaulting to 31)
             $maxdays = empty($CFG->statsruntimedays) ? 31 : abs($CFG->statsruntimedays);
             if (stats_cron_daily($maxdays)) {
@@ -516,7 +516,7 @@ function cron_execute_plugin_type($plugintype, $description = null) {
         // Using last cron and cron period, don't run if it already ran recently
         $lastcron = get_config($component, 'lastcron');
         if ($cronperiod && $lastcron) {
-            if ($lastcron + $cronperiod > time()) {
+            if ($lastcron + $cronperiod > current_time()) {
                 // do not execute cron yet
                 continue;
             }
@@ -531,7 +531,7 @@ function cron_execute_plugin_type($plugintype, $description = null) {
         mtrace("done. (" . ($DB->perf_get_queries() - $pre_dbqueries) . " dbqueries, " .
                 round(microtime(true) - $pre_time, 2) . " seconds)");
 
-        set_config('lastcron', time(), $component);
+        set_config('lastcron', current_time(), $component);
         @set_time_limit(0);
     }
 
@@ -625,7 +625,7 @@ function notify_login_failures() {
     }
 
     // If it has been less than an hour, or if there are no recipients, don't execute.
-    if (((time() - HOURSECS) < $CFG->lastnotifyfailure) || !is_array($recip) || count($recip) <= 0) {
+    if (((current_time() - HOURSECS) < $CFG->lastnotifyfailure) || !is_array($recip) || count($recip) <= 0) {
         return false;
     }
 
@@ -720,7 +720,7 @@ function notify_login_failures() {
     }
 
     // Update lastnotifyfailure with current time
-    set_config('lastnotifyfailure', time());
+    set_config('lastnotifyfailure', current_time());
 
     // Finally, delete all the temp records we have created in cache_flags
     $DB->delete_records_select('cache_flags', "flagtype IN ('login_failure_by_ip', 'login_failure_by_info')");

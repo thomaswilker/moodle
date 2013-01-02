@@ -40,7 +40,7 @@ class data_field_date extends data_field_base {
         if ($recordid) {
             $content = (int)$DB->get_field('data_content', 'content', array('fieldid'=>$this->field->id, 'recordid'=>$recordid));
         } else {
-            $content = time();
+            $content = current_time();
         }
 
         $str = '<div title="'.s($this->field->description).'">';

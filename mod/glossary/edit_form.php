@@ -106,7 +106,7 @@ class mod_glossary_entry_form extends moodleform {
             //existing entry user to avoid some potential problems if secureforms=off
             //Perhaps too much security? Anyway thanks to skodak (Bug 1823)
             $old = $DB->get_record('glossary_entries', array('id'=>$id));
-            $ineditperiod = ((time() - $old->timecreated <  $CFG->maxeditingtime) || $glossary->editalways);
+            $ineditperiod = ((current_time() - $old->timecreated <  $CFG->maxeditingtime) || $glossary->editalways);
             if ((!$ineditperiod || $USER->id != $old->userid) and !has_capability('mod/glossary:manageentries', $context)) {
                 if ($USER->id != $old->userid) {
                     $errors['concept'] = get_string('errcannoteditothers', 'glossary');

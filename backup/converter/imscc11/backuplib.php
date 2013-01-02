@@ -89,8 +89,8 @@ class imscc11_store_backup_file extends backup_execution_step {
                     'filepath'    => '/',
                     'filename'    => $filename,
                     'userid'      => $userid,
-                    'timecreated' => time(),
-                    'timemodified'=> time());
+                    'timecreated' => current_time(),
+                    'timemodified'=> current_time());
         // If file already exists, delete if before
         // creating it again. This is BC behaviour - copy()
         // overwrites by default

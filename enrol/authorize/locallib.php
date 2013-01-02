@@ -173,7 +173,7 @@ function authorize_print_orders($courseid, $userid) {
                 break;
 
             case AN_STATUS_TEST:
-                $newordertime = time() - 120; // -2 minutes. Order may be still in process.
+                $newordertime = current_time() - 120; // -2 minutes. Order may be still in process.
                 $where .= "AND (e.status = :status) AND (e.transid = '0') AND (e.timecreated < :newordertime) ";
                 $params['status'] = AN_STATUS_NONE;
                 $params['newordertime'] = $newordertime;
@@ -571,7 +571,7 @@ function authorize_get_status_action($order)
     static $newordertime = 0;
 
     if (0 == $newordertime) {
-        $newordertime = time() - 120; // -2 minutes. Order may be still in process.
+        $newordertime = current_time() - 120; // -2 minutes. Order may be still in process.
     }
 
     $ret = new stdClass();

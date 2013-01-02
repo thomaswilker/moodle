@@ -1296,7 +1296,7 @@ function quiz_print_status_bar($quiz) {
             get_string('numquestionsx', 'quiz', quiz_number_of_questions_in_quiz($quiz->questions)),
             array('class' => 'numberofquestions'));
 
-    $timenow = time();
+    $timenow = current_time();
 
     // Exact open and close dates for the tool-tip.
     $dates = array();

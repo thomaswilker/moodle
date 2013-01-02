@@ -111,7 +111,7 @@ function choice_user_complete($course, $user, $mod, $choice) {
 function choice_add_instance($choice) {
     global $DB;
 
-    $choice->timemodified = time();
+    $choice->timemodified = current_time();
 
     if (empty($choice->timerestrict)) {
         $choice->timeopen = 0;
@@ -129,7 +129,7 @@ function choice_add_instance($choice) {
             if (isset($choice->limit[$key])) {
                 $option->maxanswers = $choice->limit[$key];
             }
-            $option->timemodified = time();
+            $option->timemodified = current_time();
             $DB->insert_record("choice_options", $option);
         }
     }
@@ -150,7 +150,7 @@ function choice_update_instance($choice) {
     global $DB;
 
     $choice->id = $choice->instance;
-    $choice->timemodified = time();
+    $choice->timemodified = current_time();
 
 
     if (empty($choice->timerestrict)) {
@@ -167,7 +167,7 @@ function choice_update_instance($choice) {
         if (isset($choice->limit[$key])) {
             $option->maxanswers = $choice->limit[$key];
         }
-        $option->timemodified = time();
+        $option->timemodified = current_time();
         if (isset($choice->optionid[$key]) && !empty($choice->optionid[$key])){//existing choice record
             $option->id=$choice->optionid[$key];
             if (isset($value) && $value <> '') {
@@ -291,7 +291,7 @@ WHERE
 
             $newanswer = $current;
             $newanswer->optionid = $formanswer;
-            $newanswer->timemodified = time();
+            $newanswer->timemodified = current_time();
             $DB->update_record("choice_answers", $newanswer);
             add_to_log($course->id, "choice", "choose again", "view.php?id=$cm->id", $choice->id, $cm->id);
         } else {
@@ -299,7 +299,7 @@ WHERE
             $newanswer->choiceid = $choice->id;
             $newanswer->userid = $userid;
             $newanswer->optionid = $formanswer;
-            $newanswer->timemodified = time();
+            $newanswer->timemodified = current_time();
             $DB->insert_record("choice_answers", $newanswer);
 
             // Update completion state

@@ -38,7 +38,7 @@ abstract class convert_helper {
      * @return string random identifier
      */
     public static function generate_id($entropy) {
-        return md5(time() . '-' . $entropy . '-' . random_string(20));
+        return md5(current_time() . '-' . $entropy . '-' . random_string(20));
     }
 
     /**

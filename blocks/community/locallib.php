@@ -88,7 +88,7 @@ class block_community_manager {
 
         make_temp_directory('backup');
 
-        $filename = md5(time() . '-' . $course->id . '-'. $USER->id . '-'. random_string(20));
+        $filename = md5(current_time() . '-' . $course->id . '-'. $USER->id . '-'. random_string(20));
 
         $url  = new moodle_url($course->huburl.'/local/hub/webservice/download.php', $params);
         $path = $CFG->tempdir.'/backup/'.$filename.".mbz";
@@ -117,7 +117,7 @@ class block_community_manager {
         $record->component = 'user';
         $record->filearea = 'private';
         $record->itemid = 0;
-        $record->filename = urlencode($course->fullname)."_".time().".mbz";
+        $record->filename = urlencode($course->fullname)."_".current_time().".mbz";
         $record->filepath = '/downloaded_backup/';
         if (!$fs->file_exists($record->contextid, $record->component,
                 $record->filearea, 0, $record->filepath, $record->filename)) {

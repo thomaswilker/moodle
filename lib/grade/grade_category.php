@@ -236,7 +236,7 @@ class grade_category extends grade_object {
             $this->force_regrading();
         }
 
-        $this->timemodified = time();
+        $this->timemodified = current_time();
 
         $result = parent::update($source);
 
@@ -339,7 +339,7 @@ class grade_category extends grade_object {
 
         $this->path = null;
 
-        $this->timecreated = $this->timemodified = time();
+        $this->timecreated = $this->timemodified = current_time();
 
         if (!parent::insert($source)) {
             debugging("Could not insert this category: " . print_r($this, true));
@@ -371,7 +371,7 @@ class grade_category extends grade_object {
         $this->apply_default_settings();
         $this->apply_forced_settings();
 
-        $this->timecreated = $this->timemodified = time();
+        $this->timecreated = $this->timemodified = current_time();
 
         if (!parent::insert('system')) {
             debugging("Could not insert this category: " . print_r($this, true));

@@ -67,7 +67,7 @@ if (!$upload_form->get_data()) {
 }
 print_grade_page_head($courseid, 'outcome', 'import', get_string('importoutcomes', 'grades'));
 
-$imported_file = $CFG->tempdir . '/outcomeimport/importedfile_'.time().'.csv';
+$imported_file = $CFG->tempdir . '/outcomeimport/importedfile_'.current_time().'.csv';
 make_temp_directory('outcomeimport');
 
 // copying imported file

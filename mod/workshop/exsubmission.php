@@ -147,7 +147,7 @@ if ($edit and $canmanage) {
         } else {
             throw new coding_exception('Invalid submission form data value: example');
         }
-        $timenow = time();
+        $timenow = current_time();
         if (is_null($example->id)) {
             $formdata->workshopid     = $workshop->id;
             $formdata->example        = 1;

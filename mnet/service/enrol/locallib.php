@@ -157,7 +157,7 @@ class mnetservice_enrol {
         global $CFG, $DB; // $CFG needed!
 
         $lastfetchcourses = get_config('mnetservice_enrol', 'lastfetchcourses');
-        if (empty($lastfetchcourses) or (time()-$lastfetchcourses > DAYSECS)) {
+        if (empty($lastfetchcourses) or (current_time()-$lastfetchcourses > DAYSECS)) {
             $usecache = false;
         }
 
@@ -230,7 +230,7 @@ class mnetservice_enrol {
             }
 
             // and return the fresh data
-            set_config('lastfetchcourses', time(), 'mnetservice_enrol');
+            set_config('lastfetchcourses', current_time(), 'mnetservice_enrol');
             return $list;
 
         } else {
@@ -345,7 +345,7 @@ class mnetservice_enrol {
             }
 
             // store the timestamp of the recent fetch, can be used for cache invalidate purposes
-            set_config('lastfetchenrolments', time(), 'mnetservice_enrol');
+            set_config('lastfetchenrolments', current_time(), 'mnetservice_enrol');
             // local cache successfully updated
             return true;
 

@@ -331,7 +331,7 @@ class csv_import_reader {
         $filename = make_temp_directory('csvimport/'.$type.'/'.$USER->id);
 
         // use current (non-conflicting) time stamp
-        $iiid = time();
+        $iiid = current_time();
         while (file_exists($filename.'/'.$iiid)) {
             $iiid--;
         }

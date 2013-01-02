@@ -124,7 +124,7 @@ class lesson_add_page_form_cluster extends lesson_add_page_form_base {
         global $PAGE, $CFG, $DB;
         require_sesskey();
 
-        $timenow = time();
+        $timenow = current_time();
 
         if ($pageid == 0) {
             if ($lesson->has_pages()) {

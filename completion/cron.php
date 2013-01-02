@@ -115,7 +115,7 @@ function completion_cron_mark_started() {
             userid
     ";
 
-    $now = time();
+    $now = current_time();
     $rs = $DB->get_recordset_sql($sql, array($now, $now, $now, $now));
 
     // Check if result is empty
@@ -163,7 +163,7 @@ function completion_cron_mark_started() {
             $completion->course = $prev->course;
             $completion->timeenrolled = (string) $prev->timeenrolled;
             $completion->timestarted = 0;
-            $completion->reaggregate = time();
+            $completion->reaggregate = current_time();
 
             if ($prev->completionid) {
                 $completion->id = $prev->completionid;
@@ -233,7 +233,7 @@ function completion_cron_completions() {
     }
 
     // Save time started
-    $timestarted = time();
+    $timestarted = current_time();
 
     // Grab all criteria and their associated criteria completions
     $sql = '

@@ -182,7 +182,7 @@ class cc11_resource extends entities11 {
                                 '',
                                 $mod_alltext,
                                 $mod_options,
-                                time());
+                                current_time());
 
         return str_replace($find_tags, $replace_values, $sheet_mod_resource);
     }

@@ -100,7 +100,7 @@ class cc11_forum extends entities11 {
             //To be more true to the actual forum name we use only forum title
             self::safexml($topic_data['title']),
             self::safexml($topic_data['description']),
-            time());
+            current_time());
 
             $result = str_replace($find_tags, $replace_values, $sheet_mod_forum);
 

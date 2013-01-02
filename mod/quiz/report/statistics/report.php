@@ -802,7 +802,7 @@ class quiz_statistics_report extends quiz_default_report {
             $nostudentsingroup, $useallattempts, $groupstudents, $questions) {
         global $DB;
 
-        $timemodified = time() - self::TIME_TO_CACHE_STATS;
+        $timemodified = current_time() - self::TIME_TO_CACHE_STATS;
         $quizstats = $DB->get_record_select('quiz_statistics',
                 'quizid = ? AND groupid = ? AND allattempts = ? AND timemodified > ?',
                 array($quiz->id, $currentgroup, $useallattempts, $timemodified));
@@ -860,7 +860,7 @@ class quiz_statistics_report extends quiz_default_report {
         $toinsert = clone($quizstats);
         $toinsert->quizid = $quizid;
         $toinsert->groupid = $currentgroup;
-        $toinsert->timemodified = time();
+        $toinsert->timemodified = current_time();
 
         // Fix up some dodgy data.
         if (isset($toinsert->errorratio) && is_nan($toinsert->errorratio)) {
@@ -1016,7 +1016,7 @@ class quiz_statistics_report extends quiz_default_report {
 
         // Generate the output.
         $a = new stdClass();
-        $a->lastcalculated = format_time(time() - $quizstats->timemodified);
+        $a->lastcalculated = format_time(current_time() - $quizstats->timemodified);
         $a->count = $count;
 
         $recalcualteurl = new moodle_url($reporturl,

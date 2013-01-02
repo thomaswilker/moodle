@@ -119,7 +119,7 @@ class completion_criteria_duration extends completion_criteria {
             return false;
         }
 
-        if (time() > ($timeenrolled + $this->enrolperiod)) {
+        if (current_time() > ($timeenrolled + $this->enrolperiod)) {
             if ($mark) {
                 $completion->mark_complete();
             }
@@ -165,7 +165,7 @@ class completion_criteria_duration extends completion_criteria {
      */
     public function get_status($completion) {
         $timeenrolled = $this->get_timeenrolled($completion);
-        $timeleft = $timeenrolled + $this->enrolperiod - time();
+        $timeleft = $timeenrolled + $this->enrolperiod - current_time();
         $enrolperiod = ceil($this->enrolperiod / (60 * 60 * 24));
 
         $daysleft = ceil($timeleft / (60 * 60 * 24));
@@ -226,7 +226,7 @@ class completion_criteria_duration extends completion_criteria {
         ';
 
         // Loop through completions, and mark as complete
-        $now = time();
+        $now = current_time();
         $rs = $DB->get_recordset_sql($sql, array($now, $now));
         foreach ($rs as $record) {
             $completion = new completion_criteria_completion((array) $record, DATA_OBJECT_FETCH_BY_KEY);
@@ -256,7 +256,7 @@ class completion_criteria_duration extends completion_criteria {
 
         // Get status
         $timeenrolled = $this->get_timeenrolled($completion);
-        $timepassed = time() - $timeenrolled;
+        $timepassed = current_time() - $timeenrolled;
         $details['status'] = get_string('xdays', 'completion', floor($timepassed / (60*60*24)));
 
         return $details;

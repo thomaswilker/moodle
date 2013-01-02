@@ -326,7 +326,7 @@ function restart_preview($previewid, $questionid, $displayoptions, $context) {
  */
 function question_preview_cron() {
     $maxage = 24*60*60; // We delete previews that have not been touched for 24 hours.
-    $lastmodifiedcutoff = time() - $maxage;
+    $lastmodifiedcutoff = current_time() - $maxage;
 
     mtrace("\n  Cleaning up old question previews...", '');
     $oldpreviews = new qubaid_join('{question_usages} quba', 'quba.id',

@@ -520,7 +520,7 @@ class completion_info {
         // If changed, update
         if ($newstate != $current->completionstate) {
             $current->completionstate = $newstate;
-            $current->timemodified    = time();
+            $current->timemodified    = current_time();
             $this->internal_set_data($cm, $current);
         }
     }
@@ -857,7 +857,7 @@ class completion_info {
             }
             // Expire any old data from cache
             foreach ($SESSION->completioncache as $courseid=>$activities) {
-                if (empty($activities['updated']) || $activities['updated'] < time()-COMPLETION_CACHE_EXPIRY) {
+                if (empty($activities['updated']) || $activities['updated'] < current_time()-COMPLETION_CACHE_EXPIRY) {
                     unset($SESSION->completioncache[$courseid]);
                 }
             }
@@ -908,7 +908,7 @@ class completion_info {
                 }
                 $SESSION->completioncache[$this->course->id][$othercm->id] = $data;
             }
-            $SESSION->completioncache[$this->course->id]['updated'] = time();
+            $SESSION->completioncache[$this->course->id]['updated'] = current_time();
 
             if (!isset($SESSION->completioncache[$this->course->id][$cm->id])) {
                 $this->internal_systemerror("Unexpected error: course-module {$cm->id} could not be found on course {$this->course->id}");
@@ -934,7 +934,7 @@ class completion_info {
                 $SESSION->completioncache[$this->course->id][$cm->id] = $data;
                 // For single updates, only set date if it was empty before
                 if (empty($SESSION->completioncache[$this->course->id]['updated'])) {
-                    $SESSION->completioncache[$this->course->id]['updated'] = time();
+                    $SESSION->completioncache[$this->course->id]['updated'] = current_time();
                 }
             }
         }

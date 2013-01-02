@@ -1481,7 +1481,7 @@ class page_wiki_map extends page_wiki {
         global $CFG, $OUTPUT, $USER;
         $page = $this->page;
 
-        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < time()) {
+        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < current_time()) {
             $fresh = wiki_refresh_cachedcontent($page);
             $page = $fresh['page'];
         }
@@ -1545,7 +1545,7 @@ class page_wiki_map extends page_wiki {
         global $OUTPUT;
         $page = $this->page;
 
-        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < time()) {
+        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < current_time()) {
             $fresh = wiki_refresh_cachedcontent($page);
             $page = $fresh['page'];
         }
@@ -1596,7 +1596,7 @@ class page_wiki_map extends page_wiki {
         global $OUTPUT;
         $page = $this->page;
 
-        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < time()) {
+        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < current_time()) {
             $fresh = wiki_refresh_cachedcontent($page);
             $page = $fresh['page'];
         }
@@ -1625,7 +1625,7 @@ class page_wiki_map extends page_wiki {
         global $OUTPUT;
         $page = $this->page;
 
-        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < time()) {
+        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < current_time()) {
             $fresh = wiki_refresh_cachedcontent($page);
             $page = $fresh['page'];
         }
@@ -1670,7 +1670,7 @@ class page_wiki_map extends page_wiki {
 
         $page = $this->page;
 
-        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < time()) {
+        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < current_time()) {
             $fresh = wiki_refresh_cachedcontent($page);
             $page = $fresh['page'];
         }
@@ -1706,7 +1706,7 @@ class page_wiki_map extends page_wiki {
         global $COURSE, $OUTPUT;
         $page = $this->page;
 
-        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < time()) {
+        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < current_time()) {
             $fresh = wiki_refresh_cachedcontent($page);
             $page = $fresh['page'];
         }
@@ -2415,7 +2415,7 @@ class page_wiki_admin extends page_wiki {
 
         //update wiki cache if timedout
         $page = $this->page;
-        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < time()) {
+        if ($page->timerendered + WIKI_REFRESH_CACHE_TIME < current_time()) {
             $fresh = wiki_refresh_cachedcontent($page);
             $page = $fresh['page'];
         }

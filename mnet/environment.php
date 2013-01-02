@@ -77,7 +77,7 @@ class mnet_environment {
             list($this->keypair['certificate'], $this->keypair['keypair_PEM']) = explode('@@@@@@@@', $keypair);
         }
 
-        if ($this->public_key_expires > time()) {
+        if ($this->public_key_expires > current_time()) {
             $this->keypair['privatekey'] = openssl_pkey_get_private($this->keypair['keypair_PEM']);
             $this->keypair['publickey']  = openssl_pkey_get_public($this->keypair['certificate']);
         } else {

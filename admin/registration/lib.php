@@ -77,7 +77,7 @@ class registration_manager {
                         mtrace(get_string('errorcron', 'hub', $errorparam));
                     }
                 }
-                set_config('crontime', time(), 'registration');
+                set_config('crontime', current_time(), 'registration');
             }
         } else {
             mtrace(get_string('errorcronnoxmlrpc', 'hub'));

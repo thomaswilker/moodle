@@ -37,7 +37,7 @@ class block_online_users extends block_base {
         if (isset($CFG->block_online_users_timetosee)) {
             $timetoshowusers = $CFG->block_online_users_timetosee * 60;
         }
-        $now = time();
+        $now = current_time();
         $timefrom = 100 * floor(($now - $timetoshowusers) / 100); // Round to nearest 100 seconds for better query cache
 
         //Calculate if we are in separate groups

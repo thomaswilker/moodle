@@ -81,7 +81,7 @@ if (count($queued) > 0) {
         '',
     );
     $table->data = array();
-    $now = time();
+    $now = current_time();
     foreach ($queued as $q){
         $e = portfolio_exporter::rewaken_object($q->id);
         $e->verify_rewaken(true);

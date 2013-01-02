@@ -493,7 +493,7 @@ class assignment_base {
     function add_instance($assignment) {
         global $COURSE, $DB;
 
-        $assignment->timemodified = time();
+        $assignment->timemodified = current_time();
         $assignment->courseid = $assignment->course;
 
         $returnid = $DB->insert_record("assignment", $assignment);
@@ -579,7 +579,7 @@ class assignment_base {
     function update_instance($assignment) {
         global $COURSE, $DB;
 
-        $assignment->timemodified = time();
+        $assignment->timemodified = current_time();
 
         $assignment->id = $assignment->instance;
         $assignment->courseid = $assignment->course;
@@ -754,7 +754,7 @@ class assignment_base {
                         $submission->mailed = (int)(!$mailinfo);
                     }
 
-                    $submission->timemarked = time();
+                    $submission->timemarked = current_time();
 
                     //if it is not an update, we don't change the last modified time etc.
                     //this will also not write into database if no submissioncomment and grade is entered.
@@ -1778,13 +1778,13 @@ class assignment_base {
             } else {
                 $submission->mailed = 0;       // Make sure mail goes out (again, even)
             }
-            $submission->timemarked = time();
+            $submission->timemarked = current_time();
 
             unset($submission->data1);  // Don't need to update this.
             unset($submission->data2);  // Don't need to update this.
 
             if (empty($submission->timemodified)) {   // eg for offline assignments
-                // $submission->timemodified = time();
+                // $submission->timemodified = current_time();
             }
 
             $DB->update_record('assignment_submissions', $submission);
@@ -1891,7 +1891,7 @@ class assignment_base {
         $submission = new stdClass();
         $submission->assignment   = $this->assignment->id;
         $submission->userid       = $userid;
-        $submission->timecreated = time();
+        $submission->timecreated = current_time();
         // teachers should not be modifying modified date, except offline assignments
         if ($teachermodified) {
             $submission->timemodified = 0;
@@ -2192,7 +2192,7 @@ class assignment_base {
      * @return boolean
      */
     function isopen() {
-        $time = time();
+        $time = current_time();
         if ($this->assignment->preventlate && $this->assignment->timedue) {
             return ($this->assignment->timeavailable <= $time && $time <= $this->assignment->timedue);
         } else {
@@ -2495,7 +2495,7 @@ class assignment_grading_form extends moodleform {
         $this->add_feedback_section();
 
         if ($this->_customdata->submission->timemarked) {
-            $datestring = userdate($this->_customdata->submission->timemarked)."&nbsp; (".format_time(time() - $this->_customdata->submission->timemarked).")";
+            $datestring = userdate($this->_customdata->submission->timemarked)."&nbsp; (".format_time(current_time() - $this->_customdata->submission->timemarked).")";
             $mform->addElement('header', 'Last Grade', get_string('lastgrade', 'assignment'));
             $mform->addElement('static', 'picture', $OUTPUT->user_picture($this->_customdata->teacher) ,
                                                     fullname($this->_customdata->teacher,true).
@@ -2838,7 +2838,7 @@ function assignment_cron () {
     /// cron has not been running for a long time, and then suddenly people are flooded
     /// with mail from the past few weeks or months
 
-    $timenow   = time();
+    $timenow   = current_time();
     $endtime   = $timenow - $CFG->maxeditingtime;
     $starttime = $endtime - 24 * 3600;   /// One day earlier
 
@@ -2850,7 +2850,7 @@ function assignment_cron () {
             $DB->set_field("assignment_submissions", "mailed", "1", array("id"=>$submission->id));
         }
 
-        $timenow = time();
+        $timenow = current_time();
 
         foreach ($submissions as $submission) {
 
@@ -3662,7 +3662,7 @@ function assignment_print_overview($courses, &$htmlarray) {
 
     // Do assignment_base::isopen() here without loading the whole thing for speed
     foreach ($assignments as $key => $assignment) {
-        $time = time();
+        $time = current_time();
         if ($assignment->timedue) {
             if ($assignment->preventlate) {
                 $isopen = ($assignment->timeavailable <= $time && $time <= $assignment->timedue);
@@ -3761,7 +3761,7 @@ function assignment_print_overview($courses, &$htmlarray) {
                     $str .= $strsubmitted . ', ' . $strgraded;
                 }
             } else {
-                $str .= $strnotsubmittedyet . ' ' . assignment_display_lateness(time(), $assignment->timedue);
+                $str .= $strnotsubmittedyet . ' ' . assignment_display_lateness(current_time(), $assignment->timedue);
             }
             $str .= '</div>';
         }

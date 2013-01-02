@@ -137,7 +137,7 @@ class tool_customlang_utils {
             foreach ($english as $stringid => $stringoriginal) {
                 $stringmaster = isset($master[$stringid]) ? $master[$stringid] : null;
                 $stringlocal = isset($local[$stringid]) ? $local[$stringid] : null;
-                $now = time();
+                $now = current_time();
 
                 if (!is_null($progressbar)) {
                     $done++;

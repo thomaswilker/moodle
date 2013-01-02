@@ -66,10 +66,10 @@ function tool_qeupgradehelper_process($settings) {
         return;
     }
 
-    $stoptime = time() + $settings->procesingtime;
+    $stoptime = current_time() + $settings->procesingtime;
 
     mtrace('qeupgradehelper: processing ...');
-    while (time() < $stoptime) {
+    while (current_time() < $stoptime) {
 
         $quiz = tool_qeupgradehelper_get_quiz_for_upgrade();
         if (!$quiz) {

@@ -537,7 +537,7 @@ function external_generate_token($tokentype, $serviceorid, $userid, $contextorid
 
     $newtoken->contextid = $context->id;
     $newtoken->creatorid = $USER->id;
-    $newtoken->timecreated = time();
+    $newtoken->timecreated = current_time();
     $newtoken->validuntil = $validuntil;
     if (!empty($iprestriction)) {
         $newtoken->iprestriction = $iprestriction;

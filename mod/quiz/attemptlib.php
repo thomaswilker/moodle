@@ -1703,7 +1703,7 @@ class quiz_attempt_nav_panel extends quiz_nav_panel_base {
     public function render_end_bits(mod_quiz_renderer $output) {
         return html_writer::link($this->attemptobj->summary_url(),
                 get_string('endtest', 'quiz'), array('class' => 'endtestlink')) .
-                $output->countdown_timer($this->attemptobj, time()) .
+                $output->countdown_timer($this->attemptobj, current_time()) .
                 $this->render_restart_preview_link($output);
     }
 }

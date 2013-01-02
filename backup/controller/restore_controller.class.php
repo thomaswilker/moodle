@@ -397,7 +397,7 @@ class restore_controller extends backup implements loggable {
      */
     public static function get_tempdir_name($courseid = 0, $userid = 0) {
         // Current epoch time + courseid + userid + random bits
-        return md5(time() . '-' . $courseid . '-'. $userid . '-'. random_string(20));
+        return md5(current_time() . '-' . $courseid . '-'. $userid . '-'. random_string(20));
     }
 
     /**
@@ -446,7 +446,7 @@ class restore_controller extends backup implements loggable {
 
     protected function calculate_restoreid() {
         // Current epoch time + tempdir + courseid + interactive + mode + userid + target + operation + random bits
-        $this->restoreid = md5(time() . '-' . $this->tempdir . '-' . $this->courseid . '-'. $this->interactive . '-' .
+        $this->restoreid = md5(current_time() . '-' . $this->tempdir . '-' . $this->courseid . '-'. $this->interactive . '-' .
                                $this->mode . '-' . $this->userid . '-'. $this->target . '-' . $this->operation . '-' .
                                random_string(20));
     }

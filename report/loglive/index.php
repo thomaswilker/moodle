@@ -50,7 +50,7 @@ if ($inpopup) {
 
     add_to_log($course->id, 'course', 'report live', "report/loglive/index.php?id=$course->id", $course->id);
 
-    $date = time() - 3600;
+    $date = current_time() - 3600;
 
     $url = new moodle_url('/report/loglive/index.php', array('id'=>$course->id, 'user'=>0, 'date'=>$date, 'inpopup'=>1));
 

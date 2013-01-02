@@ -122,7 +122,7 @@ if ($tagnew = $tagform->get_data()) {
 
         tag_description_set($tag_id, $tagnew->description, $tagnew->descriptionformat);
 
-        $tagnew->timemodified = time();
+        $tagnew->timemodified = current_time();
 
         if (has_capability('moodle/tag:manage', $systemcontext)) {
             // rename tag

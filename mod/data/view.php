@@ -401,7 +401,7 @@
 //if data activity closed dont let students in
 $showactivity = true;
 if (!has_capability('mod/data:manageentries', $context)) {
-    $timenow = time();
+    $timenow = current_time();
     if (!empty($data->timeavailablefrom) && $data->timeavailablefrom > $timenow) {
         echo $OUTPUT->notification(get_string('notopenyet', 'data', userdate($data->timeavailablefrom)));
         $showactivity = false;

@@ -500,7 +500,7 @@ class database_session extends session_stub {
         global $CFG;
         try {
             $sql = "SELECT * FROM {sessions} WHERE timemodified < ? AND sid=? AND state=?";
-            $params = array(time() + $CFG->sessiontimeout, $sid, 0);
+            $params = array(current_time() + $CFG->sessiontimeout, $sid, 0);
 
             return $this->database->record_exists_sql($sql, $params);
         } catch (dml_exception $ex) {
@@ -588,7 +588,7 @@ class database_session extends session_stub {
                 $record->sid          = $sid;
                 $record->sessdata     = null;
                 $record->userid       = 0;
-                $record->timecreated  = $record->timemodified = time();
+                $record->timecreated  = $record->timemodified = current_time();
                 $record->firstip      = $record->lastip = getremoteaddr();
                 $record->id           = $this->database->insert_record_raw('sessions', $record);
             }
@@ -625,7 +625,7 @@ class database_session extends session_stub {
         }
 
         // verify timeout
-        if ($record->timemodified + $CFG->sessiontimeout < time()) {
+        if ($record->timemodified + $CFG->sessiontimeout < current_time()) {
             $ignoretimeout = false;
             if (!empty($record->userid)) { // skips not logged in
                 if ($user = $this->database->get_record('user', array('id'=>$record->userid))) {
@@ -647,7 +647,7 @@ class database_session extends session_stub {
             }
             if ($ignoretimeout) {
                 //refresh session
-                $record->timemodified = time();
+                $record->timemodified = current_time();
                 try {
                     $this->database->update_record('sessions', $record);
                 } catch (Exception $ex) {
@@ -661,7 +661,7 @@ class database_session extends session_stub {
                 $record->state        = 0;
                 $record->sessdata     = null;
                 $record->userid       = 0;
-                $record->timecreated  = $record->timemodified = time();
+                $record->timecreated  = $record->timemodified = current_time();
                 $record->firstip      = $record->lastip = getremoteaddr();
                 try {
                     $this->database->update_record('sessions', $record);
@@ -725,7 +725,7 @@ class database_session extends session_stub {
             $hash = sha1($data);
             if ($this->lasthash === $hash
                 and $this->record->userid == $userid
-                and (time() - $this->record->timemodified < 20)
+                and (current_time() - $this->record->timemodified < 20)
                 and $this->record->lastip == getremoteaddr()
             ) {
                 // No need to update anything!
@@ -734,7 +734,7 @@ class database_session extends session_stub {
 
             $this->record->sessdata     = $data;
             $this->record->userid       = $userid;
-            $this->record->timemodified = time();
+            $this->record->timemodified = current_time();
             $this->record->lastip       = getremoteaddr();
 
             try {
@@ -764,7 +764,7 @@ class database_session extends session_stub {
                 $record->sid          = $sid;
                 $record->sessdata     = base64_encode($session_data); // there might be some binary mess :-(
                 $record->userid       = $userid;
-                $record->timecreated  = $record->timemodified = time();
+                $record->timecreated  = $record->timemodified = current_time();
                 $record->firstip      = $record->lastip = getremoteaddr();
                 $record->id           = $this->database->insert_record_raw('sessions', $record);
 
@@ -866,7 +866,7 @@ function session_touch($sid) {
     // always check db table - custom session classes use sessions table
     try {
         $sql = "UPDATE {sessions} SET timemodified=? WHERE sid=?";
-        $params = array(time(), $sid);
+        $params = array(current_time(), $sid);
         $DB->execute($sql, $params);
     } catch (dml_exception $ignored) {
         // do not show any warnings - might be during upgrade/installation
@@ -958,7 +958,7 @@ function session_gc() {
                   FROM {user} u
                   JOIN {sessions} s ON s.userid = u.id
                  WHERE s.timemodified + ? < ? AND u.id <> ?";
-        $params = array($maxlifetime, time(), $CFG->siteguest);
+        $params = array($maxlifetime, current_time(), $CFG->siteguest);
 
         $authplugins = array();
         foreach($auth_sequence as $authname) {
@@ -976,8 +976,8 @@ function session_gc() {
         $rs->close();
 
         // Extending the timeout period for guest sessions as they are renewed.
-        $purgebefore = time() - $maxlifetime;
-        $purgebeforeguests = time() - ($maxlifetime * 5);
+        $purgebefore = current_time() - $maxlifetime;
+        $purgebeforeguests = current_time() - ($maxlifetime * 5);
 
         // delete expired sessions for guest user account
         $DB->delete_records_select('sessions', 'userid = ? AND timemodified < ?', array($CFG->siteguest, $purgebeforeguests));
@@ -1072,11 +1072,11 @@ function set_moodle_cookie($username) {
     $cookiename = 'MOODLEID1_'.$CFG->sessioncookie;
 
     // delete old cookie
-    setcookie($cookiename, '', time() - HOURSECS, $CFG->sessioncookiepath, $CFG->sessioncookiedomain, $CFG->cookiesecure, $CFG->cookiehttponly);
+    setcookie($cookiename, '', current_time() - HOURSECS, $CFG->sessioncookiepath, $CFG->sessioncookiedomain, $CFG->cookiesecure, $CFG->cookiehttponly);
 
     if ($username !== '') {
         // set username cookie for 60 days
-        setcookie($cookiename, rc4encrypt($username), time()+(DAYSECS*60), $CFG->sessioncookiepath, $CFG->sessioncookiedomain, $CFG->cookiesecure, $CFG->cookiehttponly);
+        setcookie($cookiename, rc4encrypt($username), current_time()+(DAYSECS*60), $CFG->sessioncookiepath, $CFG->sessioncookiedomain, $CFG->cookiesecure, $CFG->cookiehttponly);
     }
 }
 

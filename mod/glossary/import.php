@@ -96,8 +96,8 @@ if ($xml = glossary_read_imported_file($result)) {
             $glossary->showspecial = ($xmlglossary['SHOWSPECIAL'][0]['#']);
             $glossary->showalphabet = ($xmlglossary['SHOWALPHABET'][0]['#']);
             $glossary->showall = ($xmlglossary['SHOWALL'][0]['#']);
-            $glossary->timecreated = time();
-            $glossary->timemodified = time();
+            $glossary->timecreated = current_time();
+            $glossary->timemodified = current_time();
             $glossary->cmidnumber = $cm->idnumber;
 
             // Setting the default values if no values were passed
@@ -226,8 +226,8 @@ if ($xml = glossary_read_imported_file($result)) {
             $newentry->userid           = $USER->id;
             $newentry->teacherentry     = 1;
             $newentry->definitionformat = $xmlentry['#']['FORMAT'][0]['#'];
-            $newentry->timecreated      = time();
-            $newentry->timemodified     = time();
+            $newentry->timecreated      = current_time();
+            $newentry->timemodified     = current_time();
 
             // Setting the default values if no values were passed
             if ( isset($xmlentry['#']['USEDYNALINK'][0]['#']) ) {

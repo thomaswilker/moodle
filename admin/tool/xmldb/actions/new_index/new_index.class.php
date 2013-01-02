@@ -92,7 +92,7 @@ class new_index extends XMLDBAction {
             $table->addIndex($index);
 
             // We have one new key, so the structure has changed
-            $structure->setVersion(userdate(time(), '%Y%m%d', 99, false));
+            $structure->setVersion(userdate(current_time(), '%Y%m%d', 99, false));
             $structure->setChanged(true);
         }
         // Launch postaction if exists (leave this here!)

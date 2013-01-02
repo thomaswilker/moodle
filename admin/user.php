@@ -120,7 +120,7 @@
         if ($user = $DB->get_record('user', array('id'=>$suspend, 'mnethostid'=>$CFG->mnet_localhost_id, 'deleted'=>0))) {
             if (!is_siteadmin($user) and $USER->id != $user->id and $user->suspended != 1) {
                 $user->suspended = 1;
-                $user->timemodified = time();
+                $user->timemodified = current_time();
                 $DB->set_field('user', 'suspended', $user->suspended, array('id'=>$user->id));
                 $DB->set_field('user', 'timemodified', $user->timemodified, array('id'=>$user->id));
                 // force logout
@@ -136,7 +136,7 @@
         if ($user = $DB->get_record('user', array('id'=>$unsuspend, 'mnethostid'=>$CFG->mnet_localhost_id, 'deleted'=>0))) {
             if ($user->suspended != 0) {
                 $user->suspended = 0;
-                $user->timemodified = time();
+                $user->timemodified = current_time();
                 $DB->set_field('user', 'suspended', $user->suspended, array('id'=>$user->id));
                 $DB->set_field('user', 'timemodified', $user->timemodified, array('id'=>$user->id));
                 events_trigger('user_updated', $user);
@@ -332,7 +332,7 @@
             }
 
             if ($user->lastaccess) {
-                $strlastaccess = format_time(time() - $user->lastaccess);
+                $strlastaccess = format_time(current_time() - $user->lastaccess);
             } else {
                 $strlastaccess = get_string('never');
             }

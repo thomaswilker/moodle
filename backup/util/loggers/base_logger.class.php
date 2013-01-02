@@ -121,7 +121,7 @@ abstract class base_logger implements checksumable {
     }
 
     protected function get_datestr() {
-        return userdate(time(), '%c');
+        return userdate(current_time(), '%c');
     }
 
     protected function get_levelstr($level) {

@@ -57,7 +57,7 @@ if (! $datas = get_all_instances_in_course("data", $course)) {
 
 $usesections = course_format_uses_sections($course->format);
 
-$timenow  = time();
+$timenow  = current_time();
 $strname  = get_string('name');
 $strdescription = get_string("description");
 $strentries = get_string('entries', 'data');
