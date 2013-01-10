@@ -85,5 +85,4 @@ if ($ADMIN->fulltree) {
                                                     $name,
                                                     $description,
                                                     0));
-
 }

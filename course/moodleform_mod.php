@@ -857,6 +857,34 @@ abstract class moodleform_mod extends moodleform {
         $mform->setType('buttonar', PARAM_RAW);
         $mform->closeHeaderBefore('buttonar');
     }
+
+    function apply_admin_defaults() {
+        global $OUTPUT;
+
+        $settings = get_config($this->_modname);
+        $mform = $this->_form;
+        $lockedicon = html_writer::tag('span',
+                                       $OUTPUT->pix_icon('t/locked', get_string('locked', 'admin')),
+                                       array('class' => 'action-icon'));
+
+        foreach ($settings as $name => $value) {
+            if (strpos('_', $name) !== false) {
+                continue;
+            }
+            if ($mform->elementExists($name)) {
+                $element = $mform->getElement($name);
+                $advancedsetting = $name . '_adv';
+                if (!empty($settings->$advancedsetting)) {
+                    $mform->setAdvanced($name);
+                }
+                $lockedsetting = $name . '_locked';
+                if (!empty($settings->$lockedsetting)) {
+                    $mform->hardFreeze($name);
+                    $element->setLabel($element->getLabel() . $lockedicon);
+                }
+            }
+        }
+    }
 }
 
 

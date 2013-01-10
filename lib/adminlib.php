@@ -1464,10 +1464,14 @@ abstract class admin_setting {
     public $nosave = false;
     /** @var bool if set, indicates that a change to this setting requires rebuild course cache */
     public $affectsmodinfo = false;
-    /** @var bool if set, adds an "Advanced" checkbox (used for form defaults) */
+    /** @var bool $advanced if set, adds an "Advanced" checkbox (used for form defaults) */
     public $advanced = false;
-    /** @var bool if set, adds a "Locked" checkbox (used for form defaults) */
+    /** @var bool $lockable if set, adds a "Locked" checkbox (used for form defaults) */
     public $lockable = false;
+    /** @var bool $advanceddefault default for advanced checkbox */
+    public $advanceddefault = false;
+    /** @var bool $lockeddefault default for locked checkbox */
+    public $lockeddefault = false;
 
     /**
      * Constructor

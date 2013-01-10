@@ -874,13 +874,13 @@ class assign {
      * @return void
      */
     public function add_all_plugin_settings(MoodleQuickForm $mform) {
-        $mform->addElement('header', 'general', get_string('submissionsettings', 'assign'));
+        $mform->addElement('header', 'submissionplugins', get_string('submissionsettings', 'assign'));
 
         foreach ($this->submissionplugins as $plugin) {
             $this->add_plugin_settings($plugin, $mform);
 
         }
-        $mform->addElement('header', 'general', get_string('feedbacksettings', 'assign'));
+        $mform->addElement('header', 'feedbackplugins', get_string('feedbacksettings', 'assign'));
         foreach ($this->feedbackplugins as $plugin) {
             $this->add_plugin_settings($plugin, $mform);
         }

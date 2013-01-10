@@ -73,7 +73,7 @@ class mod_assign_mod_form extends moodleform_mod {
 
         $config = get_config('assign');
 
-        $mform->addElement('header', 'general', get_string('settings', 'assign'));
+        $mform->addElement('header', 'assignmentsettings', get_string('settings', 'assign'));
 
         $name = get_string('allowsubmissionsfromdate', 'assign');
         $options = array('optional'=>true);
@@ -194,6 +194,7 @@ class mod_assign_mod_form extends moodleform_mod {
                                                      get_string('changegradewarning', 'mod_assign')));
             $mform->insertElementBefore($noscriptwarning, 'grade');
         }
+
     }
 
     /**
