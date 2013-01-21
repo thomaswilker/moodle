@@ -881,8 +881,9 @@ abstract class moodleform_mod extends moodleform {
                 }
                 $lockedsetting = $name . '_locked';
                 if (!empty($settings->$lockedsetting)) {
-                    $element->setValue($settings->$name);
+                    $mform->setConstant($name, $settings->$name);
                     $element->setLabel($element->getLabel() . $lockedicon);
+                    // Do not use hardfreeze because we need the hidden input to check dependencies.
                     $element->freeze();
                 }
             }
