@@ -866,6 +866,7 @@ abstract class moodleform_mod extends moodleform {
         $lockedicon = html_writer::tag('span',
                                        $OUTPUT->pix_icon('t/locked', get_string('locked', 'admin')),
                                        array('class' => 'action-icon'));
+        $lockedsettings = false;
 
         foreach ($settings as $name => $value) {
             if (strpos('_', $name) !== false) {
@@ -873,14 +874,16 @@ abstract class moodleform_mod extends moodleform {
             }
             if ($mform->elementExists($name)) {
                 $element = $mform->getElement($name);
+                $mform->setDefault($name, $settings->$name);
                 $advancedsetting = $name . '_adv';
                 if (!empty($settings->$advancedsetting)) {
                     $mform->setAdvanced($name);
                 }
                 $lockedsetting = $name . '_locked';
                 if (!empty($settings->$lockedsetting)) {
-                    $mform->hardFreeze($name);
+                    $element->setValue($settings->$name);
                     $element->setLabel($element->getLabel() . $lockedicon);
+                    $element->freeze();
                 }
             }
         }
