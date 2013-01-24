@@ -244,7 +244,6 @@ YUI.add('moodle-mod_feedback-dragdrop', function(Y) {
                             message : xhr.responseText
                         };
                         return new M.core.exception(msg);
-                        //~ this.ajax_failure(xhr);
                         spinner.hide();
                     }
                 },
