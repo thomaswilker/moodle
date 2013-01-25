@@ -1464,14 +1464,11 @@ abstract class admin_setting {
     public $nosave = false;
     /** @var bool if set, indicates that a change to this setting requires rebuild course cache */
     public $affectsmodinfo = false;
-    /** @var bool $advanced if set, adds an "Advanced" checkbox (used for form defaults) */
-    public $advanced = false;
-    /** @var bool $lockable if set, adds a "Locked" checkbox (used for form defaults) */
-    public $lockable = false;
-    /** @var bool $advanceddefault default for advanced checkbox */
-    public $advanceddefault = false;
-    /** @var bool $lockeddefault default for locked checkbox */
-    public $lockeddefault = false;
+    /** @var admin_setting_checkbox To indicate if this setting should have an advanced checkbox */
+    private $advancedcheckbox;
+    /** @var admin_setting_checkbox To indicate if this setting should have a locked checkbox */
+    private $lockedcheckbox;
+
 
     /**
      * Constructor
@@ -1486,148 +1483,105 @@ abstract class admin_setting {
         $this->visiblename    = $visiblename;
         $this->description    = $description;
         $this->defaultsetting = $defaultsetting;
+        $this->advancedcheckbox = new admin_setting_checkbox(admin_setting_checkbox::DISABLED, false, 'adv', get_string('advanced'));
+        $this->lockedcheckbox = new admin_setting_checkbox(admin_setting_checkbox::DISABLED, false, 'locked', get_string('locked', 'admin'));
     }
 
     /**
-     * Set the advanced flag on this admin setting. If set, an "Advanced" checkbox
-     * will display inline next to the setting and the value will be saved
-     * in a setting with the same but as the admin setting but with an "_adv" suffix.
-     *
-     * @param bool $advanced - The new value for this setting.
-     */
-    public function set_advanced($advanced) {
-        $this->advanced = $advanced;
-    }
-
-    /**
-     * Get the advanced flag on this admin setting.
+     * Get the advanced checkbox on this admin setting.
      *
      * @return bool $advanced - The value for this setting.
      */
-    public function is_advanced() {
-        return $this->advanced;
+    public function get_advanced_checkbox() {
+        return $this->advancedcheckbox;
     }
 
     /**
-     * Set the advanced default flag on this admin setting. If set, the advanced
-     * checkbox will default to checked for this setting.
+     * Set the advanced options checkbox on this admin setting.
      *
-     * @param bool $advanceddefault - The new value for this setting.
+     * @param bool $enabled - One of self::OPTION_ENABLED or self::OPTION_DISABLED
+     * @param bool $default - The default for the checkbox
      */
-    public function set_advanced_default($advanceddefault) {
-        $this->advanceddefault = $advanceddefault;
+    public function set_advanced_checkbox_options($enabled, $default) {
+        $this->advancedcheckbox->set_options($enabled, $default);
     }
 
     /**
-     * Get the advanceddefault flag on this admin setting.
+     * Get the locked checkbox on this admin setting.
      *
-     * @return bool $advanceddefault - The value for this setting.
+     * @return bool $locked - The value for this setting.
      */
-    public function is_advanced_default() {
-        return $this->advanceddefault;
+    public function get_locked_checkbox() {
+        return $this->lockedcheckbox;
     }
 
     /**
-     * Output the input fields for the advanced and locked flags on this setting.
+     * Set the locked options checkbox on this admin setting.
      *
-     * @param bool $adv - The current value of the advanced flag.
-     *                    Get it from @link parse_setting_flags
+     * @param bool $enabled - One of self::OPTION_ENABLED or self::OPTION_DISABLED
+     * @param bool $default - The default for the checkbox
+     */
+    public function set_locked_checkbox_options($enabled, $default) {
+        $this->lockedcheckbox->set_options($enabled, $default);
+    }
+
+    /**
+     * Get the currently saved value for a setting checkbox
+     *
+     * @param admin_setting_checkbox $checkbox - One of the admin_setting_checkbox for this admin_setting.
+     * @return bool
+     */
+    public function get_setting_checkbox_value(admin_setting_checkbox $checkbox) {
+        $value = $this->config_read($this->name . '_' . $checkbox->get_shortname());
+        if (!isset($value)) {
+            $value = $checkbox->get_default();
+        }
+
+        return !empty($value);
+    }
+
+    /**
+     * Get the list of defaults for the checkboxes on this setting.
+     *
+     * @return array of checkbox names that are enabled and defaulted.
+     */
+    public function get_setting_checkbox_defaults() {
+        $defaults = array();
+        if ($this->advancedcheckbox->is_enabled() && $this->advancedcheckbox->get_default()) {
+            $defaults[] = $this->advancedcheckbox->get_displayname();
+        }
+        if ($this->lockedcheckbox->is_enabled() && $this->lockedcheckbox->get_default()) {
+            $defaults[] = $this->lockedcheckbox->get_displayname();
+        }
+        return $defaults;
+    }
+
+    /**
+     * Output the input fields for the advanced and locked checkboxes on this setting.
+     *
+     * @param bool $adv - The current value of the advanced checkbox.
      * @param bool $locked - The current value of the locked flag.
-     *                    Get it from @link parse_setting_flags
-     * @return string $output - The html for the flag checkboxes.
+     * @return string $output - The html for the checkboxes.
      */
     public function output_setting_checkboxes() {
         $output = '';
 
-        if ($this->is_advanced()) {
-            $adv = $this->config_read($this->name . '_adv');
-            $output .= ' <input type="checkbox" class="form-checkbox" id="' .
-                            $this->get_id() . '_adv" name="' . $this->get_full_name() .
-                            '_adv" value="1" ' . ($adv ? 'checked="checked"' : '') . ' />' .
-                            ' <label for="' . $this->get_id() . '_adv">' .
-                            get_string('advanced') . '</label> ';
-        }
-        if ($this->is_lockable()) {
-            $locked = $this->config_read($this->name . '_locked');
-            $output .= ' <input type="checkbox" class="form-checkbox" id="' .
-                            $this->get_id() . '_locked" name="' . $this->get_full_name() .
-                            '_locked" value="1" ' . ($locked ? 'checked="checked"' : '') . ' />' .
-                            ' <label for="' . $this->get_id() . '_locked">' .
-                            get_string('locked', 'admin') . '</label> ';
-        }
+        $output .= $this->advancedcheckbox->output_setting_checkbox($this);
+        $output .= $this->lockedcheckbox->output_setting_checkbox($this);
+
         return $output;
     }
 
     /**
-     * Write the advanced flag for this setting.
+     * Write the values of the checkboxes for this admin setting.
      *
-     * @param mixed $data - May be empty (default 0)
+     * @param array $data - The data submitted from the form.
      * @return bool - true if successful.
      */
-    public function write_advanced_setting($data) {
-        $result = true;
-        if ($this->is_advanced()) {
-            $value = empty($data) ? 0 : 1;
-            $result = $this->config_write($this->name.'_adv', $value);
-        }
-
+    public function write_setting_checkboxes($data) {
+        $result = $this->advancedcheckbox->write_setting_checkbox($this, $data);
+        $result = $result && $this->lockedcheckbox->write_setting_checkbox($this, $data);
         return $result;
-    }
-
-    /**
-     * Write the locked flag for this setting.
-     *
-     * @param mixed $data - May be empty (default 0)
-     * @return bool - true if successful.
-     */
-    public function write_locked_setting($data) {
-        $result = true;
-        if ($this->is_lockable()) {
-            $value = empty($data) ? 0 : 1;
-            $result = $this->config_write($this->name.'_locked', $value);
-        }
-
-        return $result;
-    }
-
-
-    /**
-     * Set the lockable flag on this admin setting. If set, an "Locked" checkbox
-     * will display inline next to the setting and the value will be saved
-     * in a setting with the same but as the admin setting but with an "_locked" suffix.
-     *
-     * @param bool $lockable - The new value for this setting.
-     */
-    public function set_lockable($lockable) {
-        $this->lockable = $lockable;
-    }
-
-    /**
-     * Get the lockable flag on this admin setting.
-     *
-     * @return bool $lockable - The value for this setting.
-     */
-    public function is_lockable() {
-        return $this->lockable;
-    }
-
-    /**
-     * Set the lockabledefault flag on this admin setting. If set, the "locked" checkbox
-     * will default to checked for this setting.
-     *
-     * @param bool $lockabledefault - The new value for this setting.
-     */
-    public function set_locked_default($lockeddefault) {
-        $this->lockeddefault = $lockeddefault;
-    }
-
-    /**
-     * Get the lockabledefault flag on this admin setting.
-     *
-     * @return bool $lockabledefault - The value for this setting.
-     */
-    public function is_locked_default() {
-        return $this->lockeddefault;
     }
 
     /**
@@ -1833,6 +1787,123 @@ abstract class admin_setting {
             }
         }
         return false;
+    }
+}
+
+/**
+ * An additional option that can be applied to an admin setting.
+ * The currently supported options are 'ADVANCED' and 'LOCKED'.
+ *
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class admin_setting_checkbox {
+    /** @var bool Flag to indicate if this option can be toggled for this setting */
+    private $enabled = false;
+    /** @var bool Flag to indicate if this option defaults to true or false */
+    private $default = false;
+    /** @var string Short string used to create setting name - e.g. 'adv' */
+    private $shortname = '';
+    /** @var string String used as the label for this checkbox */
+    private $displayname = '';
+    /** @const Checkbox for this checkbox is displayed in admin page */
+    const ENABLED = true;
+    /** @const Checkbox for this checkbox is not displayed in admin page */
+    const DISABLED = false;
+
+    /**
+     * Constructor
+     *
+     * @param bool $enabled Can this option can be toggled.
+     *                      Should be one of admin_setting_checkbox::ENABLED or admin_setting_checkbox::DISABLED.
+     * @param bool $default The default checked state for this setting option.
+     * @param string $shortname The shortname of this checkbox. Currently supported checkboxes are 'locked' and 'adv'
+     * @param string $displayname The displayname of this checkbox. Used as a label for the checkbox.
+     */
+    public function __construct($enabled, $default, $shortname, $displayname) {
+        $this->shortname = $shortname;
+        $this->displayname = $displayname;
+        $this->set_options($enabled, $default);
+    }
+
+    /**
+     * Update the values of this setting options class
+     *
+     * @param bool $enabled Can this option can be toggled.
+     *                      Should be one of admin_setting_checkbox::ENABLED or admin_setting_checkbox::DISABLED.
+     * @param bool $default The default checked state for this setting option.
+     */
+    public function set_options($enabled, $default) {
+        $this->enabled = $enabled;
+        $this->default = $default;
+    }
+
+    /**
+     * Should this option appear in the interface and be toggleable?
+     *
+     * @return bool Is it enabled?
+     */
+    public function is_enabled() {
+        return $this->enabled;
+    }
+
+    /**
+     * Should this option be checked by default?
+     *
+     * @return bool Is it on by default?
+     */
+    public function get_default() {
+        return $this->default;
+    }
+
+    /**
+     * Return the short name for this checkbox. e.g. 'adv' or 'locked'
+     *
+     * @return string
+     */
+    public function get_shortname() {
+        return $this->shortname;
+    }
+
+    /**
+     * Return the display name for this checkbox. e.g. 'Advanced' or 'Locked'
+     *
+     * @return string
+     */
+    public function get_displayname() {
+        return $this->displayname;
+    }
+
+    /**
+     * Save the submitted data for this checkbox - or set it to the default if $data is null.
+     *
+     * @param admin_setting $setting - The admin setting for this checkbox
+     * @param array $data - The data submitted from the form.
+     * @return bool
+     */
+    public function write_setting_checkbox(admin_setting $setting, $data) {
+        $result = true;
+        if ($this->is_enabled()) {
+            $value = !empty($data[$setting->get_full_name() . '_' . $this->get_shortname()]);
+            $result = $setting->config_write($setting->name . '_' . $this->get_shortname(), $value);
+        }
+
+        return $result;
+
+    }
+
+    public function output_setting_checkbox(admin_setting $setting) {
+        $output = '';
+        if ($this->is_enabled()) {
+            $value = $setting->get_setting_checkbox_value($this);
+            $output .= ' <input type="checkbox" class="form-checkbox" ' .
+                            ' id="' .  $setting->get_id() . '_' . $this->get_shortname() . '" ' .
+                            ' name="' . $setting->get_full_name() .  '_' . $this->get_shortname() . '" ' .
+                            ' value="1" ' . ($value ? 'checked="checked"' : '') . ' />' .
+                            ' <label for="' . $setting->get_id() . '_' . $this->get_shortname() . '">' .
+                            $this->get_displayname() .
+                            ' </label> ';
+        }
+        return $output;
     }
 }
 
@@ -4292,6 +4363,7 @@ class admin_setting_pickroles extends admin_setting_configmulticheckbox {
 /**
  * Text field with an advanced checkbox, that controls a additional $name.'_adv' setting.
  *
+ * @deprecated since Moodle 2.5. Use admin_setting::set_advanced_checkbox_options instead.
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class admin_setting_configtext_with_advanced extends admin_setting_configtext {
@@ -4306,8 +4378,8 @@ class admin_setting_configtext_with_advanced extends admin_setting_configtext {
      */
     public function __construct($name, $visiblename, $description, $defaultsetting, $paramtype=PARAM_RAW, $size=null) {
         parent::__construct($name, $visiblename, $description, $defaultsetting['value'], $paramtype, $size);
-        $this->set_advanced(true);
-        $this->set_advanced_default(!empty($defaultsetting['adv']));
+        $this->set_advanced_checkbox_options(admin_setting_checkbox::ENABLED, !empty($defaultsetting['adv']));
+        debugging('The class admin_setting_configtext_with_advanced() is deprecated, please fix the code and use admin_setting::set_advanced_checkbox_options() method instead', DEBUG_DEVELOPER);
     }
 }
 
@@ -4315,6 +4387,7 @@ class admin_setting_configtext_with_advanced extends admin_setting_configtext {
 /**
  * Checkbox with an advanced checkbox that controls an additional $name.'_adv' config setting.
  *
+ * @deprecated since Moodle 2.5. Use admin_setting::set_advanced_checkbox_options instead.
  * @copyright 2009 Petr Skoda (http://skodak.org)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -4331,8 +4404,8 @@ class admin_setting_configcheckbox_with_advanced extends admin_setting_configche
      */
     public function __construct($name, $visiblename, $description, $defaultsetting, $yes='1', $no='0') {
         parent::__construct($name, $visiblename, $description, $defaultsetting['value'], $yes, $no);
-        $this->set_advanced(true);
-        $this->set_advanced_default(!empty($defaultsetting['adv']));
+        $this->set_advanced_checkbox_options(admin_setting_checkbox::ENABLED, !empty($defaultsetting['adv']));
+        debugging('The class admin_setting_configcheckbox_with_advanced() is deprecated, please fix the code and use admin_setting::set_advanced_checkbox_options() method instead', DEBUG_DEVELOPER);
     }
 
 }
@@ -4343,6 +4416,7 @@ class admin_setting_configcheckbox_with_advanced extends admin_setting_configche
  *
  * This is nearly a copy/paste of admin_setting_configcheckbox_with_adv
  *
+ * @deprecated since Moodle 2.5. Use admin_setting::set_locked_checkbox_options instead.
  * @copyright 2010 Sam Hemelryk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -4358,8 +4432,8 @@ class admin_setting_configcheckbox_with_lock extends admin_setting_configcheckbo
      */
     public function __construct($name, $visiblename, $description, $defaultsetting, $yes='1', $no='0') {
         parent::__construct($name, $visiblename, $description, $defaultsetting['value'], $yes, $no);
-        $this->set_lockable(true);
-        $this->set_locked_default(!empty($defaultsetting['locked']));
+        $this->set_locked_checkbox_options(admin_setting_checkbox::ENABLED, !empty($defaultsetting['locked']));
+        debugging('The class admin_setting_configcheckbox_with_lock() is deprecated, please fix the code and use admin_setting::set_locked_checkbox_options() method instead', DEBUG_DEVELOPER);
     }
 
 }
@@ -4368,6 +4442,7 @@ class admin_setting_configcheckbox_with_lock extends admin_setting_configcheckbo
 /**
  * Dropdown menu with an advanced checkbox, that controls a additional $name.'_adv' setting.
  *
+ * @deprecated since Moodle 2.5. Use admin_setting::set_advanced_checkbox_options instead.
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class admin_setting_configselect_with_advanced extends admin_setting_configselect {
@@ -4376,8 +4451,8 @@ class admin_setting_configselect_with_advanced extends admin_setting_configselec
      */
     public function __construct($name, $visiblename, $description, $defaultsetting, $choices) {
         parent::__construct($name, $visiblename, $description, $defaultsetting['value'], $choices);
-        $this->set_advanced(true);
-        $this->set_advanced_default(!empty($defaultsetting['adv']));
+        $this->set_advanced_checkbox_options(admin_setting_checkbox::ENABLED, !empty($defaultsetting['adv']));
+        debugging('The class admin_setting_configselect_with_advanced() is deprecated, please fix the code and use admin_setting::set_advanced_checkbox_options() method instead', DEBUG_DEVELOPER);
     }
 
 }
@@ -6220,8 +6295,6 @@ function admin_apply_default_settings($node=NULL, $unconditional=true) {
                     continue;
                 }
                 $setting->write_setting($defaultsetting);
-                $setting->write_advanced_setting($setting->is_advanced_default());
-                $setting->write_locked_setting($setting->is_locked_default());
             }
         }
 }
@@ -6259,8 +6332,7 @@ function admin_write_settings($formdata) {
             $adminroot->errors[$fullname]->id    = $setting->get_id();
             $adminroot->errors[$fullname]->error = $error;
         } else {
-            $setting->write_advanced_setting(!empty($data[$fullname . '_adv']));
-            $setting->write_locked_setting(!empty($data[$fullname . '_locked']));
+            $setting->write_setting_checkboxes($data);
         }
         if ($original !== serialize($setting->get_setting())) {
             $count++;
@@ -6478,12 +6550,7 @@ function format_admin_setting($setting, $title='', $form='', $description='', $l
         $defaults[] = $defaultinfo;
     }
 
-    if ($setting->is_advanced() && $setting->is_advanced_default()) {
-        $defaults[] = get_string('advanced');
-    }
-    if ($setting->is_lockable() && $setting->is_locked_default()) {
-        $defaults[] = get_string('locked', 'admin');
-    }
+    $defaults = array_merge($defaults, $setting->get_setting_checkbox_defaults());
 
     if (count($defaults)) {
         $defaultinfo = implode(', ', $defaults);
