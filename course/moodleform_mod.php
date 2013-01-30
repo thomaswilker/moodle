@@ -874,6 +874,15 @@ abstract class moodleform_mod extends moodleform {
             }
             if ($mform->elementExists($name)) {
                 $element = $mform->getElement($name);
+                if ($element->getType() == 'date_time_selector') {
+                    if ($settings->$name === '') {
+                        $mform->setDefault($name, 0);
+                    } else {
+                        $mform->setDefault($name, usergetmidnight(time()) + $settings->$name);
+                    }
+                } else {
+                    $mform->setDefault($name, $settings->$name);
+                }
                 $mform->setDefault($name, $settings->$name);
                 $advancedsetting = $name . '_adv';
                 if (!empty($settings->$advancedsetting)) {
