@@ -1509,7 +1509,7 @@ abstract class admin_setting {
      * @param bool $default - The default for the flag
      */
     public function set_enabled_flag_options($enabled, $default) {
-        $this->set_flag_options($enabled, $default, 'enabled', get_string('enabled'));
+        $this->set_flag_options($enabled, $default, 'enabled', get_string('enabled', 'admin'));
     }
 
     /**
