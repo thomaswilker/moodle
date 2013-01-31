@@ -866,7 +866,6 @@ abstract class moodleform_mod extends moodleform {
         $lockedicon = html_writer::tag('span',
                                        $OUTPUT->pix_icon('t/locked', get_string('locked', 'admin')),
                                        array('class' => 'action-icon'));
-        $lockedsettings = false;
 
         foreach ($settings as $name => $value) {
             if (strpos('_', $name) !== false) {
