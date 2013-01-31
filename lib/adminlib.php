@@ -4373,7 +4373,6 @@ class admin_setting_pickroles extends admin_setting_configmulticheckbox {
 /**
  * Text field with an advanced checkbox, that controls a additional $name.'_adv' setting.
  *
- * @deprecated since Moodle 2.5. Use admin_setting::set_advanced_flag_options instead.
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class admin_setting_configtext_with_advanced extends admin_setting_configtext {
@@ -4389,7 +4388,6 @@ class admin_setting_configtext_with_advanced extends admin_setting_configtext {
     public function __construct($name, $visiblename, $description, $defaultsetting, $paramtype=PARAM_RAW, $size=null) {
         parent::__construct($name, $visiblename, $description, $defaultsetting['value'], $paramtype, $size);
         $this->set_advanced_flag_options(admin_setting_flag::ENABLED, !empty($defaultsetting['adv']));
-        debugging('The class admin_setting_configtext_with_advanced() is deprecated, please fix the code and use admin_setting::set_advanced_flag_options() method instead', DEBUG_DEVELOPER);
     }
 }
 
@@ -4397,7 +4395,6 @@ class admin_setting_configtext_with_advanced extends admin_setting_configtext {
 /**
  * Checkbox with an advanced checkbox that controls an additional $name.'_adv' config setting.
  *
- * @deprecated since Moodle 2.5. Use admin_setting::set_advanced_flag_options instead.
  * @copyright 2009 Petr Skoda (http://skodak.org)
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -4415,7 +4412,6 @@ class admin_setting_configcheckbox_with_advanced extends admin_setting_configche
     public function __construct($name, $visiblename, $description, $defaultsetting, $yes='1', $no='0') {
         parent::__construct($name, $visiblename, $description, $defaultsetting['value'], $yes, $no);
         $this->set_advanced_flag_options(admin_setting_flag::ENABLED, !empty($defaultsetting['adv']));
-        debugging('The class admin_setting_configcheckbox_with_advanced() is deprecated, please fix the code and use admin_setting::set_advanced_flag_options() method instead', DEBUG_DEVELOPER);
     }
 
 }
@@ -4426,7 +4422,6 @@ class admin_setting_configcheckbox_with_advanced extends admin_setting_configche
  *
  * This is nearly a copy/paste of admin_setting_configcheckbox_with_adv
  *
- * @deprecated since Moodle 2.5. Use admin_setting::set_locked_flag_options instead.
  * @copyright 2010 Sam Hemelryk
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -4443,7 +4438,6 @@ class admin_setting_configcheckbox_with_lock extends admin_setting_configcheckbo
     public function __construct($name, $visiblename, $description, $defaultsetting, $yes='1', $no='0') {
         parent::__construct($name, $visiblename, $description, $defaultsetting['value'], $yes, $no);
         $this->set_locked_flag_options(admin_setting_flag::ENABLED, !empty($defaultsetting['locked']));
-        debugging('The class admin_setting_configcheckbox_with_lock() is deprecated, please fix the code and use admin_setting::set_locked_flag_options() method instead', DEBUG_DEVELOPER);
     }
 
 }
@@ -4452,7 +4446,6 @@ class admin_setting_configcheckbox_with_lock extends admin_setting_configcheckbo
 /**
  * Dropdown menu with an advanced checkbox, that controls a additional $name.'_adv' setting.
  *
- * @deprecated since Moodle 2.5. Use admin_setting::set_advanced_flag_options instead.
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class admin_setting_configselect_with_advanced extends admin_setting_configselect {
@@ -4462,7 +4455,6 @@ class admin_setting_configselect_with_advanced extends admin_setting_configselec
     public function __construct($name, $visiblename, $description, $defaultsetting, $choices) {
         parent::__construct($name, $visiblename, $description, $defaultsetting['value'], $choices);
         $this->set_advanced_flag_options(admin_setting_flag::ENABLED, !empty($defaultsetting['adv']));
-        debugging('The class admin_setting_configselect_with_advanced() is deprecated, please fix the code and use admin_setting::set_advanced_flag_options() method instead', DEBUG_DEVELOPER);
     }
 
 }
