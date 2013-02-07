@@ -1467,10 +1467,6 @@ abstract class admin_setting {
     /** @var array of admin_setting_flag - These are extra checkboxes attached to a setting. */
     private $flags = array();
 
-    const ADVANCED_FLAG = 0;
-    const LOCKED_FLAT = 1;
-
-
     /**
      * Constructor
      * @param string $name unique ascii name, either 'mysetting' for settings that in config,
