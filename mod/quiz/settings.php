@@ -58,26 +58,6 @@ $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
 $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
 $quizsettings->add($setting);
 
-// Time open.
-$setting = new admin_setting_configduration('quiz/timeopen',
-                                            get_string('quizopenclose', 'quiz'),
-                                            '',
-                                            0);
-$setting->set_enabled_flag_options(admin_setting_flag::ENABLED, false);
-$setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
-$setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
-$quizsettings->add($setting);
-
-// Time closed.
-$setting = new admin_setting_configduration('quiz/timeclose',
-                                            '',
-                                            get_string('quizopenclose_help', 'quiz'),
-                                            0);
-$setting->set_enabled_flag_options(admin_setting_flag::ENABLED, false);
-$setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
-$setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
-$quizsettings->add($setting);
-
 // What to do with overdue attempts.
 $setting = new mod_quiz_admin_setting_overduehandling('quiz/overduehandling',
         get_string('overduehandling', 'quiz'), get_string('overduehandling_desc', 'quiz'),
