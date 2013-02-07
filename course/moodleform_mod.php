@@ -858,6 +858,11 @@ abstract class moodleform_mod extends moodleform {
         $mform->closeHeaderBefore('buttonar');
     }
 
+    /**
+     * Get the list of admin settings for this module and apply any defaults/advanced/locked settings.
+     *
+     * @return void
+     */
     function apply_admin_defaults() {
         global $OUTPUT;
 
