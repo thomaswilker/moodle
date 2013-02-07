@@ -1549,7 +1549,7 @@ abstract class admin_setting {
      *
      * @param array of strings describing the defaults for this setting. This is appended to by this function.
      */
-    public function get_setting_flag_defaults($defaults) {
+    public function get_setting_flag_defaults(& $defaults) {
         foreach ($this->flags as $flag) {
             if ($flag->is_enabled() && $flag->get_default()) {
                 $defaults[] = $flag->get_displayname();
