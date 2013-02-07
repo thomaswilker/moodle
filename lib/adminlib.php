@@ -1494,7 +1494,7 @@ abstract class admin_setting {
      * @param string $shortname - The shortname for this flag. Used as a suffix for the setting name.
      * @param string $displayname - The display name for this flag. Used as a label next to the checkbox.
      */
-    public function set_flag_options($enabled, $default, $shortname, $displayname) {
+    protected function set_flag_options($enabled, $default, $shortname, $displayname) {
         if (empty($this->flags[$shortname])) {
             $this->flags[$shortname] = new admin_setting_flag($enabled, $default, $shortname, $displayname);
         } else {
@@ -1551,16 +1551,14 @@ abstract class admin_setting {
     /**
      * Get the list of defaults for the flags on this setting.
      *
-     * @return array of flag names that are enabled and defaulted.
+     * @param array of strings describing the defaults for this setting. This is appended to by this function.
      */
-    public function get_setting_flag_defaults() {
-        $defaults = array();
+    public function get_setting_flag_defaults($defaults) {
         foreach ($this->flags as $flag) {
             if ($flag->is_enabled() && $flag->get_default()) {
                 $defaults[] = $flag->get_displayname();
             }
         }
-        return $defaults;
     }
 
     /**
@@ -1574,7 +1572,9 @@ abstract class admin_setting {
         $output = '';
 
         foreach ($this->flags as $flag) {
-            $output .= $flag->output_setting_flag($this);
+            if ($flag->is_enabled()) {
+                $output .= $flag->output_setting_flag($this);
+            }
         }
 
         return $output;
@@ -1901,18 +1901,21 @@ class admin_setting_flag {
 
     }
 
+    /**
+     * Output the checkbox for this setting flag. Should only be called if the flag is enabled.
+     *
+     * @param admin_setting $setting - The admin setting for this flag
+     * @return string - The html for the checkbox.
+     */
     public function output_setting_flag(admin_setting $setting) {
-        $output = '';
-        if ($this->is_enabled()) {
-            $value = $setting->get_setting_flag_value($this);
-            $output .= ' <input type="checkbox" class="form-checkbox" ' .
-                            ' id="' .  $setting->get_id() . '_' . $this->get_shortname() . '" ' .
-                            ' name="' . $setting->get_full_name() .  '_' . $this->get_shortname() . '" ' .
-                            ' value="1" ' . ($value ? 'checked="checked"' : '') . ' />' .
-                            ' <label for="' . $setting->get_id() . '_' . $this->get_shortname() . '">' .
-                            $this->get_displayname() .
-                            ' </label> ';
-        }
+        $value = $setting->get_setting_flag_value($this);
+        $output = ' <input type="checkbox" class="form-checkbox" ' .
+                        ' id="' .  $setting->get_id() . '_' . $this->get_shortname() . '" ' .
+                        ' name="' . $setting->get_full_name() .  '_' . $this->get_shortname() . '" ' .
+                        ' value="1" ' . ($value ? 'checked="checked"' : '') . ' />' .
+                        ' <label for="' . $setting->get_id() . '_' . $this->get_shortname() . '">' .
+                        $this->get_displayname() .
+                        ' </label> ';
         return $output;
     }
 }
@@ -6552,9 +6555,9 @@ function format_admin_setting($setting, $title='', $form='', $description='', $l
         $defaults[] = $defaultinfo;
     }
 
-    $defaults = array_merge($defaults, $setting->get_setting_flag_defaults());
+    $setting->get_setting_flag_defaults($defaults);
 
-    if (count($defaults)) {
+    if (!empty($defaults)) {
         $defaultinfo = implode(', ', $defaults);
         $defaultinfo = highlight($query, nl2br(s($defaultinfo)));
         $defaultinfo = '<div class="form-defaultinfo">'.get_string('defaultsettinginfo', 'admin', $defaultinfo).'</div>';
