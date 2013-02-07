@@ -51,9 +51,9 @@ $quizsettings = new admin_settingpage('modsettingquiz', $pagetitle, 'moodle/site
 $quizsettings->add(new admin_setting_heading('quizintro', '', get_string('configintro', 'quiz')));
 
 // Time limit.
-$setting = new admin_setting_configtext('quiz/timelimit',
+$setting = new admin_setting_configduration('quiz/timelimit',
         get_string('timelimitsec', 'quiz'), get_string('configtimelimitsec', 'quiz'),
-        0, PARAM_INT);
+        0, 60);
 $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
 $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
 $quizsettings->add($setting);
@@ -67,17 +67,17 @@ $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
 $quizsettings->add($setting);
 
 // Grace period time.
-$setting = new admin_setting_configtext('quiz/graceperiod',
+$setting = new admin_setting_configduration('quiz/graceperiod',
         get_string('graceperiod', 'quiz'), get_string('graceperiod_desc', 'quiz'),
-        86400, PARAM_INT);
+        86400);
 $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
 $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
 $quizsettings->add($setting);
 
 // Minimum grace period used behind the scenes.
-$setting = new admin_setting_configtext('quiz/graceperiodmin',
+$setting = new admin_setting_configduration('quiz/graceperiodmin',
         get_string('graceperiodmin', 'quiz'), get_string('graceperiodmin_desc', 'quiz'),
-        60, PARAM_INT);
+        60);
 $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
 $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
 $quizsettings->add($setting);
@@ -238,16 +238,16 @@ $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
 $quizsettings->add($setting);
 
 // Enforced delay between attempts.
-$setting = new admin_setting_configtext('quiz/delay1',
+$setting = new admin_setting_configduration('quiz/delay1',
         get_string('delay1st2nd', 'quiz'), get_string('configdelay1st2nd', 'quiz'),
-        0, PARAM_INT);
+        0, 3600);
 $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
 $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
 $quizsettings->add($setting);
 
-$setting = new admin_setting_configtext('quiz/delay2',
+$setting = new admin_setting_configduration('quiz/delay2',
         get_string('delaylater', 'quiz'), get_string('configdelaylater', 'quiz'),
-        0, PARAM_INT);
+        0, 3600);
 $setting->set_advanced_flag_options(admin_setting_flag::ENABLED, false);
 $setting->set_locked_flag_options(admin_setting_flag::ENABLED, false);
 $quizsettings->add($setting);
