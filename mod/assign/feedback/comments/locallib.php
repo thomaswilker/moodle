@@ -61,11 +61,16 @@ class assign_feedback_comments extends assign_feedback_plugin {
      * @return mixed - A html string containing the html form elements required for quickgrading
      */
     public function get_quickgrading_html($userid, $grade) {
+        global $OUTPUT;
         $commenttext = '';
+        $commentformat = 0;
+        $gradeid = 0;
         if ($grade) {
+            $gradeid = $grade->id;
             $feedbackcomments = $this->get_feedback_comments($grade->id);
             if ($feedbackcomments) {
                 $commenttext = $feedbackcomments->commenttext;
+                $commentformat = $feedbackcomments->commentformat;
             }
         }
 
@@ -75,8 +80,18 @@ class assign_feedback_comments extends assign_feedback_plugin {
         $textareaoptions = array('name'=>'quickgrade_comments_' . $userid,
                                  'id'=>'quickgrade_comments_' . $userid,
                                  'class'=>'quickgrade');
-        return html_writer::tag('label', $pluginname, $labeloptions) .
-               html_writer::tag('textarea', $commenttext, $textareaoptions);
+        $html = html_writer::tag('label', $pluginname, $labeloptions) .
+                html_writer::tag('textarea', $commenttext, $textareaoptions);
+
+        $html = $OUTPUT->inlinehtmleditor((object)array('data' => (object)array('text'=>$commenttext, 'format'=>$commentformat),
+                                                          'field' => 'quickgrade_comments_' . $userid,
+                                                          'options' => null,
+                                                          'context' => $this->assignment->get_context(),
+                                                          'component' => 'assignfeedback_comments',
+                                                          'filearea' => 'comments',
+                                                          'itemid' => $gradeid));
+
+        return $html;
     }
 
     /**

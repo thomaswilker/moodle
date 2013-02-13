@@ -2829,3 +2829,54 @@ class custom_menu extends custom_menu_item {
         return ($itema > $itemb) ? +1 : -1;
     }
 }
+
+/**
+ * This class represents an inline htmleditor popup.
+ *
+ * It renders as html with an icon to open a textarea in a dialog.
+ *
+ * @copyright 2013 Damyon Wiese
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since Moodle 2.5
+ * @package core
+ * @category output
+ */
+class inlinehtmleditor implements renderable {
+
+    /**
+     * @var stdClass An object containing options for the file picker
+     */
+    public $options;
+
+    /**
+     * Constructs a inline html editor object.
+     *
+     * The following are possible options for the inline html editor:
+     *    - options  List of options passed to the editor in the popup.
+     * The valid options are the same as the parameters to the function file_prepare_standard_editor.
+     * $options->data stdClass - database field that holds the html text with embedded media
+     * $options->field string - the name of the database field that holds the html text with embedded media
+     * $options->options array - editor options (like maxifiles, maxbytes etc.)
+     * $options->context stdClass - context of the editor
+     * $options->component param string
+     * $options->filearea string - file area name
+     * $options->itemid int - item id, required if item exists
+     *
+     * @param stdClass $options An object containing options for the file picker.
+     */
+    public function __construct(stdClass $options) {
+        $defaults = array(
+            'context' => null,
+            'component' => null,
+            'filearea' => null,
+            'itemid' => null
+        );
+        foreach ($defaults as $key=>$value) {
+            if (empty($options->$key)) {
+                $options->$key = $value;
+            }
+        }
+        $this->options = $options;
+    }
+}
+

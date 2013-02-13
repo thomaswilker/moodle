@@ -2185,6 +2185,92 @@ class core_renderer extends renderer_base {
     }
 
     /**
+     * Returns HTML to display the inline html editor hidden form
+     *
+     * <pre>
+     * $OUTPUT->inlinehtmleditorform();
+     * </pre>
+     *
+     * @return string HTML fragment
+     */
+    public function inlinehtmleditorform() {
+        global $CFG;
+        require_once($CFG->libdir . '/ajax/inlinehtmleditor_form.php');
+        $ihf = new core_inlinehtmleditor_form();
+        return $this->render($ihf);
+    }
+
+    /**
+     * Internal implementation of inline_htmleditor_form rendering.
+     *
+     * @param core_inlinehtmleditor_form $ihf
+     * @return string
+     */
+    public function render_core_inlinehtmleditor_form(core_inlinehtmleditor_form $ihf) {
+        ob_start();
+        $ihf->display();
+        $o = ob_get_contents();
+        ob_end_clean();
+        return $this->container($o, 'inlinehtmleditorform notinitialised');
+    }
+
+    /**
+     * Returns HTML to display the inline html editor
+     *
+     * <pre>
+     * $OUTPUT->inline_htmleditor($options);
+     * </pre>
+     *
+     * The following are possible options for the inline html editor:
+     *    - options  List of options passed to the editor in the popup.
+     * The valid options are the same as the parameters to the function file_prepare_standard_editor.
+     * $options->data stdClass - database field that holds the html text with embedded media
+     * $options->field string - the name of the database field that holds the html text with embedded media
+     * $options->options array - editor options (like maxifiles, maxbytes etc.)
+     * $options->context stdClass - context of the editor
+     * $options->component param string
+     * $options->filearea string - file area name
+     * $options->itemid int - item id, required if item exists
+     *
+     * @param stdClass $options The options for the component
+     * @return string HTML fragment
+     */
+    public function inlinehtmleditor($options) {
+        $ih = new inlinehtmleditor($options);
+        return $this->render($ih);
+    }
+
+    /**
+     * Internal implementation of inlinehtmleditor rendering.
+     *
+     * @param inlinehtmleditor $ih
+     * @return string
+     */
+    public function render_inlinehtmleditor(inlinehtmleditor $ih) {
+        global $CFG, $OUTPUT, $USER;
+        $options = $ih->options;
+
+        $statictext = file_rewrite_pluginfile_urls($options->data->text,
+                                                  'pluginfile.php',
+                                                  $options->context->id,
+                                                  $options->component,
+                                                  $options->filearea,
+                                                  $options->itemid);
+        $params = array('overflowdiv' => true, 'context' => $options->context);
+        $html = format_text($statictext, $options->data->format, $params);
+
+        $linkoptions = array('class'=>'inlinehtmleditor visibleifjs');
+        $linkparams = array('sesskey'=>sesskey(),
+                            'contextid'=>$options->context->id);
+        $url = new moodle_url('/lib/ajax/inlinehtmleditor.php', $linkparams);
+        $html .= $OUTPUT->action_icon($url, new pix_icon('t/edit', get_string('edit')), null, $linkoptions);
+        $this->page->requires->yui_module('moodle-core-inlinehtmleditor', 'M.core.init_inlinehtmleditor', array($options));
+        $this->page->requires->string_for_js('updatetext', 'core');
+
+        return $html;
+    }
+
+    /**
      * Returns HTML to display the file picker
      *
      * <pre>
