@@ -962,6 +962,57 @@ class url_select implements renderable {
 }
 
 /**
+ * Data structure describing html link with special popup form action attached
+ *
+ * @copyright 2013 Damyon Wiese
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since Moodle 2.5
+ * @package core
+ * @category output
+ */
+class popup_form_link implements renderable {
+
+    /**
+     * @var string Link text HTML fragment
+     */
+    var $text;
+
+    /**
+     * @var array HTML attributes
+     */
+    var $attributes;
+
+    /**
+     * @var moodle_url Href for form page
+     */
+    var $formurl;
+
+    /**
+     * Constructor
+     * @param string $text HTML fragment
+     * @param moodle_url $formurl
+     * @param array $attributes associative array of html link attributes + disabled
+     */
+    public function __construct($text, moodle_url $formurl, array $attributes = null) {
+        $this->text = $text;
+        $this->formurl = clone($formurl);
+        $this->attributes = (array)$attributes;
+    }
+
+    /**
+     * Adds a CSS class to this popup form link object
+     * @param string $class
+     */
+    public function add_class($class) {
+        if (empty($this->attributes['class'])) {
+            $this->attributes['class'] = $class;
+        } else {
+            $this->attributes['class'] .= ' ' . $class;
+        }
+    }
+}
+
+/**
  * Data structure describing html link with special action attached.
  *
  * @copyright 2010 Petr Skoda

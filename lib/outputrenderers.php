@@ -1240,6 +1240,61 @@ class core_renderer extends renderer_base {
     }
 
     /**
+     * Renders a special html link with can open a form in a dialog
+     *
+     * @param $text text for the link
+     * @param string|moodle_url $formurl The link to use if javascript is enabled
+     * @return string HTML fragment
+     */
+    public function popup_form_link($text, $formurl) {
+        if (!($formurl instanceof moodle_url)) {
+            $formurl = new moodle_url($formurl);
+        }
+        $link = new popup_form_link($text, $formurl);
+
+        return $this->render($link);
+    }
+
+    /**
+     * Renders an popup_form_link object.
+     *
+     * The provided link is rendered and the HTML returned.
+     *
+     * @param popup_form_link $link
+     * @return string HTML fragment
+     */
+    protected function render_popup_form_link(popup_form_link $link) {
+        global $CFG;
+
+        if ($link->text instanceof renderable) {
+            $text = $this->render($link->text);
+        } else {
+            $text = $link->text;
+        }
+
+        if (empty($link->attributes['id'])) {
+            $link->attributes['id'] = html_writer::random_id('popup_form_link');
+        }
+
+        // A disabled link is rendered as formatted text
+        if (!empty($link->attributes['disabled'])) {
+            // do not use div here due to nesting restriction in xhtml strict
+            return html_writer::tag('span', $text, array('class'=>'currentlink'));
+        }
+
+        $attributes = $link->attributes;
+        unset($link->attributes['disabled']);
+        $attributes['href'] = $link->formurl;
+
+        $o = html_writer::tag('a', $text, $attributes);
+        $this->page->requires->yui_module('moodle-core-popupform',
+            'M.core.init_popupform',
+            array(array('id' => $link->attributes['id']))
+        );
+        return $o;
+    }
+
+    /**
      * Renders a special html link with attached action
      *
      * @param string|moodle_url $url
@@ -1850,6 +1905,11 @@ class core_renderer extends renderer_base {
 
         return $ratinghtml;
     }
+
+    /**
+     * 
+     *
+     */
 
     /**
      * Centered heading with attached help button (same title text)
