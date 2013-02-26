@@ -998,7 +998,7 @@ class page_requirements_manager {
      *
      * @return string
      */
-    protected function get_css_code() {
+    public function get_css_code() {
         // First of all the theme CSS, then any custom CSS
         // Please note custom CSS is strongly discouraged,
         // because it can not be overridden by themes!
@@ -1077,6 +1077,15 @@ var yui2in3ConfigFn = function(me) {if(/-skin|reset|fonts|grids|base/.test(me.na
         // Link our main JS file, all core stuff should be there.
         $output .= html_writer::script('', $this->js_fix_url('/lib/javascript-static.js'));
 
+        $output .= $this->get_end_of_head_code();
+
+        // Mark head sending done, it is not possible to anything there.
+        $this->headdone = true;
+
+        return $output;
+    }
+
+    public function get_end_of_head_code() {
         // Add variables.
         if ($this->jsinitvariables['head']) {
             $js = '';
@@ -1093,11 +1102,6 @@ var yui2in3ConfigFn = function(me) {if(/-skin|reset|fonts|grids|base/.test(me.na
                 $output .= html_writer::script('', $url);
             }
         }
-
-        // Mark head sending done, it is not possible to anything there.
-        $this->headdone = true;
-
-        return $output;
     }
 
     /**

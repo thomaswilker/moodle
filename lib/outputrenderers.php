@@ -1288,7 +1288,7 @@ class core_renderer extends renderer_base {
 
         $o = html_writer::tag('a', $text, $attributes);
         $this->page->requires->yui_module('moodle-core-popupform',
-            'M.core.init_popupform',
+            'M.core_popupform_init',
             array(array('id' => $link->attributes['id']))
         );
         return $o;
@@ -3422,4 +3422,92 @@ class core_media_renderer extends plugin_renderer_base {
         }
         return $this->embeddablemarkers;
     }
+}
+
+/**
+ * A renderer that generates output for html fragments preserving javascript and css.
+ *
+ * This renderer prevents headers, footers etc and only sends back content and css/js blocks.
+ *
+ * @copyright 2013 Damyon Wiese
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @since Moodle 2.0
+ * @package core
+ * @category output
+ */
+class core_renderer_fragment extends core_renderer {
+
+    /**
+     * Returns a template fragment representing a fatal error.
+     *
+     * @param string $message The message to output
+     * @param string $moreinfourl URL where more info can be found about the error
+     * @param string $link Link for the Continue button
+     * @param array $backtrace The execution backtrace
+     * @param string $debuginfo Debugging information
+     * @return string A template fragment for a fatal error
+     */
+    public function fatal_error($message, $moreinfourl, $link, $backtrace, $debuginfo = null) { }
+
+    /**
+     * Used to display a notification.
+     *
+     * @param string $message
+     * @param string $classes
+     */
+    public function notification($message, $classes = 'notifyproblem') { }
+
+    /**
+     * Used to display a redirection message.
+     * Fragment redirections should not occur and as such redirection messages
+     * are discarded.
+     *
+     * @param moodle_url|string $encodedurl
+     * @param string $message
+     * @param int $delay
+     * @param bool $debugdisableredirect
+     */
+    public function redirect_message($encodedurl, $message, $delay, $debugdisableredirect) { }
+
+    /**
+     * Prepares the start of a html fragment output.
+     */
+    public function header() {
+        // unfortunately YUI iframe upload does not support application/json
+        /*
+        if (!empty($_FILES)) {
+            @header('Content-type: text/plain; charset=utf-8');
+        } else {
+            @header('Content-type: application/json; charset=utf-8');
+        }
+
+        // Headers to make it not cacheable and json
+        @header('Cache-Control: no-store, no-cache, must-revalidate');
+        @header('Cache-Control: post-check=0, pre-check=0', false);
+        @header('Pragma: no-cache');
+        @header('Expires: Mon, 20 Aug 1969 09:23:00 GMT');
+        @header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+        @header('Accept-Ranges: none');
+        */
+        $header = '';
+        $header .= $this->page->requires->get_css_code();
+        $header .= $this->page->requires->get_end_of_head_code();
+        return $header;
+    }
+
+    public function doctype() { return ''; }
+
+    public function footer() {
+        $footer = $this->page->requires->get_end_code();
+        $this->page->set_state(moodle_page::STATE_DONE);
+        return $footer;
+    }
+
+    /**
+     * @param string $text
+     * @param int $level
+     * @param string $classes
+     * @param string $id
+     */
+    public function heading($text, $level = 2, $classes = 'main', $id = null) {}
 }

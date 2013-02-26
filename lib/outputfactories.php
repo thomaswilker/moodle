@@ -37,6 +37,9 @@ define('RENDERER_TARGET_CLI', 'cli');
 /** Plain text rendering for Ajax scripts*/
 define('RENDERER_TARGET_AJAX', 'ajax');
 
+/** HTML fragment loader for partial page updates */
+define('RENDERER_TARGET_FRAGMENT', 'fragment');
+
 /** Plain text rendering intended for sending via email */
 define('RENDERER_TARGET_TEXTEMAIL', 'textemail');
 
@@ -136,6 +139,8 @@ abstract class renderer_factory_base implements renderer_factory {
                 $target = RENDERER_TARGET_CLI;
             } else if (AJAX_SCRIPT) {
                 $target = RENDERER_TARGET_AJAX;
+            } else if (HTML_FRAGMENT) {
+                $target = RENDERER_TARGET_FRAGMENT;
             }
         }
 
@@ -144,6 +149,7 @@ abstract class renderer_factory_base implements renderer_factory {
             case RENDERER_TARGET_AJAX: $suffix = '_ajax'; break;
             case RENDERER_TARGET_TEXTEMAIL: $suffix = '_textemail'; break;
             case RENDERER_TARGET_HTMLEMAIL: $suffix = '_htmlemail'; break;
+            case RENDERER_TARGET_FRAGMENT: $suffix = '_fragment'; break;
             default: $target = RENDERER_TARGET_GENERAL; $suffix = '';
         }
 

@@ -264,6 +264,10 @@ if (CLI_SCRIPT) {
 if (!defined('AJAX_SCRIPT')) {
     define('AJAX_SCRIPT', false);
 }
+// Detect html fragments.
+if (!defined('HTML_FRAGMENT')) {
+    define('HTML_FRAGMENT', false);
+}
 
 // File permissions on created directories in the $CFG->dataroot
 if (empty($CFG->directorypermissions)) {
