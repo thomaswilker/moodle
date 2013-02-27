@@ -22,12 +22,17 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+if (!empty($_GET['fragment'])) {
+    // This gives us a different renderer
+    define('HTML_FRAGMENT', true);
+}
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->libdir . '/adminlib.php');
 require_once($CFG->dirroot . '/local/mformpopupdemo/demo_form.php');
 
 require_login();
 require_capability('moodle/site:config', get_context_instance(CONTEXT_SYSTEM));
+
 
 $pageparams = array();
 admin_externalpage_setup('local_mformpopupdemo', '', $pageparams);
