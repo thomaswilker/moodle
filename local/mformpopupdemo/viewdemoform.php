@@ -50,6 +50,10 @@ $output = $PAGE->get_renderer('local_mformpopupdemo');
 
 echo $OUTPUT->header();
 
-echo $mform->display(true);
+if ($data = $mform->get_data()) {
+    var_dump($data);
+} else {
+    echo $mform->display(true);
+}
 
 echo $OUTPUT->footer();
