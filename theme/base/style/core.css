@@ -869,6 +869,10 @@ sup {vertical-align: super;}
 .moodle-dialogue-base .core-popupform-content .hidden {
     display: inherit;
 }
+.moodle-dialogue-base .core-popupform-spinner {
+    padding: 3em;
+    text-align: center;
+}
 
 .moodle-dialogue-base .moodle-dialogue-wrap {
     margin-top:-3px;
