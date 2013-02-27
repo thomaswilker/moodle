@@ -25,4 +25,5 @@
 
 $string['pluginname'] = 'Mform popup demo page';
 $string['text'] = 'Text';
+$string['editor'] = 'Editor';
 $string['submit'] = 'Submit';

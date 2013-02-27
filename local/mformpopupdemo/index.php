@@ -43,7 +43,7 @@ $output = $PAGE->get_renderer('local_mformpopupdemo');
 echo $OUTPUT->header();
 
 $formurl = new moodle_url('/local/mformpopupdemo/viewdemoform.php');
-echo $output->container($output->popup_form_link('First popup link', $formurl));
-echo $output->container($output->popup_form_link('Second popup link', $formurl));
+echo $output->container($output->popup_form_link('First popup link', $formurl, $mform));
+echo $output->container($output->popup_form_link('Second popup link', $formurl, $mform));
 
 echo $OUTPUT->footer();

@@ -866,7 +866,9 @@ sup {vertical-align: super;}
     /* Override the z-index set incorrectly by the YUI dialogue */
     z-index: 600!important;
 }
-
+.moodle-dialogue-base .core-popupform-content .hidden {
+    display: inherit;
+}
 
 .moodle-dialogue-base .moodle-dialogue-wrap {
     margin-top:-3px;

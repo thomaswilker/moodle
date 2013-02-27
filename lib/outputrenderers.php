@@ -1244,13 +1244,14 @@ class core_renderer extends renderer_base {
      *
      * @param $text text for the link
      * @param string|moodle_url $formurl The link to use if javascript is enabled
+     * @param moodleform $form The form to show in a popup.
      * @return string HTML fragment
      */
-    public function popup_form_link($text, $formurl) {
+    public function popup_form_link($text, $formurl, $form) {
         if (!($formurl instanceof moodle_url)) {
             $formurl = new moodle_url($formurl);
         }
-        $link = new popup_form_link($text, $formurl);
+        $link = new popup_form_link($text, $formurl, $form);
 
         return $this->render($link);
     }
@@ -1291,6 +1292,12 @@ class core_renderer extends renderer_base {
             'M.core_popupform_init',
             array(array('id' => $link->attributes['id']))
         );
+
+        // We dont want the form in the page - but we do want all the js requirements loaded already.
+        ob_start();
+        $link->form->display();
+        ob_get_contents();
+        ob_end_clean();
         return $o;
     }
 
@@ -3499,7 +3506,6 @@ class core_renderer_fragment extends core_renderer {
 
     public function footer() {
         $footer = $this->page->requires->get_end_code();
-        $this->page->set_state(moodle_page::STATE_DONE);
         return $footer;
     }
 

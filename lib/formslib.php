@@ -203,6 +203,16 @@ abstract class moodleform {
     }
 
     /**
+     * Return an attribute of the MoodleQuickForm
+     *
+     * @param string $name The attribute name
+     * @return string attribute value.
+     */
+    function get_attribute($name) {
+        return $this->_form->getAttribute($name);
+    }
+
+    /**
      * It should returns unique identifier for the form.
      * Currently it will return class name, but in case two same forms have to be
      * rendered on same page then override function to get unique form identifier.

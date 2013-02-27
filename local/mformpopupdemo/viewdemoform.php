@@ -40,6 +40,9 @@ admin_externalpage_setup('local_mformpopupdemo', '', $pageparams);
 $PAGE->set_heading($SITE->fullname);
 $PAGE->set_title($SITE->fullname . ': ' . get_string('pluginname', 'local_mformpopupdemo'));
 
+// Testing js includes are functioning.
+$PAGE->requires->js_init_code('console.log("INLINE JS LOADED");', true);
+$PAGE->requires->js('/local/mformpopupdemo/module.js');
 $mform = new local_mformpopupdemo_form();
 $mform->set_data((object) array());
 

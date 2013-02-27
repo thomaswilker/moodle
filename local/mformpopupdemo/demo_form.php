@@ -39,7 +39,10 @@ class local_mformpopupdemo_form extends moodleform {
         $mform = $this->_form;
 
         $mform->addElement('text', 'text', get_string('text', 'local_mformpopupdemo'));
+        $mform->addElement('editor', 'editor', get_string('editor', 'local_mformpopupdemo'));
 
         $mform->addElement('submit', 'submitbutton', get_string('submit', 'local_mformpopupdemo'));
+
+        $mform->disable_form_change_checker();
     }
 }

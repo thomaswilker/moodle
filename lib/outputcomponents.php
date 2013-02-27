@@ -988,14 +988,20 @@ class popup_form_link implements renderable {
     var $formurl;
 
     /**
+     * @var moodleform The form to display
+     */
+    var $form;
+
+    /**
      * Constructor
      * @param string $text HTML fragment
      * @param moodle_url $formurl
      * @param array $attributes associative array of html link attributes + disabled
      */
-    public function __construct($text, moodle_url $formurl, array $attributes = null) {
+    public function __construct($text, moodle_url $formurl, moodleform $form, array $attributes = null) {
         $this->text = $text;
         $this->formurl = clone($formurl);
+        $this->form = $form;
         $this->attributes = (array)$attributes;
     }
 
