@@ -206,9 +206,8 @@ class tinymce_texteditor extends texteditor {
         $params['custom_elements'] = 'nolink,~tex,~algebra,lang';
 
         //Add onblur event for client side text validation
-        if (!empty($options['required'])) {
-            $params['init_instance_callback'] = 'M.editor_tinymce.onblur_event';
-        }
+        //and ajax form submission.
+        $params['init_instance_callback'] = 'M.editor_tinymce.onblur_event';
 
         // Allow plugins to adjust parameters.
         editor_tinymce_plugin::all_update_init_params($params, $context, $options);
