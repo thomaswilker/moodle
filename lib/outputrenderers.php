@@ -1294,10 +1294,11 @@ class core_renderer extends renderer_base {
         );
 
         // We dont want the form in the page - but we do want all the js requirements loaded already.
-        ob_start();
-        $link->form->display();
-        ob_get_contents();
-        ob_end_clean();
+        //ob_start();
+       // $link->form->display();
+       // $o .= '<div style="display:none;">' . ob_get_contents() . '</div>';
+       // ob_end_clean();
+
         return $o;
     }
 
@@ -3497,9 +3498,13 @@ class core_renderer_fragment extends core_renderer {
         @header('Accept-Ranges: none');
         */
         $header = '';
-        $header .= $this->page->requires->get_css_code();
-        $header .= $this->page->requires->get_end_of_head_code();
-        return $header;
+        //$header .= $this->page->requires->get_css_code();
+        //$header .= $this->page->requires->get_end_of_head_code();
+        $header .= $this->page->requires->get_head_code($this->page, $this);
+        
+        //return $header;
+        // discard the code - we already have it.
+        return '';
     }
 
     public function doctype() { return ''; }
@@ -3507,6 +3512,18 @@ class core_renderer_fragment extends core_renderer {
     public function footer() {
         $footer = $this->page->requires->get_end_code();
         return $footer;
+
+        /*
+        $output = '';
+        $inyuijs = $this->page->requires->get_javascript_code(false);
+        $ondomreadyjs = $this->page->requires->get_javascript_code(true);
+        $jsinit = $this->page->requires->get_javascript_init_code();
+        $handlersjs = $this->page->requires->get_event_handler_code();
+        $js = "YUI().use('node', function(Y) {\n{$inyuijs}{$ondomreadyjs}{$jsinit}{$handlersjs}\n});";
+
+        $output .= html_writer::script($js);
+        return $output;
+        */
     }
 
     /**

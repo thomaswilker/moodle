@@ -911,7 +911,7 @@ class page_requirements_manager {
      * Returns code needed for registering of event handlers.
      * @return string JS code
      */
-    protected function get_event_handler_code() {
+    public function get_event_handler_code() {
         $output = '';
         foreach ($this->eventhandlers as $h) {
             $output .= js_writer::event_handler($h['selector'], $h['event'], $h['function'], $h['arguments']);
@@ -924,7 +924,7 @@ class page_requirements_manager {
      * @param bool $ondomready
      * @return string
      */
-    protected function get_javascript_code($ondomready) {
+    public function get_javascript_code($ondomready) {
         $where = $ondomready ? 'ondomready' : 'normal';
         $output = '';
         if ($this->jscalls[$where]) {
@@ -942,7 +942,7 @@ class page_requirements_manager {
      * Returns js code to be executed when Y is available.
      * @return string
      */
-    protected function get_javascript_init_code() {
+    public function get_javascript_init_code() {
         if (count($this->jsinitcode)) {
             return implode("\n", $this->jsinitcode) . "\n";
         }
@@ -1061,7 +1061,7 @@ class page_requirements_manager {
         // Set up global YUI3 loader object - this should contain all code needed by plugins.
         // Note: in JavaScript just use "YUI().use('overlay', function(Y) { .... });",
         //       this needs to be done before including any other script.
-        $js = "var M = {}; M.yui = {};
+        $js = "var M = M || {}; M.yui = M.yui || {};
 var moodleConfigFn = function(me) {var p = me.path, b = me.name.replace(/^moodle-/,'').split('-', 3), n = b.pop();if (/(skin|core)/.test(n)) {n = b.pop();me.type = 'css';};me.path = b.join('-')+'/'+n+'/'+n+'.'+me.type;};
 var galleryConfigFn = function(me) {var p = me.path,v=M.yui.galleryversion,f;if(/-(skin|core)/.test(me.name)) {me.type = 'css';p = p.replace(/-(skin|core)/, '').replace(/\.js/, '.css').split('/'), f = p.pop().replace(/(\-(min|debug))/, '');if (/-skin/.test(me.name)) {p.splice(p.length,0,v,'assets','skins','sam', f);} else {p.splice(p.length,0,v,'assets', f);};} else {p = p.split('/'), f = p.pop();p.splice(p.length,0,v, f);};me.path = p.join('/');};
 var yui2in3ConfigFn = function(me) {if(/-skin|reset|fonts|grids|base/.test(me.name)){me.type='css';me.path=me.path.replace(/\.js/,'.css');me.path=me.path.replace(/\/yui2-skin/,'/assets/skins/sam/yui2-skin');}};\n";
