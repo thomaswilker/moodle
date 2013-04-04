@@ -49,7 +49,7 @@ if ($ADMIN->fulltree) {
     if (isset($CFG->maxbytes)) {
         $options = get_max_upload_sizes($CFG->maxbytes);
         $settings->add(new admin_setting_configselect('workshop/maxbytes', get_string('maxbytes', 'workshop'),
-                            get_string('configmaxbytes', 'workshop'), 0, $options));
+                            get_string('configmaxbytes', 'workshop'), 1048576, $options));
     }
 
     $settings->add(new admin_setting_configselect('workshop/strategy', get_string('strategy', 'workshop'),
