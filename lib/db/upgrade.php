@@ -1237,6 +1237,7 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2012092600.00);
     }
 
+
     if ($oldversion < 2012101500.01) {
         // Find all orphaned blog associations that might exist.
         $sql = "SELECT ba.id
@@ -1564,6 +1565,7 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2012120300.07);
     }
 
+
     if ($oldversion < 2013021100.01) {
 
         // Changing precision of field password on table user to (255).
@@ -1865,6 +1867,7 @@ function xmldb_main_upgrade($oldversion) {
         $table->add_key('fk_critid', XMLDB_KEY_FOREIGN, array('critid'), 'badge_criteria', array('id'));
 
         // Conditionally launch create table for 'badge_criteria_param'.
+
         if (!$dbman->table_exists($table)) {
             $dbman->create_table($table);
         }
@@ -1988,6 +1991,32 @@ function xmldb_main_upgrade($oldversion) {
 
         // Main savepoint reached.
         upgrade_main_savepoint(true, 2013040300.01);
+    }
+
+    if ($oldversion < 2013041100.02) {
+
+        // Define table user_idps to be created.
+        $table = new xmldb_table('user_idps');
+
+        // Adding fields to table user_idps.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('userid', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('provideruserid', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('email', XMLDB_TYPE_CHAR, '100', null, null, null, null);
+
+        // Adding keys to table user_idps.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+        $table->add_key('userid', XMLDB_KEY_FOREIGN, array('userid'), 'user', array('id'));
+
+        // Conditionally launch create table for 'user_idps'.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Conditionally launch create table for user_idps.
+        // Main savepoint reached
+        upgrade_main_savepoint(true, 2013041100.02);
     }
 
     return true;
