@@ -1319,8 +1319,12 @@ function forum_get_group_sql($course, $user = null) {
     if (empty($user)) {
         $user = $USER;
     }
-    $cms = get_coursemodules_in_course('forum', $course->id);
+    $allcms = get_fast_modinfo($course);
+    $cms = $allcms->get_instances_of('forum');
     foreach($cms as $cm) {
+        if (!$cm->uservisible) {
+            continue;
+        }
         if (groups_get_activity_groupmode($cm, $course) != NOGROUPS) {
             // Groups are used.
             $mygroups = groups_get_activity_allowed_groups($cm, $user);
