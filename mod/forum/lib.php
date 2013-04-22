@@ -1300,10 +1300,56 @@ function forum_user_complete($course, $user, $mod, $forum) {
     }
 }
 
+/**
+ * Retuns group sql to be used to identify what discussions a user can see in a course.
+ *
+ * @since Moodle 2.5
+ * @param stdClass $course course object.
+ * @param stdClass $user   user object, defaults to $USER.
+ * @return array an array containing the groupsql as first element and an 'argument array' as second.
+ */
+function forum_get_group_sql($course, $user = null) {
+    global $DB, $USER;
 
+    $groupsql = null;
+    $args = array();
+    $coursegsql = null;
+    $courseargs = array();
 
+    if (empty($user)) {
+        $user = $USER;
+    }
+    $cms = get_coursemodules_in_course('forum', $course->id);
+    foreach($cms as $cm) {
+        if (groups_get_activity_groupmode($cm, $course) != NOGROUPS) {
+            // Groups are used.
+            $mygroups = groups_get_activity_allowed_groups($cm, $user);
 
-
+            // Fetch only stuff that the user can see. If user doesn't belong to a group, he cannot see anything.
+            if ($mygroups) {
+                list($gsql , $args) = $DB->get_in_or_equal(array_keys($mygroups));
+                $groupsql = "(d.groupid $gsql AND d.forum = ?)";
+                $args[] = $cm->instance;
+            } else {
+                // User cannot see anything.
+                continue;
+            }
+        } else {
+            // Groups are not used. So user can see everything.
+            $groupsql = "(d.forum = ?)";
+            $args = array($cm->instance);
+        }
+        if (!empty($groupsql)) {
+            if (empty($coursegsql)) {
+                $coursegsql = $groupsql;
+            } else {
+                $coursegsql .= " OR $groupsql";
+            }
+            $courseargs = array_merge($courseargs, $args);
+        }
+    }
+    return array($coursegsql, $courseargs);
+}
 
 /**
  * @global object
@@ -1328,26 +1374,33 @@ function forum_print_overview($courses,&$htmlarray) {
     $params = array();
     foreach ($courses as $course) {
 
+        $coursesql = null;
         // If the user has never entered into the course all posts are pending
         if ($course->lastaccess == 0) {
-            $coursessqls[] = '(f.course = ?)';
+            $coursesql = '(f.course = ?)';
             $params[] = $course->id;
 
         // Only posts created after the course last access
         } else {
-            $coursessqls[] = '(f.course = ? AND p.created > ?)';
+            $coursesql = '(f.course = ? AND p.created > ?)';
             $params[] = $course->id;
             $params[] = $course->lastaccess;
         }
+        // Check group restrictions.
+        list($groupsql, $args) = forum_get_group_sql($course, $USER);
+        if (!empty($groupsql)) {
+            $coursesql = "($coursesql AND ($groupsql))";
+            $params = array_merge($params, $args);
+        }
+        $coursessqls[] = $coursesql;
     }
     $params[] = $USER->id;
-    $coursessql = implode(' OR ', $coursessqls);
-
+    $where = implode(' OR ', $coursessqls);
     $sql = "SELECT f.id, COUNT(*) as count "
                 .'FROM {forum} f '
                 .'JOIN {forum_discussions} d ON d.forum  = f.id '
                 .'JOIN {forum_posts} p ON p.discussion = d.id '
-                ."WHERE ($coursessql) "
+                ."WHERE ($where) "
                 .'AND p.userid != ? '
                 .'GROUP BY f.id';
 
