@@ -30,7 +30,7 @@ $string['alias'] = 'Keyword';
 $string['aliases'] = 'Keyword(s)';
 $string['aliases_help'] = 'Each glossary entry can have an associated list of keywords (or aliases). If the entry is auto-linked, then any keywords will also be auto-linked.
 
-Enter each keyword on a new line (not separated by commas).';
+Enter each keyword on a new line or separated by commas.';
 $string['allcategories'] = 'All categories';
 $string['allentries'] = 'ALL';
 $string['allowcomments'] = 'Allow comments on entries';

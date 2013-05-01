@@ -163,6 +163,19 @@ if ($mform->is_cancelled()){
     $DB->delete_records('glossary_alias', array('entryid'=>$entry->id));
     if ($aliases !== '') {
         $aliases = explode("\n", $aliases);
+        $count = 0;
+        foreach ($aliases as $alias) {
+            $alias = trim($alias);
+            if (!empty($alias)) {
+                $count++;
+            }
+        }
+
+        // Only one non-empty alias.
+        if ($count == 1) {
+            // See if this is a comma separated list.
+            $aliases = explode(",", $aliases[0]);
+        }
         foreach ($aliases as $alias) {
             $alias = trim($alias);
             if ($alias !== '') {
