@@ -118,8 +118,8 @@ $string['licence_link'] = 'licenses';
 $string['logourl'] = 'Logo URL';
 $string['modulenumberaverage'] = 'Average number of course modules ({$a})';
 $string['moodleorg'] = 'Moodle.org';
-$string['moodleorgregistrationdetail'] = 'The main community hub is called MOOCH, at hub.moodle.org.  By registering your site with MOOCH you will contribute to the statistics of the worldwide Moodle community.  You can also join a low-volume mailing list providing early notifications of security fixes and new releases of Moodle.';
-$string['moodleorgregistrationdetail2'] = 'This option allows you to register your Moodle site with MOOCH, at hub.moodle.org.  Registration is free.
+$string['moodleorgregistrationdetail'] = 'By registering your site with Moodle.org you will contribute to the statistics of the worldwide Moodle community.  This will also register your site with the main community hub (Moodle.net).  You can also join a low-volume mailing list providing early notifications of security fixes and new releases of Moodle.';
+$string['moodleorgregistrationdetail2'] = 'This option allows you to register your Moodle site with Moodle.net.  Registration is free.
 The main benefit of registering is that you will be added to a low-volume mailing list for important notifications such as security alerts and new releases of Moodle.
 By default, your information will be kept private, and will never be sold or passed on to anyone else.  The only reason for collecting this information is for support purposes, and to help build up a statistical picture of the Moodle community as a whole.
 If you choose, you can allow your site name, country and URL to be added to the public list of Moodle Sites.
@@ -158,7 +158,7 @@ $string['publisheremail_help'] = 'The publisher email address allows the hub adm
 $string['publishername'] = 'Publisher';
 $string['publishername_help'] = 'The publisher is the person or organisation that is the official publisher of the course.  Unless you are publishing it on behalf of someone else, it will usually be you.';
 $string['publishon'] = 'Publish on';
-$string['publishonmoodleorg'] = 'Publish on MOOCH';
+$string['publishonmoodleorg'] = 'Publish on Moodle.net';
 $string['publishonspecifichub'] = 'Publish on another Hub';
 $string['questionsnumber'] = 'Number of questions ({$a})';
 $string['registeredcourses'] = 'Registered courses';
@@ -168,7 +168,7 @@ $string['registeredmoodleorg'] = 'Moodle.org ({$a})';
 $string['registeredon'] = 'Registered with';
 $string['registersite'] = 'Register with {$a}';
 $string['registeron'] = 'Register your site';
-$string['registeronmoodleorg'] = 'Register with Moodle.org (MOOCH)';
+$string['registeronmoodleorg'] = 'Register with Moodle.net';
 $string['registeronspecifichub'] = 'Register with a specific hub';
 $string['registrationconfirmed'] = 'Site registration confirmed';
 $string['registrationconfirmedon'] = 'You are now registered on the hub {$a}. You are now able to publish courses to this hub, using the "Publish" link in course administration menus.';
@@ -197,7 +197,7 @@ $string['share'] = 'Share this course for people to download';
 $string['shared'] = 'Shared';
 $string['shareon'] = 'Upload this course to {$a}';
 $string['shareonhub'] = 'Upload this course to a hub';
-$string['shareonmoodleorg'] = 'Upload this course to MOOCH';
+$string['shareonmoodleorg'] = 'Upload this course to Moodle.net';
 $string['sharepublication_help'] = 'Uploading this course to a community hub server will enable people to download it and install it on their own Moodle sites.';
 $string['siteadmin'] = 'Administrator';
 $string['siteadmin_help'] = 'The full name of the site administrator.';

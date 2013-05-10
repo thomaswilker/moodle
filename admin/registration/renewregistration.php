@@ -52,7 +52,7 @@ if (!empty($registeredhub) and $registeredhub->token == $token) {
 
     $registrationmanager->delete_registeredhub($url);
 
-    //Mooch case, need to recreate the siteidentifier
+    //Moodle.net case, need to recreate the siteidentifier
     if ($url == HUB_MOODLEORGHUBURL) {
         $CFG->siteidentifier = null;
         get_site_identifier();

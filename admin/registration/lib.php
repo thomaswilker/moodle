@@ -86,7 +86,7 @@ class registration_manager {
 
     /**
      * Return the site secret for a given hub
-     * site identifier is assigned to Mooch
+     * site identifier is assigned to Moodle.net
      * each hub has a unique and personal site secret.
      * @param string $huburl
      * @return string site secret
