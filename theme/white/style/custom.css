@@ -1,0 +1,155 @@
+/* Custom CSS
+-------------------------*/
+
+h1, h2, h3, h4, h5, body {
+    font-family: 'Quicksand', sans-serif;
+}
+
+a h1 {
+    color: black;
+}
+
+header h1 {
+    text-align: right;
+    font-size: 40pt;
+    padding-right: 0.3em;
+}
+
+header nav a:hover {
+    text-decoration: none;
+}
+
+button, input.form-submit, input[type="button"], input[type="submit"], input[type="reset"] {
+    background: white;
+    border: 0px;
+    color: #999;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+    font-family: 'Quicksand', sans-serif;
+    box-shadow: none;
+}
+
+button:hover, input.form-submit:hover, input[type="button"]:hover, input[type="submit"]:hover, input[type="reset"]:hover {
+    background: white;
+    color: #08c;
+}
+
+.breadcrumb {
+    background: white;
+}
+
+.breadcrumb li {
+    padding-left: 1em; padding-right: 1em;
+}
+
+.breadcrumb .divider {
+    display: none;
+}
+
+.course-content ul li.section.main {
+    border: 0px;
+}
+
+body {
+    padding-top: 0px;
+}
+
+#page-footer {
+    border: 0px;
+}
+
+.nav .span2 .singlebutton input[type="submit"] {
+    margin: 4px;
+}
+
+hr {
+    display: none;
+}
+
+.block,
+header .logininfo {
+    background-color: white;
+    border: 0px;
+    box-shadow: none;
+    opacity: 0.2;
+    transition:opacity 0.5s;
+    -webkit-filter: blur(1px);
+}
+
+a {
+    color: #444;
+    font-weight: 600;
+}
+
+
+.block:hover,
+.block:hover h2,
+header:hover .logininfo {
+    color: black;
+    opacity: 1.0;
+    -webkit-filter: blur(0px);
+}
+
+.activityicon {
+    -webkit-filter: saturate(0.2);
+}
+/*
+
+.block h2 {
+    color: #aaa;
+}
+
+.block a,
+footer a,
+.logininfo a,
+.breadcrumb a {
+    color: #ccf;
+}
+
+.block:hover a,
+footer:hover a,
+.logininfo:hover a,
+.breadcrumb:hover a {
+    color: #08c;
+}
+*/
+
+body {
+    border-top: 4px solid black;
+}
+
+
+footer,
+span.cache-definition-stats span.cache-store-stats,
+span.cache-definition-stats-heading {
+    background-color: black;
+    color: white;
+}
+span.cache-definition-stats-heading {
+    font-weight: 600;
+}
+
+.sitelink img {
+    -webkit-filter: invert(1) hue-rotate(180deg);
+}
+
+li.section.main {
+    display: inline-block;
+    width: 26em;
+    min-height: 8em;
+    margin: 2em;
+}
+
+@media (max-width: 767px) {
+    header h1 {
+        font-size: 20pt;
+        float: left;
+    }
+
+    .nav .row-fluid .span2 {
+        position: absolute;
+        left: 50%;
+    }
+}
+
+
