@@ -73,46 +73,16 @@ header .logininfo {
     box-shadow: none;
     opacity: 0.2;
     transition:opacity 0.5s;
-    -webkit-filter: blur(1px);
+    -webkit-filter: saturate(0);
 }
-
-a {
-    color: #444;
-    font-weight: 600;
-}
-
 
 .block:hover,
 .block:hover h2,
 header:hover .logininfo {
     color: black;
     opacity: 1.0;
-    -webkit-filter: blur(0px);
+    -webkit-filter: saturate(1);
 }
-
-.activityicon {
-    -webkit-filter: saturate(0.2);
-}
-/*
-
-.block h2 {
-    color: #aaa;
-}
-
-.block a,
-footer a,
-.logininfo a,
-.breadcrumb a {
-    color: #ccf;
-}
-
-.block:hover a,
-footer:hover a,
-.logininfo:hover a,
-.breadcrumb:hover a {
-    color: #08c;
-}
-*/
 
 body {
     border-top: 4px solid black;
@@ -135,9 +105,51 @@ span.cache-definition-stats-heading {
 
 li.section.main {
     display: inline-block;
-    width: 26em;
+    width: 30em;
     min-height: 8em;
     margin: 2em;
+    vertical-align:top;
+}
+
+#page {
+    padding: 0 14em 0 14em;
+}
+#page-center {
+    float: left;
+    width: 100%;
+    border-left: 14em solid white;
+    border-right: 14em solid white;
+    margin-left: -14em;
+    margin-right: -14em;
+    display: inline;
+}
+#block-region-side-pre {
+    float: left;
+    margin-left: -13em;
+    width: 14em;
+    position: relative;
+}
+
+#block-region-side-post {
+    float: right;
+    width: 14em;
+    margin-right: -13em;
+    position: relative;
+}
+
+#page-content {
+    float: left;
+    width: 100%;
+    margin-right: -100%;
+}
+
+footer {
+    clear: both;
+}
+
+.label, .badge {
+    font-weight: normal;
+    line-height: 21px;
 }
 
 @media (max-width: 767px) {
@@ -150,6 +162,28 @@ li.section.main {
         position: absolute;
         left: 50%;
     }
+
+    #block-region-side-post {
+        float: left;
+        margin-left: -13em;
+        clear: left;
+    }
+
+    body {
+        padding: 0px;
+    }
 }
 
+@media (max-width: 650px) {
+    #block-region-side-pre {
+        clear: left;
+        margin-left: 0em;
+    }
+    #block-region-side-post {
+        margin-left: 0em;
+    }
 
+    #page-center {
+        border-left: 1em solid white;
+    }
+}
