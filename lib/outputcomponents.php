@@ -937,19 +937,26 @@ class action_link implements renderable {
     var $actions;
 
     /**
+     * @var pix_icon Optional pix icon to render with the link
+     */
+    var $icon;
+
+    /**
      * Constructor
      * @param moodle_url $url
      * @param string $text HTML fragment
      * @param component_action $action
      * @param array $attributes associative array of html link attributes + disabled
+     * @param pix_icon $icon optional pix_icon to render with the link text
      */
-    public function __construct(moodle_url $url, $text, component_action $action = null, array $attributes = null) {
+    public function __construct(moodle_url $url, $text, component_action $action = null, array $attributes = null, pix_icon $icon = null) {
         $this->url = clone($url);
         $this->text = $text;
         $this->attributes = (array)$attributes;
         if ($action) {
             $this->add_action($action);
         }
+        $this->icon = $icon;
     }
 
     /**
@@ -2852,6 +2859,41 @@ class custom_menu extends custom_menu_item {
             return 0;
         }
         return ($itema > $itemb) ? +1 : -1;
+    }
+}
+
+/**
+ * A list of action links/icons relating to a specific element in the page.
+ *
+ * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package core
+ */
+class action_menu implements renderable {
+    /** @var string unique id of the tab in this tree, it is used to find selected and/or inactive tabs */
+    var $id;
+    /** @var string title under the link, by default equals to text */
+    var $title;
+    /** @var pix_icon representing the icon to open the menu */
+    var $icon;
+    /** @var array of action_link objects representing a list of menu items */
+    var $items;
+
+    /**
+     * Constructor
+     *
+     * @param string $title title for the menu. Should include the name of the item this menu relates to.
+     * @param string $icon pix_icon for the menu. Defaults to a menu icon.
+     * @param array $items a list of items to put in the menu.
+     */
+    public function __construct($title, $icon = '', $items = array()) {
+        $this->id = html_writer::random_id('actionmenu');
+        $this->icon = $icon;
+        $this->title = $title;
+        $this->items = $items;
+    }
+
+    public function add(action_link $link) {
+        array_push($this->items, $link);
     }
 }
 

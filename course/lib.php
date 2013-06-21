@@ -1801,9 +1801,10 @@ function course_get_cm_edit_actions(cm_info $mod, $indent = -1, $sr = null) {
         // we will not display link if we are on some other-course page (where we should not see this module anyway)
         $actions['title'] = new action_link(
             new moodle_url($baseurl, array('update' => $mod->id)),
-            new pix_icon('t/editstring', $str->edittitle, 'moodle', array('class' => 'iconsmall visibleifjs', 'title' => '')),
+            $str->edittitle,
             null,
-            array('class' => 'editing_title', 'title' => $str->edittitle)
+            array('class' => 'editing_title', 'title' => $str->edittitle),
+            new pix_icon('t/editstring', $str->edittitle, 'moodle', array('class' => 'iconsmall visibleifjs', 'title' => ''))
         );
     }
 
@@ -1820,17 +1821,19 @@ function course_get_cm_edit_actions(cm_info $mod, $indent = -1, $sr = null) {
         if ($indent > 0) {
             $actions['moveleft'] = new action_link(
                 new moodle_url($baseurl, array('id' => $mod->id, 'indent' => '-1')),
-                new pix_icon($leftarrow, $str->moveleft, 'moodle', array('class' => 'iconsmall', 'title' => '')),
+                $str->moveleft,
                 null,
-                array('class' => 'editing_moveleft', 'title' => $str->moveleft)
+                array('class' => 'editing_moveleft', 'title' => $str->moveleft),
+                new pix_icon($leftarrow, $str->moveleft, 'moodle', array('class' => 'iconsmall', 'title' => ''))
             );
         }
         if ($indent >= 0) {
             $actions['moveright'] = new action_link(
                 new moodle_url($baseurl, array('id' => $mod->id, 'indent' => '1')),
-                new pix_icon($rightarrow, $str->moveright, 'moodle', array('class' => 'iconsmall', 'title' => '')),
+                $str->moveright,
                 null,
-                array('class' => 'editing_moveright', 'title' => $str->moveright)
+                array('class' => 'editing_moveright', 'title' => $str->moveright),
+                new pix_icon($rightarrow, $str->moveright, 'moodle', array('class' => 'iconsmall', 'title' => ''))
             );
         }
     }
@@ -1839,9 +1842,10 @@ function course_get_cm_edit_actions(cm_info $mod, $indent = -1, $sr = null) {
     if ($hasmanageactivities) {
         $actions['move'] = new action_link(
             new moodle_url($baseurl, array('copy' => $mod->id)),
-            new pix_icon('t/move', $str->move, 'moodle', array('class' => 'iconsmall', 'title' => '')),
+            $str->move,
             null,
-            array('class' => 'editing_move', 'title' => $str->move)
+            array('class' => 'editing_move', 'title' => $str->move),
+            new pix_icon('t/move', $str->move, 'moodle', array('class' => 'iconsmall', 'title' => ''))
         );
     }
 
@@ -1849,9 +1853,10 @@ function course_get_cm_edit_actions(cm_info $mod, $indent = -1, $sr = null) {
     if ($hasmanageactivities) {
         $actions['update'] = new action_link(
             new moodle_url($baseurl, array('update' => $mod->id)),
-            new pix_icon('t/edit', $str->update, 'moodle', array('class' => 'iconsmall', 'title' => '')),
+            $str->update,
             null,
-            array('class' => 'editing_update', 'title' => $str->update)
+            array('class' => 'editing_update', 'title' => $str->update),
+            new pix_icon('t/edit', $str->update, 'moodle', array('class' => 'iconsmall', 'title' => ''))
         );
     }
 
@@ -1861,9 +1866,10 @@ function course_get_cm_edit_actions(cm_info $mod, $indent = -1, $sr = null) {
             plugin_supports('mod', $mod->modname, FEATURE_BACKUP_MOODLE2)) {
         $actions['duplicate'] = new action_link(
             new moodle_url($baseurl, array('duplicate' => $mod->id)),
-            new pix_icon('t/copy', $str->duplicate, 'moodle', array('class' => 'iconsmall', 'title' => '')),
+            $str->duplicate,
             null,
-            array('class' => 'editing_duplicate', 'title' => $str->duplicate)
+            array('class' => 'editing_duplicate', 'title' => $str->duplicate),
+            new pix_icon('t/copy', $str->duplicate, 'moodle', array('class' => 'iconsmall', 'title' => ''))
         );
     }
 
@@ -1871,9 +1877,10 @@ function course_get_cm_edit_actions(cm_info $mod, $indent = -1, $sr = null) {
     if ($hasmanageactivities) {
         $actions['delete'] = new action_link(
             new moodle_url($baseurl, array('delete' => $mod->id)),
-            new pix_icon('t/delete', $str->delete, 'moodle', array('class' => 'iconsmall', 'title' => '')),
+            $str->delete,
             null,
-            array('class' => 'editing_delete', 'title' => $str->delete)
+            array('class' => 'editing_delete', 'title' => $str->delete),
+            new pix_icon('t/delete', $str->delete, 'moodle', array('class' => 'iconsmall', 'title' => ''))
         );
     }
 
@@ -1882,9 +1889,10 @@ function course_get_cm_edit_actions(cm_info $mod, $indent = -1, $sr = null) {
         if ($mod->visible) {
             $actions['hide'] = new action_link(
                 new moodle_url($baseurl, array('hide' => $mod->id)),
-                new pix_icon('t/hide', $str->hide, 'moodle', array('class' => 'iconsmall', 'title' => '')),
+                $str->hide,
                 null,
-                array('class' => 'editing_hide', 'title' => $str->hide)
+                array('class' => 'editing_hide', 'title' => $str->hide),
+                new pix_icon('t/hide', $str->hide, 'moodle', array('class' => 'iconsmall', 'title' => ''))
             );
         } else {
             $actions['show'] = new action_link(
@@ -1925,9 +1933,10 @@ function course_get_cm_edit_actions(cm_info $mod, $indent = -1, $sr = null) {
         if (!$mod->coursegroupmodeforce) {
             $actions[$actionname] = new action_link(
                 new moodle_url($baseurl, array('id' => $mod->id, 'groupmode' => $groupmode)),
-                new pix_icon($groupimage, $grouptitle, 'moodle', array('class' => 'iconsmall', 'title' => '')),
+                $grouptitle,
                 null,
-                array('class' => 'editing_'. $actionname, 'title' => $grouptitle)
+                array('class' => 'editing_'. $actionname, 'title' => $grouptitle),
+                new pix_icon($groupimage, $grouptitle, 'moodle', array('class' => 'iconsmall', 'title' => ''))
             );
         } else {
             $actions[$actionname] = new pix_icon($groupimage, $forcedgrouptitle, 'moodle', array('title' => $forcedgrouptitle, 'class' => 'iconsmall'));
@@ -1938,9 +1947,10 @@ function course_get_cm_edit_actions(cm_info $mod, $indent = -1, $sr = null) {
     if (has_capability('moodle/role:assign', $modcontext)){
         $actions['assign'] = new action_link(
             new moodle_url('/admin/roles/assign.php', array('contextid' => $modcontext->id)),
-            new pix_icon('t/assignroles', $str->assign, 'moodle', array('class' => 'iconsmall', 'title' => '')),
+            $str->assign,
             null,
-            array('class' => 'editing_assign', 'title' => $str->assign)
+            array('class' => 'editing_assign', 'title' => $str->assign),
+            new pix_icon('t/assignroles', $str->assign, 'moodle', array('class' => 'iconsmall', 'title' => ''))
         );
     }
 

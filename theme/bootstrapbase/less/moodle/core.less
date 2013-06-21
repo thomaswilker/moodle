@@ -1892,3 +1892,27 @@ div.badge .expireimage {
     padding: 0;
     border-width: 0;
 }
+
+.jsenabled .commands {
+    visibility: hidden;
+}
+
+.yui3-overlay .commands {
+    visibility: inherit;
+    background-color: @dropdownBackground;
+    border: 1px solid @dropdownBorder;
+    display: block;
+    padding: 4px;
+    .border-radius(4px);
+}
+
+.yui3-overlay .commands a {
+    display: block;
+    color: @dropdownLinkColor;
+}
+.yui3-overlay .commands a:hover,
+.yui3-overlay .commands a:focus
+ {
+    color: @dropdownLinkColorHover;
+    background-color: @dropdownLinkBackgroundHover;
+}

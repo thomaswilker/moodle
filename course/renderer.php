@@ -329,6 +329,7 @@ class core_course_renderer extends plugin_renderer_base {
      * @return string
      */
     public function course_section_cm_edit_actions($actions) {
+        $this->page->requires->yui_module('moodle-core-actionmenu', 'M.core.actionmenu.init');
         $output = html_writer::start_tag('span', array('class' => 'commands'));
         foreach ($actions as $action) {
             if ($action instanceof renderable) {

@@ -1278,13 +1278,14 @@ class core_renderer extends renderer_base {
      * @param string $text HTML fragment
      * @param component_action $action
      * @param array $attributes associative array of html link attributes + disabled
+     * @param pix_icon optional pix icon to render with the link
      * @return string HTML fragment
      */
-    public function action_link($url, $text, component_action $action = null, array $attributes=null) {
+    public function action_link($url, $text, component_action $action = null, array $attributes = null, $icon = null) {
         if (!($url instanceof moodle_url)) {
             $url = new moodle_url($url);
         }
-        $link = new action_link($url, $text, $action, $attributes);
+        $link = new action_link($url, $text, $action, $attributes, $icon);
 
         return $this->render($link);
     }
@@ -1301,11 +1302,18 @@ class core_renderer extends renderer_base {
     protected function render_action_link(action_link $link) {
         global $CFG;
 
-        if ($link->text instanceof renderable) {
-            $text = $this->render($link->text);
-        } else {
-            $text = $link->text;
+        $text = '';
+        if ($link->icon) {
+            $text .= $this->render($link->icon);
         }
+
+        $text .= html_writer::start_tag('span', array('class'=>'actionlinktext'));
+        if ($link->text instanceof renderable) {
+            $text .= $this->render($link->text);
+        } else {
+            $text .= $link->text;
+        }
+        $text .= html_writer::end_tag('span');
 
         // A disabled link is rendered as formatted text
         if (!empty($link->attributes['disabled'])) {
