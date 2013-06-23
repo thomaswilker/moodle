@@ -19,52 +19,57 @@ echo $OUTPUT->doctype() ?>
 <head>
     <title><?php echo $OUTPUT->page_title(); ?></title>
     <link rel="shortcut icon" href="<?php echo $OUTPUT->favicon(); ?>" />
+    <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
     <?php echo $OUTPUT->standard_head_html() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body <?php echo $OUTPUT->body_attributes(); ?>>
+<body <?php echo $OUTPUT->body_attributes('columns3'); ?>>
 
 <?php echo $OUTPUT->standard_top_of_body_html() ?>
 
-<header role="banner" class="navbar navbar-fixed-top">
-    <nav role="navigation" class="navbar-inner">
+<div class="container-fluid nav">
+    <div class="row-fluid">
+    <span class="span10">
+            <?php echo $OUTPUT->navbar(); ?>
+    </span>
+    <span class="span2">
+         <?php echo $OUTPUT->page_heading_button(); ?>
+    </span>
+    </div>
+</div>
+
+<header role="banner">
+    <nav role="navigation">
         <div class="container-fluid">
-            <a class="brand" href="<?php echo $CFG->wwwroot;?>"><?php echo $SITE->shortname; ?></a>
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <div class="nav-collapse collapse">
-                <ul class="nav pull-right">
-                    <li><?php echo $OUTPUT->page_heading_menu(); ?></li>
-                </ul>
+            <div class="row-fluid">
+            <span class="span6"><a href="<?php echo $CFG->wwwroot;?>"><?php echo $OUTPUT->page_heading(); ?></a></span>
+            <span class="pull-right hidden-phone">
+                    <?php echo $OUTPUT->page_heading_menu(); ?>
+                    <?php echo $OUTPUT->login_info() ?>
+            </span>
             </div>
         </div>
     </nav>
 </header>
 
-<div id="page" class="container-fluid">
-
-    <header id="page-header" class="clearfix">
-        <?php echo $OUTPUT->page_heading(); ?>
-    </header>
-
-    <div id="page-content" class="row-fluid">
-        <div id="region-bs-main-and-pre" class="span9">
-            <div class="row-fluid">
-                <section id="region-main" class="span8 pull-right">
-                    <?php echo $OUTPUT->main_content(); ?>
-                </section>
-                <?php echo $OUTPUT->blocks('side-pre', 'span4 desktop-first-column'); ?>
-            </div>
-        </div>
-        <?php echo $OUTPUT->blocks('side-post', 'span3'); ?>
+<div id="page">
+    <div id="page-center">
+    <div id="page-content">
+        <section id="region-main">
+            <?php
+            echo $OUTPUT->course_content_header();
+            echo $OUTPUT->main_content();
+            echo $OUTPUT->course_content_footer();
+            ?>
+        </section>
     </div>
-
-    <?php echo $OUTPUT->standard_end_of_body_html() ?>
-
+    <?php echo $OUTPUT->blocks('side-pre'); ?>
+    <?php echo $OUTPUT->blocks('side-post'); ?>
+    </div>
 </div>
+
+<?php echo $OUTPUT->standard_end_of_body_html() ?>
+
 </body>
 </html>
