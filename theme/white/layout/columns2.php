@@ -19,82 +19,71 @@ echo $OUTPUT->doctype() ?>
 <head>
     <title><?php echo $OUTPUT->page_title(); ?></title>
     <link rel="shortcut icon" href="<?php echo $OUTPUT->favicon(); ?>" />
+    <link href='http://fonts.googleapis.com/css?family=Quicksand:300,400,700' rel='stylesheet' type='text/css'>
     <?php echo $OUTPUT->standard_head_html() ?>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
 
-<body <?php echo $OUTPUT->body_attributes('two-column'); ?>>
+<body <?php echo $OUTPUT->body_attributes('columns2'); ?>>
 
 <?php echo $OUTPUT->standard_top_of_body_html() ?>
 
-<header role="banner" class="navbar navbar-fixed-top">
-    <nav role="navigation" class="navbar-inner">
+<div class="container-fluid nav">
+    <div class="row-fluid">
+    <span class="span10">
+            <?php echo $OUTPUT->navbar(); ?>
+    </span>
+    <span class="span2">
+         <?php echo $OUTPUT->page_heading_button(); ?>
+    </span>
+    </div>
+</div>
+
+<header role="banner">
+    <nav role="navigation">
         <div class="container-fluid">
-            <a class="brand" href="<?php echo $CFG->wwwroot;?>"><?php echo $SITE->shortname; ?></a>
-            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </a>
-            <div class="nav-collapse collapse">
-                <?php echo $OUTPUT->custom_menu(); ?>
-                <ul class="nav pull-right">
-                    <li><?php echo $OUTPUT->page_heading_menu(); ?></li>
-                    <li class="navbar-text"><?php echo $OUTPUT->login_info() ?></li>
-                </ul>
+            <div class="row-fluid">
+            <span class="span6"><a href="<?php echo $CFG->wwwroot;?>"><?php echo $OUTPUT->page_heading(); ?></a></span>
+            <span class="pull-right hidden-phone">
+                    <?php echo $OUTPUT->page_heading_menu(); ?>
+                    <?php echo $OUTPUT->login_info() ?>
+            </span>
             </div>
         </div>
     </nav>
 </header>
 
-<div id="page" class="container-fluid">
-
-    <header id="page-header" class="clearfix">
-        <div id="page-navbar">
-            <nav class="breadcrumb-button"><?php echo $OUTPUT->page_heading_button(); ?></nav>
-            <?php echo $OUTPUT->navbar(); ?>
-        </div>
-        <?php echo $OUTPUT->page_heading(); ?>
-        <div id="course-header">
-            <?php echo $OUTPUT->course_header(); ?>
-        </div>
-    </header>
-
-    <div id="page-content" class="row-fluid">
-        <div id="region-bs-main-and-pre" class="span9">
-            <div class="row-fluid">
-                <section id="region-main" class="span9 pull-right">
-                    <?php
-                    echo $OUTPUT->course_content_header();
-                    echo $OUTPUT->main_content();
-                    echo $OUTPUT->course_content_footer();
-                    ?>
-                </section>
-                <?php
-                if (!right_to_left()) {
-                    echo $OUTPUT->blocks('side-pre', 'span3 desktop-first-column');
-                } ?>
-            </div>
-        </div>
-        <?php
-        if (right_to_left()) {
-            echo $OUTPUT->blocks('side-post', 'span3');
-        }
-        ?>
+<div id="page">
+    <br/>
+    <div id="page-center">
+    <div id="page-content">
+        <section id="region-main">
+            <?php
+            echo $OUTPUT->course_content_header();
+            echo $OUTPUT->main_content();
+            echo $OUTPUT->course_content_footer();
+            ?>
+        </section>
     </div>
-
-    <footer id="page-footer">
-        <div id="course-footer"><?php echo $OUTPUT->course_footer(); ?></div>
-        <p class="helplink"><?php echo $OUTPUT->page_doc_link(); ?></p>
-        <?php
-        echo $OUTPUT->login_info();
-        echo $OUTPUT->home_link();
-        echo $OUTPUT->standard_footer_html();
-        ?>
-    </footer>
-
-    <?php echo $OUTPUT->standard_end_of_body_html() ?>
-
+    <?php if (!right_to_left()) {
+        echo $OUTPUT->blocks('side-pre');
+    } else {
+        echo $OUTPUT->blocks('side-post');
+    } ?>
+    </div>
 </div>
+
+<footer id="page-footer">
+    <div id="course-footer"><?php echo $OUTPUT->course_footer(); ?></div>
+    <p class="helplink"><?php echo $OUTPUT->page_doc_link(); ?></p>
+    <?php
+    echo $OUTPUT->login_info();
+    echo $OUTPUT->home_link();
+    echo $OUTPUT->standard_footer_html();
+    ?>
+</footer>
+
+<?php echo $OUTPUT->standard_end_of_body_html() ?>
+
 </body>
 </html>

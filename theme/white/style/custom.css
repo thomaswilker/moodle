@@ -114,6 +114,13 @@ li.section.main {
 #page {
     padding: 0 14em 0 14em;
 }
+.columns2 #page-center {
+    padding-right: 0;
+}
+.columns1 #page-center {
+    padding-left: 0;
+    padding-right: 0;
+}
 #page-center {
     float: left;
     width: 100%;
@@ -122,6 +129,16 @@ li.section.main {
     margin-left: -14em;
     margin-right: -14em;
     display: inline;
+}
+.columns2 #page-center {
+    border-right: 0em solid white;
+    margin-right: 0em;
+}
+.columns1 #page-center {
+    border-right: 0em solid white;
+    margin-right: 0em;
+    border-left: 0em solid white;
+    margin-left: 0em;
 }
 #block-region-side-pre {
     float: left;
@@ -186,4 +203,8 @@ footer {
     #page-center {
         border-left: 1em solid white;
     }
+}
+
+input, textarea, .uneditable-input {
+    width: 8em;
 }
