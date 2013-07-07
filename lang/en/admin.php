@@ -574,6 +574,7 @@ $string['helpcalendarcustomexport'] = 'Enable custom date range export option in
 $string['helpexportlookahead'] = 'How many days in the future does the calendar look for events during export for the custom export option?';
 $string['helpexportlookback'] = 'How many days in the past does the calendar look for events during export for the custom export option?';
 $string['helpforcetimezone'] = 'You can allow users to individually select their timezone, or force a timezone for everyone.';
+$string['helplocktype'] = 'Moodle is capable of using different methods of locking for subsystems such as cache and cron. Not all lock types are available for every Moodle installation. The full list of lock types are:<br>{$a->list}';
 $string['helpshowicalsource'] = 'If enabled, the subscription name and link will be shown for iCal-imported events.';
 $string['helpsitemaintenance'] = 'For upgrades and other work';
 $string['helpstartofweek'] = 'Which day starts the week in the calendar?';
@@ -636,6 +637,14 @@ $string['localstringcustomization'] = 'Local string customization';
 $string['location'] = 'Location';
 $string['locationsettings'] = 'Location settings';
 $string['locked'] = 'Locked';
+$string['locking'] = 'Locking';
+$string['locktype'] = 'Lock type';
+$string['locktype_db'] = 'Database Lock';
+$string['locktype_db_help'] = 'The database lock type will use generic row based locking algorithm unless your database supports a more efficient native locking mechanism.';
+$string['locktype_file'] = 'File Lock';
+$string['locktype_file_help'] = 'The file lock type use lock files stored in the dataroot. Whether this works on clusters depends on the file system used for the dataroot.';
+$string['locktype_memcache'] = 'Memcache Lock';
+$string['locktype_memcache_help'] = 'The memcache lock type depends on an external Memcache server to hold the locks. It is dangerous to use this lock type with a Memcache server that is used for other purposes. If the memcache server deletes the locks to reclaim space - the locks will be released.';
 $string['lockoutduration'] = 'Account lockout duration';
 $string['lockoutduration_desc'] = 'Locked out account is automatically unlocked after this duration.';
 $string['lockoutemailbody'] = 'Your account with username {$a->username} on server \'{$a->sitename}\'
@@ -709,6 +718,17 @@ $string['mediapluginswf'] = 'Enable .swf filter';
 $string['mediapluginswfnote'] = 'As a default security measure, normal users should not be allowed to embed swf flash files.';
 $string['mediapluginwmv'] = 'Enable .wmv filter';
 $string['mediapluginyoutube'] = 'Enable YouTube links filter';
+$string['memcachelockservers'] = 'Memcache lock servers';
+$string['memcachelockservers_desc'] = 'This sets the servers that should be utilised for locking with the memcache lock type.
+Servers should be defined one per line and consist of a server address and optionally a port and weight.
+If no port is provided then the default port (11211) is used.
+
+For example:
+<pre>
+server.url.com
+ipaddress:port
+servername:port:weight
+</pre>';
 $string['messaging'] = 'Enable messaging system';
 $string['messagingallowemailoverride'] = 'Notification email override';
 $string['messaginghidereadnotifications'] = 'Hide read notifications';
