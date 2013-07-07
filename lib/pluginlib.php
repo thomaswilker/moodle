@@ -749,6 +749,10 @@ class plugin_manager {
             'local' => array(
             ),
 
+            'locktype' => array(
+                'file'
+            ),
+
             'message' => array(
                 'email', 'jabber', 'popup'
             ),

@@ -4,6 +4,7 @@
 
 if ($hassiteconfig) { // speedup for non-admins, add all caps used on this page
 
+require_once($CFG->libdir.'/pluginlib.php');
 
 // "systempaths" settingpage
 $temp = new admin_settingpage('systempaths', new lang_string('systempaths','admin'));
@@ -217,5 +218,15 @@ if (empty($CFG->disableupdatenotifications)) {
                                                 new lang_string('updatenotifybuilds_desc', 'core_admin'), 0));
     $ADMIN->add('server', $temp);
 }
+
+$temp = new admin_settingpage('locking', new lang_string('locking', 'core_admin'));
+$lockplugins = plugin_manager::instance()->get_plugins_of_type('locktype');
+foreach ($lockplugins as $type => $path) {
+    $lockplugins[$type] = new lang_string('pluginname', 'locktype_' . $type);
+}
+
+$temp->add(new admin_setting_configselect('locktype', new lang_string('locktype', 'core_admin'),
+                                          new lang_string('helplocktype', 'core_admin'), 0, $lockplugins));
+$ADMIN->add('server', $temp);
 
 } // end of speedup

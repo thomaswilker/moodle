@@ -250,6 +250,7 @@ $cache = '.var_export($cache, true).';
             'iso6392'     => null,
             'langconfig'  => null,
             'license'     => null,
+            'lock'       => $CFG->dirroot.'/lock',
             'mathslib'    => null,
             'media'       => null,
             'message'     => $CFG->dirroot.'/message',
@@ -316,7 +317,7 @@ $cache = '.var_export($cache, true).';
             'tool'          => $CFG->dirroot.'/'.$CFG->admin.'/tool',
             'cachestore'    => $CFG->dirroot.'/cache/stores',
             'cachelock'     => $CFG->dirroot.'/cache/locks',
-
+            'locktype'     => $CFG->dirroot.'/lock/type',
         );
 
         if (!empty($CFG->themedir) and is_dir($CFG->themedir) ) {
