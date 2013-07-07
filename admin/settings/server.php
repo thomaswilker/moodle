@@ -4,6 +4,7 @@
 
 if ($hassiteconfig) { // speedup for non-admins, add all caps used on this page
 
+require_once($CFG->libdir.'/pluginlib.php');
 
 // "systempaths" settingpage
 $temp = new admin_settingpage('systempaths', new lang_string('systempaths','admin'));
@@ -218,5 +219,29 @@ if (empty($CFG->disableupdatenotifications)) {
                                                 new lang_string('updatenotifybuilds_desc', 'core_admin'), 0));
     $ADMIN->add('server', $temp);
 }
+
+$temp = new admin_settingpage('locking', new lang_string('locking', 'core_admin'));
+$lockplugins = \core\lock\manager::get_available_lock_types();
+$descriptionlist = '<ul>';
+foreach ($lockplugins as $type => $path) {
+    $lockplugins[$type] = new lang_string('locktype_' . $type, 'admin');
+    $descriptionlist .= '<li>' . get_string('locktype_' . $type . '_help', 'admin') . '</li>';
+}
+$descriptionlist .= '</ul>';
+
+$default = 'db';
+
+$temp->add(new admin_setting_configselect('locktype', new lang_string('locktype', 'core_admin'),
+                                          new lang_string('helplocktype', 'core_admin', array('list'=>$descriptionlist)), $default, $lockplugins));
+
+
+$temp->add(new admin_setting_configtextarea('memcachelockservers',
+                                            new lang_string('memcachelockservers', 'core_admin'),
+                                            new lang_string('memcachelockservers_desc', 'core_admin'),
+                                            '',
+                                            PARAM_RAW,
+                                            60,
+                                            3));
+$ADMIN->add('server', $temp);
 
 } // end of speedup
