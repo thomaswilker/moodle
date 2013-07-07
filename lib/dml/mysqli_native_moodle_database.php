@@ -1528,4 +1528,60 @@ class mysqli_native_moodle_database extends moodle_database {
 
         return true;
     }
+
+    /**
+     * Get a lock within the specified timeout or return false.
+     * @param string $resource - The identifier for the lock. Should use frankenstyle prefix.
+     * @param int $timeout - The number of seconds to wait for a lock before giving up.
+     *                       Not all lock types will support this.
+     * @param int $maxlifetime - The number of seconds to wait before reclaiming a stale lock.
+     *                       Not all lock types will use this - e.g. if they support auto releasing
+     *                       a lock when a process ends.
+     * @return mixed string/false - Lock token if the lock was obtained or false
+     */
+    public function lock($resource, $timeout, $maxlifetime = 86400) {
+        global $DB;
+
+        $result = $DB->get_record_sql('select GET_LOCK(:key, :timeout) AS locked', array('key' => $resource, 'timeout' => $timeout));
+        $locked = (bool)($result->locked);
+
+        if ($locked) {
+            return $resource;
+        }
+        return false;
+    }
+
+    /**
+     * Release a lock that was previously obtained with {@link lock()}.
+     * @param string token - The lock token returned by {@link lock()}
+     * @return boolean - True if the lock is no longer held (including if it was never held).
+     */
+    public function unlock($token) {
+        $result = $DB->get_record_sql('select RELEASE_LOCK(:key) AS unlocked', array('key' => $token));
+        return (bool)$result->unlocked;
+    }
+
+    /**
+     * Return information about the blocking behaviour of the lock type on this platform.
+     * @return boolean - false (unless we are using transactions)
+     */
+    public function is_lock_blocking() {
+        return false;
+    }
+
+    /**
+     * This lock type will NOT be automatically released when a process ends.
+     * @return boolean - false
+     */
+    public function is_lock_auto_released() {
+        return true;
+    }
+
+    /**
+     * Multiple locks for the same resource can be held by a single process.
+     * @return boolean - false
+     */
+    public function is_lock_stackable() {
+        return true;
+    }
 }

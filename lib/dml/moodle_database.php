@@ -2363,4 +2363,148 @@ abstract class moodle_database {
     public function perf_get_queries() {
         return $this->writes + $this->reads;
     }
+
+    /**
+     * This function generates a unique token for the lock to use.
+     * It is important that this token is not soley based on time as this could lead
+     * to duplicates in a clustered environment (especially on VMs due to poor time precision).
+     */
+    public function generate_unique_token() {
+        $uuid = '';
+
+        if (function_exists("uuid_create")) {
+            $context = null;
+            uuid_create($context);
+
+            uuid_make($context, UUID_MAKE_V4);
+            uuid_export($context, UUID_FMT_STR, $uuid);
+        } else {
+            // Fallback uuid generation based on:
+            // http://www.php.net/manual/en/function.uniqid.php#94959
+            $uuid = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
+
+                // 32 bits for "time_low".
+                mt_rand(0, 0xffff), mt_rand(0, 0xffff),
+
+                // 16 bits for "time_mid".
+                mt_rand(0, 0xffff),
+
+                // 16 bits for "time_hi_and_version",
+                // four most significant bits holds version number 4.
+                mt_rand(0, 0x0fff) | 0x4000,
+
+                // 16 bits, 8 bits for "clk_seq_hi_res",
+                // 8 bits for "clk_seq_low",
+                // two most significant bits holds zero and one for variant DCE1.1.
+                mt_rand(0, 0x3fff) | 0x8000,
+
+                // 48 bits for "node".
+                mt_rand(0, 0xffff), mt_rand(0, 0xffff), mt_rand(0, 0xffff));
+        }
+        return trim($uuid);
+    }
+
+    /**
+     * Get a lock within the specified timeout or return false.
+     * @param string $resource - The identifier for the lock. Should use frankenstyle prefix.
+     * @param int $timeout - The number of seconds to wait for a lock before giving up.
+     *                       Not all lock types will support this.
+     * @param int $maxlifetime - The number of seconds to wait before reclaiming a stale lock.
+     *                       Not all lock types will use this - e.g. if they support auto releasing
+     *                       a lock when a process ends.
+     * @return mixed string/false - Lock token if the lock was obtained or false
+     */
+    public function lock($resource, $timeout, $maxlifetime = 86400) {
+
+        $token = $this->generate_unique_token();
+        $now = time();
+        $giveuptime = $now + $timeout;
+        $expires = $now + $maxlifetime;
+
+        if (!$this->record_exists('lock_db', array('resourcekey' => $resource))) {
+            $record = new stdClass();
+            $record->resourcekey = $resource;
+            $result = $this->insert_record('lock_db', $record);
+        }
+
+        $params = array('expires' => $expires,
+                        'token' => $token,
+                        'resourcekey' => $resource,
+                        'now' => $now);
+        $sql = 'UPDATE {lock_db}
+                    SET
+                        expires = :expires,
+                        owner = :token
+                    WHERE
+                        resourcekey = :resourcekey AND
+                        (owner IS NULL OR expires < :now)';
+
+        do {
+            $now = time();
+            $params['now'] = $now;
+            $this->execute($sql, $params);
+
+            $countparams = array('owner' => $token, 'resourcekey' => $resource);
+            $result = $this->count_records('lock_db', $countparams);
+            $locked = $result === 1;
+            if (!$locked) {
+                usleep(rand(10000, 250000)); // Sleep between 10 and 250 milliseconds.
+            }
+            // Try until the giveup time.
+        } while (!$locked && $now < $giveuptime);
+
+        if ($locked) {
+            return $token;
+        }
+
+        return false;
+    }
+
+    /**
+     * Release a lock that was previously obtained with {@link lock()}.
+     * @param string token - The lock token returned by {@link lock()}
+     * @return boolean - True if the lock is no longer held (including if it was never held).
+     */
+    public function unlock($token) {
+        $params = array('noexpires' => null,
+                        'token' => $token,
+                        'noowner' => null);
+
+        $sql = 'UPDATE {lock_db}
+                    SET
+                        expires = :noexpires,
+                        owner = :noowner
+                    WHERE
+                        owner = :token';
+        $this->execute($sql, $params);
+        $countparams = array('owner' => $token);
+        $result = $this->count_records('lock_db', $countparams);
+        $unlocked = $result === 0;
+
+        return $unlocked;
+    }
+
+    /**
+     * Return information about the blocking behaviour of the lock type on this platform.
+     * @return boolean - false (unless we are using transactions)
+     */
+    public function is_lock_blocking() {
+        return false;
+    }
+
+    /**
+     * This lock type will NOT be automatically released when a process ends.
+     * @return boolean - false
+     */
+    public function is_lock_auto_released() {
+        return false;
+    }
+
+    /**
+     * Multiple locks for the same resource can be held by a single process.
+     * @return boolean - false
+     */
+    public function is_lock_stackable() {
+        return false;
+    }
 }

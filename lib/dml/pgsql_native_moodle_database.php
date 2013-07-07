@@ -42,8 +42,20 @@ class pgsql_native_moodle_database extends moodle_database {
 
     protected $last_error_reporting; // To handle pgsql driver default verbosity
 
+    /** @var array $lockidcache - static cache for string -> int conversions required for pg advisory locks. */
+    protected static $lockidcache = array();
+
     /** @var bool savepoint hack for MDL-35506 - workaround for automatic transaction rollback on error */
     protected $savepointpresent = false;
+
+    /** @var array $validlocktypes - PostgreSQL has 2 versions of the lock functions,
+                                     The first uses a single bigint - this is used by session locks,
+                                     because bigint is the same type as the id of the session table. The
+                                     second accepts 2 int types - this is used by the generic lock type with
+                                     the first int being one of the following types. This acts as a namespace
+                                     for the locks to prevent overlaps. Note the two differing forms of
+                                     the lock functions do not overlap. */
+    static $validlocktypes = array('DB_LOCK' => 1);
 
     /**
      * Detects if all needed PHP stuff installed.
@@ -1351,5 +1363,116 @@ class pgsql_native_moodle_database extends moodle_database {
      */
     private function trim_quotes($str) {
         return trim(trim($str), "'\"");
+    }
+
+    /**
+     * This function generates the unique index for a specific lock key.
+     * Once an index is assigned to a key, it never changes - so this is
+     * statically cached.
+     */
+    protected function get_index_from_key($key) {
+        global $DB;
+
+        if (isset(self::$lockidcache[$key])) {
+            return self::$lockidcache[$key];
+        }
+
+        $index = 0;
+        $record = $DB->get_record('lock_db', array('resourcekey' => $key));
+        if ($record) {
+            $index = $record->id;
+        }
+
+        if (!$index) {
+            $record = new \stdClass();
+            $record->resourcekey = $key;
+            try {
+                $index = $DB->insert_record('lock_db', $record);
+            } catch (dml_exception $de) {
+                // Race condition - never mind - now the value is guaranteed to exist.
+                $record = $DB->get_record('lock_db', array('resourcekey' => $key));
+                if ($record) {
+                    $index = $record->id;
+                }
+            }
+        }
+
+        if (!$index) {
+            throw new moodle_exception('Could not generate unique index for key');
+        }
+
+        self::$lockidcache[$key] = $index;
+        return $index;
+    }
+
+    /**
+     * Get a lock within the specified timeout or return false.
+     * @param string $resource - The identifier for the lock. Should use frankenstyle prefix.
+     * @param int $timeout - The number of seconds to wait for a lock before giving up.
+     *                       Not all lock types will support this.
+     * @param int $maxlifetime - The number of seconds to wait before reclaiming a stale lock.
+     *                       Not all lock types will use this - e.g. if they support auto releasing
+     *                       a lock when a process ends.
+     * @return mixed string/false - Lock token if the lock was obtained or false
+     */
+    public function lock($resource, $timeout, $maxlifetime = 86400) {
+        $giveuptime = time() + $timeout;
+
+        $index = $this->get_index_from_key($resource);
+
+        $params = array('locktype' => self::$validlocktypes['DB_LOCK'],
+                        'index' => $index);
+
+        $locked = false;
+
+        do {
+            $result = $this->get_record_sql('select pg_try_advisory_lock(:locktype, :index) AS locked', $params);
+            $locked = $result->locked === 't';
+            if (!$locked) {
+                usleep(rand(10000, 250000)); // Sleep between 10 and 250 milliseconds.
+            }
+            // Try until the giveup time.
+        } while (!$locked && time() < $giveuptime);
+
+        if ($locked) {
+            return $index;
+        }
+        return false;
+    }
+
+    /**
+     * Release a lock that was previously obtained with {@link lock()}.
+     * @param string token - The lock token returned by {@link lock()}
+     * @return boolean - True if the lock is no longer held (including if it was never held).
+     */
+    public function unlock($token) {
+        $params = array('locktype' => self::$validlocktypes['DB_LOCK'],
+                        'index' => $token);
+        $result = $this->get_record_sql('select pg_advisory_unlock(:locktype, :index) AS unlocked', $params);
+        return $result->unlocked === 't';
+    }
+
+    /**
+     * Return information about the blocking behaviour of the lock type on this platform.
+     * @return boolean - false (unless we are using transactions)
+     */
+    public function is_lock_blocking() {
+        return false;
+    }
+
+    /**
+     * This lock type will NOT be automatically released when a process ends.
+     * @return boolean - false
+     */
+    public function is_lock_auto_released() {
+        return true;
+    }
+
+    /**
+     * Multiple locks for the same resource can be held by a single process.
+     * @return boolean - false
+     */
+    public function is_lock_stackable() {
+        return true;
     }
 }

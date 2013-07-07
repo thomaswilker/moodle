@@ -412,7 +412,7 @@ $cache = '.var_export($cache, true).';
             'plagiarism'    => $CFG->dirroot.'/plagiarism',
             'tool'          => $CFG->dirroot.'/'.$CFG->admin.'/tool',
             'cachestore'    => $CFG->dirroot.'/cache/stores',
-            'cachelock'     => $CFG->dirroot.'/cache/locks',
+            'cachelock'     => $CFG->dirroot.'/cache/locks'
         );
         $parents = array();
         $subplugins = array();

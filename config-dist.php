@@ -470,6 +470,49 @@ $CFG->admin = 'admin';
 // will be sent to supportemail.
 //      $CFG->supportuserid = -20;
 //
+// Moodle is capable of using different methods of locking.
+// To use a lock type other than the default (db locking), set the $CFG->lock_config array.
+// Example:
+// $CFG->lock_config = array(
+//     'default' => array(
+//         'factory'=>'\core\lock\file_lock_factory',
+//         'options'=>array(
+//             'lockdirectory'=>$CFG->dirroot . '/lock',
+//             'verbose'=>false
+//         )
+//     ),
+//     'session' => array(
+//         'factory'=>'\core\lock\db_lock_factory'
+//     ),
+//     'cache' => array(
+//         'factory'=>'\core\lock\memcache_lock_factory',
+//         'options'=>array(
+//             'memcacheserver'=>'localhost:11211',
+//             'verbose'=>true
+//         )
+//     )
+// );
+//
+// The list of built in lock factories is:
+// "\core\lock\db_lock_factory"
+//     The database lock type will use generic row based locking algorithm unless your database supports a
+//     more efficient native locking mechanism.
+// "\core\lock\file_lock_factory"
+//     The file lock type use lock files stored in the dataroot. Whether this works on clusters depends
+//     on the file system used for the dataroot.
+// "\core\lock\memcache_lock_factory"
+//     The memcache lock type depends on an external Memcache server to hold the locks. It is dangerous
+//     to use this lock type with a Memcache server that is also used for other purposes. If the memcache
+//     server deletes the locks to reclaim space - the locks will be released. Also if memcache is restarted,
+//     all cluster nodes also need to be restarted because their active locks will be released. This factory
+//     requires the memcacheserver option be set to the hostname and optionally the port of the memcache server that will
+//     be used for locking (e.g. 'options'=>array('memcacheserver'=>'localhost:11211')).
+// "\core\lock\memcached_lock_factory"
+//     The memcached lock type is identical to the memcache lock type except it uses the memcached extension rather
+//     than the memcache one.
+// The types of locks available are currently only 'default' (will apply to any config where a more
+// specific type config is missing). Intended uses (but not implemented yet) are: cron and cache.
+//
 //=========================================================================
 // 7. SETTINGS FOR DEVELOPMENT SERVERS - not intended for production use!!!
 //=========================================================================

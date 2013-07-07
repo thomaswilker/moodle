@@ -3,6 +3,7 @@ information provided here is intended especially for developers.
 
 === 2.6 ===
 
+* New $CFG->lock_config settings used to configure the locking system. See config-dist.php for more info.
 * Use new methods from core_component class instead of get_core_subsystems(), get_plugin_types(),
   get_plugin_list(), get_plugin_list_with_class(), get_plugin_directory(), normalize_component(),
   get_component_directory() and get_plugin_list_with_file(). The names of the new methods are
