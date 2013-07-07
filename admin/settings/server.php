@@ -220,7 +220,7 @@ if (empty($CFG->disableupdatenotifications)) {
 }
 
 $temp = new admin_settingpage('locking', new lang_string('locking', 'core_admin'));
-$lockplugins = plugin_manager::instance()->get_plugins_of_type('locktype');
+$lockplugins = \core_lock\manager::get_available_lock_types();
 foreach ($lockplugins as $type => $path) {
     $lockplugins[$type] = new lang_string('pluginname', 'locktype_' . $type);
 }
