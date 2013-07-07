@@ -492,6 +492,29 @@ $CFG->admin = 'admin';
 // Force developer level debug and add debug info to the output of cron
 // $CFG->showcrondebugging = true;
 //
+// Moodle is capable of using different methods of locking.
+// To use a lock type other than the default (file locking) set the class name of the lock type here.
+// Note you must use double slashes here due to php string escaping rules.
+// $CFG->locktype = '\\core\\lock\\file';
+//
+// The list of built in lock types are:
+// "\\core\\lock\\db"         The database lock type will use generic row based locking algorithm unless
+//                            your database supports a more efficient native locking mechanism.
+// "\\core\\lock\\memcache" - The file lock type use lock files stored in the dataroot. Whether this works
+//                            on clusters depends on the file system used for the dataroot.
+// "\\core\\lock\\file"     - The memcache lock type depends on an external Memcache server to hold the locks.
+//                            It is dangerous to use this lock type with a Memcache server that is also used for
+//                            other purposes. If the memcache server deletes the locks to reclaim space - the
+//                            locks will be released. Also if memcache is restarted, all cluster nodes also need
+//                            to be restarted because their active locks will be released.
+//
+// This sets the servers that should be utilised for locking with the memcache lock type. It is required if using that lock type.
+// Servers should be defined one per line and consist of a server address and optionally a port and weight.
+// If no port is provided then the default port (11211) is used.
+// $CFG->memcachelocktype = 'server.url.com
+//                           ipaddress:port
+//                           servername:port:weight';
+//
 //=========================================================================
 // 8. FORCED SETTINGS
 //=========================================================================

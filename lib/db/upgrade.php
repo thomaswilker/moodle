@@ -2327,6 +2327,7 @@ function xmldb_main_upgrade($oldversion) {
         upgrade_main_savepoint(true, 2013081200.00);
     }
 
+<<<<<<< HEAD
     if ($oldversion < 2013082300.01) {
         // Define the table 'backup_logs' and the field 'message' which we will be changing from a char to a text field.
         $table = new xmldb_table('backup_logs');
@@ -2361,6 +2362,33 @@ function xmldb_main_upgrade($oldversion) {
                  WHERE format = 'scorm'";
         $DB->execute($sql);
         upgrade_main_savepoint(true, 2013082700.00);
+    }
+
+    if ($oldversion < 2013082700.02) {
+        // Define table lock_db to be created.
+        $table = new xmldb_table('lock_db');
+
+        // Adding fields to table lock_db.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('resourcekey', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('expires', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('owner', XMLDB_TYPE_CHAR, '36', null, null, null, null);
+
+        // Adding keys to table lock_db.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table lock_db.
+        $table->add_index('resourcekey_uniq', XMLDB_INDEX_UNIQUE, array('resourcekey'));
+        $table->add_index('expires_idx', XMLDB_INDEX_NOTUNIQUE, array('expires'));
+        $table->add_index('owner_idx', XMLDB_INDEX_NOTUNIQUE, array('owner'));
+
+        // Conditionally launch create table for lock_db.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2013082700.02);
     }
 
     return true;
