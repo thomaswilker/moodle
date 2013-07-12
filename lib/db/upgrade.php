@@ -2258,6 +2258,58 @@ function xmldb_main_upgrade($oldversion) {
         // Main savepoint reached.
         upgrade_main_savepoint(true, 2013070800.01);
     }
+    if ($oldversion < 2013071200.01) {
+        // Define table scheduled_task to be created.
+        $table = new xmldb_table('scheduled_task');
+
+        // Adding fields to table scheduled_task.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('classname', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('lastruntime', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('nextruntime', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('blocking', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('minute', XMLDB_TYPE_CHAR, '25', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('hour', XMLDB_TYPE_CHAR, '25', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('day', XMLDB_TYPE_CHAR, '25', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('month', XMLDB_TYPE_CHAR, '25', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('dayofweek', XMLDB_TYPE_CHAR, '25', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('faildelay', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+
+        // Adding keys to table scheduled_task.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table scheduled_task.
+        $table->add_index('classname_uniq', XMLDB_INDEX_UNIQUE, array('classname'));
+
+        // Conditionally launch create table for scheduled_task.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table adhoc_task to be created.
+        $table = new xmldb_table('adhoc_task');
+
+        // Adding fields to table adhoc_task.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('classname', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('nextruntime', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('customdata', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('blocking', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0');
+
+        // Adding keys to table adhoc_task.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table adhoc_task.
+        $table->add_index('nextruntime_idx', XMLDB_INDEX_NOTUNIQUE, array('nextruntime'));
+
+        // Conditionally launch create table for adhoc_task.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+        upgrade_main_savepoint(true, 2013071200.01);
+    }
 
     if ($oldversion < 2013071500.01) {
         // The enrol_authorize plugin has been removed, if there are no records
@@ -2338,6 +2390,59 @@ function xmldb_main_upgrade($oldversion) {
 
         // Main savepoint reached.
         upgrade_main_savepoint(true, 2013080100.02);
+    }
+
+    if ($oldversion < 2013071600.02) {
+        // Adding fields to table scheduled_task.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('classname', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('lastruntime', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('nextruntime', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('blocking', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0');
+        $table->add_field('minute', XMLDB_TYPE_CHAR, '25', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('hour', XMLDB_TYPE_CHAR, '25', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('day', XMLDB_TYPE_CHAR, '25', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('month', XMLDB_TYPE_CHAR, '25', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('dayofweek', XMLDB_TYPE_CHAR, '25', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('faildelay', XMLDB_TYPE_INTEGER, '10', null, null, null, null);
+        $table->add_field('customised', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0');
+
+        // Adding keys to table scheduled_task.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table scheduled_task.
+        $table->add_index('classname_uniq', XMLDB_INDEX_UNIQUE, array('classname'));
+
+        // Conditionally launch create table for scheduled_task.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Define table adhoc_task to be created.
+        $table = new xmldb_table('adhoc_task');
+
+        // Adding fields to table adhoc_task.
+        $table->add_field('id', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, XMLDB_SEQUENCE, null);
+        $table->add_field('component', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('classname', XMLDB_TYPE_CHAR, '255', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('nextruntime', XMLDB_TYPE_INTEGER, '10', null, XMLDB_NOTNULL, null, null);
+        $table->add_field('customdata', XMLDB_TYPE_TEXT, null, null, null, null, null);
+        $table->add_field('blocking', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0');
+
+        // Adding keys to table adhoc_task.
+        $table->add_key('primary', XMLDB_KEY_PRIMARY, array('id'));
+
+        // Adding indexes to table adhoc_task.
+        $table->add_index('nextruntime_idx', XMLDB_INDEX_NOTUNIQUE, array('nextruntime'));
+
+        // Conditionally launch create table for adhoc_task.
+        if (!$dbman->table_exists($table)) {
+            $dbman->create_table($table);
+        }
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2013071600.02);
     }
 
     return true;
