@@ -1,9 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <<<<<<< HEAD
+<<<<<<< HEAD
 <XMLDB PATH="lib/db" VERSION="20130412" COMMENT="XMLDB file for core Moodle tables"
 =======
 <XMLDB PATH="lib/db" VERSION="20130718" COMMENT="XMLDB file for core Moodle tables"
 >>>>>>> fcbd249... WIP
+=======
+<XMLDB PATH="lib/db" VERSION="20130712" COMMENT="XMLDB file for core Moodle tables"
+>>>>>>> 02445fe... MDL-25502: Added "black magic" task allocator for cron
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../lib/xmldb/xmldb.xsd"
 >
@@ -3028,6 +3032,44 @@
         <INDEX NAME="resourcekey_uniq" UNIQUE="true" FIELDS="resourcekey" COMMENT="Unique index for resourcekey"/>
         <INDEX NAME="expires_idx" UNIQUE="false" FIELDS="expires" COMMENT="Index on expires column"/>
         <INDEX NAME="owner_idx" UNIQUE="false" FIELDS="owner" COMMENT="Index on owner"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="scheduled_task" COMMENT="List of scheduled tasks to be run by cron.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="component" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The component this scheduled task belongs to."/>
+        <FIELD NAME="classname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The class extending scheduled_task to be called when running this task."/>
+        <FIELD NAME="lastruntime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="nextruntime" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+        <FIELD NAME="blocking" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Block the entire cron when this task is running."/>
+        <FIELD NAME="minute" TYPE="char" LENGTH="25" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="hour" TYPE="char" LENGTH="25" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="day" TYPE="char" LENGTH="25" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="month" TYPE="char" LENGTH="25" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="dayofweek" TYPE="char" LENGTH="25" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="faildelay" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="classname_uniq" UNIQUE="true" FIELDS="classname"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="adhoc_task" COMMENT="List of adhoc tasks waiting to run.">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true"/>
+        <FIELD NAME="component" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The component that triggered this adhoc task."/>
+        <FIELD NAME="classname" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="The name of the class extending adhoc_task to run when this task is executed."/>
+        <FIELD NAME="nextruntime" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false"/>
+        <FIELD NAME="customdata" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Custom data to be passed to the adhoc task. Must be serialisable using json_encode()"/>
+        <FIELD NAME="blocking" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="nextruntime_idx" UNIQUE="false" FIELDS="nextruntime"/>
       </INDEXES>
     </TABLE>
   </TABLES>
