@@ -51,16 +51,35 @@ class scheduled_task_testcase extends advanced_testcase {
     }
 
     public function test_get_next_scheduled_time() {
+        // Test job run at 1 am.
         $testclass = new testable_scheduled_task();
 
         // All fields default to '*'.
         $testclass->set_hour('1');
         $testclass->set_minute('0');
         // Next valid time should be 1am of the next day.
-        $nextvalidtime = $testclass->get_next_scheduled_time();
-        $oneam = mktime(1, 0, 0);
+        $nexttime = $testclass->get_next_scheduled_time();
 
-        $this->assertEquals($oneam, $nextvalidtime);
+        $oneam = mktime(1, 0, 0);
+        // Make it 1 am tomorrow if the time is after 1am.
+        if ($oneam < time()) {
+            $oneam += 86400;
+        }
+
+        $this->assertEquals($oneam, $nexttime, 'Next scheduled time is 1am.');
+
+        // Now test for job run every 10 minutes.
+        $testclass = new testable_scheduled_task();
+
+        // All fields default to '*'.
+        $testclass->set_minute('*/10');
+        // Next valid time should be next 10 minute boundary.
+        $nexttime = $testclass->get_next_scheduled_time();
+
+        $minutes = ((intval(date('i') / 10))+1) * 10;
+        $nexttenminutes = mktime(date('H'), $minutes, 0);
+
+        $this->assertEquals($nexttenminutes, $nexttime, 'Next scheduled time is in 10 minutes.');
     }
 
     public function test_get_next_scheduled_task() {
@@ -90,7 +109,6 @@ class scheduled_task_testcase extends advanced_testcase {
         $this->assertNotNull($task);
         $task->execute();
         \core_task::scheduled_task_complete($task);
-
         // Should not get any task.
         $task = \core_task::get_next_scheduled_task($now);
         $this->assertNull($task);

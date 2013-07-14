@@ -447,6 +447,7 @@ function upgrade_plugins($type, $startcallback, $endcallback, $verbose) {
                     log_update_descriptions($component);
                     external_update_descriptions($component);
                     events_update_definition($component);
+                    \core_task::reset_scheduled_tasks_for_component($component);
                     message_update_providers($component);
                     if ($type === 'message') {
                         message_update_processors($plug);
@@ -483,6 +484,7 @@ function upgrade_plugins($type, $startcallback, $endcallback, $verbose) {
             log_update_descriptions($component);
             external_update_descriptions($component);
             events_update_definition($component);
+            \core_task::reset_scheduled_tasks_for_component($component);
             message_update_providers($component);
             if ($type === 'message') {
                 message_update_processors($plug);
@@ -516,6 +518,7 @@ function upgrade_plugins($type, $startcallback, $endcallback, $verbose) {
             log_update_descriptions($component);
             external_update_descriptions($component);
             events_update_definition($component);
+            \core_task::reset_scheduled_tasks_for_component($component);
             message_update_providers($component);
             if ($type === 'message') {
                 message_update_processors($plug);
@@ -619,6 +622,7 @@ function upgrade_plugins_modules($startcallback, $endcallback, $verbose) {
                     log_update_descriptions($component);
                     external_update_descriptions($component);
                     events_update_definition($component);
+                    \core_task::reset_scheduled_tasks_for_component($component);
                     message_update_providers($component);
                     upgrade_plugin_mnet_functions($component);
                     $endcallback($component, true, $verbose);
@@ -650,6 +654,7 @@ function upgrade_plugins_modules($startcallback, $endcallback, $verbose) {
             log_update_descriptions($component);
             external_update_descriptions($component);
             events_update_definition($component);
+            \core_task::reset_scheduled_tasks_for_component($component);
             message_update_providers($component);
             upgrade_plugin_mnet_functions($component);
 
@@ -684,6 +689,7 @@ function upgrade_plugins_modules($startcallback, $endcallback, $verbose) {
             log_update_descriptions($component);
             external_update_descriptions($component);
             events_update_definition($component);
+            \core_task::reset_scheduled_tasks_for_component($component);
             message_update_providers($component);
             upgrade_plugin_mnet_functions($component);
 
@@ -804,6 +810,7 @@ function upgrade_plugins_blocks($startcallback, $endcallback, $verbose) {
                     log_update_descriptions($component);
                     external_update_descriptions($component);
                     events_update_definition($component);
+                    \core_task::reset_scheduled_tasks_for_component($component);
                     message_update_providers($component);
                     upgrade_plugin_mnet_functions($component);
                     $endcallback($component, true, $verbose);
@@ -841,6 +848,7 @@ function upgrade_plugins_blocks($startcallback, $endcallback, $verbose) {
             log_update_descriptions($component);
             external_update_descriptions($component);
             events_update_definition($component);
+            \core_task::reset_scheduled_tasks_for_component($component);
             message_update_providers($component);
             upgrade_plugin_mnet_functions($component);
 
@@ -874,6 +882,7 @@ function upgrade_plugins_blocks($startcallback, $endcallback, $verbose) {
             log_update_descriptions($component);
             external_update_descriptions($component);
             events_update_definition($component);
+            \core_task::reset_scheduled_tasks_for_component($component);
             message_update_providers($component);
             upgrade_plugin_mnet_functions($component);
 
@@ -1492,6 +1501,7 @@ function install_core($version, $verbose) {
         log_update_descriptions('moodle');
         external_update_descriptions('moodle');
         events_update_definition('moodle');
+        \core_task::reset_scheduled_tasks_for_component('moodle');
         message_update_providers('moodle');
 
         // Write default settings unconditionally
@@ -1550,6 +1560,7 @@ function upgrade_core($version, $verbose) {
         log_update_descriptions('moodle');
         external_update_descriptions('moodle');
         events_update_definition('moodle');
+        \core_task::reset_scheduled_tasks_for_component('moodle');
         message_update_providers('moodle');
         // Update core definitions.
         cache_helper::update_definitions(true);
