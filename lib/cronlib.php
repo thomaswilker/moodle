@@ -63,6 +63,20 @@ function cron_run() {
     $timenow  = time();
     mtrace("Server Time: ".date('r', $timenow)."\n\n");
 
+    // Run all scheduled tasks.
+    while ($task = \core_task::get_next_scheduled_task($timenow)) {
+        mtrace("Execute scheduled task: ".get_class($task)."\n\n");
+        try {
+            $task->execute();
+            mtrace("Scheduled task complete: ".get_class($task)."\n\n");
+            cron_trace_time_and_memory();
+            \core_task::scheduled_task_complete($task);
+        } catch (Exception $e) {
+            mtrace("Scheduled task failed: ".get_class($task).",".$e->getMessage()."\n\n");
+            cron_trace_time_and_memory();
+            \core_task::scheduled_task_failed($task);
+        }
+    }
 
     // Run cleanup core cron jobs, but not every time since they aren't too important.
     // These don't have a timer to reduce load, so we'll use a random number
