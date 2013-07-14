@@ -325,59 +325,73 @@ abstract class scheduled_task {
     public function get_next_scheduled_time() {
         $validminutes = $this->eval_cron_field($this->minute, 0, 59);
         $validhours = $this->eval_cron_field($this->hour, 0, 23);
-        $validdays = $this->eval_cron_field($this->day, 0, 31);
+
+        $daysinmonth = date("t");
+        $validdays = $this->eval_cron_field($this->day, 0, $daysinmonth);
         $validdaysofweek = $this->eval_cron_field($this->dayofweek, 0, 7);
         $validmonths = $this->eval_cron_field($this->month, 0, 11);
+        $nextvalidyear = date('Y');
 
-        $currentminute = date("i");
+        $currentminute = date("i") + 1;
         $currenthour = date("H");
         $currentday = date("j");
         $currentmonth = date("n");
         $currentdayofweek = date("w");
 
         $nextvalidminute = $this->next_in_list($currentminute, $validminutes);
+        if ($nextvalidminute < $currentminute) {
+            $currenthour+=1;
+        }
         $nextvalidhour = $this->next_in_list($currenthour, $validhours);
+        if ($nextvalidhour < $currenthour) {
+            $currentdayofweek += 1;
+            $currentday += 1;
+        }
         $nextvaliddayofmonth = $this->next_in_list($currentday, $validdays);
-        $nextvalidmonth = $this->next_in_list($currentmonth, $validmonths);
         $nextvaliddayofweek = $this->next_in_list($currentdayofweek, $validdaysofweek);
+        $daysincrementbymonth = $nextvaliddayofmonth - $currentday;
+        if ($nextvaliddayofmonth < $currentday) {
+            $daysincrementbymonth += $daysinmonth;
+        }
+
+        $daysincrementbyweek = $nextvaliddayofweek - $currentdayofweek;
+        if ($nextvaliddayofweek < $currentdayofweek) {
+            $daysincrementbyweek += 7;
+        }
 
         // Special handling for dayofmonth vs dayofweek:
         // if either field is * - use the other field
         // otherwise - choose the soonest (see man 5 cron).
-
-        // Work out the next valid time based on the days of the month.
-        $nexttimebasedondayofmonth = mktime($nextvalidhour,
-                                           $nextvalidminute,
-                                           0,
-                                           $nextvalidmonth,
-                                           $nextvaliddayofmonth,
-                                           date("Y"));
-
-        // This function is complicated but is covered by unit tests.
-        // Work out the next valid time based on the days of the week.
-        if ($nextvaliddayofweek < $currentdayofweek) {
-            $nextvaliddayofweek += 7;
-        }
-        $nextday = $currentday + ($nextvaliddayofweek - $currentdayofweek);
-
-        $nexttimebasedondayofweek = mktime($nextvalidhour,
-                                           $nextvalidminute,
-                                           0,
-                                           $nextvalidmonth,
-                                           $nextday,
-                                           date("Y"));
-
-        // Work out which next valid time to use.
         if ($this->dayofweek == '*') {
-            $nexttime = $nexttimebasedondayofmonth;
+            $daysincrement = $daysincrementbymonth;
         } else if ($this->dayofmonth == '*') {
-            $nexttime = $nexttimebasedondayofweek;
+            $daysincrement = $daysincrementbyweek;
         } else {
-            $nexttime = $nexttimebasedondayofmonth;
-            if ($nexttimebasedondayofweek < $nexttime) {
-                $nexttime = $nexttimebasedondayofweek;
+            // Take the smaller increment of days by month or week.
+            $daysincrement = $daysincrementbymonth;
+            if ($daysincrementbyweek < $daysincrementbymonth) {
+                $daysincrement = $daysincrementbyweek;
             }
         }
+
+        $nextvaliddayofmonth = $currentday + $daysincrement;
+        if ($nextvaliddayofmonth > $daysinmonth) {
+            $currentmonth += 1;
+            $nextvaliddayofmonth -= $daysinmonth;
+        }
+
+        $nextvalidmonth = $this->next_in_list($currentmonth, $validmonths);
+        if ($nextvalidmonth < $currentmonth) {
+            $nextvalidyear += 1;
+        }
+
+        // Work out the next valid time.
+        $nexttime = mktime($nextvalidhour,
+                           $nextvalidminute,
+                           0,
+                           $nextvalidmonth,
+                           $nextvaliddayofmonth,
+                           $nextvalidyear);
 
         return $nexttime;
     }

@@ -60,7 +60,8 @@ class manager {
         $scheduledtasks = array();
 
         foreach ($tasks as $task) {
-            $classname = $task['classname'];
+            // Assume the root namespace.
+            $classname = '\\' . $task['classname'];
 
             $scheduledtask = new $classname();
             $scheduledtask->set_component($componentname);
@@ -180,7 +181,8 @@ class manager {
         // We are just reading - so no locks required.
         $records = $DB->get_records('scheduled_task', array('componentname'=>$componentname), '*', IGNORE_MISSING);
         foreach ($records as $record) {
-            $task = new $record->classname();
+            $classname = '\\' . $record->classname;
+            $task = new $classname;
             $task->set_component($record->component);
             $task->set_blocking(!empty($record->blocking));
             $task->set_minute($record->minute);
@@ -219,7 +221,7 @@ class manager {
             $lock = \core\lock\manager::get_current_lock_type();
 
             if ($lock->lock(($record->classname), 10)) {
-                $classname = $record->classname;
+                $classname = '\\' . $record->classname;
                 $task = new $classname();
                 $task->set_component($record->component);
                 $task->set_blocking(!empty($record->blocking));
