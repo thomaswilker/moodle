@@ -50,6 +50,9 @@ class lock_testcase extends advanced_testcase {
     public function test_locks() {
         $locktypes = \core\lock\manager::get_all_lock_types();
 
+        // Insert special upgrade lock type (not returned by default).
+        $locktypes['upgrade'] = new \core\lock\upgrade();
+
         foreach ($locktypes as $lock1) {
             $lock2 = clone $lock1;
 

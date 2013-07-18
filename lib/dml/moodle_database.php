@@ -2346,7 +2346,7 @@ abstract class moodle_database {
      * It is important that this token is not soley based on time as this could lead
      * to duplicates in a clustered environment (especially on VMs due to poor time precision).
      */
-    protected function generate_unique_token() {
+    public function generate_unique_token() {
         $uuid = '';
 
         if (function_exists("uuid_create")) {
@@ -2448,12 +2448,13 @@ abstract class moodle_database {
      */
     public function unlock($token) {
         $params = array('noexpires' => null,
-                        'token' => $token);
+                        'token' => $token,
+                        'noowner' => null);
 
         $sql = 'UPDATE {lock_db}
                     SET
                         expires = :noexpires,
-                        owner = NULL
+                        owner = :noowner
                     WHERE
                         owner = :token';
         $this->execute($sql, $params);
