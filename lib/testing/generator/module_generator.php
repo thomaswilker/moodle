@@ -126,6 +126,8 @@ abstract class testing_module_generator extends component_generator_base {
 
         $instance->cmid = $cm->id;
 
+        // rebuild_course_cache($instance->course, true);
+
         return $instance;
     }
 

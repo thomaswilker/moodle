@@ -70,6 +70,18 @@ class mod_assign_lib_testcase extends mod_assign_base_testcase {
         assign_print_recent_activity($this->course, true, time() - 3600);
     }
 
+    public function test_new_assign_clears_modinfo_cache() {
+        global $DB;
+        $this->setUser($this->editingteachers[0]);
+        $this->create_instance(array('duedate'=>time()));
+        $record = $DB->get_record('course', array('id' => $this->course->id));
+
+        $this->assertEmpty($record->modinfo);
+
+        $modinfo = get_fast_modinfo($this->course->id);
+        $this->assertNotEmpty($modinfo->cms);
+    }
+
     public function test_assign_get_recent_mod_activity() {
         $this->setUser($this->editingteachers[0]);
         $assign = $this->create_instance();
