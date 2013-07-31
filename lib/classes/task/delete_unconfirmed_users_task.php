@@ -18,7 +18,7 @@
  * Scheduled task abstract class.
  *
  * @package    core
- * @copyright  2013 Damyon Wiese
+ * @copyright  2013 onwards Martin Dougiamas  http://dougiamas.com
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace core\task;

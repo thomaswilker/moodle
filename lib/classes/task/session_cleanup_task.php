@@ -18,7 +18,7 @@
  * Scheduled task abstract class.
  *
  * @package    core
- * @copyright  2013 Damyon Wiese
+ * @copyright  2013 onwards Martin Dougiamas  http://dougiamas.com
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace core\task;
@@ -33,7 +33,16 @@ class session_cleanup_task extends scheduled_task {
      * Throw exceptions on errors (the job will be retried).
      */
     public function execute() {
+        global $DB;
+
+        $timenow = time();
+
         session_gc();
+        //cleanup old session linked tokens
+        //deletes the session linked tokens that are over a day old.
+        cron_trace_time_and_memory();
+        $DB->delete_records_select('external_tokens', 'lastaccess < :onedayago AND tokentype = :tokentype',
+                        array('onedayago' => $timenow - DAYSECS, 'tokentype' => EXTERNAL_TOKEN_EMBEDDED));
     }
 
 }
