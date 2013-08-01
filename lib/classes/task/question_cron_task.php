@@ -36,9 +36,8 @@ class question_cron_task extends scheduled_task {
         global $CFG;
 
         // Run question bank clean-up.
-        cron_trace_time_and_memory();
         require_once($CFG->libdir . '/questionlib.php');
-        question_bank::cron();
+        \question_bank::cron();
 
     }
 

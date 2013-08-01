@@ -36,8 +36,8 @@ class calendar_cron_task extends scheduled_task {
         global $CFG;
 
         // run calendar cron
-        require_once "{$CFG->dirroot}/calendar/lib.php";
-        calendar_cron();
+        require_once("{$CFG->dirroot}/calendar/lib.php");
+        \calendar_cron();
     }
 
 }

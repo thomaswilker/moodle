@@ -37,7 +37,7 @@ class send_new_user_passwords_task extends scheduled_task {
 
         // Generate new password emails for users - ppl expect these generated asap
         if ($DB->count_records('user_preferences', array('name'=>'create_password', 'value'=>'1'))) {
-            mtrace('Creating passwords for new users...');
+            \mtrace('Creating passwords for new users...');
             $newusers = $DB->get_recordset_sql("SELECT u.id as id, u.email, u.firstname,
                                                      u.lastname, u.username, u.lang,
                                                      p.id as prefid
@@ -51,11 +51,11 @@ class send_new_user_passwords_task extends scheduled_task {
                 // hashing would be slow when emailing lots of users. Hashes
                 // will be automatically updated to a higher cost factor the first
                 // time the user logs in.
-                if (setnew_password_and_mail($newuser, true)) {
-                    unset_user_preference('create_password', $newuser);
-                    set_user_preference('auth_forcepasswordchange', 1, $newuser);
+                if (\setnew_password_and_mail($newuser, true)) {
+                    \unset_user_preference('create_password', $newuser);
+                    \set_user_preference('auth_forcepasswordchange', 1, $newuser);
                 } else {
-                    trigger_error("Could not create and mail new user password!");
+                    \trigger_error("Could not create and mail new user password!");
                 }
             }
             $newusers->close();

@@ -33,7 +33,7 @@ class events_cron_task extends scheduled_task {
      * Throw exceptions on errors (the job will be retried).
      */
     public function execute() {
-        events_cron();
+        \events_cron();
     }
 
 }

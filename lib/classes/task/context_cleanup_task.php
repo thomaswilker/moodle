@@ -36,7 +36,7 @@ class context_cleanup_task extends scheduled_task {
     public function execute() {
         // Context maintenance stuff
         \context_helper::cleanup_instances();
-        mtrace(' Cleaned up context instances');
+        \mtrace(' Cleaned up context instances');
         \context_helper::build_all_paths(false);
         // If you suspect that the context paths are somehow corrupt
         // replace the line below with: context_helper::build_all_paths(true);

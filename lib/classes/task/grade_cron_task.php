@@ -36,7 +36,7 @@ class grade_cron_task extends scheduled_task {
         global $CFG;
 
         require_once($CFG->libdir.'/gradelib.php');
-        grade_cron();
+        \grade_cron();
     }
 
 }

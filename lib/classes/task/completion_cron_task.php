@@ -38,7 +38,7 @@ class completion_cron_task extends scheduled_task {
         if ($CFG->enablecompletion) {
             // Completion cron
             require_once($CFG->dirroot.'/completion/cron.php');
-            completion_cron();
+            \completion_cron();
         }
     }
 

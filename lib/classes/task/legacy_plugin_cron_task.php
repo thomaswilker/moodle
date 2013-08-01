@@ -37,18 +37,19 @@ class legacy_plugin_cron_task extends scheduled_task {
     public function execute() {
         global $CFG, $DB;
 
+        $timenow = time();
         // Run the auth cron, if any before enrolments
         // because it might add users that will be needed in enrol plugins
-        $auths = get_enabled_auth_plugins();
-        mtrace("Running auth crons if required...");
-        cron_trace_time_and_memory();
+        $auths = \get_enabled_auth_plugins();
+        \mtrace("Running auth crons if required...");
+        \cron_trace_time_and_memory();
         foreach ($auths as $auth) {
-            $authplugin = get_auth_plugin($auth);
+            $authplugin = \get_auth_plugin($auth);
             if (method_exists($authplugin, 'cron')) {
-                mtrace("Running cron for auth/$auth...");
+                \mtrace("Running cron for auth/$auth...");
                 $authplugin->cron();
                 if (!empty($authplugin->log)) {
-                    mtrace($authplugin->log);
+                    \mtrace($authplugin->log);
                 }
             }
             unset($authplugin);
@@ -56,31 +57,31 @@ class legacy_plugin_cron_task extends scheduled_task {
 
         // It is very important to run enrol early
         // because other plugins depend on correct enrolment info.
-        mtrace("Running enrol crons if required...");
-        $enrols = enrol_get_plugins(true);
+        \mtrace("Running enrol crons if required...");
+        $enrols = \enrol_get_plugins(true);
         foreach($enrols as $ename=>$enrol) {
             // do this for all plugins, disabled plugins might want to cleanup stuff such as roles
             if (!$enrol->is_cron_required()) {
                 continue;
             }
-            mtrace("Running cron for enrol_$ename...");
-            cron_trace_time_and_memory();
+            \mtrace("Running cron for enrol_$ename...");
+            \cron_trace_time_and_memory();
             $enrol->cron();
             $enrol->set_config('lastcron', time());
         }
 
         // Run all cron jobs for each module
-        mtrace("Starting activity modules");
-        get_mailer('buffer');
+        \mtrace("Starting activity modules");
+        \get_mailer('buffer');
         if ($mods = $DB->get_records_select("modules", "cron > 0 AND ((? - lastcron) > cron) AND visible = 1", array($timenow))) {
             foreach ($mods as $mod) {
                 $libfile = "$CFG->dirroot/mod/$mod->name/lib.php";
                 if (file_exists($libfile)) {
                     include_once($libfile);
-                    $cron_function = $mod->name."_cron";
+                    $cron_function = '\\' .$mod->name."_cron";
                     if (function_exists($cron_function)) {
-                        mtrace("Processing module function $cron_function ...", '');
-                        cron_trace_time_and_memory();
+                        \mtrace("Processing module function $cron_function ...", '');
+                        \cron_trace_time_and_memory();
                         $pre_dbqueries = null;
                         $pre_dbqueries = $DB->perf_get_queries();
                         $pre_time      = microtime(1);
@@ -93,15 +94,15 @@ class legacy_plugin_cron_task extends scheduled_task {
                         }
                         // Reset possible changes by modules to time_limit. MDL-11597
                         @set_time_limit(0);
-                        mtrace("done.");
+                        \mtrace("done.");
                     }
                 }
             }
         }
-        get_mailer('close');
-        mtrace("Finished activity modules");
+        \get_mailer('close');
+        \mtrace("Finished activity modules");
 
-        mtrace("Starting blocks");
+        \mtrace("Starting blocks");
         if ($blocks = $DB->get_records_select("block", "cron > 0 AND ((? - lastcron) > cron) AND visible = 1", array($timenow))) {
             // We will need the base class.
             require_once($CFG->dirroot.'/blocks/moodleblock.class.php');
@@ -109,39 +110,38 @@ class legacy_plugin_cron_task extends scheduled_task {
                 $blockfile = $CFG->dirroot.'/blocks/'.$block->name.'/block_'.$block->name.'.php';
                 if (file_exists($blockfile)) {
                     require_once($blockfile);
-                    $classname = 'block_'.$block->name;
+                    $classname = '\\block_'.$block->name;
                     $blockobj = new $classname;
                     if (method_exists($blockobj,'cron')) {
-                        mtrace("Processing cron function for ".$block->name.'....','');
-                        cron_trace_time_and_memory();
+                        \mtrace("Processing cron function for ".$block->name.'....','');
+                        \cron_trace_time_and_memory();
                         if ($blockobj->cron()) {
                             $DB->set_field('block', 'lastcron', $timenow, array('id'=>$block->id));
                         }
                         // Reset possible changes by blocks to time_limit. MDL-11597
                         @set_time_limit(0);
-                        mtrace('done.');
+                        \mtrace('done.');
                     }
                 }
 
             }
         }
-        mtrace('Finished blocks');
+        \mtrace('Finished blocks');
 
-        mtrace('Starting admin reports');
+        \mtrace('Starting admin reports');
         $this->execute_plugin_type('report');
-        mtrace('Finished admin reports');
+        \mtrace('Finished admin reports');
 
-        mtrace('Starting course reports');
+        \mtrace('Starting course reports');
         $this->execute_plugin_type('coursereport');
-        mtrace('Finished course reports');
-
+        \mtrace('Finished course reports');
 
         // run gradebook import/export/report cron
-        mtrace('Starting gradebook plugins');
+        \mtrace('Starting gradebook plugins');
         $this->execute_plugin_type('gradeimport');
         $this->execute_plugin_type('gradeexport');
         $this->execute_plugin_type('gradereport');
-        mtrace('Finished gradebook plugins');
+        \mtrace('Finished gradebook plugins');
 
         // all other plugins
         $this->execute_plugin_type('message', 'message plugins');
@@ -171,7 +171,7 @@ class legacy_plugin_cron_task extends scheduled_task {
         global $DB;
 
         // Get list from plugin => function for all plugins
-        $plugins = get_plugin_list_with_function($plugintype, 'cron');
+        $plugins = \get_plugin_list_with_function($plugintype, 'cron');
 
         // Modify list for backward compatibility (different files/names)
         $plugins = $this->bc_hack_plugin_functions($plugintype, $plugins);
@@ -182,16 +182,16 @@ class legacy_plugin_cron_task extends scheduled_task {
         }
 
         if ($description) {
-            mtrace('Starting '.$description);
+            \mtrace('Starting '.$description);
         }
 
         foreach ($plugins as $component=>$cronfunction) {
-            $dir = core_component::get_component_directory($component);
+            $dir = \core_component::get_component_directory($component);
 
             // Get cron period if specified in version.php, otherwise assume every cron
             $cronperiod = 0;
             if (file_exists("$dir/version.php")) {
-                $plugin = new stdClass();
+                $plugin = new \stdClass();
                 include("$dir/version.php");
                 if (isset($plugin->cron)) {
                     $cronperiod = $plugin->cron;
@@ -199,7 +199,7 @@ class legacy_plugin_cron_task extends scheduled_task {
             }
 
             // Using last cron and cron period, don't run if it already ran recently
-            $lastcron = get_config($component, 'lastcron');
+            $lastcron = \get_config($component, 'lastcron');
             if ($cronperiod && $lastcron) {
                 if ($lastcron + $cronperiod > time()) {
                     // do not execute cron yet
@@ -207,22 +207,22 @@ class legacy_plugin_cron_task extends scheduled_task {
                 }
             }
 
-            mtrace('Processing cron function for ' . $component . '...');
-            cron_trace_time_and_memory();
+            \mtrace('Processing cron function for ' . $component . '...');
+            \cron_trace_time_and_memory();
             $pre_dbqueries = $DB->perf_get_queries();
             $pre_time = microtime(true);
 
             $cronfunction();
 
-            mtrace("done. (" . ($DB->perf_get_queries() - $pre_dbqueries) . " dbqueries, " .
+            \mtrace("done. (" . ($DB->perf_get_queries() - $pre_dbqueries) . " dbqueries, " .
                     round(microtime(true) - $pre_time, 2) . " seconds)");
 
-            set_config('lastcron', time(), $component);
+            \set_config('lastcron', time(), $component);
             @set_time_limit(0);
         }
 
         if ($description) {
-            mtrace('Finished ' . $description);
+            \mtrace('Finished ' . $description);
         }
     }
 
@@ -243,7 +243,7 @@ class legacy_plugin_cron_task extends scheduled_task {
         if ($plugintype === 'report') {
             // Admin reports only - not course report because course report was
             // never implemented before, so doesn't need BC
-            foreach (core_component::get_plugin_list($plugintype) as $pluginname=>$dir) {
+            foreach (\core_component::get_plugin_list($plugintype) as $pluginname=>$dir) {
                 $component = $plugintype . '_' . $pluginname;
                 if (isset($plugins[$component])) {
                     // We already have detected the function using the new API
@@ -254,11 +254,11 @@ class legacy_plugin_cron_task extends scheduled_task {
                     continue;
                 }
                 include_once("$dir/cron.php");
-                $cronfunction = $component . '_cron';
+                $cronfunction = '\\' . $component . '_cron';
                 if (function_exists($cronfunction)) {
                     $plugins[$component] = $cronfunction;
                 } else {
-                    debugging("Invalid legacy cron.php detected in $component, " .
+                    \debugging("Invalid legacy cron.php detected in $component, " .
                             "please use lib.php instead");
                 }
             }
@@ -266,7 +266,7 @@ class legacy_plugin_cron_task extends scheduled_task {
             // Detect old style cron function names
             // Plugin gradeexport_frog used to use grade_export_frog_cron() instead of
             // new standard API gradeexport_frog_cron(). Also applies to gradeimport, gradereport
-            foreach(core_component::get_plugin_list($plugintype) as $pluginname=>$dir) {
+            foreach(\core_component::get_plugin_list($plugintype) as $pluginname=>$dir) {
                 $component = $plugintype.'_'.$pluginname;
                 if (isset($plugins[$component])) {
                     // We already have detected the function using the new API
@@ -276,7 +276,7 @@ class legacy_plugin_cron_task extends scheduled_task {
                     continue;
                 }
                 include_once("$dir/lib.php");
-                $cronfunction = str_replace('grade', 'grade_', $plugintype) . '_' .
+                $cronfunction = '\\' . str_replace('grade', 'grade_', $plugintype) . '_' .
                         $pluginname . '_cron';
                 if (function_exists($cronfunction)) {
                     $plugins[$component] = $cronfunction;
@@ -284,15 +284,15 @@ class legacy_plugin_cron_task extends scheduled_task {
             }
         } else if (strpos($plugintype, 'local') === 0) {
             // Local plugins can have legacy cron.php files too.
-            if ($locals = core_component::get_plugin_list('local')) {
-                mtrace('Processing customized cron scripts ...', '');
+            if ($locals = \core_component::get_plugin_list('local')) {
+                \mtrace('Processing customized cron scripts ...', '');
                 // legacy cron files are executed directly
                 foreach ($locals as $local => $localdir) {
                     if (file_exists("$localdir/cron.php")) {
                         include("$localdir/cron.php");
                     }
                 }
-                mtrace('done.');
+                \mtrace('done.');
             }
         }
 

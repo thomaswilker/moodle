@@ -34,7 +34,7 @@ class cache_cleanup_task extends scheduled_task {
      */
     public function execute() {
         // Remove expired cache flags
-        gc_cache_flags();
+        \gc_cache_flags();
 
     }
 

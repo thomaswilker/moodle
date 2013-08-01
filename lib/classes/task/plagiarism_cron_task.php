@@ -37,7 +37,7 @@ class plagiarism_cron_task extends scheduled_task {
 
         //now do plagiarism checks
         require_once($CFG->libdir.'/plagiarismlib.php');
-        plagiarism_cron();
+        \plagiarism_cron();
     }
 
 }

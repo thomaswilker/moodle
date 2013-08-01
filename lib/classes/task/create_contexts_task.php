@@ -34,8 +34,8 @@ class create_contexts_task extends scheduled_task {
      */
     public function execute() {
         // Make sure all context instances are properly created - they may be required in auth, enrol, etc.
-        context_helper::create_instances();
-        mtrace(' Created missing context instances');
+        \context_helper::create_instances();
+        \mtrace(' Created missing context instances');
     }
 
 }

@@ -45,9 +45,9 @@ class delete_unconfirmed_users_task extends scheduled_task {
                                             WHERE confirmed = 0 AND firstaccess > 0
                                                   AND firstaccess < ?", array($cuttime));
             foreach ($rs as $user) {
-                delete_user($user); // We MUST delete user properly first.
+                \delete_user($user); // We MUST delete user properly first.
                 $DB->delete_records('user', array('id'=>$user->id)); // This is a bloody hack, but it might work.
-                mtrace(" Deleted unconfirmed user for ".fullname($user, true)." ($user->id)");
+                \mtrace(" Deleted unconfirmed user for ".\fullname($user, true)." ($user->id)");
             }
             $rs->close();
         }

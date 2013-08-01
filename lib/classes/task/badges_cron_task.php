@@ -33,9 +33,10 @@ class badges_cron_task extends scheduled_task {
      * Throw exceptions on errors (the job will be retried).
      */
     public function execute() {
+        global $CFG;
         // Run badges review cron.
         require_once($CFG->dirroot . '/badges/cron.php');
-        badge_cron();
+        \badge_cron();
     }
 
 }

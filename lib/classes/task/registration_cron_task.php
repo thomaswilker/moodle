@@ -36,7 +36,7 @@ class registration_cron_task extends scheduled_task {
         global $CFG;
 
         require_once($CFG->dirroot . '/' . $CFG->admin . '/registration/lib.php');
-        $registrationmanager = new registration_manager();
+        $registrationmanager = new \registration_manager();
         $registrationmanager->cron();
     }
 

@@ -47,11 +47,11 @@ class delete_incomplete_users_task extends scheduled_task {
                                                AND (lastname = '' OR firstname = '' OR email = '')",
                                            array($cuttime));
              foreach ($rs as $user) {
-                 if (isguestuser($user) or is_siteadmin($user)) {
+                 if (\isguestuser($user) or \is_siteadmin($user)) {
                      continue;
                  }
-                 delete_user($user);
-                 mtrace(" Deleted not fully setup user $user->username ($user->id)");
+                 \delete_user($user);
+                 \mtrace(" Deleted not fully setup user $user->username ($user->id)");
              }
              $rs->close();
          }

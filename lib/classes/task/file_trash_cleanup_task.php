@@ -35,7 +35,7 @@ class file_trash_cleanup_task extends scheduled_task {
     public function execute() {
 
         // cleanup file trash - not very important
-        $fs = get_file_storage();
+        $fs = \get_file_storage();
         $fs->cron();
     }
 

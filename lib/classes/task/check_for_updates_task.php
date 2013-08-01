@@ -37,7 +37,7 @@ class check_for_updates_task extends scheduled_task {
         // If enabled, fetch information about available updates and eventually notify site admins
         if (empty($CFG->disableupdatenotifications)) {
             require_once($CFG->libdir.'/pluginlib.php');
-            $updateschecker = available_update_checker::instance();
+            $updateschecker = \available_update_checker::instance();
             $updateschecker->cron();
         }
 

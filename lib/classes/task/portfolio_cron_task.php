@@ -38,7 +38,7 @@ class portfolio_cron_task extends scheduled_task {
         if ($CFG->enableportfolios) {
             // Portfolio cron
             require_once($CFG->libdir . '/portfoliolib.php');
-            portfolio_cron();
+            \portfolio_cron();
         }
     }
 
