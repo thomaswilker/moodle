@@ -63,7 +63,7 @@ function cron_run() {
     mtrace("Server Time: ".date('r', $timenow)."\n\n");
 
     // Run all scheduled tasks.
-    while ($task = \core_task::get_next_scheduled_task($timenow)) {
+    while ($task = \core\task\manager::get_next_scheduled_task($timenow)) {
         mtrace("Execute scheduled task:  ".get_class($task));
         try {
             $task->execute();
