@@ -24,9 +24,9 @@
 namespace core\task;
 
 /**
- * Simple task to run the grade cron.
+ * Simple task to run the registration cron.
  */
-class grade_cron_task extends scheduled_task {
+class registration_cron_task extends scheduled_task {
 
     /**
      * Do the job.
@@ -35,8 +35,9 @@ class grade_cron_task extends scheduled_task {
     public function execute() {
         global $CFG;
 
-        require_once($CFG->libdir.'/gradelib.php');
-        grade_cron();
+        require_once($CFG->dirroot . '/' . $CFG->admin . '/registration/lib.php');
+        $registrationmanager = new registration_manager();
+        $registrationmanager->cron();
     }
 
 }

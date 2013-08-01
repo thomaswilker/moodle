@@ -24,19 +24,18 @@
 namespace core\task;
 
 /**
- * Simple task to run the grade cron.
+ * Simple task to run the badges cron.
  */
-class grade_cron_task extends scheduled_task {
+class badges_cron_task extends scheduled_task {
 
     /**
      * Do the job.
      * Throw exceptions on errors (the job will be retried).
      */
     public function execute() {
-        global $CFG;
-
-        require_once($CFG->libdir.'/gradelib.php');
-        grade_cron();
+        // Run badges review cron.
+        require_once($CFG->dirroot . '/badges/cron.php');
+        badge_cron();
     }
 
 }

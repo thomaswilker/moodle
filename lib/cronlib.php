@@ -40,7 +40,6 @@ function cron_run() {
     }
 
     require_once($CFG->libdir.'/adminlib.php');
-    require_once($CFG->libdir.'/gradelib.php');
 
     if (!empty($CFG->showcronsql)) {
         $DB->set_debug(true);
@@ -78,72 +77,6 @@ function cron_run() {
         }
         unset($task);
     }
-
-
-    // Run question bank clean-up.
-    mtrace("Starting the question bank cron...", '');
-    cron_trace_time_and_memory();
-    require_once($CFG->libdir . '/questionlib.php');
-    question_bank::cron();
-    mtrace('done.');
-
-    //Run registration updated cron
-    mtrace(get_string('siteupdatesstart', 'hub'));
-    cron_trace_time_and_memory();
-    require_once($CFG->dirroot . '/' . $CFG->admin . '/registration/lib.php');
-    $registrationmanager = new registration_manager();
-    $registrationmanager->cron();
-    mtrace(get_string('siteupdatesend', 'hub'));
-
-    // If enabled, fetch information about available updates and eventually notify site admins
-    if (empty($CFG->disableupdatenotifications)) {
-        require_once($CFG->libdir.'/pluginlib.php');
-        $updateschecker = available_update_checker::instance();
-        $updateschecker->cron();
-    }
-
-
-    mtrace('Running cache cron routines');
-    cache_helper::cron();
-    mtrace('done.');
-
-    // Run automated backups if required - these may take a long time to execute
-    require_once($CFG->dirroot.'/backup/util/includes/backup_includes.php');
-    require_once($CFG->dirroot.'/backup/util/helper/backup_cron_helper.class.php');
-    backup_cron_automated_helper::run_automated_backup();
-
-
-    // Run stats as at the end because they are known to take very long time on large sites
-    if (!empty($CFG->enablestats) and empty($CFG->disablestatsprocessing)) {
-        require_once($CFG->dirroot.'/lib/statslib.php');
-        // check we're not before our runtime
-        $timetocheck = stats_get_base_daily() + $CFG->statsruntimestarthour*60*60 + $CFG->statsruntimestartminute*60;
-
-        if (time() > $timetocheck) {
-            // process configured number of days as max (defaulting to 31)
-            $maxdays = empty($CFG->statsruntimedays) ? 31 : abs($CFG->statsruntimedays);
-            if (stats_cron_daily($maxdays)) {
-                if (stats_cron_weekly()) {
-                    if (stats_cron_monthly()) {
-                        stats_clean_old();
-                    }
-                }
-            }
-            @set_time_limit(0);
-        } else {
-            mtrace('Next stats run after:'. userdate($timetocheck));
-        }
-    }
-
-    // Run badges review cron.
-    mtrace("Starting badges cron...");
-    require_once($CFG->dirroot . '/badges/cron.php');
-    badge_cron();
-    mtrace('done.');
-
-    // cleanup file trash - not very important
-    $fs = get_file_storage();
-    $fs->cron();
 
     mtrace("Cron script completed correctly");
 

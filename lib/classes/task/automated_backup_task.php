@@ -24,19 +24,19 @@
 namespace core\task;
 
 /**
- * Simple task to run the grade cron.
+ * Simple task to run the backup cron.
  */
-class grade_cron_task extends scheduled_task {
+class automated_backup_task extends scheduled_task {
 
     /**
      * Do the job.
      * Throw exceptions on errors (the job will be retried).
      */
     public function execute() {
-        global $CFG;
-
-        require_once($CFG->libdir.'/gradelib.php');
-        grade_cron();
+        // Run automated backups if required - these may take a long time to execute
+        require_once($CFG->dirroot.'/backup/util/includes/backup_includes.php');
+        require_once($CFG->dirroot.'/backup/util/helper/backup_cron_helper.class.php');
+        backup_cron_automated_helper::run_automated_backup();
     }
 
 }

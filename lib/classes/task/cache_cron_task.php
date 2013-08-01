@@ -24,19 +24,16 @@
 namespace core\task;
 
 /**
- * Simple task to run the grade cron.
+ * Simple task to run the cache cron.
  */
-class grade_cron_task extends scheduled_task {
+class cache_cron_task extends scheduled_task {
 
     /**
      * Do the job.
      * Throw exceptions on errors (the job will be retried).
      */
     public function execute() {
-        global $CFG;
-
-        require_once($CFG->libdir.'/gradelib.php');
-        grade_cron();
+        cache_helper::cron();
     }
 
 }

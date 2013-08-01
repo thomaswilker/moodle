@@ -24,9 +24,9 @@
 namespace core\task;
 
 /**
- * Simple task to run the grade cron.
+ * Simple task to run the question cron.
  */
-class grade_cron_task extends scheduled_task {
+class question_cron_task extends scheduled_task {
 
     /**
      * Do the job.
@@ -35,8 +35,11 @@ class grade_cron_task extends scheduled_task {
     public function execute() {
         global $CFG;
 
-        require_once($CFG->libdir.'/gradelib.php');
-        grade_cron();
+        // Run question bank clean-up.
+        cron_trace_time_and_memory();
+        require_once($CFG->libdir . '/questionlib.php');
+        question_bank::cron();
+
     }
 
 }

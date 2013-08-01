@@ -24,9 +24,9 @@
 namespace core\task;
 
 /**
- * Simple task to run the grade cron.
+ * Simple task to run the registration cron.
  */
-class grade_cron_task extends scheduled_task {
+class check_for_updates_task extends scheduled_task {
 
     /**
      * Do the job.
@@ -34,9 +34,13 @@ class grade_cron_task extends scheduled_task {
      */
     public function execute() {
         global $CFG;
+        // If enabled, fetch information about available updates and eventually notify site admins
+        if (empty($CFG->disableupdatenotifications)) {
+            require_once($CFG->libdir.'/pluginlib.php');
+            $updateschecker = available_update_checker::instance();
+            $updateschecker->cron();
+        }
 
-        require_once($CFG->libdir.'/gradelib.php');
-        grade_cron();
     }
 
 }

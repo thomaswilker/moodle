@@ -24,19 +24,19 @@
 namespace core\task;
 
 /**
- * Simple task to run the grade cron.
+ * Simple task to run the file trash cleanup cron.
  */
-class grade_cron_task extends scheduled_task {
+class file_trash_cleanup_task extends scheduled_task {
 
     /**
      * Do the job.
      * Throw exceptions on errors (the job will be retried).
      */
     public function execute() {
-        global $CFG;
 
-        require_once($CFG->libdir.'/gradelib.php');
-        grade_cron();
+        // cleanup file trash - not very important
+        $fs = get_file_storage();
+        $fs->cron();
     }
 
 }
