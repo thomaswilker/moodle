@@ -717,11 +717,12 @@ M.core_filepicker.init = function(Y, options) {
                 node.generateID();
                 this.process_dlg = new M.core.dialogue({
                     draggable    : true,
-                    srcNode      : this.fpnode,
+                    bodyContent  : this.fpnode,
                     headerContent: M.str.repository.fileexistsdialogheader,
                     centered     : true,
                     modal        : true,
                     visible      : false,
+                    zIndex       : this.options.zIndex
                 });
                 node.one('.fp-dlg-butoverwrite').on('click', handleOverwrite, this);
                 node.one('.fp-dlg-butrename').on('click', handleRename, this);
@@ -757,10 +758,11 @@ M.core_filepicker.init = function(Y, options) {
 
                 this.msg_dlg = new M.core.dialogue({
                     draggable    : true,
-                    srcNode      : this.msg_dlg_node,
+                    bodyContent  : this.msg_dlg_node,
                     centered     : true,
                     modal        : true,
-                    visible      : false
+                    visible      : false,
+                    zIndex       : this.options.zIndex
                 });
                 this.msg_dlg_node.one('.fp-msg-butok').on('click', function(e) {
                     e.preventDefault();
@@ -1281,16 +1283,17 @@ M.core_filepicker.init = function(Y, options) {
             this.fpnode = Y.Node.createWithFilesSkin(M.core_filepicker.templates.generallayout).
                 set('id', 'filepicker-'+client_id);
             this.mainui = new M.core.dialogue({
-                extraClasses : 'filepicker',
+                extraClasses : ['filepicker'],
                 draggable    : true,
-                srcNode      : this.fpnode,
+                bodyContent  : this.fpnode,
                 headerContent: M.str.repository.filepicker,
                 centered     : true,
                 modal        : true,
                 visible      : false,
                 width        : '873px',
                 responsiveWidth : 873,
-                height       : '558px'
+                height       : '558px',
+                zIndex       : this.options.zIndex
             });
 
             // create panel for selecting a file (initially hidden)
@@ -1298,10 +1301,11 @@ M.core_filepicker.init = function(Y, options) {
                 set('id', 'filepicker-select-'+client_id);
             this.selectui = new M.core.dialogue({
                 draggable    : true,
-                srcNode      : this.selectnode,
+                bodyContent  : this.selectnode,
                 centered     : true,
                 modal        : true,
                 visible      : false,
+                zIndex       : this.options.zIndex
             });
             this.selectui.hide();
             // event handler for lazy loading of thumbnails and next page
