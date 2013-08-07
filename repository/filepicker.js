@@ -1307,7 +1307,6 @@ M.core_filepicker.init = function(Y, options) {
                 visible      : false,
                 zIndex       : this.options.zIndex
             });
-            this.selectui.hide();
             // event handler for lazy loading of thumbnails and next page
             this.fpnode.one('.fp-content').on(['scroll','resize'], this.content_scrolled, this);
             // save template for one path element and location of path bar
@@ -1371,6 +1370,7 @@ M.core_filepicker.init = function(Y, options) {
                 this.display_error(M.str.repository.norepositoriesavailable, 'norepositoriesavailable')
             }
             // display repository that was used last time
+            this.mainui.show();
             this.show_recent_repository();
         },
         parse_repository_options: function(data, appendtolist) {
