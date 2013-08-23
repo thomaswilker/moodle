@@ -50,7 +50,7 @@ class memcache implements \core\lock\locktype {
     public function is_available() {
         global $CFG;
 
-        return !empty($CFG->memcachelockservers) && class_exists('Memcache');
+        return !empty($CFG->memcachelockserver) && class_exists('Memcache');
     }
 
      /**
@@ -97,27 +97,26 @@ class memcache implements \core\lock\locktype {
 
         $this->connection = new \Memcache();
 
-        $servers = explode("\n", $CFG->memcachelockservers);
-        foreach ($servers as $server) {
-            $server = trim($server);
-            if (!empty($server)) {
-                $hostportweight = explode(':', $server);
-                $host = $hostportweight[0];
-                if (count($hostportweight) > 1) {
-                    $port = $hostportweight[1];
-                } else {
-                    $port = 11211;
-                }
-                if (count($hostportweight) > 1) {
-                    $weight = $hostportweight[2];
-                } else {
-                    $weight = 100;
-                }
+        $server = trim($CFG->memcachelockserver);
+        if (empty($server)) {
+            return false;
+        }
 
-                if (!$this->connection->addServer($host, $port, true, $weight)) {
-                    return false;
-                }
-            }
+        $hostportweight = explode(':', $server);
+        $host = $hostportweight[0];
+        if (count($hostportweight) > 1) {
+            $port = $hostportweight[1];
+        } else {
+            $port = 11211;
+        }
+        if (count($hostportweight) > 1) {
+            $weight = $hostportweight[2];
+        } else {
+            $weight = 100;
+        }
+
+        if (!$this->connection->addServer($host, $port, true, $weight)) {
+            return false;
         }
         return true;
     }

@@ -45,10 +45,10 @@ class manager {
     public static function get_current_lock_type() {
         global $CFG;
         // Simple no configuration default is better than nothing.
-        $type = '\\core\\lock\\file';
+        $type = '\core\lock\file';
 
         if (!empty($CFG->locktype)) {
-            if (class_exists($CFG->locktype) && ) {
+            if (class_exists($CFG->locktype)) {
                 $type = $CFG->locktype;
             }
         }
