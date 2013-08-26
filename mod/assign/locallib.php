@@ -3324,7 +3324,7 @@ class assign {
 
         // Give each submission plugin a chance to process the locking.
         $plugins = $this->get_submission_plugins();
-        $submission = $this->get_user_submission($userid, false);
+        $submission = $this->get_user_submission($userid, true);
         foreach ($plugins as $plugin) {
             if ($plugin->is_enabled() && $plugin->is_visible()) {
                 $plugin->lock($submission);
@@ -3360,7 +3360,7 @@ class assign {
 
         // Give each submission plugin a chance to process the locking.
         $plugins = $this->get_submission_plugins();
-        $submission = $this->get_user_submission($userid, false);
+        $submission = $this->get_user_submission($userid, true);
         foreach ($plugins as $plugin) {
             if ($plugin->is_enabled() && $plugin->is_visible()) {
                 $plugin->unlock($submission);
