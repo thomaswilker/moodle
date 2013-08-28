@@ -40,7 +40,7 @@ interface locktype {
      * Return information about the blocking behaviour of the lock type on this platform.
      * @return boolean - True if attempting to get a lock will block indefinitely.
      */
-    public function is_blocking();
+    public function supports_timeout();
 
     /**
      * Will this lock be automatically released when the process ends.
@@ -49,13 +49,13 @@ interface locktype {
      * the max lock time parameter must be obeyed to eventually clean up a lock.
      * @return boolean - True if this lock type will be automatically released when the current process ends.
      */
-    public function is_auto_released();
+    public function supports_auto_release();
 
     /**
-     * is_stackable
+     * supports_recursion
      * @return boolean - True if attempting to get 2 locks on the same resource will "stack"
      */
-    public function is_stackable();
+    public function supports_recursion();
 
     /**
      * Is available.

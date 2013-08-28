@@ -64,8 +64,8 @@ class lock_testcase extends advanced_testcase {
             if ($lock1->is_available()) {
                 // This should work.
                 $this->assertTrue($lock1->lock('abc', 2), 'Get a lock');
-                if (!$lock1->is_blocking()) {
-                    if ($lock1->is_stackable()) {
+                if (!$lock1->supports_timeout()) {
+                    if ($lock1->supports_recursion()) {
                         $this->assertTrue($lock2->lock('abc', 2), 'Get a stacked lock');
                         $this->assertTrue($lock2->unlock(), 'Release a stacked lock');
                     } else {
@@ -81,7 +81,7 @@ class lock_testcase extends advanced_testcase {
                 $this->assertTrue($lock1->unlock(), 'Release a lock again');
                 // Release the lock again (shouldn't hurt).
                 $this->assertTrue($lock1->unlock(), 'Release a lock that is not held');
-                if (!$lock1->is_auto_released()) {
+                if (!$lock1->supports_auto_release()) {
                     // Test that a lock can be claimed after the timeout period.
                     $this->assertTrue($lock1->lock('abc', 2, 2), 'Get a lock');
                     sleep(3);

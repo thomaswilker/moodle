@@ -1378,7 +1378,7 @@ class pgsql_native_moodle_database extends moodle_database {
         }
 
         $index = 0;
-        $record = $DB->get_record('lock_db', array('resourcekey'=>$key));
+        $record = $DB->get_record('lock_db', array('resourcekey' => $key));
         if ($record) {
             $index = $record->id;
         }
@@ -1390,7 +1390,7 @@ class pgsql_native_moodle_database extends moodle_database {
                 $index = $DB->insert_record('lock_db', $record);
             } catch (dml_exception $de) {
                 // Race condition - never mind - now the value is guaranteed to exist.
-                $record = $DB->get_record('lock_db', array('resourcekey'=>$key));
+                $record = $DB->get_record('lock_db', array('resourcekey' => $key));
                 if ($record) {
                     $index = $record->id;
                 }
@@ -1416,19 +1416,23 @@ class pgsql_native_moodle_database extends moodle_database {
      * @return mixed string/false - Lock token if the lock was obtained or false
      */
     public function lock($resource, $timeout, $maxlifetime = 86400) {
+        $giveuptime = time() + $timeout;
+
         $index = $this->get_index_from_key($resource);
 
-        $params = array('locktype'=>self::$validlocktypes['DB_LOCK'],
-                        'index'=>$index);
-        $result = $this->get_record_sql('select pg_try_advisory_lock(:locktype, :index) AS locked', $params);
-        $locked = (bool)($result->locked);
+        $params = array('locktype' => self::$validlocktypes['DB_LOCK'],
+                        'index' => $index);
 
-        // Try until the giveup time.
-        while (!$locked && time() < $giveuptime) {
-            usleep(rand(10000, 250000)); // Sleep between 10 and 250 milliseconds.
+        $locked = false;
+
+        do {
             $result = $this->get_record_sql('select pg_try_advisory_lock(:locktype, :index) AS locked', $params);
-            $locked = (bool)($result->locked);
-        }
+            $locked = $result->locked === 't';
+            if (!$locked) {
+                usleep(rand(10000, 250000)); // Sleep between 10 and 250 milliseconds.
+            }
+            // Try until the giveup time.
+        } while (!$locked && time() < $giveuptime);
 
         if ($locked) {
             return $index;
@@ -1442,10 +1446,10 @@ class pgsql_native_moodle_database extends moodle_database {
      * @return boolean - True if the lock is no longer held (including if it was never held).
      */
     public function unlock($token) {
-        $params = array('locktype'=>self::$validlocktypes['DB_LOCK'],
-                        'index'=>$token);
+        $params = array('locktype' => self::$validlocktypes['DB_LOCK'],
+                        'index' => $token);
         $result = $this->get_record_sql('select pg_advisory_unlock(:locktype, :index) AS unlocked', $params);
-        return (bool)$result->unlocked;
+        return $result->unlocked === 't';
     }
 
     /**

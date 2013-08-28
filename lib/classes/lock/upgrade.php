@@ -58,7 +58,7 @@ class upgrade implements \core\lock\locktype {
      * Return information about the blocking behaviour of the lock type on this platform.
      * @return boolean - Defer to the DB driver.
      */
-    public function is_blocking() {
+    public function supports_timeout() {
         return false;
     }
 
@@ -66,7 +66,7 @@ class upgrade implements \core\lock\locktype {
      * This lock type will NOT be automatically released when a process ends.
      * @return boolean - False
      */
-    public function is_auto_released() {
+    public function supports_auto_release() {
         return false;
     }
 
@@ -74,7 +74,7 @@ class upgrade implements \core\lock\locktype {
      * Multiple locks for the same resource can be held by a single process.
      * @return boolean - True
      */
-    public function is_stackable() {
+    public function supports_recursion() {
         return false;
     }
 
@@ -110,7 +110,7 @@ class upgrade implements \core\lock\locktype {
             $result = $DB->execute($sql, $params);
             return $result;
         }
-        if (!$DB->record_exists('config_plugins', array('plugin'=>'core_upgradelock'))) {
+        if (!$DB->record_exists('config_plugins', array('plugin' => 'core_upgradelock'))) {
             $record = new \stdClass();
             $record->plugin = 'core_upgradelock';
             $record->name = '';
@@ -121,7 +121,7 @@ class upgrade implements \core\lock\locktype {
 
         $params = array('expires' => $expires,
                         'token' => $this->token,
-                        'noowner'=> '',
+                        'noowner' => '',
                         'plugin' => 'core_upgradelock',
                         'now' => $now);
 
@@ -137,7 +137,7 @@ class upgrade implements \core\lock\locktype {
 
         $DB->execute($sql, $params);
 
-        $countparams = array('plugin'=>'core_upgradelock', 'name'=>$this->token);
+        $countparams = array('plugin' => 'core_upgradelock', 'name' => $this->token);
         $result = $DB->count_records('config_plugins', $countparams);
         $locked = $result === 1;
 
@@ -161,7 +161,7 @@ class upgrade implements \core\lock\locktype {
     public function unlock() {
         global $DB;
 
-        $params = array('upgradelock'=>'core_upgradelock',
+        $params = array('upgradelock' => 'core_upgradelock',
                         'noexpires' => '0',
                         'token' => $this->token,
                         'noowner' => '');
@@ -176,7 +176,7 @@ class upgrade implements \core\lock\locktype {
         $DB->execute($sql, $params);
 
         // Count the records to see if we released the lock.
-        $countparams = array('plugin'=>'core_upgradelock', 'name'=>$this->token);
+        $countparams = array('plugin' => 'core_upgradelock', 'name' => $this->token);
         $result = $DB->count_records('config_plugins', $countparams);
         $unlocked = $result === 0;
 

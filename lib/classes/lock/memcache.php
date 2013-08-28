@@ -57,7 +57,7 @@ class memcache implements \core\lock\locktype {
       * Return information about the blocking behaviour of the lock type on this platform.
       * @return boolean - Defer to the DB driver.
       */
-    public function is_blocking() {
+    public function supports_timeout() {
         return false;
     }
 
@@ -65,7 +65,7 @@ class memcache implements \core\lock\locktype {
      * This lock type will NOT be automatically released when a process ends.
      * @return boolean - False
      */
-    public function is_auto_released() {
+    public function supports_auto_release() {
         return false;
     }
 
@@ -73,7 +73,7 @@ class memcache implements \core\lock\locktype {
      * Multiple locks for the same resource can be held by a single process.
      * @return boolean - True
      */
-    public function is_stackable() {
+    public function supports_recursion() {
         return false;
     }
 
@@ -85,7 +85,7 @@ class memcache implements \core\lock\locktype {
     protected function generate_key($resource) {
         global $CFG;
 
-        return sha1($CFG->siteidentifier . $resource);
+        return sha1($CFG->siteidentifier . '_' . $resource);
     }
 
     /**
@@ -142,10 +142,13 @@ class memcache implements \core\lock\locktype {
         $this->key = $this->generate_key($resource);
         $locked = $this->connection->add($this->key, 1, 0, $maxlifetime);
 
-        while (!$locked && time() < $giveuptime) {
-            usleep(rand(10000, 250000)); // Sleep between 10 and 250 milliseconds.
+        do {
             $locked = $this->connection->add($this->key, 1, 0, $maxlifetime);
-        }
+            if (!$locked) {
+                usleep(rand(10000, 250000)); // Sleep between 10 and 250 milliseconds.
+            }
+            // Try until the giveuptime.
+        } while (!$locked && time() < $giveuptime);
 
         return $locked;
     }
@@ -155,8 +158,8 @@ class memcache implements \core\lock\locktype {
      * @return boolean - true if the lock is no longer held (including if it was never held).
      */
     public function unlock() {
-        $this->connection->delete($this->key);
+        $result = $this->connection->delete($this->key);
         $this->connection->close();
-        return true;
+        return $result;
     }
 }

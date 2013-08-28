@@ -40,6 +40,9 @@ class db implements \core\lock\locktype {
     /** @var string $token A uniq token representing a held lock */
     protected $token = '';
 
+    /** @var moodle_database $db Hold a reference to the global $DB */
+    protected $db;
+
     /**
      * Is available.
      * @return boolean - True if this lock type is available in this environment.
@@ -49,30 +52,38 @@ class db implements \core\lock\locktype {
     }
 
     /**
-     * Return information about the blocking behaviour of the lock type on this platform.
-     * @return boolean - Defer to the DB driver.
+     * Almighty constructor.
      */
-    public function is_blocking() {
+    public function __construct() {
         global $DB;
-        return $DB->is_lock_blocking();
+
+        // Save a reference to the global $DB so it will not be released while we still have open locks.
+        $this->db = $DB;
     }
 
     /**
-     * This lock type will NOT be automatically released when a process ends.
-     * @return boolean - False
+     * Return information about the blocking behaviour of the lock type on this platform.
+     * @return boolean - Defer to the DB driver.
      */
-    public function is_auto_released() {
-        global $DB;
-        return $DB->is_lock_auto_released();
+    public function supports_timeout() {
+        return $this->db->is_lock_blocking();
+    }
+
+    /**
+     * Will this lock type will be automatically released when a process ends.
+     *
+     * @return boolean - Defer to the DB driver.
+     */
+    public function supports_auto_release() {
+        return $this->db->is_lock_auto_released();
     }
 
     /**
      * Multiple locks for the same resource can be held by a single process.
-     * @return boolean - True
+     * @return boolean - Defer to the DB driver.
      */
-    public function is_stackable() {
-        global $DB;
-        return $DB->is_lock_stackable();
+    public function supports_recursion() {
+        return $this->db->is_lock_stackable();
     }
 
     /**
@@ -83,9 +94,8 @@ class db implements \core\lock\locktype {
      * @return boolean - true if a lock was obtained.
      */
     public function lock($resource, $timeout, $maxlifetime = 86400) {
-        global $DB;
 
-        $this->token = $DB->lock($resource, $timeout, $maxlifetime);
+        $this->token = $this->db->lock($resource, $timeout, $maxlifetime);
 
         return $this->token !== false;
     }
@@ -95,8 +105,7 @@ class db implements \core\lock\locktype {
      * @return boolean - true if the lock is no longer held (including if it was never held).
      */
     public function unlock() {
-        global $DB;
 
-        return $DB->unlock($this->token);
+        return $this->db->unlock($this->token);
     }
 }

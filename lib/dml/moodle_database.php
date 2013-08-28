@@ -2416,7 +2416,7 @@ abstract class moodle_database {
         $giveuptime = $now + $timeout;
         $expires = $now + $maxlifetime;
 
-        if (!$this->record_exists('lock_db', array('resourcekey'=>$resource))) {
+        if (!$this->record_exists('lock_db', array('resourcekey' => $resource))) {
             $record = new stdClass();
             $record->resourcekey = $resource;
             $result = $this->insert_record('lock_db', $record);
@@ -2434,23 +2434,19 @@ abstract class moodle_database {
                         resourcekey = :resourcekey AND
                         (owner IS NULL OR expires < :now)';
 
-        $records = $this->get_records('lock_db');
-
-        $this->execute($sql, $params);
-
-        $countparams = array('owner'=>$token, 'resourcekey' => $resource);
-        $result = $this->count_records('lock_db', $countparams);
-        $locked = $result === 1;
-
-        // Try until the giveup time.
-        while (!$locked && $now < $giveuptime) {
-            usleep(rand(10000, 250000)); // Sleep between 10 and 250 milliseconds.
+        do {
             $now = time();
             $params['now'] = $now;
             $this->execute($sql, $params);
+
+            $countparams = array('owner' => $token, 'resourcekey' => $resource);
             $result = $this->count_records('lock_db', $countparams);
             $locked = $result === 1;
-        }
+            if (!$locked) {
+                usleep(rand(10000, 250000)); // Sleep between 10 and 250 milliseconds.
+            }
+            // Try until the giveup time.
+        } while (!$locked && $now < $giveuptime);
 
         if ($locked) {
             return $token;
@@ -2476,7 +2472,7 @@ abstract class moodle_database {
                     WHERE
                         owner = :token';
         $this->execute($sql, $params);
-        $countparams = array('owner'=>$token);
+        $countparams = array('owner' => $token);
         $result = $this->count_records('lock_db', $countparams);
         $unlocked = $result === 0;
 

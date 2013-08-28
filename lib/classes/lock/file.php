@@ -44,7 +44,7 @@ class file implements \core\lock\locktype {
      * Return information about the blocking behaviour of the lock type on this platform.
      * @return boolean - True if attempting to get a lock will block indefinitely.
      */
-    public function is_blocking() {
+    public function supports_timeout() {
         global $CFG;
 
         return $CFG->ostype === 'WINDOWS';
@@ -54,7 +54,7 @@ class file implements \core\lock\locktype {
      * This lock type will be automatically released when a process ends.
      * @return boolean - True
      */
-    public function is_auto_released() {
+    public function supports_auto_release() {
         return true;
     }
 
@@ -70,7 +70,7 @@ class file implements \core\lock\locktype {
      * Multiple locks for the same resource cannot be held from a single process.
      * @return boolean - False
      */
-    public function is_stackable() {
+    public function supports_recursion() {
         return false;
     }
 
@@ -102,19 +102,19 @@ class file implements \core\lock\locktype {
             return false;
         }
 
-        // Will block on windows. So sad.
-        $wouldblock = false;
-        $locked = flock($this->lockfile, LOCK_EX|LOCK_NB, $wouldblock);
-
-        // Try until the giveup time.
-        while (!$locked && $wouldblock && time() < $giveuptime) {
-            usleep(rand(10000, 250000)); // Sleep between 10 and 250 milliseconds.
+        do {
+            // Will block on windows. So sad.
+            $wouldblock = false;
             $locked = flock($this->lockfile, LOCK_EX|LOCK_NB, $wouldblock);
-        }
+            if (!$locked && $wouldblock) {
+                usleep(rand(10000, 250000)); // Sleep between 10 and 250 milliseconds.
+            }
+            // Try until the giveup time.
+        } while (!$locked && $wouldblock && time() < $giveuptime);
 
         if (!$locked) {
             fclose($this->lockfile);
-            $this->lockfile = 0;
+            $this->lockfile = null;
         }
         return $locked;
     }
@@ -131,7 +131,7 @@ class file implements \core\lock\locktype {
 
         $result = flock($this->lockfile, LOCK_UN);
         fclose($this->lockfile);
-        $this->lockfile = 0;
+        $this->lockfile = null;
         return $result;
     }
 }

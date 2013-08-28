@@ -1542,7 +1542,7 @@ class mysqli_native_moodle_database extends moodle_database {
     public function lock($resource, $timeout, $maxlifetime = 86400) {
         global $DB;
 
-        $result = $DB->get_record_sql('select GET_LOCK(:key, :timeout) AS locked', array('key'=>$resource, 'timeout'=>$timeout));
+        $result = $DB->get_record_sql('select GET_LOCK(:key, :timeout) AS locked', array('key' => $resource, 'timeout' => $timeout));
         $locked = (bool)($result->locked);
 
         if ($locked) {
@@ -1557,7 +1557,7 @@ class mysqli_native_moodle_database extends moodle_database {
      * @return boolean - True if the lock is no longer held (including if it was never held).
      */
     public function unlock($token) {
-        $result = $DB->get_record_sql('select RELEASE_LOCK(:key) AS unlocked', array('key'=>$token));
+        $result = $DB->get_record_sql('select RELEASE_LOCK(:key) AS unlocked', array('key' => $token));
         return (bool)$result->unlocked;
     }
 

@@ -42,7 +42,7 @@ class broken implements \core\lock\locktype {
      * Not important because this will never return valid lock.
      * @return boolean - always true
      */
-    public function is_blocking() {
+    public function supports_timeout() {
         return true;
     }
 
@@ -50,7 +50,7 @@ class broken implements \core\lock\locktype {
      * Not important because this will never return valid lock.
      * @return boolean - always true
      */
-    public function is_auto_released() {
+    public function supports_auto_release() {
         return true;
     }
 
@@ -66,7 +66,7 @@ class broken implements \core\lock\locktype {
      * Not important because this will never return valid lock.
      * @return boolean - always false
      */
-    public function is_stackable() {
+    public function supports_recursion() {
         return false;
     }
 
