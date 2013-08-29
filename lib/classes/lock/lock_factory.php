@@ -27,17 +27,17 @@ namespace core\lock;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Defines api for locking (including separate cluster nodes)
+ * Defines abstract factory class for generating locks.
  *
  * @package   core
  * @category  lock
  * @copyright Damyon Wiese 2013
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-interface locktype {
+interface lockfactory {
 
     /**
-     * Return information about the blocking behaviour of the lock type on this platform.
+     * Return information about the blocking behaviour of the locks on this platform.
      * @return boolean - True if attempting to get a lock will block indefinitely.
      */
     public function supports_timeout();
@@ -71,13 +71,14 @@ interface locktype {
      * @param int $maxlifetime - The number of seconds to wait before reclaiming a stale lock.
      *                       Not all lock types will use this - e.g. if they support auto releasing
      *                       a lock when a process ends.
-     * @return boolean - True if a lock was obtained.
+     * @return \core\lock\lock - True if a lock was obtained.
      */
-    public function lock($resource, $timeout, $maxlifetime = 86400);
+    public function create_lock($resource, $timeout, $maxlifetime = 86400);
 
     /**
      * Release a lock that was previously obtained with @lock.
+     * @param lock - The lock to release.
      * @return boolean - True if the lock is no longer held (including if it was never held).
      */
-    public function unlock();
+    public function release_lock(lock $lock);
 }

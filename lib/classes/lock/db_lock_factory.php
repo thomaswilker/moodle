@@ -35,10 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright Damyon Wiese 2013
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class db implements \core\lock\locktype {
-
-    /** @var string $token A uniq token representing a held lock */
-    protected $token = '';
+class db_lock_factory implements \core\lock\lock_factory {
 
     /** @var moodle_database $db Hold a reference to the global $DB */
     protected $db;
@@ -87,17 +84,21 @@ class db implements \core\lock\locktype {
     }
 
     /**
-     * Get a lock within the specified timeout or return false.
+     * Create and get a lock
      * @param string $resource - The identifier for the lock. Should use frankenstyle prefix.
      * @param int $timeout - The number of seconds to wait for a lock before giving up.
      * @param int $maxlifetime - Unused by this lock type.
      * @return boolean - true if a lock was obtained.
      */
-    public function lock($resource, $timeout, $maxlifetime = 86400) {
+    public function create_lock($resource, $timeout, $maxlifetime = 86400) {
 
-        $this->token = $this->db->lock($resource, $timeout, $maxlifetime);
+        $token = $this->db->lock($resource, $timeout, $maxlifetime);
 
-        return $this->token !== false;
+        if ($token !== false) {
+            return new db_lock($token);
+        }
+
+        return false;
     }
 
     /**

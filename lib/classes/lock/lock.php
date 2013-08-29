@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines locking apis.
+ * Defines locking apis
  *
  * @package    core
- * @category   lock
  * @copyright  Damyon Wiese 2013
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -28,47 +27,14 @@ namespace core\lock;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Lock Manager class.
- *
- * Used to get and configure locks.
+ * Interface representing a lock.
+ * The methods available for a specific lock type are only known by it's factory.
  *
  * @package   core
  * @category  lock
  * @copyright Damyon Wiese 2013
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class manager {
-
-    /**
-     * Get an instance of the currently configured locking subclass.
-     * @return \core\lock\locktype
-     */
-    public static function get_current_lock_type() {
-        global $CFG;
-        // Simple no configuration default is better than nothing.
-        $type = '\core\lock\file';
-
-        if (!empty($CFG->locktype)) {
-            if (class_exists($CFG->locktype)) {
-                $type = $CFG->locktype;
-            }
-        }
-
-        $lock = new $type();
-        if ($lock instanceof \core\lock\locktype) {
-            return $lock;
-        }
-
-        // This broken lock type will never return a valid lock.
-        return new \core\lock\broken();
-    }
-
-    /**
-     * Get a special lock type reserved for upgrades.
-     * @return \core\lock\locktype
-     */
-    public static function get_upgrade_lock_type() {
-        return new \core\lock\upgrade();
-    }
+interface lock {
 
 }

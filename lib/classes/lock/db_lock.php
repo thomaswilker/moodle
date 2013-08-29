@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines locking apis.
+ * Defines locking apis
  *
  * @package    core
  * @category   lock
@@ -28,47 +28,31 @@ namespace core\lock;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Lock Manager class.
- *
- * Used to get and configure locks.
+ * Holds data required to release an obtained lock.
  *
  * @package   core
  * @category  lock
  * @copyright Damyon Wiese 2013
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class manager {
+class db_lock implements \core\lock\lock {
+
+    /** @var string $token A uniq token representing a held lock */
+    protected $token = '';
 
     /**
-     * Get an instance of the currently configured locking subclass.
-     * @return \core\lock\locktype
+     * Construct a lock containing the unique token required to release it.
+     * @param string $token - The lock token.
      */
-    public static function get_current_lock_type() {
-        global $CFG;
-        // Simple no configuration default is better than nothing.
-        $type = '\core\lock\file';
-
-        if (!empty($CFG->locktype)) {
-            if (class_exists($CFG->locktype)) {
-                $type = $CFG->locktype;
-            }
-        }
-
-        $lock = new $type();
-        if ($lock instanceof \core\lock\locktype) {
-            return $lock;
-        }
-
-        // This broken lock type will never return a valid lock.
-        return new \core\lock\broken();
+    public __construct($token) {
+        $this->token = $token;
     }
 
     /**
-     * Get a special lock type reserved for upgrades.
-     * @return \core\lock\locktype
+     * Return the unique token representing this lock.
+     * @return string lock token.
      */
-    public static function get_upgrade_lock_type() {
-        return new \core\lock\upgrade();
+    public function get_token() {
+        return $token;
     }
-
 }
