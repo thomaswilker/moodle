@@ -740,5 +740,16 @@ class mod_assign_locallib_testcase extends mod_assign_base_testcase {
         $grades = $assign->get_user_grades_for_gradebook($this->students[0]->id);
         $this->assertEquals(50, (int)$grades[$this->students[0]->id]->rawgrade);
     }
+
+    public function test_submission_locked() {
+        $this->editingteachers[0]->ignoresesskey = true;
+        $this->setUser($this->editingteachers[0]);
+
+        $assign = $this->create_instance(array('assignsubmission_onlinetext_enabled'=>1));
+
+        $assign->testable_process_lock($this->students[0]->id);
+
+        $this->assertFalse($assign->submissions_open($this->students[0]->id));
+    }
 }
 

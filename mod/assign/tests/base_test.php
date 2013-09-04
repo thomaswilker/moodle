@@ -241,6 +241,10 @@ class testable_assign extends assign {
         return parent::submissions_open($userid);
     }
 
+    public function testable_process_lock($userid = 0) {
+        return parent::process_lock($userid);
+    }
+
     public function testable_save_user_extension($userid, $extensionduedate) {
         return parent::save_user_extension($userid, $extensionduedate);
     }
