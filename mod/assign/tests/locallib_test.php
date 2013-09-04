@@ -976,7 +976,7 @@ class mod_assign_locallib_testcase extends mod_assign_base_testcase {
         $this->editingteachers[0]->ignoresesskey = true;
         $this->setUser($this->editingteachers[0]);
 
-        $assign = $this->create_instance();
+        $assign = $this->create_instance(array('assignsubmission_onlinetext_enabled'=>1));
         $sink = $this->redirectEvents();
 
         $assign->testable_process_lock($this->students[0]->id);

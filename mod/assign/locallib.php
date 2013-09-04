@@ -5728,15 +5728,16 @@ class assign {
         // Give each submission plugin a chance to process the locking.
         $plugins = $this->get_submission_plugins();
         $submission = $this->get_user_submission($userid, false);
-        foreach ($plugins as $plugin) {
-            if ($plugin->is_enabled() && $plugin->is_visible()) {
-                $plugin->lock($submission);
-            }
-        }
 
         $flags = $this->get_user_flags($userid, true);
         $flags->locked = 1;
         $this->update_user_flags($flags);
+
+        foreach ($plugins as $plugin) {
+            if ($plugin->is_enabled() && $plugin->is_visible()) {
+                $plugin->lock($submission, $flags);
+            }
+        }
 
         $user = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
 
@@ -5880,15 +5881,15 @@ class assign {
         // Give each submission plugin a chance to process the unlocking.
         $plugins = $this->get_submission_plugins();
         $submission = $this->get_user_submission($userid, false);
-        foreach ($plugins as $plugin) {
-            if ($plugin->is_enabled() && $plugin->is_visible()) {
-                $plugin->unlock($submission);
-            }
-        }
-
         $flags = $this->get_user_flags($userid, true);
         $flags->locked = 0;
         $this->update_user_flags($flags);
+
+        foreach ($plugins as $plugin) {
+            if ($plugin->is_enabled() && $plugin->is_visible()) {
+                $plugin->unlock($submission, $flags);
+            }
+        }
 
         $user = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
 

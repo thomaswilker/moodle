@@ -3,6 +3,8 @@ This files describes API changes in the assign code.
 === 2.6 ===
 * To see submission/grades of inactive users, user should have moodle/course:viewsuspendedusers capability.
 * count_* functions will return only active participants.
+* Submission plugins implementing lock and unlock need to use the extra parameter $flags to reliably get the user info.
+  This is because a user may not have submitted anything when their submission is locked.
 
 === 2.5 ===
 
