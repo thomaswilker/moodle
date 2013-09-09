@@ -1046,11 +1046,16 @@ class assign {
                 $o .= '<input type="hidden" name="grademodified_' . $userid . '" value="' . $modified . '"/>';
                 if ($grade == -1 || $grade === null) {
                     $o .= '-';
-                    return $o;
                 } else {
-                    $o .= format_float(($grade),2) .'&nbsp;/&nbsp;'. format_float($this->get_instance()->grade,2);
-                    return $o;
+                    $instance = $this->get_instance();
+                    $item = grade_item::fetch(array('itemtype' => 'mod', 'itemmodule' => 'assign', 'iteminstance' => $instance->id, 'courseid' => $instance->course, 'itemnumber' => 0));
+                    $o .= grade_format_gradevalue($grade, $item);
+                    if ($item->get_displaytype() == GRADE_DISPLAY_TYPE_REAL) {
+                        // If displaying the raw grade, also display the total value.
+                        $o .= '&nbsp;/&nbsp;' . format_float($instance->grade, 2);
+                    }
                 }
+                return $o;
             }
 
         } else {
