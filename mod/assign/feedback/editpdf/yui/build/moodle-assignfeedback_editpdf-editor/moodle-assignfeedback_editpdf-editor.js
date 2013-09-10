@@ -448,9 +448,9 @@ EDITOR.prototype = {
             // When it is already open then the below code should fire.
             var buttonchildnodes = Y.one(SELECTOR.COLOURBUTTON).get('childNodes');
             if(event.target.ancestor('#colorpicker') === null &&
-                event.target.get('id') != buttonchildnodes.item(0).get('id') &&
-                event.target.get('id') != Y.one(SELECTOR.COLOURBUTTON).get('id') &&
-                colourpicker.get('visible') == true)  {
+                event.target.get('id') !== buttonchildnodes.item(0).get('id') &&
+                event.target.get('id') !== Y.one(SELECTOR.COLOURBUTTON).get('id') &&
+                colourpicker.get('visible') === true)  {
                colourpicker.hide();
             }
         }, null, this.colourpicker);
@@ -659,22 +659,22 @@ EDITOR.prototype = {
                 stroke: {
                     weight: STROKEWEIGHT,
                     color: COLOUR[this.currentcolour]
-                },
+                }
             });
 
             // If position is different from last position.
             if (!this.currentpenposition.x || !this.currentpenposition.y ||
-                this.currentpenposition.x != this.currentedit.end.x ||
-                this.currentpenposition.y != this.currentedit.end.y) {
+                this.currentpenposition.x !== this.currentedit.end.x ||
+                this.currentpenposition.y !== this.currentedit.end.y) {
                 // save the mouse postion to the list of position.
-                if (this.currentpenpath.length == 0) {
+                if (this.currentpenpath.length === 0) {
                     this.currentpenpath.push({x:this.currentedit.start.x,y:this.currentedit.start.y});
                 }
                 this.currentpenpath.push({x:this.currentedit.end.x,y:this.currentedit.end.y});
 
                 // Redraw all the lines.
                 var previousposition = {x:null,y:null};
-                Y.each(this.currentpenpath, function(position, key) {
+                Y.each(this.currentpenpath, function(position) {
                     if (!previousposition.x) {
                         previousposition.x = this.currentedit.start.x;
                         previousposition.y = this.currentedit.start.y;
@@ -733,7 +733,7 @@ EDITOR.prototype = {
                 stroke: {
                     weight: STROKEWEIGHT,
                     color: COLOUR[this.currentcolour]
-                },
+                }
             });
 
             shape.moveTo(this.currentedit.start.x, this.currentedit.start.y);
@@ -877,9 +877,9 @@ EDITOR.prototype = {
         } else if (this.currenttool === 'pen') {
             // Create the path string.
             thepath = '';
-            Y.each(this.currentpenpath, function(position, key) {
-            thepath = thepath + position.x + "," + position.y + ":";
-            // Remove the last ":".
+            Y.each(this.currentpenpath, function(position) {
+                thepath = thepath + position.x + "," + position.y + ":";
+                // Remove the last ":".
             }, this);
             thepath = thepath.substring(0, thepath.length - 1);
 
@@ -957,7 +957,7 @@ EDITOR.prototype = {
                 stroke: {
                     weight: STROKEWEIGHT,
                     color: COLOUR[annotation.colour]
-                },
+                }
             });
 
             shape.moveTo(annotation.x, annotation.y);
@@ -974,14 +974,14 @@ EDITOR.prototype = {
                 stroke: {
                     weight: STROKEWEIGHT,
                     color: COLOUR[annotation.colour]
-                },
+                }
             });
 
             // Recreate the pen path array.
             positions = annotation.path.split(':');
             // Redraw all the lines.
             previousposition = {x:null,y:null};
-            Y.each(positions, function(position, key) {
+            Y.each(positions, function(position) {
                 xy = position.split(',');
                 if (!previousposition.x) {
                     previousposition.x = xy[0];
