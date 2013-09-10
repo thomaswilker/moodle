@@ -369,7 +369,7 @@ EDITOR.prototype = {
     /**
      * Attach listeners and enable the color picker buttons.
      * @protected
-     * @method setup_save_cancel
+     * @method setup_toolbar
      */
     setup_toolbar : function() {
         var toolnode,
@@ -537,27 +537,31 @@ EDITOR.prototype = {
     },
 
     /**
-     * JSON encode the pages data - stripping out drawable references which cannot be encoded.
+     * JSON encode the current page data - stripping out drawable references which cannot be encoded.
      * @protected
-     * @method stringify_pages
+     * @method stringify_current_page
      * @return string
      */
-    stringify_pages : function() {
-        var page, i;
-        for (page = 0; page < this.pages.length; page++) {
-            for (i = 0; i < this.pages[page].comments.length; i++) {
-                delete this.pages[page].comments[i].drawable;
-            }
-            for (i = 0; i < this.pages[page].annotations.length; i++) {
-                delete this.pages[page].annotations[i].drawable;
-            }
+    stringify_current_page : function() {
+        var comments = [],
+            annotations = [],
+            page,
+            i = 0;
+
+        for (i = 0; i < this.pages[this.currentpage].comments.length; i++) {
+            comments[i] = this.clean_comment_data(this.pages[this.currentpage].comments[i]);
+        }
+        for (i = 0; i < this.pages[this.currentpage].annotations.length; i++) {
+            annotations[i] = this.clean_annotation_data(this.pages[this.currentpage].annotations[i]);
         }
 
-        return Y.JSON.stringify(this.pages);
+        page = { comments : comments, annotations : annotations };
+
+        return Y.JSON.stringify(page);
     },
 
     /**
-     * Hide the popup - after saving all the edits.
+     * Hide the popup - after generating a new pdf.
      * @protected
      * @method handle_save
      */
@@ -573,11 +577,10 @@ EDITOR.prototype = {
             sync: false,
             data : {
                 'sesskey' : M.cfg.sesskey,
-                'action' : 'saveallpages',
+                'action' : 'generatepdf',
                 'userid' : this.get('userid'),
                 'attemptnumber' : this.get('attemptnumber'),
-                'assignmentid' : this.get('assignmentid'),
-                'pages' : this.stringify_pages()
+                'assignmentid' : this.get('assignmentid')
             },
             on: {
                 success: function(tid, response) {
@@ -776,6 +779,9 @@ EDITOR.prototype = {
      * @method erase_drawable
      */
     erase_drawable : function(drawable) {
+        if (!drawable) {
+            return;
+        }
         if (drawable.shapes) {
             while (drawable.shapes.length > 0) {
                 this.graphic.removeShape(drawable.shapes.pop());
@@ -820,6 +826,46 @@ EDITOR.prototype = {
     },
 
     /**
+     * Clean a comment record, returning an oject with only fields that are valid.
+     * @protected
+     * @method clean_comment_data
+     * @param comment
+     * @return string
+     */
+    clean_comment_data : function(comment) {
+        return {
+            gradeid : comment.gradeid,
+            x : comment.x,
+            y : comment.y,
+            width : comment.width,
+            rawtext : comment.rawtext,
+            pageno : comment.currentpage,
+            colour : comment.colour
+        };
+    },
+
+    /**
+     * Clean a annotation record, returning an oject with only fields that are valid.
+     * @protected
+     * @method clean_annotation_data
+     * @param annotation
+     * @return string
+     */
+    clean_annotation_data : function(annotation) {
+        return {
+            gradeid : annotation.gradeid,
+            x : annotation.x,
+            y : annotation.y,
+            endx : annotation.endx,
+            endy : annotation.endy,
+            type : annotation.type,
+            path : annotation.path,
+            pageno : annotation.pageno,
+            colour : annotation.colour
+        };
+    },
+
+    /**
      * Event handler for mouseup or touchend.
      * @protected
      * @param Event
@@ -837,15 +883,11 @@ EDITOR.prototype = {
 
         duration = new Date().getTime() - this.currentedit.start;
 
-        if (duration < CLICKTIMEOUT) {
+        if (duration < CLICKTIMEOUT || this.currentedit.start === false) {
             return;
         }
 
         if (this.currenttool === 'comment') {
-            if (width < 100) {
-                width = 100;
-            }
-
             // Work out the boundary box.
             x = this.currentedit.start.x;
             if (this.currentedit.end.x > x) {
@@ -861,6 +903,9 @@ EDITOR.prototype = {
                 y = this.currentedit.end.y;
                 height = this.currentedit.start.y - y;
             }
+            if (width < 100) {
+                width = 100;
+            }
 
             // Save the current edit to the server and the current page list.
 
@@ -875,7 +920,7 @@ EDITOR.prototype = {
             };
 
             this.pages[this.currentpage].comments.push(data);
-            this.drawables.push(this.draw_comment(data));
+            this.drawables.push(this.draw_comment(data, true));
             this.erase_drawable(this.currentdrawable);
         } else if (this.currenttool === 'pen') {
             // Create the path string.
@@ -924,10 +969,57 @@ EDITOR.prototype = {
             this.pages[this.currentpage].annotations.push(data);
         }
 
+        this.save_current_page();
+
         this.currentedit.starttime = 0;
         this.currentedit.start = false;
         this.currentedit.end = false;
         this.currentdrawable = false;
+    },
+
+    /**
+     * Save all the annotations and comments for the current page.
+     * @protected
+     * @method save_current_page
+     */
+    save_current_page : function() {
+        var ajaxurl = AJAXBASE,
+            config;
+
+        config = {
+            method: 'post',
+            context: this,
+            sync: false,
+            data : {
+                'sesskey' : M.cfg.sesskey,
+                'action' : 'savepage',
+                'index' : this.currentpage,
+                'userid' : this.get('userid'),
+                'attemptnumber' : this.get('attemptnumber'),
+                'assignmentid' : this.get('assignmentid'),
+                'page' : this.stringify_current_page()
+            },
+            on: {
+                success: function(tid, response) {
+                    var jsondata;
+                    Y.log(response.responseText);
+                    try {
+                        jsondata = Y.JSON.parse(response.responseText);
+                        if (jsondata.error) {
+                            return new M.core.ajaxException(jsondata);
+                        }
+                    } catch (e) {
+                        return new M.core.exception(e);
+                    }
+                },
+                failure: function(tid, response) {
+                    return M.core.exception(response.responseText);
+                }
+            }
+        };
+
+        Y.io(ajaxurl, config);
+
     },
 
     /**
@@ -1061,6 +1153,7 @@ EDITOR.prototype = {
             if (comments[i] === comment) {
                 comments.splice(i, 1);
                 this.erase_drawable(comment.drawable);
+                this.save_current_page();
                 return;
             }
         }
@@ -1071,9 +1164,10 @@ EDITOR.prototype = {
      * @protected
      * @method draw_comment
      * @param comment
+     * @param boolean focus - Set the keyboard focus to the new comment if true
      * @return Drawable
      */
-    draw_comment : function(comment) {
+    draw_comment : function(comment, focus) {
         var drawable = new Drawable(),
             node,
             drawingregion = Y.one(SELECTOR.DRAWINGREGION),
@@ -1084,8 +1178,8 @@ EDITOR.prototype = {
 
         // Lets add a contenteditable div.
         node = Y.Node.create('<textarea/>');
-        if (comment.width < 60) {
-            comment.width = 60;
+        if (comment.width < 100) {
+            comment.width = 100;
         }
         node.setStyles({
             position: 'absolute',
@@ -1097,13 +1191,23 @@ EDITOR.prototype = {
             border: '2px solid black',
             fontSize: '12pt',
             fontFamily: 'helvetica',
-            minHeight: '1.2em'
+            minHeight: '1.2em',
+            resize: 'horizontal',
+            overflow: 'hidden',
+            padding: '4px'
+        });
+
+        node.on('keyup', function() {
+            var scrollHeight = node.get('scrollHeight') - 8;
+            this.setStyle('height', scrollHeight + 'px');
         });
 
         drawingregion.append(node);
         drawable.nodes.push(node);
         node.set('value', comment.rawtext);
-        //node.focus();
+        if (focus) {
+            node.focus();
+        }
         node.on('blur', function() {
             // Save the changes back to the comment.
             comment.rawtext = node.get('value');
@@ -1139,7 +1243,7 @@ EDITOR.prototype = {
             this.drawables.push(this.draw_annotation(page.annotations[i]));
         }
         for (i = 0; i < page.comments.length; i++) {
-            this.drawables.push(this.draw_comment(page.comments[i]));
+            this.drawables.push(this.draw_comment(page.comments[i], false));
         }
     },
 

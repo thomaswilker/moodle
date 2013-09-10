@@ -78,26 +78,32 @@ if ($action == 'loadallpages') {
 
     echo json_encode($response);
     die();
-} else if ($action == 'saveallpages') {
+} else if ($action == 'savepage') {
     require_capability('mod/assign:grade', $context);
 
     $response = new stdClass();
 
     $grade = $assignment->get_user_grade($userid, true);
 
-    $pagesjson = required_param('pages', PARAM_RAW);
-    $pages = json_decode($pagesjson);
+    $pagejson = required_param('page', PARAM_RAW);
+    $page = json_decode($pagejson);
+    $index = required_param('index', PARAM_INT);
 
-    foreach ($pages as $index => $page) {
-        $added = page_editor::set_comments($grade->id, $index, $page->comments);
-        if ($added != count($page->comments)) {
-            array_push($response->errors, get_string('couldnotsavepage', 'assignfeedback_editpdf', $index+1));
-        }
-        $added = page_editor::set_annotations($grade->id, $index, $page->annotations);
-        if ($added != count($page->annotations)) {
-            array_push($response->errors, get_string('couldnotsavepage', 'assignfeedback_editpdf', $index+1));
-        }
+    $added = page_editor::set_comments($grade->id, $index, $page->comments);
+    if ($added != count($page->comments)) {
+        array_push($response->errors, get_string('couldnotsavepage', 'assignfeedback_editpdf', $index+1));
     }
+    $added = page_editor::set_annotations($grade->id, $index, $page->annotations);
+    if ($added != count($page->annotations)) {
+        array_push($response->errors, get_string('couldnotsavepage', 'assignfeedback_editpdf', $index+1));
+    }
+    echo json_encode($response);
+    die();
+
+} else if ($action == 'generatepdf') {
+
+    require_capability('mod/assign:grade', $context);
+    $response = new stdClass();
     $file = document_services::generate_feedback_document($assignment, $userid, $attemptnumber);
 
     $response->url = '';
