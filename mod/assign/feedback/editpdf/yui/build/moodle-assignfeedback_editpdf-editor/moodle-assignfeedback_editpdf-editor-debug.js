@@ -1256,7 +1256,23 @@ EDITOR.prototype = {
      */
     change_page : function() {
         var drawingcanvas = Y.one(SELECTOR.DRAWINGCANVAS),
-            page;
+            page,
+            previousbutton,
+            nextbutton;
+
+        previousbutton = Y.one(SELECTOR.PREVIOUSBUTTON);
+        nextbutton = Y.one(SELECTOR.NEXTBUTTON);
+
+        if (this.currentpage > 0) {
+            previousbutton.removeAttribute('disabled');
+        } else {
+            previousbutton.setAttribute('disabled', 'true');
+        }
+        if (this.currentpage < (this.pagecount - 1)) {
+            nextbutton.removeAttribute('disabled');
+        } else {
+            nextbutton.setAttribute('disabled', 'true');
+        }
 
         page = this.pages[this.currentpage];
         this.loadingicon.hide();
@@ -1273,25 +1289,12 @@ EDITOR.prototype = {
      */
     setup_navigation : function() {
         var pageselect,
-            previousbutton,
-            nextbutton,
             i,
-            option;
+            option,
+            previousbutton,
+            nextbutton;
 
-        previousbutton = Y.one(SELECTOR.PREVIOUSBUTTON);
-        nextbutton = Y.one(SELECTOR.NEXTBUTTON);
         pageselect = Y.one(SELECTOR.PAGESELECT);
-
-        if (this.currentpage > 0) {
-            previousbutton.removeAttribute('disabled');
-        } else {
-            previousbutton.setAttribute('disabled', 'true');
-        }
-        if (this.currentpage < (this.pagecount - 1)) {
-            nextbutton.removeAttribute('disabled');
-        } else {
-            nextbutton.setAttribute('disabled', 'true');
-        }
 
         options = pageselect.all('option');
         if (options.size() <= 1) {
@@ -1303,6 +1306,44 @@ EDITOR.prototype = {
             }
         }
         pageselect.removeAttribute('disabled');
+        pageselect.on('change', function() {
+            this.currentpage = pageselect.get('value');
+            this.change_page();
+        }, this);
+
+        previousbutton = Y.one(SELECTOR.PREVIOUSBUTTON);
+        nextbutton = Y.one(SELECTOR.NEXTBUTTON);
+
+        previousbutton.on('click', this.previous_page, this);
+        previousbutton.on('key', this.previous_page, 'down:13', this);
+        nextbutton.on('click', this.next_page, this);
+        nextbutton.on('key', this.next_page, 'down:13', this);
+    },
+
+    /**
+     * Navigate to the previous page.
+     * @protected
+     * @method previous_page
+     */
+    previous_page : function() {
+        this.currentpage--;
+        if (this.currentpage < 0) {
+            this.currentpage = 0;
+        }
+        this.change_page();
+    },
+
+    /**
+     * Navigate to the next page.
+     * @protected
+     * @method next_page
+     */
+    next_page : function() {
+        this.currentpage++;
+        if (this.currentpage >= this.pages.length) {
+            this.currentpage = this.pages.length - 1;
+        }
+        this.change_page();
     }
 
 
