@@ -1346,8 +1346,10 @@ class mod_assign_locallib_testcase extends mod_assign_base_testcase {
 
         $this->setUser($this->students[0]);
         $output = $assign->view_student_summary($this->students[0], true);
-        $this->assertNotContains($output, get_string('editsubmission', 'assign'), 'Cannot edit after cutoff date.');
-        $this->assertNotContains($output, get_string('submitassignment', 'assign'), 'Cannot submit after cutoff date.');
+        $this->assertNotContains($output, get_string('editsubmission', 'assign'),
+                                 'Should not be able to edit after cutoff date.');
+        $this->assertNotContains($output, get_string('submitassignment', 'assign'),
+                                 'Should not be able to submit after cutoff date.');
     }
 }
 
