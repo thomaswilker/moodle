@@ -28,46 +28,36 @@
     display: none;
 }
 
-.assignfeedback_editpdf_square {
-	-moz-border-radius: 4px;
-	-webkit-border-radius: 4px;
-	border-radius: 4px;
-	border: 1px solid #000000;
-	display: inline-block;
-	color: #000000;
-	font-family: arial;
-	font-size: 15px;
-	font-weight: normal;
-	padding: 6px 15px;
-	text-decoration: none;
-	height: 32px;
-	width: 19px;
-	margin: 10px;
-	cursor: pointer;
-}
-.assignfeedback_editpdf_yellow {
-	background-color: rgb(255,255,176);
-}
-.assignfeedback_editpdf_red {
-	background-color: rgb(255,176,176);
-}
-.assignfeedback_editpdf_green {
-	background-color: rgb(176,255,176);
-}
-.assignfeedback_editpdf_blue {
-	background-color: rgb(208,208,255);
-}
-.assignfeedback_editpdf_white {
-	background-color: white;
+.assignfeedback_editpdf_colourpicker ul {
+    margin: 0px;
 }
 
-.assignfeedback_editpdf_black {
-    background-color: black;
+.assignfeedback_editpdf_colourpicker .moodle-dialogue-hd {
+    display: none;
 }
-.moodle-dialogue-base .colourpicker .moodle-dialogue-wrap .moodle-dialogue-hd{
-	display: none;
+.assignfeedback_editpdf_colourpicker li {
+    list-style-type: none;
+    margin: 0px;
 }
 
+.assignfeedback_editpdf_colourpicker li button {
+    width: 42px;
+    height: 30px;
+}
+
+.assignfeedback_editpdf_widget .commentbutton {
+    margin-left: 1em;
+}
+.dir-rtl .assignfeedback_editpdf_widget .commentbutton {
+    margin-right: 1em;
+    margin-left: inherit;
+}
+
+.assignfeedback_editpdf_selectedbutton:hover {
+    background-image: none;
+	background-color: #CCF;
+}
 .assignfeedback_editpdf_selectedbutton {
-	background-color: #ccc;
+	background-color: #CCF;
+    background-image: none;
 }

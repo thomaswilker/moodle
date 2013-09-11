@@ -39,18 +39,14 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
      * @param $icon string - The key for the icon
      * @param $colour string - The key for the lang string.
      * @param $disabled bool - The is this button disabled.
-     * @param $id string - Set the id for this button.
      * @return string
      */
-    private function render_toolbar_button($icon, $colour, $disabled=false, $id='') {
-        $iconalt = get_string($colour, 'assignfeedback_editpdf');
+    private function render_toolbar_button($icon, $tool, $disabled=false) {
+        $iconalt = get_string($tool, 'assignfeedback_editpdf');
         $iconhtml = $this->pix_icon($icon, $iconalt, 'assignfeedback_editpdf');
-        $iconparams = array('data-colour'=>$colour, 'class'=>'pdfbutton_' . $colour);
+        $iconparams = array('data-tool'=>$tool, 'class'=>$tool . 'button');
         if ($disabled) {
             $iconparams['disabled'] = 'true';
-        }
-        if ($id) {
-            $iconparams['id'] = $id;
         }
 
         return html_writer::tag('button', $iconhtml, $iconparams);
@@ -120,7 +116,9 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
         $toolbar = '';
 
         // Colour chooser.
-        $toolbar .= $this->render_toolbar_button('yellow', 'colour');
+        $toolbar .= $this->render_toolbar_button('commentcolour', 'commentcolour');
+        $toolbar .= $this->render_toolbar_button('annotationcolour', 'annotationcolour');
+        $toolbar .= $this->render_toolbar_button('currentstamp', 'currentstamp');
 
         // Tools.
         $toolbar .= $this->render_toolbar_button('comment', 'comment');

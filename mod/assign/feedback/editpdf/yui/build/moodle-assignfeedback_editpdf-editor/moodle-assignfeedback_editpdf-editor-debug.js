@@ -35,10 +35,12 @@ var AJAXBASE = M.cfg.wwwroot + '/mod/assign/feedback/editpdf/ajax.php',
         DRAWINGCANVAS : '.' + CSS.DIALOGUE + ' .drawingcanvas',
         CANCEL : '.' + CSS.DIALOGUE + ' .cancelbutton',
         SAVE : '.' + CSS.DIALOGUE + ' .savebutton',
-        COLOURBUTTON : '.' + CSS.DIALOGUE + ' .pdfbutton_colour',
+        COMMENTCOLOURBUTTON : '.' + CSS.DIALOGUE + ' .commentcolourbutton',
+        ANNOTATIONCOLOURBUTTON : '.' + CSS.DIALOGUE + ' .annotationcolourbutton',
+        STAMPSBUTTON : '.' + CSS.DIALOGUE + ' .currentstampbutton',
         DIALOGUE : '.' + CSS.DIALOGUE
     },
-    COLOUR = {
+    COMMENTCOLOUR = {
         'red' : 'rgb(255,176,176)',
         'green' : 'rgb(176,255,176)',
         'blue' : 'rgb(208,208,255)',
@@ -46,15 +48,23 @@ var AJAXBASE = M.cfg.wwwroot + '/mod/assign/feedback/editpdf/ajax.php',
         'yellow' : 'rgb(255,255,176)',
         'black' : 'rgb(0,0,0)'
     },
+    ANNOTATIONCOLOUR = {
+        'red' : 'rgb(255,0,0)',
+        'green' : 'rgb(0,255,0)',
+        'blue' : 'rgb(0,0,255)',
+        'white' : 'rgb(255,255,255)',
+        'yellow' : 'rgb(255,255,0)',
+        'black' : 'rgb(0,0,0)'
+    },
     CLICKTIMEOUT = 300,
     TOOLSELECTOR = {
-        'comment': '.' + CSS.DIALOGUE + ' .pdfbutton_comment',
-        'pen': '.' + CSS.DIALOGUE + ' .pdfbutton_pen',
-        'line': '.' + CSS.DIALOGUE + ' .pdfbutton_line',
-        'rectangle': '.' + CSS.DIALOGUE + ' .pdfbutton_rectangle',
-        'oval': '.' + CSS.DIALOGUE + ' .pdfbutton_oval',
-        'stamp': '.' + CSS.DIALOGUE + ' .pdfbutton_stamp',
-        'select': '.' + CSS.DIALOGUE + ' .pdfbutton_select'
+        'comment': '.' + CSS.DIALOGUE + ' .commentbutton',
+        'pen': '.' + CSS.DIALOGUE + ' .penbutton',
+        'line': '.' + CSS.DIALOGUE + ' .linebutton',
+        'rectangle': '.' + CSS.DIALOGUE + ' .rectanglebutton',
+        'oval': '.' + CSS.DIALOGUE + ' .ovalbutton',
+        'stamp': '.' + CSS.DIALOGUE + ' .stampbutton',
+        'select': '.' + CSS.DIALOGUE + ' .selectbutton'
     },
     STROKEWEIGHT = 4;
 
@@ -154,12 +164,20 @@ EDITOR.prototype = {
     graphic : null,
 
     /**
-     * Current colour.
+     * Current comment colour.
      * @property type
      * @type string
      * @protected
      */
-    currentcolour : 'yellow',
+    currentcommentcolour : 'yellow',
+
+    /**
+     * Current annotation colour.
+     * @property type
+     * @type string
+     * @protected
+     */
+    currentannotationcolour : 'red',
 
     /**
      * Selected tool
@@ -213,7 +231,9 @@ EDITOR.prototype = {
      * @method initializer
      */
     initializer : function() {
-        var link, deletelink;
+        var link,
+            deletelink;
+
         Y.log('Initialising M.assignfeedback_editpdf.editor');
         link = Y.one('#' + this.get('linkid'));
 
@@ -227,6 +247,49 @@ EDITOR.prototype = {
 
         this.currentedit.start = false;
         this.currentedit.end = false;
+    },
+
+    /**
+     * Called to show/hide buttons and set the current colours/stamps.
+     * @method refresh_button_state
+     */
+    refresh_button_state : function() {
+        var button, currenttoolnode;
+        // Initalise the colour buttons.
+        button = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
+        button.setStyle('backgroundImage', 'none');
+        button.setStyle('backgroundColor', COMMENTCOLOUR[this.currentcommentcolour]);
+
+        button = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
+        button.setStyle('backgroundImage', 'none');
+        button.setStyle('backgroundColor', ANNOTATIONCOLOUR[this.currentannotationcolour]);
+
+        if (this.currenttool === 'comment') {
+            button = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
+            button.show();
+            button = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
+            button.hide();
+            button = Y.one(SELECTOR.STAMPSBUTTON);
+            button.hide();
+        } else if (this.currenttool === 'stamp') {
+            button = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
+            button.hide();
+            button = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
+            button.hide();
+            button = Y.one(SELECTOR.STAMPSBUTTON);
+            button.show();
+        } else {
+            button = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
+            button.hide();
+            button = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
+            button.show();
+            button = Y.one(SELECTOR.STAMPSBUTTON);
+            button.hide();
+        }
+
+        currenttoolnode = Y.one(TOOLSELECTOR[this.currenttool]);
+        currenttoolnode.addClass('assignfeedback_editpdf_selectedbutton');
+        currenttoolnode.setAttribute('aria-pressed', 'true');
     },
 
     /**
@@ -260,6 +323,7 @@ EDITOR.prototype = {
             drawingcanvas.on('mousemove', this.edit_move, this);
             drawingcanvas.on('mouseup', this.edit_end, this);
 
+            this.refresh_button_state();
         } else {
             this.dialogue.show();
         }
@@ -369,15 +433,82 @@ EDITOR.prototype = {
     },
 
     /**
+     * Setup colour picker
+     * @protected
+     * @method setup_colour_picker
+     * @param Y.Node button - The button to open the picker
+     * @param colours - List of colours
+     * @param {function} callback when a new colour is chosen.
+     */
+    setup_colour_picker : function(node, colours, callback) {
+        var colourlist = Y.Node.create('<ul/>'),
+            colourpicker,
+            body,
+            headertext,
+            showhandler;
+
+        Y.each(colours, function(rgb, colour) {
+            var button, listitem;
+
+            button = Y.Node.create('<button/>');
+            button.setAttribute('title', M.util.get_string(colour, 'assignfeedback_editpdf'));
+            button.setAttribute('data-colour', colour);
+            button.setAttribute('data-rgb', rgb);
+            button.addClass('colour_' + colour);
+            button.setStyle('backgroundColor', rgb);
+            button.setStyle('backgroundImage', 'none');
+            listitem = Y.Node.create('<li/>');
+            listitem.append(button);
+            colourlist.append(listitem);
+        });
+
+        body = Y.Node.create('<div/>');
+
+        colourlist.delegate('click', callback, 'button', this);
+        colourlist.delegate('key', callback, 'down:13', 'button', this);
+        headertext = Y.Node.create('<h3/>');
+        headertext.addClass('accesshide');
+        headertext.setHTML(M.util.get_string('colourpicker', 'assignfeedback_editpdf'));
+        body.append(headertext);
+        body.append(colourlist);
+
+        colourpicker = new M.core.dialogue({
+            extraClasses : ['assignfeedback_editpdf_colourpicker'],
+            draggable: false,
+            centered: false,
+            width: '75px',
+            lightbox: false,
+            visible: false,
+            bodyContent: body,
+            footerContent: '',
+            align: {node: node, points: [Y.WidgetPositionAlign.TL, Y.WidgetPositionAlign.BL]}
+        });
+
+        body.on('clickoutside', function(e) {
+            if (e.target !== node && e.target.ancestor() !== node) {
+                e.preventDefault();
+                colourpicker.hide();
+            }
+        });
+
+        showhandler = function() {
+            this.currentcolourpicker = colourpicker;
+            colourpicker.show();
+        };
+        node.on('click', showhandler, this);
+        node.on('key', showhandler, 'down:13', this);
+
+    },
+
+    /**
      * Attach listeners and enable the color picker buttons.
      * @protected
      * @method setup_toolbar
      */
     setup_toolbar : function() {
         var toolnode,
-            currenttoolnode,
-            colourbutton,
-            colordivs;
+            commentcolourbutton,
+            annotationcolourbutton;
 
         // Setup the tool buttons.
         Y.each(TOOLSELECTOR, function(selector, tool) {
@@ -388,81 +519,19 @@ EDITOR.prototype = {
         }, this);
 
          // Set the default tool.
-        currenttoolnode = Y.one(TOOLSELECTOR[this.currenttool]);
-        currenttoolnode.addClass('assignfeedback_editpdf_selectedbutton');
-        currenttoolnode.setAttribute('aria-pressed', 'true');
 
-        // Setup the color button.
-        colourbutton = Y.one(SELECTOR.COLOURBUTTON);
-        colourbutton.on('click', this.handle_colourbutton, this);
-        colourbutton.on('key', this.handle_colourbutton, 'down:13', this);
-        colourbutton.setAttribute('title', this.currentcolour + 'color');
-
-        // Generate the color picker content.
-        colordivs = '';
-        Y.each(COLOUR, function(rgb, color) {
-            colordivs = colordivs + '<div class=\"assignfeedback_editpdf_square assignfeedback_editpdf_'+
-                color +'\" title=\"'+ color +'\" role=\"button\" tabIndex=\"0\"></div>';
-        }, this);
-
-        if (!this.colourpicker) {
-            // Create the color picker.
-            this.colourpicker = new M.core.dialogue({
-                width: 307,
-                extraClasses : ['colourpicker'],
-                draggable: false,
-                center: false,
-                lightbox: false,
-                headerContent : M.util.get_string('colourpicker', 'assignfeedback_editpdf'),
-                bodyContent:"<div id=\"colorpicker\" class=\"\" style=\"\">" + colordivs + "</div>",
-                footerContent: ''
-            });
-        }
-    },
-
-    /**
-     * Handle a click on the colour button.
-     * @protected
-     * @method handle_colourbutton
-     */
-    handle_colourbutton : function(e) {
-        var colourbuttonxy,
-            colourpickerxy;
-
-        e.preventDefault();
-
-        // Display the color picker.
-        this.colourpicker.show();
-        this.colourpicker.render();
-
-        // Position the colourpicker at the bottom on the colour button.
-        colourbuttonxy = Y.one(SELECTOR.COLOURBUTTON).getXY();
-        colourpickerxy = Y.one('.moodle-dialogue-base .colourpicker').getXY();
-        this.colourpicker.move(colourpickerxy[0],colourbuttonxy[1]+40);
-
-        // Add on click event to all colors.
-        Y.each(COLOUR, function(rgb, color) {
-            Y.one('.assignfeedback_editpdf_'+color).on("click", this.changecolor, null, color, this, this.colourpicker);
-        }, this);
-
-        // Automatically close the color picker when we click something else (except the color button).
-        Y.on("click",  Y.bind(this.colourpicker.show, this.colourpicker) , Y.one(SELECTOR.COLOURBUTTON));
-        Y.one(document).on('click', function(event, colourpicker) {
-            // Below code is causing the dialogue to close as soon as it is open. Need to detect the state of overlay.
-            // When it is already open then the below code should fire.
-            var buttonchildnodes = Y.one(SELECTOR.COLOURBUTTON).get('childNodes');
-            if(event.target.ancestor('#colorpicker') === null &&
-                event.target.get('id') !== buttonchildnodes.item(0).get('id') &&
-                event.target.get('id') !== Y.one(SELECTOR.COLOURBUTTON).get('id') &&
-                colourpicker.get('visible') === true)  {
-               colourpicker.hide();
-            }
-        }, null, this.colourpicker);
-
-        // Focus on the dialogue for aria purpose - to set focus by js on a div we set tabIndex to -1.
-        // We'll put the tabindex on the div being set as role=dialog.
-        Y.one('.colourpicker').get('childNodes').item(0).setAttribute('tabIndex', '-1');
-        Y.one('.colourpicker').get('childNodes').item(0).focus();
+        commentcolourbutton = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
+        this.setup_colour_picker(commentcolourbutton, COMMENTCOLOUR, function (e) {
+            this.currentcommentcolour = e.target.getAttribute('data-colour');
+            this.refresh_button_state();
+            this.currentcolourpicker.hide();
+        });
+        annotationcolourbutton = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
+        this.setup_colour_picker(annotationcolourbutton, ANNOTATIONCOLOUR, function (e) {
+            this.currentannotationcolour = e.target.getAttribute('data-colour');
+            this.refresh_button_state();
+            this.currentcolourpicker.hide();
+        });
     },
 
     /**
@@ -471,8 +540,7 @@ EDITOR.prototype = {
      * @method handle_toolbutton
      */
     handle_toolbutton : function(e, tool) {
-        var currenttoolnode,
-            newtoolnode;
+        var currenttoolnode;
 
         e.preventDefault();
 
@@ -480,12 +548,8 @@ EDITOR.prototype = {
         currenttoolnode = Y.one(TOOLSELECTOR[this.currenttool]);
         currenttoolnode.removeClass('assignfeedback_editpdf_selectedbutton');
         currenttoolnode.setAttribute('aria-pressed', 'false');
-        newtoolnode = Y.one(TOOLSELECTOR[tool]);
-        newtoolnode.addClass('assignfeedback_editpdf_selectedbutton');
-        newtoolnode.setAttribute('aria-pressed', 'true');
-
-        // Change the rool.
         this.currenttool = tool;
+        this.refresh_button_state();
     },
 
     /**
@@ -662,11 +726,11 @@ EDITOR.prototype = {
             shape = this.graphic.addShape({
                type: Y.Path,
                 fill: {
-                    color: COLOUR[this.currentcolour]
+                    color: ANNOTATIONCOLOUR[this.currentannotationcolour]
                 },
                 stroke: {
                     weight: STROKEWEIGHT,
-                    color: COLOUR[this.currentcolour]
+                    color: ANNOTATIONCOLOUR[this.currentannotationcolour]
                 }
             });
 
@@ -725,7 +789,7 @@ EDITOR.prototype = {
                 width: width,
                 height: height,
                 fill: {
-                   color: COLOUR[this.currentcolour]
+                   color: COMMENTCOLOUR[this.currentcommentcolour]
                 },
                 x: x,
                 y: y
@@ -736,11 +800,11 @@ EDITOR.prototype = {
             shape = this.graphic.addShape({
                type: Y.Path,
                 fill: {
-                    color: COLOUR[this.currentcolour]
+                    color: ANNOTATIONCOLOUR[this.currentannotationcolour]
                 },
                 stroke: {
                     weight: STROKEWEIGHT,
-                    color: COLOUR[this.currentcolour]
+                    color: ANNOTATIONCOLOUR[this.currentannotationcolour]
                 }
             });
 
@@ -763,7 +827,7 @@ EDITOR.prototype = {
                 height: height,
                 stroke: {
                    weight: STROKEWEIGHT,
-                   color: COLOUR[this.currentcolour]
+                   color: ANNOTATIONCOLOUR[this.currentannotationcolour]
                 },
                 x: x,
                 y: y
@@ -918,7 +982,7 @@ EDITOR.prototype = {
                 width : width,
                 rawtext : '',
                 pageno : this.currentpage,
-                colour : this.currentcolour
+                colour : this.currentcommentcolour
             };
 
             this.pages[this.currentpage].comments.push(data);
@@ -938,7 +1002,7 @@ EDITOR.prototype = {
                 path : thepath,
                 type : 'pen',
                 pageno : this.currentpage,
-                colour : this.currentcolour
+                colour : this.currentannotationcolour
             };
 
             this.pages[this.currentpage].annotations.push(data);
@@ -965,7 +1029,7 @@ EDITOR.prototype = {
                     endy : this.currentedit.end.y,
                     type : tooltype,
                     pageno : this.currentpage,
-                    colour : this.currentcolour
+                    colour : this.currentcommentcolour
                 };
 
             this.pages[this.currentpage].annotations.push(data);
@@ -1049,11 +1113,11 @@ EDITOR.prototype = {
             shape = this.graphic.addShape({
                 type: Y.Path,
                 fill: {
-                    color: COLOUR[annotation.colour]
+                    color: ANNOTATIONCOLOUR[annotation.colour]
                 },
                 stroke: {
                     weight: STROKEWEIGHT,
-                    color: COLOUR[annotation.colour]
+                    color: ANNOTATIONCOLOUR[annotation.colour]
                 }
             });
 
@@ -1066,11 +1130,11 @@ EDITOR.prototype = {
             shape = this.graphic.addShape({
                type: Y.Path,
                 fill: {
-                    color: COLOUR[annotation.colour]
+                    color: ANNOTATIONCOLOUR[annotation.colour]
                 },
                 stroke: {
                     weight: STROKEWEIGHT,
-                    color: COLOUR[annotation.colour]
+                    color: ANNOTATIONCOLOUR[annotation.colour]
                 }
             });
 
@@ -1129,7 +1193,7 @@ EDITOR.prototype = {
                 height: height,
                 stroke: {
                    weight: STROKEWEIGHT,
-                   color: COLOUR[annotation.colour]
+                   color: ANNOTATIONCOLOUR[annotation.colour]
                 },
                 x: topleftx,
                 y: toplefty
@@ -1188,7 +1252,7 @@ EDITOR.prototype = {
             left: (parseInt(comment.x, 10) + offsetleft) + 'px',
             top: (parseInt(comment.y, 10) + offsettop) + 'px',
             width: comment.width + 'px',
-            backgroundColor: COLOUR[comment.colour],
+            backgroundColor: COMMENTCOLOUR[comment.colour],
             color: 'black',
             border: '2px solid black',
             fontSize: '12pt',
