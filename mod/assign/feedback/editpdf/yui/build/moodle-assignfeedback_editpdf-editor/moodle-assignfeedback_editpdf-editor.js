@@ -44,16 +44,16 @@ var AJAXBASE = M.cfg.wwwroot + '/mod/assign/feedback/editpdf/ajax.php',
         'red' : 'rgb(255,176,176)',
         'green' : 'rgb(176,255,176)',
         'blue' : 'rgb(208,208,255)',
-        'white' : 'rgb(255,255,255)',
         'yellow' : 'rgb(255,255,176)',
+        'white' : 'rgb(255,255,255)',
         'black' : 'rgb(0,0,0)'
     },
     ANNOTATIONCOLOUR = {
         'red' : 'rgb(255,0,0)',
         'green' : 'rgb(0,255,0)',
         'blue' : 'rgb(0,0,255)',
-        'white' : 'rgb(255,255,255)',
         'yellow' : 'rgb(255,255,0)',
+        'white' : 'rgb(255,255,255)',
         'black' : 'rgb(0,0,0)'
     },
     CLICKTIMEOUT = 300,
