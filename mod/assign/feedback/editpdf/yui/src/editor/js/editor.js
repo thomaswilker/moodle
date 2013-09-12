@@ -1027,7 +1027,7 @@ EDITOR.prototype = {
                     endy : this.currentedit.end.y,
                     type : tooltype,
                     pageno : this.currentpage,
-                    colour : this.currentcommentcolour
+                    colour : this.currentannotationcolour
                 };
 
             this.pages[this.currentpage].annotations.push(data);
@@ -1281,6 +1281,7 @@ EDITOR.prototype = {
                 // Delete empty comments.
                 this.delete_comment(comment);
             }
+            this.save_current_page();
 
         }, this);
 
