@@ -317,9 +317,9 @@ EDITOR.prototype = {
             drawingcanvas = Y.one(SELECTOR.DRAWINGCANVAS);
             this.graphic = new Y.Graphic({render : SELECTOR.DRAWINGCANVAS});
 
-            drawingcanvas.on('mousedown', this.edit_start, this);
-            drawingcanvas.on('mousemove', this.edit_move, this);
-            drawingcanvas.on('mouseup', this.edit_end, this);
+            drawingcanvas.on('gesturemovestart', this.edit_start, null, this);
+            drawingcanvas.on('gesturemove', this.edit_move, null, this);
+            drawingcanvas.on('gesturemoveend', this.edit_end, null, this);
 
             this.refresh_button_state();
         } else {
@@ -1253,7 +1253,7 @@ EDITOR.prototype = {
             backgroundColor: COMMENTCOLOUR[comment.colour],
             color: 'black',
             border: '2px solid black',
-            fontSize: '12pt',
+            fontSize: '16px',
             fontFamily: 'helvetica',
             minHeight: '1.2em',
             resize: 'horizontal',
@@ -1272,6 +1272,14 @@ EDITOR.prototype = {
         if (focus) {
             node.focus();
         }
+        this.attach_comment_events(comment, node);
+        comment.drawable = drawable;
+
+        return drawable;
+    },
+
+    attach_comment_events : function(comment, node) {
+        // Save the text on blur.
         node.on('blur', function() {
             // Save the changes back to the comment.
             comment.rawtext = node.get('value');
@@ -1285,9 +1293,54 @@ EDITOR.prototype = {
 
         }, this);
 
-        comment.drawable = drawable;
+        node.on('gesturemovestart', function(e) {
+            node.setData('dragging', true);
+            node.setData('offsetx', e.clientX - node.getX());
+            node.setData('offsety', e.clientY - node.getY());
+        });
+        node.on('gesturemoveend', function() {
+            node.setData('dragging', false);
+            this.save_current_page();
+        }, null, this);
+        node.on('gesturemove', function(e) {
+            var x = e.clientX - node.getData('offsetx'),
+                y = e.clientY - node.getData('offsety'),
+                canvas = Y.one(SELECTOR.DRAWINGCANVAS),
+                offsetcanvas = canvas.getXY(),
+                canvaswidth,
+                canvasheight,
+                nodewidth,
+                nodeheight,
+                offsetleft = offsetcanvas[0],
+                offsettop = offsetcanvas[1];
 
-        return drawable;
+                canvaswidth = parseInt(canvas.getStyle('width'), 10);
+                canvasheight = parseInt(canvas.getStyle('height'), 10);
+                nodewidth = parseInt(node.getStyle('width'), 10);
+                nodeheight = parseInt(node.getStyle('height'), 10);
+
+                Y.log(offsetcanvas);
+                // Constrain the comment to the canvas.
+                if (x < offsetleft) {
+                    x = offsetleft;
+                }
+                if (y < offsettop) {
+                    y = offsettop;
+                }
+                if (x - offsetleft + nodewidth > canvaswidth) {
+                    x = offsetleft + canvaswidth - nodewidth;
+                }
+                if (y - offsettop + nodeheight > canvasheight) {
+                    y = offsettop + canvasheight - nodeheight;
+                }
+
+                comment.x = x - offsetleft;
+                comment.y = y - offsettop;
+
+                node.setX(x);
+                node.setY(y);
+            e.preventDefault();
+        });
     },
 
     /**

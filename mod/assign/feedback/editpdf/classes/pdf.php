@@ -64,7 +64,7 @@ class pdf extends \FPDI {
         $this->setPrintHeader(false);
         $this->setPrintFooter(false);
         $this->scale = 72.0 / 100.0;
-        $this->SetFont('helvetica', '', 12.0 * $this->scale);
+        $this->SetFont('helvetica', '', 16.0 * $this->scale);
         $this->SetTextColor(0, 0, 0);
 
         $totalpagecount = 0;
@@ -107,7 +107,7 @@ class pdf extends \FPDI {
     public function load_pdf($filename) {
         $this->setPageUnit('pt');
         $this->scale = 72.0 / 100.0;
-        $this->SetFont('helvetica', '', 12.0 * $this->scale);
+        $this->SetFont('helvetica', '', 16.0 * $this->scale);
         $this->SetFillColor(255, 255, 176);
         $this->SetDrawColor(0, 0, 0);
         $this->SetLineWidth(1.0 * $this->scale);
@@ -217,13 +217,13 @@ class pdf extends \FPDI {
         $text = str_replace('&gt;', '>', $text);
         // Draw the text with a border, but no background colour (using a background colour would cause the fill to
         // appear behind any existing content on the page, hence the extra filled rectangle drawn below).
-        $this->MultiCell($width, 1.0, $text, 0, 'L', 0, 1, $x, $y); /* width, height, text, border, justify, fill, ln, x, y */
+        $this->MultiCell($width, 1.0, $text, 0, 'L', 0, 4, $x, $y); /* width, height, text, border, justify, fill, ln, x, y */
         if ($colour != 'clear') {
             $newy = $this->GetY();
             // Now we know the final size of the comment, draw a rectangle with the background colour.
             $this->Rect($x, $y, $width, $newy - $y, 'DF');
             // Re-draw the text over the top of the background rectangle.
-            $this->MultiCell($width, 1.0, $text, 0, 'L', 0, 1, $x, $y); /* width, height, text, border, justify, fill, ln, x, y */
+            $this->MultiCell($width, 1.0, $text, 0, 'L', 0, 4, $x, $y); /* width, height, text, border, justify, fill, ln, x, y */
         }
         return true;
     }
@@ -290,7 +290,7 @@ class pdf extends \FPDI {
                 break;
             case 'highlight':
                 $w = abs($sx - $ex);
-                $h = 12.0 * $this->scale;
+                $h = 16.0 * $this->scale;
                 $sx = min($sx, $ex);
                 $sy = min($sy, $ey) - $h * 0.5;
                 $imgfile = $CFG->dirroot . '/mod/assign/feedback/editpdf/pix/trans' . $colour . '.png';
