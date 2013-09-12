@@ -48,7 +48,6 @@ function assignfeedback_editpdf_pluginfile($course,
     }
 
     require_login($course, false, $cm);
-    var_dump($args);
     $itemid = (int)array_shift($args);
     $record = $DB->get_record('assign_grades', array('id'=>$itemid), 'userid,assignment', MUST_EXIST);
     $userid = $record->userid;
