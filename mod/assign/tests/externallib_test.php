@@ -97,7 +97,32 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
         $grade->attemptnumber = 1;
         $DB->insert_record('assign_grades', $grade);
 
+        // Create another course and assignment.
+        $coursedata['idnumber'] = 'idnumbercourse2';
+        $coursedata['fullname'] = 'Lightwork Course 2';
+        $coursedata['summary'] = 'Lightwork Course description 2';
+        $coursedata['summaryformat'] = FORMAT_MOODLE;
+        $course2 = self::getDataGenerator()->create_course($coursedata);
+
+        $assigndata['course'] = $course2->id;
+        $assigndata['name'] = 'lightwork assignment 2';
+
+        $assign2 = self::getDataGenerator()->create_module('assign', $assigndata);
+
+        // Give the student a grade for the second assignment.
+        $grade = new stdClass();
+        $grade->assignment = $assign2->id;
+        $grade->userid = $student->id;
+        $grade->timecreated = time();
+        $grade->timemodified = $grade->timecreated;
+        $grade->grader = $USER->id;
+        $grade->grade = 34;
+        $grade->attemptnumber = 0;
+        $DB->insert_record('assign_grades', $grade);
+
+
         $assignmentids[] = $assign->id;
+        $assignmentids[] = $assign2->id;
         $result = mod_assign_external::get_grades($assignmentids);
 
         // We need to execute the return values cleaning process to simulate the web service server.
@@ -113,6 +138,12 @@ class mod_assign_external_testcase extends externallib_advanced_testcase {
         $this->assertEquals($student->id, $grade['userid']);
         // Should be the last grade (not the first).
         $this->assertEquals(75, $grade['grade']);
+
+        // Verify we got a warning about the assignment we were not allowed to access.
+        $this->assertEquals(1, count($result['warnings']));
+        $warning = $result['warnings'][0];
+        $this->assertEquals("assignment", $warning['item']);
+        $this->assertEquals($assign2->id, $warning['itemid']);
     }
 
     /**
