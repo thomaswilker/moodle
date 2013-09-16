@@ -151,7 +151,8 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
                                     'downloadlinkid'=>$downloadlinkid,
                                     'assignmentid'=>$widget->assignment,
                                     'userid'=>$widget->userid,
-                                    'attemptnumber'=>$widget->attemptnumber));
+                                    'attemptnumber'=>$widget->attemptnumber,
+                                    'transparentbackground'=>$this->pix_url('checkers', 'assignfeedback_editpdf')));
 
         $this->page->requires->yui_module('moodle-assignfeedback_editpdf-editor',
                                           'M.assignfeedback_editpdf.editor.init',

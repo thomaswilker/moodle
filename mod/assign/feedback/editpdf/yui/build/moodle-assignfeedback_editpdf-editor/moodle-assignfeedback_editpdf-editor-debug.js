@@ -21,7 +21,7 @@ YUI.add('moodle-assignfeedback_editpdf-editor', function (Y, NAME) {
  * @module moodle-assignfeedback_editpdf-editor
  */
 
-// Globals
+// Globals.
 var AJAXBASE = M.cfg.wwwroot + '/mod/assign/feedback/editpdf/ajax.php',
     CSS = {
         DIALOGUE : 'assignfeedback_editpdf_widget'
@@ -46,7 +46,7 @@ var AJAXBASE = M.cfg.wwwroot + '/mod/assign/feedback/editpdf/ajax.php',
         'blue' : 'rgb(208,208,255)',
         'yellow' : 'rgb(255,255,176)',
         'white' : 'rgb(255,255,255)',
-        'black' : 'rgb(0,0,0)'
+        'clear' : 'rgba(255,255,255, 0)'
     },
     ANNOTATIONCOLOUR = {
         'red' : 'rgb(255,0,0)',
@@ -258,7 +258,13 @@ EDITOR.prototype = {
         // Initalise the colour buttons.
         button = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
         button.setStyle('backgroundImage', 'none');
-        button.setStyle('backgroundColor', COMMENTCOLOUR[this.currentcommentcolour]);
+        button.setStyle('background', COMMENTCOLOUR[this.currentcommentcolour]);
+
+        if (this.currentcommentcolour === 'clear') {
+            button.setStyle('borderStyle', 'dashed');
+        } else {
+            button.setStyle('borderStyle', 'solid');
+        }
 
         button = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
         button.setStyle('backgroundImage', 'none');
@@ -455,12 +461,17 @@ EDITOR.prototype = {
             button.setAttribute('data-colour', colour);
             button.setAttribute('data-rgb', rgb);
             button.addClass('colour_' + colour);
-            button.setStyle('backgroundColor', rgb);
             button.setStyle('backgroundImage', 'none');
+            button.setStyle('background', rgb);
+            if (colour === 'clear') {
+                button.setStyle('borderStyle', 'dashed');
+            } else {
+                button.setStyle('borderStyle', 'solid');
+            }
             listitem = Y.Node.create('<li/>');
             listitem.append(button);
             colourlist.append(listitem);
-        });
+        }, this);
 
         body = Y.Node.create('<div/>');
 
@@ -1012,22 +1023,13 @@ EDITOR.prototype = {
             this.currentpenposition.y = null;
             this.currentpenpath = [];
         } else {
-
-            if (this.currenttool === 'line') {
-                tooltype = 'line';
-            } else if (this.currenttool === 'rectangle') {
-                tooltype = 'rectangle';
-            } else if (this.currenttool === 'oval') {
-                tooltype = 'oval';
-            }
-
             data = {
                     gradeid : this.get('gradeid'),
                     x : this.currentedit.start.x,
                     y : this.currentedit.start.y,
                     endx : this.currentedit.end.x,
                     endy : this.currentedit.end.y,
-                    type : tooltype,
+                    type : this.currenttool,
                     pageno : this.currentpage,
                     colour : this.currentannotationcolour
                 };
@@ -1515,6 +1517,10 @@ Y.extend(EDITOR, Y.Base, EDITOR.prototype, {
             value : ''
         },
         downloadlinkid : {
+            validator : Y.Lang.isString,
+            value : ''
+        },
+        transparentbackground : {
             validator : Y.Lang.isString,
             value : ''
         }
