@@ -159,7 +159,7 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
                                           $editorparams);
 
         $this->page->requires->strings_for_js(array('yellow', 'white', 'red', 'blue', 'green', 'black', 'clear',
-            'colourpicker', 'loadingeditor', 'pagexofy'), 'assignfeedback_editpdf');
+            'colourpicker', 'loadingeditor', 'pagexofy', 'deletecomment', 'addtoquicklist'), 'assignfeedback_editpdf');
 
         return $html;
     }

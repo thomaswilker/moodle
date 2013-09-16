@@ -198,7 +198,7 @@ EDITOR.prototype = {
 
     /**
      * Current drawable.
-     * @property type
+     * @property currentdrawable
      * @type Drawable (or false)
      * @protected
      */
@@ -206,7 +206,7 @@ EDITOR.prototype = {
 
     /**
      * Current drawables.
-     * @property type
+     * @property drawables
      * @type array(Drawable)
      * @protected
      */
@@ -215,15 +215,45 @@ EDITOR.prototype = {
     /**
      * The colour picker dialogue box.
      */
-    colourpicker : null,
+    currentcolourpicker : null,
+
+    /**
+     * The comment menu dialogue.
+     * @property commentmenu
+     * @type M.core.dialogue
+     * @protected
+     */
+    commentmenu : null,
+
+    /**
+     * Current comment when the comment menu is open.
+     * @property currentcomment
+     * @type Object
+     * @protected
+     */
+    currentcomment : null,
+
+    /**
+     * The link that opened the current comment menu.
+     * @property currentcommentmenulink
+     * @type Y.Node
+     * @protected
+     */
+    currentcommentmenulink : null,
 
     /**
      * The pen tool position (also known as the mouse position :P).
+     * @property currentpenposition
+     * @type Object
+     * @protected
      */
     currentpenposition : {x:null,y:null},
 
     /**
      * The pen tool path being drawn.
+     * @property currentpenpath
+     * @type Array
+     * @protected
      */
     currentpenpath : [],
 
@@ -453,7 +483,7 @@ EDITOR.prototype = {
      * @param {function} callback when a new colour is chosen.
      */
     setup_colour_picker : function(node, colours, callback) {
-        var colourlist = Y.Node.create('<ul/>'),
+        var colourlist = Y.Node.create('<ul role="menu" class="assignfeedback_editpdf_menu"/>'),
             colourpicker,
             body,
             headertext,
@@ -493,7 +523,7 @@ EDITOR.prototype = {
             extraClasses : ['assignfeedback_editpdf_colourpicker'],
             draggable: false,
             centered: false,
-            width: '75px',
+            width: 'auto',
             lightbox: false,
             visible: false,
             bodyContent: body,
@@ -1292,14 +1322,73 @@ EDITOR.prototype = {
      * @method open_comment_menu
      */
     open_comment_menu : function(e) {
-        var comment = e.target.getData('comment');
+        var target = e.target,
+            comment = e.target.getData('comment'),
+            commentlinks,
+            link;
+
+        // Cancel deleting of empty comment.
+        this.commenttodelete = null;
 
         if (!comment) {
             // The event triggered on the img tag, not the a.
-            comment = e.target.ancestor().getData('comment');
+            target = target.ancestor();
+            comment = target.getData('comment');
         }
 
-        debugger;
+        this.currentcomment = comment;
+        this.currentcommentmenulink = target;
+
+        // Build the comment menu only the first time.
+        if (!this.commentmenu) {
+            // Build the list of comments.
+            commentlinks = Y.Node.create('<ul role="menu" class="assignfeedback_editpdf_menu"/>');
+
+            link = Y.Node.create('<li><a tabindex="-1" href="#">' + M.util.get_string('addtoquicklist', 'assignfeedback_editpdf') + '</a></li>');
+            link.on('click', function() { this.commentmenu.hide(); }, this);
+            link.on('key', function() { this.commentmenu.hide(); }, 'enter,space', this);
+
+            commentlinks.append(link);
+
+            link = Y.Node.create('<li><a tabindex="-1" href="#">' + M.util.get_string('deletecomment', 'assignfeedback_editpdf') + '</a></li>');
+            link.on('click', function() { this.commentmenu.hide(); this.delete_comment(this.currentcomment); }, this);
+            link.on('key', function() { this.commentmenu.hide(); this.delete_comment(this.currentcomment); }, 'enter,space', this);
+
+            commentlinks.append(link);
+
+            this.commentmenu = new M.core.dialogue({
+                extraClasses : ['assignfeedback_editpdf_commentmenu'],
+                draggable: false,
+                centered: false,
+                lightbox: false,
+                width: 'auto',
+                visible: false,
+                bodyContent: commentlinks,
+                footerContent: '',
+                align: {node: target, points: [Y.WidgetPositionAlign.TL, Y.WidgetPositionAlign.BL]}
+            });
+            // Close the menu on click outside.
+            commentlinks.on('clickoutside', function(e) {
+                if (e.target !== this.currentcommentmenulink && e.target.ancestor() !== this.currentcommentmenulink) {
+                    e.preventDefault();
+                    this.commentmenu.hide();
+                }
+            }, this);
+        } else {
+            this.commentmenu.align( target, [Y.WidgetPositionAlign.TL, Y.WidgetPositionAlign.BL]);
+        }
+
+        this.commentmenu.show();
+    },
+
+    /**
+     * Delete an empty comment if it's menu hasn't been opened in time.
+     * @method delete_comment_later
+     */
+    delete_comment_later : function() {
+        if (this.commenttodelete !== null) {
+            this.delete_comment(this.commenttodelete);
+        }
     },
 
     /**
@@ -1317,10 +1406,12 @@ EDITOR.prototype = {
             // Save the changes back to the comment.
             comment.rawtext = node.get('value');
             comment.width = parseInt(node.getStyle('width'), 10);
+
             // Trim.
             if (comment.rawtext.replace(/^\s+|\s+$/g, "") === '') {
                 // Delete empty comments.
-                this.delete_comment(comment);
+                this.commenttodelete = comment;
+                Y.later(400, this, this.delete_comment_later);
             }
             this.save_current_page();
         }, this);
