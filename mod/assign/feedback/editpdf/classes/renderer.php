@@ -152,13 +152,13 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
                                     'assignmentid'=>$widget->assignment,
                                     'userid'=>$widget->userid,
                                     'attemptnumber'=>$widget->attemptnumber,
-                                    'transparentbackground'=>$this->pix_url('checkers', 'assignfeedback_editpdf')));
+                                    'menuicon'=>$this->pix_url('t/contextmenu')->out(true)));
 
         $this->page->requires->yui_module('moodle-assignfeedback_editpdf-editor',
                                           'M.assignfeedback_editpdf.editor.init',
                                           $editorparams);
 
-        $this->page->requires->strings_for_js(array('yellow', 'white', 'red', 'blue', 'green', 'black',
+        $this->page->requires->strings_for_js(array('yellow', 'white', 'red', 'blue', 'green', 'black', 'clear',
             'colourpicker', 'loadingeditor', 'pagexofy'), 'assignfeedback_editpdf');
 
         return $html;

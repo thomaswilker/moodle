@@ -34,24 +34,25 @@ var AJAXBASE = M.cfg.wwwroot + '/mod/assign/feedback/editpdf/ajax.php',
         CANCEL : '.' + CSS.DIALOGUE + ' .cancelbutton',
         SAVE : '.' + CSS.DIALOGUE + ' .savebutton',
         COMMENTCOLOURBUTTON : '.' + CSS.DIALOGUE + ' .commentcolourbutton',
+        COMMENTMENU : ' .commentdrawable a',
         ANNOTATIONCOLOURBUTTON : '.' + CSS.DIALOGUE + ' .annotationcolourbutton',
         STAMPSBUTTON : '.' + CSS.DIALOGUE + ' .currentstampbutton',
         DIALOGUE : '.' + CSS.DIALOGUE
     },
     COMMENTCOLOUR = {
+        'white' : 'rgb(255,255,255)',
+        'yellow' : 'rgb(255,255,176)',
         'red' : 'rgb(255,176,176)',
         'green' : 'rgb(176,255,176)',
         'blue' : 'rgb(208,208,255)',
-        'yellow' : 'rgb(255,255,176)',
-        'white' : 'rgb(255,255,255)',
         'clear' : 'rgba(255,255,255, 0)'
     },
     ANNOTATIONCOLOUR = {
+        'white' : 'rgb(255,255,255)',
+        'yellow' : 'rgb(255,255,0)',
         'red' : 'rgb(255,0,0)',
         'green' : 'rgb(0,255,0)',
         'blue' : 'rgb(0,0,255)',
-        'yellow' : 'rgb(255,255,0)',
-        'white' : 'rgb(255,255,255)',
         'black' : 'rgb(0,0,0)'
     },
     CLICKTIMEOUT = 300,
@@ -301,7 +302,7 @@ EDITOR.prototype = {
      * @method link_handler
      */
     link_handler : function(e) {
-        var drawingcanvas;
+        var drawingcanvas, drawingregion;
         Y.log('Launch pdf editor');
         e.preventDefault();
 
@@ -326,6 +327,11 @@ EDITOR.prototype = {
             drawingcanvas.on('gesturemovestart', this.edit_start, null, this);
             drawingcanvas.on('gesturemove', this.edit_move, null, this);
             drawingcanvas.on('gesturemoveend', this.edit_end, null, this);
+
+            drawingregion = Y.one(SELECTOR.DRAWINGREGION),
+            Y.log(drawingregion);
+            drawingregion.delegate('click', this.open_comment_menu, SELECTOR.COMMENTMENU, this);
+            drawingregion.delegate('key', this.open_comment_menu, 'down:13', SELECTOR.COMMENTMENU, this);
 
             this.refresh_button_state();
         } else {
@@ -1240,40 +1246,58 @@ EDITOR.prototype = {
             offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY(),
             offsetdialogue = Y.one(SELECTOR.DIALOGUE).getXY(),
             offsetleft = offsetcanvas[0] - offsetdialogue[0],
-            offsettop = offsetcanvas[1] - offsetdialogue[1];
+            offsettop = offsetcanvas[1] - offsetdialogue[1],
+            container,
+            menu;
 
         // Lets add a contenteditable div.
         node = Y.Node.create('<textarea/>');
+        container = Y.Node.create('<div class="commentdrawable"/>');
+        menu = Y.Node.create('<a href="#"><img src="' + this.get('menuicon') + '"/></a>');
+        container.append(node);
+        container.append(menu);
         if (comment.width < 100) {
             comment.width = 100;
         }
-        node.setStyles({
+        container.setStyles({
             position: 'absolute',
             left: (parseInt(comment.x, 10) + offsetleft) + 'px',
-            top: (parseInt(comment.y, 10) + offsettop) + 'px',
+            top: (parseInt(comment.y, 10) + offsettop) + 'px'
+        });
+        node.setStyles({
             width: comment.width + 'px',
-            backgroundColor: COMMENTCOLOUR[comment.colour],
-            color: 'black',
-            border: '2px solid black',
-            fontSize: '16px',
-            fontFamily: 'helvetica',
-            minHeight: '1.2em',
-            resize: 'horizontal',
-            overflow: 'hidden',
-            padding: '4px'
+            backgroundColor: COMMENTCOLOUR[comment.colour]
         });
 
-        drawingregion.append(node);
-        drawable.nodes.push(node);
+        drawingregion.append(container);
+        drawable.nodes.push(container);
         node.set('value', comment.rawtext);
         node.setStyle('height', node.get('scrollHeight') - 8 + 'px');
+        this.attach_comment_events(comment, node, menu);
         if (focus) {
             node.focus();
         }
-        this.attach_comment_events(comment, node);
         comment.drawable = drawable;
 
         return drawable;
+    },
+
+    /**
+     * Event handler to open the quicklist/delete menu for a comment.
+     *
+     * @param Event e
+     * @protected
+     * @method open_comment_menu
+     */
+    open_comment_menu : function(e) {
+        var comment = e.target.getData('comment');
+
+        if (!comment) {
+            // The event triggered on the img tag, not the a.
+            comment = e.target.ancestor().getData('comment');
+        }
+
+        debugger;
     },
 
     /**
@@ -1285,7 +1309,7 @@ EDITOR.prototype = {
      * @param comment - The comment structure
      * @param node - The Y.Node representing the comment.
      */
-    attach_comment_events : function(comment, node) {
+    attach_comment_events : function(comment, node, menu) {
         // Save the text on blur.
         node.on('blur', function() {
             // Save the changes back to the comment.
@@ -1297,8 +1321,10 @@ EDITOR.prototype = {
                 this.delete_comment(comment);
             }
             this.save_current_page();
-
         }, this);
+
+        // For delegated event handler.
+        menu.setData('comment', comment);
 
         node.on('keyup', function() {
             var scrollHeight = node.get('scrollHeight') - 8;
@@ -1351,8 +1377,8 @@ EDITOR.prototype = {
             comment.x = x - offsetleft;
             comment.y = y - offsettop;
 
-            node.setX(x);
-            node.setY(y);
+            node.ancestor().setX(x);
+            node.ancestor().setY(y);
         });
     },
 
@@ -1518,7 +1544,7 @@ Y.extend(EDITOR, Y.Base, EDITOR.prototype, {
             validator : Y.Lang.isString,
             value : ''
         },
-        transparentbackground : {
+        menuicon : {
             validator : Y.Lang.isString,
             value : ''
         }

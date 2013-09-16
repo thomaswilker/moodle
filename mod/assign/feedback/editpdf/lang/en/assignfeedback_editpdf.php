@@ -35,6 +35,7 @@ $string['red'] = 'Red';
 $string['blue'] = 'Blue';
 $string['green'] = 'Green';
 $string['yellow'] = 'Yellow';
+$string['clear'] = 'Clear';
 $string['white'] = 'White';
 $string['black'] = 'Black';
 $string['pen'] = 'Pen';
