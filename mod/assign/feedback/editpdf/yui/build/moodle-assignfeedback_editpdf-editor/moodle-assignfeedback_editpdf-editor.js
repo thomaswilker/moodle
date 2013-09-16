@@ -1257,14 +1257,10 @@ EDITOR.prototype = {
             padding: '4px'
         });
 
-        node.on('keyup', function() {
-            var scrollHeight = node.get('scrollHeight') - 8;
-            this.setStyle('height', scrollHeight + 'px');
-        });
-
         drawingregion.append(node);
         drawable.nodes.push(node);
         node.set('value', comment.rawtext);
+        node.setStyle('height', node.get('scrollHeight') - 8 + 'px');
         if (focus) {
             node.focus();
         }
@@ -1274,6 +1270,15 @@ EDITOR.prototype = {
         return drawable;
     },
 
+    /**
+     * Comment nodes have a bunch of event handlers attached to them directly.
+     * This is all done here for neatness.
+     *
+     * @protected
+     * @method attach_comment_events
+     * @param comment - The comment structure
+     * @param node - The Y.Node representing the comment.
+     */
     attach_comment_events : function(comment, node) {
         // Save the text on blur.
         node.on('blur', function() {
@@ -1288,6 +1293,11 @@ EDITOR.prototype = {
             this.save_current_page();
 
         }, this);
+
+        node.on('keyup', function() {
+            var scrollHeight = node.get('scrollHeight') - 8;
+            this.setStyle('height', scrollHeight + 'px');
+        });
 
         node.on('gesturemovestart', function(e) {
             node.setData('dragging', true);
@@ -1310,31 +1320,30 @@ EDITOR.prototype = {
                 offsetleft = offsetcanvas[0],
                 offsettop = offsetcanvas[1];
 
-                canvaswidth = parseInt(canvas.getStyle('width'), 10);
-                canvasheight = parseInt(canvas.getStyle('height'), 10);
-                nodewidth = parseInt(node.getStyle('width'), 10);
-                nodeheight = parseInt(node.getStyle('height'), 10);
+            canvaswidth = parseInt(canvas.getStyle('width'), 10);
+            canvasheight = parseInt(canvas.getStyle('height'), 10);
+            nodewidth = parseInt(node.getStyle('width'), 10);
+            nodeheight = parseInt(node.getStyle('height'), 10);
 
-                // Constrain the comment to the canvas.
-                if (x < offsetleft) {
-                    x = offsetleft;
-                }
-                if (y < offsettop) {
-                    y = offsettop;
-                }
-                if (x - offsetleft + nodewidth > canvaswidth) {
-                    x = offsetleft + canvaswidth - nodewidth;
-                }
-                if (y - offsettop + nodeheight > canvasheight) {
-                    y = offsettop + canvasheight - nodeheight;
-                }
+            // Constrain the comment to the canvas.
+            if (x < offsetleft) {
+                x = offsetleft;
+            }
+            if (y < offsettop) {
+                y = offsettop;
+            }
+            if (x - offsetleft + nodewidth > canvaswidth) {
+                x = offsetleft + canvaswidth - nodewidth;
+            }
+            if (y - offsettop + nodeheight > canvasheight) {
+                y = offsettop + canvasheight - nodeheight;
+            }
 
-                comment.x = x - offsetleft;
-                comment.y = y - offsettop;
+            comment.x = x - offsetleft;
+            comment.y = y - offsettop;
 
-                node.setX(x);
-                node.setY(y);
-            e.preventDefault();
+            node.setX(x);
+            node.setY(y);
         });
     },
 
