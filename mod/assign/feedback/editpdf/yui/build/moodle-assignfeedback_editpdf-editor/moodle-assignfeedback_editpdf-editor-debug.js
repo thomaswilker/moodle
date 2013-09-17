@@ -308,6 +308,7 @@ EDITOR.prototype = {
         button.setStyle('backgroundImage', 'none');
         button.setStyle('backgroundColor', ANNOTATIONCOLOUR[this.currentannotationcolour]);
 
+        /** We are still playing with the layout - just comment this for now.
         if (this.currenttool === 'comment') {
             button = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
             button.show();
@@ -329,7 +330,7 @@ EDITOR.prototype = {
             button.show();
             button = Y.one(SELECTOR.STAMPSBUTTON);
             button.hide();
-        }
+        } **/
 
         currenttoolnode = Y.one(TOOLSELECTOR[this.currenttool]);
         currenttoolnode.addClass('assignfeedback_editpdf_selectedbutton');

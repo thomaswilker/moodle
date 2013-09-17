@@ -28,6 +28,18 @@
     display: none;
 }
 
+.assignfeedback_editpdf_widget .navigation,
+.assignfeedback_editpdf_widget .toolbar {
+    display: inline-block;
+}
+.assignfeedback_editpdf_widget .pageheader {
+    text-align: left;
+}
+
+.dir-rtl .assignfeedback_editpdf_widget .pageheader {
+    text-align: right;
+}
+
 .assignfeedback_editpdf_colourpicker ul {
     margin: 0px;
 }

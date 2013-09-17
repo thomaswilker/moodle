@@ -83,7 +83,6 @@ class comments_quick_list {
      */
     public static function remove_comment($commentid) {
         global $DB, $USER;
-
-        return $DB->delete_record('assignfeedback_editpdf_quick', array('id'=>$commentid, 'userid'=>$USER->id));
+        return $DB->delete_records('assignfeedback_editpdf_quick', array('id'=>$commentid, 'userid'=>$USER->id));
     }
 }

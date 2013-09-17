@@ -106,38 +106,43 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
         // Create the page navigation.
         $navigation = '';
 
-        $navigation .= html_writer::tag('button', get_string('previous'), array('disabled'=>'true', 'class'=>'navigate-previous-button'));
+        $navigation .= html_writer::tag('button', '⤎', array('disabled'=>'true', 'class'=>'navigate-previous-button'));
         $pageoptions = html_writer::tag('option', get_string('gotopage', 'assignfeedback_editpdf'), array('value'=>''));
         $navigation .= html_writer::tag('select', $pageoptions, array('disabled'=>'true', 'class'=>'navigate-page-select'));
-        $navigation .= html_writer::tag('button', get_string('next'), array('disabled'=>'true', 'class'=>'navigate-next-button'));
-        $navigation .= $this->render_toolbar_button('search', 'searchcomments');
+        $navigation .= html_writer::tag('button', '⤏', array('disabled'=>'true', 'class'=>'navigate-next-button'));
 
         $attributes = array('disabled'=>'true', 'class'=>'savebutton');
-        $navigation .= html_writer::tag('button', get_string('generatefeedback', 'assignfeedback_editpdf'), $attributes);
+        $navigation .= html_writer::tag('button', '⤾', $attributes);
 
 
         $navigation = html_writer::div($navigation, 'navigation', array('role'=>'navigation'));
 
         $toolbar = '';
 
-        // Colour chooser.
-        $toolbar .= $this->render_toolbar_button('commentcolour', 'commentcolour');
-        $toolbar .= $this->render_toolbar_button('annotationcolour', 'annotationcolour');
-        $toolbar .= $this->render_toolbar_button('currentstamp', 'currentstamp');
-
-        // Tools.
+        // Comments.
         $toolbar .= $this->render_toolbar_button('comment', 'comment');
+        $toolbar .= $this->render_toolbar_button('search', 'searchcomments');
+        $toolbar .= $this->render_toolbar_button('commentcolour', 'commentcolour');
+        $toolbar .= $this->spacer(array('width'=>15));
+
+        // Other Tools.
+        $toolbar .= $this->render_toolbar_button('select', 'select');
         $toolbar .= $this->render_toolbar_button('pen', 'pen');
         $toolbar .= $this->render_toolbar_button('line', 'line');
         $toolbar .= $this->render_toolbar_button('rectangle', 'rectangle');
         $toolbar .= $this->render_toolbar_button('oval', 'oval');
         $toolbar .= $this->render_toolbar_button('highlight', 'highlight');
+        $toolbar .= $this->render_toolbar_button('annotationcolour', 'annotationcolour');
+        $toolbar .= $this->spacer(array('width'=>15));
+
+        // Stamps
         $toolbar .= $this->render_toolbar_button('stamp', 'stamp');
-        $toolbar .= $this->render_toolbar_button('select', 'select');
+        $toolbar .= $this->render_toolbar_button('currentstamp', 'currentstamp');
 
         $toolbar = html_writer::div($toolbar, 'toolbar', array('role'=>'toolbar'));
 
-        $body = $navigation . $toolbar . '<hr/>';
+        $pageheader = html_writer::div($navigation . $toolbar, 'pageheader');
+        $body = $pageheader . '<hr/>';
 
         $loading = $this->pix_icon('i/loading', get_string('loadingeditor', 'assignfeedback_editpdf'), 'moodle', array('class'=>'loading'));
         $canvas = html_writer::div($loading, 'drawingcanvas');
