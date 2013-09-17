@@ -578,7 +578,7 @@ EDITOR.prototype = {
             searchcommentsbutton;
 
         // Setup the tool buttons.
-        Y.each(searchcommentsbutton, function(selector, tool) {
+        Y.each(TOOLSELECTOR, function(selector, tool) {
             toolnode = Y.one(selector);
             toolnode.on('click', this.handle_toolbutton, this, tool);
             toolnode.on('key', this.handle_toolbutton, 'down:13', this, tool);
