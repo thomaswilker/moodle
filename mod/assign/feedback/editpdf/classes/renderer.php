@@ -110,6 +110,11 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
         $pageoptions = html_writer::tag('option', get_string('gotopage', 'assignfeedback_editpdf'), array('value'=>''));
         $navigation .= html_writer::tag('select', $pageoptions, array('disabled'=>'true', 'class'=>'navigate-page-select'));
         $navigation .= html_writer::tag('button', get_string('next'), array('disabled'=>'true', 'class'=>'navigate-next-button'));
+        $navigation .= $this->render_toolbar_button('search', 'searchcomments');
+
+        $attributes = array('disabled'=>'true', 'class'=>'savebutton');
+        $navigation .= html_writer::tag('button', get_string('generatefeedback', 'assignfeedback_editpdf'), $attributes);
+
 
         $navigation = html_writer::div($navigation, 'navigation', array('role'=>'navigation'));
 
@@ -126,6 +131,7 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
         $toolbar .= $this->render_toolbar_button('line', 'line');
         $toolbar .= $this->render_toolbar_button('rectangle', 'rectangle');
         $toolbar .= $this->render_toolbar_button('oval', 'oval');
+        $toolbar .= $this->render_toolbar_button('highlight', 'highlight');
         $toolbar .= $this->render_toolbar_button('stamp', 'stamp');
         $toolbar .= $this->render_toolbar_button('select', 'select');
 
@@ -139,10 +145,7 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
 
         $body .= '<hr/>';
 
-        $attributes = array('disabled'=>'true', 'class'=>'savebutton');
-        $footer = html_writer::tag('button', get_string('generatefeedback', 'assignfeedback_editpdf'), $attributes);
-        $attributes = array('disabled'=>'true', 'class'=>'cancelbutton');
-        $footer .= html_writer::tag('button', get_string('savechanges'), $attributes);
+        $footer = '';
         $editorparams = array(array('header'=>$header,
                                     'body'=>$body,
                                     'footer'=>$footer,

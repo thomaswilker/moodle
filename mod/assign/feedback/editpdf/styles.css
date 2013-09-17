@@ -32,11 +32,30 @@
     margin: 0px;
 }
 
+.assignfeedback_editpdf_commentmenu li.quicklist_comment {
+    width: 150px;
+}
+.assignfeedback_editpdf_commentmenu li.quicklist_comment a {
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 130px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.assignfeedback_editpdf_commentmenu a.delete_quicklist_comment {
+    float: right;
+}
+.dir-rtl .assignfeedback_editpdf_commentmenu a.delete_quicklist_comment {
+    float: left;
+}
 .assignfeedback_editpdf_commentmenu .moodle-dialogue-hd,
 .assignfeedback_editpdf_commentmenu .moodle-dialogue-ft,
 .assignfeedback_editpdf_colourpicker .moodle-dialogue-ft,
 .assignfeedback_editpdf_colourpicker .moodle-dialogue-hd {
     display: none;
+}
+.assignfeedback_editpdf_menu li hr {
+    margin: 0px;
 }
 .assignfeedback_editpdf_menu li a {
     text-decoration: none;

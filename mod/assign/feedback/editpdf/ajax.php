@@ -24,6 +24,7 @@
 
 use \assignfeedback_editpdf\document_services;
 use \assignfeedback_editpdf\page_editor;
+use \assignfeedback_editpdf\comments_quick_list;
 
 if (!defined('AJAX_SCRIPT')) {
     define('AJAX_SCRIPT', true);
@@ -122,7 +123,34 @@ if ($action == 'loadallpages') {
 
     echo json_encode($response);
     die();
+} else if ($action == 'loadquicklist') {
+    require_capability('mod/assign:grade', $context);
 
+    $result = comments_quick_list::get_comments();
+
+    echo json_encode($result);
+    die();
+
+} else if ($action == 'addtoquicklist') {
+    require_capability('mod/assign:grade', $context);
+
+    $comment = required_param('commenttext', PARAM_RAW);
+    $width = required_param('width', PARAM_INT);
+    $colour = required_param('colour', PARAM_ALPHA);
+
+    $result = comments_quick_list::add_comment($comment, $width, $colour);
+
+    echo json_encode($result);
+    die();
+} else if ($action == 'removefromquicklist') {
+    require_capability('mod/assign:grade', $context);
+
+    $commentid = required_param('commentid', PARAM_INT);
+
+    $result = comments_quick_list::remove_comment($commentid);
+
+    echo json_encode($result);
+    die();
 } else if ($action == 'deletefeedbackdocument') {
     require_capability('mod/assign:grade', $context);
 

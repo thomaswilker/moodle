@@ -31,7 +31,6 @@ var AJAXBASE = M.cfg.wwwroot + '/mod/assign/feedback/editpdf/ajax.php',
         LOADINGICON : '.' + CSS.DIALOGUE + ' .loading',
         DRAWINGREGION : '.' + CSS.DIALOGUE + ' .drawingregion',
         DRAWINGCANVAS : '.' + CSS.DIALOGUE + ' .drawingcanvas',
-        CANCEL : '.' + CSS.DIALOGUE + ' .cancelbutton',
         SAVE : '.' + CSS.DIALOGUE + ' .savebutton',
         COMMENTCOLOURBUTTON : '.' + CSS.DIALOGUE + ' .commentcolourbutton',
         COMMENTMENU : ' .commentdrawable a',
@@ -256,6 +255,14 @@ EDITOR.prototype = {
     currentpenpath : [],
 
     /**
+     * The users comments quick list
+     * @property quicklist
+     * @type Array
+     * @protected
+     */
+    quicklist : [],
+
+    /**
      * Called during the initialisation process of the object.
      * @method initializer
      */
@@ -386,7 +393,7 @@ EDITOR.prototype = {
             config;
 
         config = {
-            method: 'get',
+            method: 'post',
             context: this,
             sync: false,
             data : {
@@ -466,6 +473,7 @@ EDITOR.prototype = {
         this.pages = data.pages;
 
         // Update the ui.
+        this.load_quicklist();
         this.setup_navigation();
         this.change_page();
         this.setup_save_cancel();
@@ -525,6 +533,7 @@ EDITOR.prototype = {
             lightbox: false,
             visible: false,
             bodyContent: body,
+            zIndex: 100,
             footerContent: '',
             align: {node: node, points: [Y.WidgetPositionAlign.TL, Y.WidgetPositionAlign.BL]}
         });
@@ -622,15 +631,9 @@ EDITOR.prototype = {
      * @method setup_save_cancel
      */
     setup_save_cancel : function() {
-        var cancel,
-            save;
+        var save;
 
-        cancel = Y.one(SELECTOR.CANCEL),
         save = Y.one(SELECTOR.SAVE);
-
-        cancel.on('mousedown', this.handle_cancel, this);
-        cancel.on('key', this.handle_cancel, 'down:13', this);
-        cancel.removeAttribute('disabled');
 
         save.on('mousedown', this.handle_save, this);
         save.on('key', this.handle_save, 'down:13', this);
@@ -783,7 +786,7 @@ EDITOR.prototype = {
             if (!this.currentpenposition.x || !this.currentpenposition.y ||
                 this.currentpenposition.x !== this.currentedit.end.x ||
                 this.currentpenposition.y !== this.currentedit.end.y) {
-                // save the mouse postion to the list of position.
+                // Save the mouse postion to the list of position.
                 if (this.currentpenpath.length === 0) {
                     this.currentpenpath.push({x:this.currentedit.start.x,y:this.currentedit.start.y});
                 }
@@ -1313,6 +1316,192 @@ EDITOR.prototype = {
     },
 
     /**
+     * Event handler to load the users quick comments list.
+     *
+     * @protected
+     * @method load_quicklist
+     */
+    load_quicklist : function() {
+        var ajaxurl = AJAXBASE,
+            config;
+
+        config = {
+            method: 'get',
+            context: this,
+            sync: false,
+            data : {
+                'sesskey' : M.cfg.sesskey,
+                'action' : 'loadquicklist',
+                'userid' : this.get('userid'),
+                'attemptnumber' : this.get('attemptnumber'),
+                'assignmentid' : this.get('assignmentid')
+            },
+            on: {
+                success: function(tid, response) {
+                    var jsondata;
+                    try {
+                        jsondata = Y.JSON.parse(response.responseText);
+                        if (jsondata.error) {
+                            return new M.core.ajaxException(jsondata);
+                        } else {
+                            this.quicklist = [];
+                            Y.each(jsondata, function(comment) {
+                                this.quicklist.push(comment);
+                            }, this);
+                        }
+                    } catch (e) {
+                        return new M.core.exception(e);
+                    }
+                },
+                failure: function(tid, response) {
+                    return M.core.exception(response.responseText);
+                }
+            }
+        };
+
+        Y.io(ajaxurl, config);
+    },
+
+    /**
+     * Event handler to add a comment to the users quicklist.
+     *
+     * @protected
+     * @method add_to_quicklist
+     */
+    add_to_quicklist : function() {
+        var ajaxurl = AJAXBASE,
+            config;
+
+        this.commentmenu.hide();
+        // Do not save empty comments.
+        if (this.currentcomment.rawtext === '') {
+            return;
+        }
+
+        config = {
+            method: 'post',
+            context: this,
+            sync: false,
+            data : {
+                'sesskey' : M.cfg.sesskey,
+                'action' : 'addtoquicklist',
+                'userid' : this.get('userid'),
+                'commenttext' : this.currentcomment.rawtext,
+                'width' : this.currentcomment.width,
+                'colour' : this.currentcomment.colour,
+                'attemptnumber' : this.get('attemptnumber'),
+                'assignmentid' : this.get('assignmentid')
+            },
+            on: {
+                success: function(tid, response) {
+                    var jsondata;
+                    try {
+                        jsondata = Y.JSON.parse(response.responseText);
+                        if (jsondata.error) {
+                            return new M.core.ajaxException(jsondata);
+                        } else {
+                            this.quicklist.push(jsondata);
+                        }
+                    } catch (e) {
+                        return new M.core.exception(e);
+                    }
+                },
+                failure: function(tid, response) {
+                    return M.core.exception(response.responseText);
+                }
+            }
+        };
+
+        Y.io(ajaxurl, config);
+    },
+
+    /**
+     * Event handler to remove a comment from the users quicklist.
+     *
+     * @protected
+     * @method remove_from_quicklist
+     */
+    remove_from_quicklist : function(e) {
+        var target = e.target,
+            comment = target.getData('comment'),
+            ajaxurl = AJAXBASE,
+            config;
+
+        this.commentmenu.hide();
+
+        if (!comment) {
+            target = target.ancestor();
+            comment = target.getData('comment');
+        }
+
+        // Should not happen.
+        if (!comment) {
+            return;
+        }
+
+        config = {
+            method: 'post',
+            context: this,
+            sync: false,
+            data : {
+                'sesskey' : M.cfg.sesskey,
+                'action' : 'removefromquicklist',
+                'userid' : this.get('userid'),
+                'commentid' : comment.id,
+                'attemptnumber' : this.get('attemptnumber'),
+                'assignmentid' : this.get('assignmentid')
+            },
+            on: {
+                success: function() {
+                    var i;
+
+                    // Find and remove the comment from the quicklist.
+                    i = this.quicklist.indexOf(comment);
+                    if (i >= 0) {
+                        this.quicklist.splice(i, 1);
+                    }
+                },
+                failure: function(tid, response) {
+                    return M.core.exception(response.responseText);
+                }
+            }
+        };
+
+        Y.io(ajaxurl, config);
+    },
+
+    /**
+     * A quick comment was selected in the list, update the active comment and redraw the page.
+     *
+     * @param Event e
+     * @protected
+     * @method set_comment_from_quick_comment
+     */
+    set_comment_from_quick_comment : function(e) {
+        var target = e.target,
+            comment = target.getData('comment');
+
+        this.commentmenu.hide();
+
+        if (!comment) {
+            target = target.ancestor();
+            comment = target.getData('comment');
+        }
+
+        // Should not happen.
+        if (!comment || !this.currentcomment) {
+            return;
+        }
+        this.currentcomment.rawtext = comment.rawtext;
+        this.currentcomment.width = comment.width;
+        this.currentcomment.colour = comment.colour;
+
+        this.save_current_page();
+
+        this.redraw();
+    },
+
+    /**
      * Event handler to open the quicklist/delete menu for a comment.
      *
      * @param Event e
@@ -1343,8 +1532,8 @@ EDITOR.prototype = {
             commentlinks = Y.Node.create('<ul role="menu" class="assignfeedback_editpdf_menu"/>');
 
             link = Y.Node.create('<li><a tabindex="-1" href="#">' + M.util.get_string('addtoquicklist', 'assignfeedback_editpdf') + '</a></li>');
-            link.on('click', function() { this.commentmenu.hide(); }, this);
-            link.on('key', function() { this.commentmenu.hide(); }, 'enter,space', this);
+            link.on('click', this.add_to_quicklist, this);
+            link.on('key', this.add_to_quicklist, 'enter,space', this);
 
             commentlinks.append(link);
 
@@ -1354,6 +1543,9 @@ EDITOR.prototype = {
 
             commentlinks.append(link);
 
+            link = Y.Node.create('<li><hr/></li>');
+            commentlinks.append(link);
+
             this.commentmenu = new M.core.dialogue({
                 extraClasses : ['assignfeedback_editpdf_commentmenu'],
                 draggable: false,
@@ -1361,6 +1553,7 @@ EDITOR.prototype = {
                 lightbox: false,
                 width: 'auto',
                 visible: false,
+                zIndex: 100,
                 bodyContent: commentlinks,
                 footerContent: '',
                 align: {node: target, points: [Y.WidgetPositionAlign.TL, Y.WidgetPositionAlign.BL]}
@@ -1374,7 +1567,32 @@ EDITOR.prototype = {
             }, this);
         } else {
             this.commentmenu.align( target, [Y.WidgetPositionAlign.TL, Y.WidgetPositionAlign.BL]);
+            commentlinks = this.commentmenu.get('boundingBox').one('ul');
+            commentlinks.all('.quicklist_comment').remove(true);
         }
+
+        // Now build the list of quicklist comments.
+        Y.each(this.quicklist, function(comment) {
+            var listitem = Y.Node.create('<li class="quicklist_comment"></li>'),
+                linkitem = Y.Node.create('<a href="#" tabindex="-1">' + comment.rawtext + '</a>'),
+                deletelinkitem = Y.Node.create('<a href="#" tabindex="-1" class="delete_quicklist_comment">' +
+                                               '<img src="' + M.util.image_url('t/delete', 'core') + '" ' +
+                                               'alt="' + M.util.get_string('deletecomment', 'assignfeedback_editpdf') + '"/>' +
+                                               '</a>');
+            listitem.append(linkitem);
+            listitem.append(deletelinkitem);
+            listitem.setData('comment', comment);
+
+            commentlinks.append(listitem);
+
+            linkitem.on('click', this.set_comment_from_quick_comment, this);
+            linkitem.on('key', this.set_comment_from_quick_comment, 'space,enter', this);
+
+            deletelinkitem.setData('comment', comment);
+
+            deletelinkitem.on('click', this.remove_from_quicklist, this);
+            deletelinkitem.on('key', this.remove_from_quicklist, 'space,enter', this);
+        }, this);
 
         this.commentmenu.show();
     },
@@ -1498,7 +1716,7 @@ EDITOR.prototype = {
     /**
      * Load the image for this pdf page and remove the loading icon (if there).
      * @protected
-     * @method all_pages_loaded
+     * @method change_page
      */
     change_page : function() {
         var drawingcanvas = Y.one(SELECTOR.DRAWINGCANVAS),
@@ -1531,7 +1749,7 @@ EDITOR.prototype = {
      * Now we know how many pages there are,
      * we can enable the navigation controls.
      * @protected
-     * @method all_pages_loaded
+     * @method setup_navigation
      */
     setup_navigation : function() {
         var pageselect,
