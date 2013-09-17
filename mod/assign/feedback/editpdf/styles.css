@@ -16,6 +16,14 @@
     margin: 0px 0px 10px 5px;
 }
 
+.assignfeedback_editpdf_searchcomments ul {
+    max-height: 400px;
+    overflow-y: auto;
+}
+.assignfeedback_editpdf_searchcomments a pre {
+    font-family: helvetica;
+}
+
 .assignfeedback_editpdf_downloadlink {
     margin-top: 1em;
 }

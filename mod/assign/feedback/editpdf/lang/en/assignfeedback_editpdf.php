@@ -27,6 +27,7 @@ defined('MOODLE_INTERNAL') || die();
 $string['pluginname'] = 'Annotate PDF';
 $string['enabled'] = 'Annotate PDF';
 $string['editpdf'] = 'Annotate PDF';
+$string['filter'] = 'Filter comments...';
 $string['downloadfeedback'] = 'Download feedback PDF';
 $string['deletefeedback'] = 'Delete feedback PDF';
 $string['deletecomment'] = 'Delete comment';

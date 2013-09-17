@@ -29,6 +29,9 @@ var AJAXBASE = M.cfg.wwwroot + '/mod/assign/feedback/editpdf/ajax.php',
     SELECTOR = {
         PREVIOUSBUTTON : '.' + CSS.DIALOGUE + ' .navigate-previous-button',
         NEXTBUTTON : '.' + CSS.DIALOGUE + ' .navigate-next-button',
+        SEARCHCOMMENTSBUTTON : '.' + CSS.DIALOGUE + ' .searchcommentsbutton',
+        SEARCHFILTER : '.assignfeedback_editpdf_searchcomments input',
+        SEARCHCOMMENTSLIST : '.assignfeedback_editpdf_searchcomments ul',
         PAGESELECT : '.' + CSS.DIALOGUE + ' .navigate-page-select',
         LOADINGICON : '.' + CSS.DIALOGUE + ' .loading',
         DRAWINGREGION : '.' + CSS.DIALOGUE + ' .drawingregion',
@@ -213,6 +216,9 @@ EDITOR.prototype = {
 
     /**
      * The colour picker dialogue box.
+     * @property currentcolourpicker
+     * @type M.core.dialogue
+     * @protected
      */
     currentcolourpicker : null,
 
@@ -263,6 +269,14 @@ EDITOR.prototype = {
      * @protected
      */
     quicklist : [],
+
+    /**
+     * The search comments window.
+     * @property searchcommentswindow
+     * @type M.core.dialogue
+     * @protected
+     */
+    searchcommentswindow : null,
 
     /**
      * Called during the initialisation process of the object.
@@ -565,17 +579,22 @@ EDITOR.prototype = {
     setup_toolbar : function() {
         var toolnode,
             commentcolourbutton,
-            annotationcolourbutton;
+            annotationcolourbutton,
+            searchcommentsbutton;
 
         // Setup the tool buttons.
-        Y.each(TOOLSELECTOR, function(selector, tool) {
+        Y.each(searchcommentsbutton, function(selector, tool) {
             toolnode = Y.one(selector);
             toolnode.on('click', this.handle_toolbutton, this, tool);
             toolnode.on('key', this.handle_toolbutton, 'down:13', this, tool);
             toolnode.setAttribute('aria-pressed', 'false');
         }, this);
 
-         // Set the default tool.
+        // Set the default tool.
+        searchcommentsbutton = Y.one(SELECTOR.SEARCHCOMMENTSBUTTON);
+        searchcommentsbutton.on('click', this.open_search_comments, this);
+        searchcommentsbutton.on('key', this.open_search_comments, 'down:13', this);
+
 
         commentcolourbutton = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
         this.setup_colour_picker(commentcolourbutton, COMMENTCOLOUR, function (e) {
@@ -1502,6 +1521,111 @@ EDITOR.prototype = {
         this.save_current_page();
 
         this.redraw();
+    },
+
+    /**
+     * Event handler to filter the list of comments.
+     *
+     * @protected
+     * @method filter_search_comments
+     */
+    filter_search_comments : function() {
+        var filternode,
+            commentslist,
+            filtertext;
+
+        filternode = Y.one(SELECTOR.SEARCHFILTER);
+        commentslist = Y.one(SELECTOR.SEARCHCOMMENTSLIST);
+
+        filtertext = filternode.get('value');
+
+        commentslist.all('li').each(function (node) {
+            if (node.get('text').indexOf(filtertext) !== -1) {
+                node.show();
+            } else {
+                node.hide();
+            }
+        });
+
+
+    },
+
+    /**
+     * Event handler to focus on a selected comment.
+     *
+     * @param Event e
+     * @protected
+     * @method focus_on_comment
+     */
+    focus_on_comment : function(e) {
+        var target = e.target.ancestor('li'),
+            comment = target.getData('comment');
+
+        this.searchcommentswindow.hide();
+
+        if (comment.pageno === this.currentpage) {
+            comment.drawable.nodes[0].one('textarea').focus();
+        } else {
+            // comment is on a different page.
+            this.currentpage = comment.pageno;
+            this.change_page();
+            comment.drawable.nodes[0].one('textarea').focus();
+        }
+    },
+
+    /**
+     * Event handler to open the comment search interface.
+     *
+     * @param Event e
+     * @protected
+     * @method open_search_comments
+     */
+    open_search_comments : function(e) {
+        var commentlist, commentfilter, container, placeholder;
+
+        if (!this.searchcommentswindow) {
+            container = Y.Node.create('<div/>');
+
+            placeholder = M.util.get_string('filter', 'assignfeedback_editpdf');
+            commentfilter = Y.Node.create('<input type="text" size="20" placeholder="' + placeholder + '"/>');
+            container.append(commentfilter);
+            commentlist = Y.Node.create('<ul role="menu" class="assignfeedback_editpdf_menu"/>');
+            container.append(commentlist);
+
+            this.searchcommentswindow = new M.core.dialogue({
+                extraClasses : ['assignfeedback_editpdf_searchcomments'],
+                draggable: false,
+                centered: true,
+                lightbox: true,
+                width: '400px',
+                visible: false,
+                zIndex: 100,
+                headerContent: M.util.get_string('searchcomments', 'assignfeedback_editpdf'),
+                bodyContent: container,
+                footerContent: ''
+            });
+
+            commentfilter.on('keyup', this.filter_search_comments, null, this);
+
+            commentlist.delegate('click', this.focus_on_comment, 'a', this);
+            commentlist.delegate('key', this.focus_on_comment, 'enter,space', 'a', this);
+        } else {
+            commentlist = this.searchcommentswindow.get('boundingBox').one('ul');
+            commentlist.all('li').remove(true);
+        }
+
+        // Rebuild the latest list of comments.
+        Y.each(this.pages, function(page) {
+            Y.each(page.comments, function(comment) {
+                var commentnode = Y.Node.create('<li><a href="#" tabindex="-1"><pre>' + comment.rawtext + '</pre></a></li>');
+                commentlist.append(commentnode);
+                commentnode.setData('comment', comment);
+            }, this);
+        }, this);
+
+        this.searchcommentswindow.centerDialogue();
+        this.searchcommentswindow.show();
+        e.preventDefault();
     },
 
     /**
