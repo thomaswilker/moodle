@@ -93,6 +93,10 @@ ul.assignfeedback_editpdf_menu {
     margin: 0px;
 }
 
+.assignfeedback_editpdf_widget .pageheader button {
+    padding: 4px 10px;
+}
+
 .assignfeedback_editpdf_colourpicker li button {
     width: 42px;
     height: 30px;
