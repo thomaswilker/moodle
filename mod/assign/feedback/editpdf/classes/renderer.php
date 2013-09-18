@@ -102,6 +102,7 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
         $html .= html_writer::div($links, 'visibleifjs');
         $header = get_string('pluginname', 'assignfeedback_editpdf');
         $body = '';
+        $spacer = '<span class="verticaldivider"></span>';
 
         // Create the page navigation.
         $navigation = '';
@@ -111,38 +112,52 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
         $navigation .= html_writer::tag('select', $pageoptions, array('disabled'=>'true', 'class'=>'navigate-page-select'));
         $navigation .= html_writer::tag('button', '⤏', array('disabled'=>'true', 'class'=>'navigate-next-button'));
 
-        $attributes = array('disabled'=>'true', 'class'=>'savebutton');
-        $navigation .= html_writer::tag('button', '⤾', $attributes);
-
-
         $navigation = html_writer::div($navigation, 'navigation', array('role'=>'navigation'));
 
-        $toolbar = '';
+        $toolbar1 = '';
+        $toolbar2 = '';
+        $toolbar3 = '';
+        $toolbar4 = '';
+        $toolbar5 = '';
 
         // Comments.
-        $toolbar .= $this->render_toolbar_button('comment', 'comment');
-        $toolbar .= $this->render_toolbar_button('search', 'searchcomments');
-        $toolbar .= $this->render_toolbar_button('commentcolour', 'commentcolour');
-        $toolbar .= $this->spacer(array('width'=>15));
+        $toolbar1 .= $this->render_toolbar_button('comment', 'comment');
+        $toolbar1 .= $this->render_toolbar_button('search', 'searchcomments');
+        $toolbar1 .= $this->render_toolbar_button('commentcolour', 'commentcolour');
+        $toolbar1 = html_writer::div($toolbar1, 'toolbar', array('role'=>'toolbar'));
+
+        // Select Tool.
+        $toolbar2 .= $this->render_toolbar_button('select', 'select');
+        $toolbar2 = html_writer::div($toolbar2, 'toolbar', array('role'=>'toolbar'));
 
         // Other Tools.
-        $toolbar .= $this->render_toolbar_button('select', 'select');
-        $toolbar .= $this->render_toolbar_button('pen', 'pen');
-        $toolbar .= $this->render_toolbar_button('line', 'line');
-        $toolbar .= $this->render_toolbar_button('rectangle', 'rectangle');
-        $toolbar .= $this->render_toolbar_button('oval', 'oval');
-        $toolbar .= $this->render_toolbar_button('highlight', 'highlight');
-        $toolbar .= $this->render_toolbar_button('annotationcolour', 'annotationcolour');
-        $toolbar .= $this->spacer(array('width'=>15));
+        $toolbar3 = $this->render_toolbar_button('pen', 'pen');
+        $toolbar3 .= $this->render_toolbar_button('line', 'line');
+        $toolbar3 .= $this->render_toolbar_button('rectangle', 'rectangle');
+        $toolbar3 .= $this->render_toolbar_button('oval', 'oval');
+        $toolbar3 .= $this->render_toolbar_button('highlight', 'highlight');
+        $toolbar3 .= $this->render_toolbar_button('annotationcolour', 'annotationcolour');
+        $toolbar3 = html_writer::div($toolbar3, 'toolbar', array('role'=>'toolbar'));
 
-        // Stamps
-        $toolbar .= $this->render_toolbar_button('stamp', 'stamp');
-        $toolbar .= $this->render_toolbar_button('currentstamp', 'currentstamp');
+        // Stamps.
+        $toolbar4 .= $this->render_toolbar_button('stamp', 'stamp');
+        $toolbar4 .= $this->render_toolbar_button('currentstamp', 'currentstamp');
+        $toolbar4 = html_writer::div($toolbar4, 'toolbar', array('role'=>'toolbar'));
 
-        $toolbar = html_writer::div($toolbar, 'toolbar', array('role'=>'toolbar'));
+        // Generate PDF.
+        $attributes = array('disabled'=>'true', 'class'=>'savebutton');
+        $toolbar5 .= html_writer::tag('button', '⤾', $attributes);
 
-        $pageheader = html_writer::div($navigation . $toolbar, 'pageheader');
-        $body = $pageheader . '<hr/>';
+        $toolbar5 = html_writer::div($toolbar5, 'toolbar', array('role'=>'toolbar'));
+
+        $pageheader = html_writer::div($navigation . $spacer .
+                                       $toolbar1 . $spacer .
+                                       $toolbar2 . $spacer .
+                                       $toolbar3 . $spacer .
+                                       $toolbar4 . $spacer .
+                                       $toolbar5,
+                                        'pageheader');
+        $body = $pageheader;
 
         $loading = $this->pix_icon('i/loading', get_string('loadingeditor', 'assignfeedback_editpdf'), 'moodle', array('class'=>'loading'));
         $canvas = html_writer::div($loading, 'drawingcanvas');
