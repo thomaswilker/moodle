@@ -28,6 +28,7 @@
     background-image: none;
     background-color: white;
     margin: 6px 0 6px 5px;
+    padding: 4px 9px;
 }
 
 .assignfeedback_editpdf_widget .verticaldivider {
@@ -120,20 +121,17 @@ ul.assignfeedback_editpdf_menu {
     margin: 0px;
 }
 
-.assignfeedback_editpdf_widget .pageheader button {
-    padding: 4px 9px;
-}
-
 .assignfeedback_editpdf_colourpicker li button {
     width: 42px;
     height: 30px;
 }
 
-.assignfeedback_editpdf_selectedbutton:hover {
+.assignfeedback_editpdf_widget .pageheader button.assignfeedback_editpdf_selectedbutton:hover {
     background-image: none;
     background-color: #CCF;
 }
-.assignfeedback_editpdf_selectedbutton {
+
+.assignfeedback_editpdf_widget .pageheader button.assignfeedback_editpdf_selectedbutton {
     background-color: #CCF;
     background-image: none;
 }
