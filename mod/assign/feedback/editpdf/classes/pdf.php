@@ -247,25 +247,26 @@ class pdf extends \FPDI {
         }
         switch ($colour) {
             case 'yellow':
-                $this->SetDrawColor(255, 255, 0);
+                $colourarray = array(255, 255, 0);
                 break;
             case 'green':
-                $this->SetDrawColor(0, 255, 0);
+                $colourarray = array(0, 255, 0);
                 break;
             case 'blue':
-                $this->SetDrawColor(0, 0, 255);
+                $colourarray = array(0, 0, 255);
                 break;
             case 'white':
-                $this->SetDrawColor(255, 255, 255);
+                $colourarray = array(255, 255, 255);
                 break;
             case 'black':
-                $this->SetDrawColor(0, 0, 0);
+                $colourarray = array(0, 0, 0);
                 break;
             default: /* Red */
                 $colour = 'red';
-                $this->SetDrawColor(255, 0, 0);
+                $colourarray = array(255, 0, 0);
                 break;
         }
+        $this->SetDrawColorArray($colourarray);
 
         $sx *= $this->scale;
         $sy *= $this->scale;
@@ -290,13 +291,15 @@ class pdf extends \FPDI {
                 break;
             case 'highlight':
                 $w = abs($sx - $ex);
-                $h = 16.0 * $this->scale;
+                $h = 8.0 * $this->scale;
                 $sx = min($sx, $ex);
-                $sy = min($sy, $ey) - $h * 0.5;
-                $imgfile = $CFG->dirroot . '/mod/assign/feedback/editpdf/pix/trans' . $colour . '.png';
-                $this->Image($imgfile, $sx, $sy, $w, $h);
+                $sy = min($sy, $ey) + ($h * 0.5);
+                $this->SetAlpha(0.5, 'Normal', 0.5, 'Normal');
+                $this->SetLineWidth(8.0 * $this->scale);
+                $this->Rect($sx, $sy, $w, $h);
+                $this->SetAlpha(1.0, 'Normal', 1.0, 'Normal');
                 break;
-            case 'freehand':
+            case 'pen':
                 if ($path) {
                     $scalepath = array();
                     foreach ($path as $point) {

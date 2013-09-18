@@ -67,7 +67,8 @@ var AJAXBASE = M.cfg.wwwroot + '/mod/assign/feedback/editpdf/ajax.php',
         'rectangle': '.' + CSS.DIALOGUE + ' .rectanglebutton',
         'oval': '.' + CSS.DIALOGUE + ' .ovalbutton',
         'stamp': '.' + CSS.DIALOGUE + ' .stampbutton',
-        'select': '.' + CSS.DIALOGUE + ' .selectbutton'
+        'select': '.' + CSS.DIALOGUE + ' .selectbutton',
+        'highlight': '.' + CSS.DIALOGUE + ' .highlightbutton'
     },
     STROKEWEIGHT = 4;
 
@@ -319,30 +320,6 @@ EDITOR.prototype = {
         button = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
         button.setStyle('backgroundImage', 'none');
         button.setStyle('backgroundColor', ANNOTATIONCOLOUR[this.currentannotationcolour]);
-
-        /** We are still playing with the layout - just comment this for now.
-        if (this.currenttool === 'comment') {
-            button = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
-            button.show();
-            button = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
-            button.hide();
-            button = Y.one(SELECTOR.STAMPSBUTTON);
-            button.hide();
-        } else if (this.currenttool === 'stamp') {
-            button = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
-            button.hide();
-            button = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
-            button.hide();
-            button = Y.one(SELECTOR.STAMPSBUTTON);
-            button.show();
-        } else {
-            button = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
-            button.hide();
-            button = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
-            button.show();
-            button = Y.one(SELECTOR.STAMPSBUTTON);
-            button.hide();
-        } **/
 
         currenttoolnode = Y.one(TOOLSELECTOR[this.currenttool]);
         currenttoolnode.addClass('assignfeedback_editpdf_selectedbutton');
@@ -779,7 +756,7 @@ EDITOR.prototype = {
      */
     get_current_drawable : function() {
         var drawable = new Drawable(),
-            shape, width, height, x, y;
+            shape, width, height, x, y, highlightcolour;
 
         if (!this.currentedit.start || !this.currentedit.end) {
             return false;
@@ -828,22 +805,20 @@ EDITOR.prototype = {
             }
         }
 
-        if (this.currenttool === 'comment' || this.currenttool === 'rectangle' || this.currenttool === 'oval' ) {
-            // Work out the boundary box.
-            x = this.currentedit.start.x;
-            if (this.currentedit.end.x > x) {
-                width = this.currentedit.end.x - x;
-            } else {
-                x = this.currentedit.end.x;
-                width = this.currentedit.start.x - x;
-            }
-            y = this.currentedit.start.y;
-            if (this.currentedit.end.y > y) {
-                height = this.currentedit.end.y - y;
-            } else {
-                y = this.currentedit.end.y;
-                height = this.currentedit.start.y - y;
-            }
+        // Work out the boundary box.
+        x = this.currentedit.start.x;
+        if (this.currentedit.end.x > x) {
+            width = this.currentedit.end.x - x;
+        } else {
+            x = this.currentedit.end.x;
+            width = this.currentedit.start.x - x;
+        }
+        y = this.currentedit.start.y;
+        if (this.currentedit.end.y > y) {
+            height = this.currentedit.end.y - y;
+        } else {
+            y = this.currentedit.end.y;
+            height = this.currentedit.start.y - y;
         }
 
         if (this.currenttool === 'comment') {
@@ -895,6 +870,27 @@ EDITOR.prototype = {
                 },
                 x: x,
                 y: y
+            });
+        }
+
+        if (this.currenttool === 'highlight') {
+            highlightcolour = ANNOTATIONCOLOUR[this.currentannotationcolour];
+
+            // Add an alpha channel to the rgb colour.
+
+            highlightcolour = highlightcolour.replace('rgb', 'rgba');
+            highlightcolour = highlightcolour.replace(')', ',0.5)');
+
+            shape = this.graphic.addShape({
+                type: Y.Rect,
+                width: width,
+                height: 16,
+                stroke: false,
+                fill: {
+                    color: highlightcolour
+                },
+                x: x,
+                y: this.currentedit.start.y
             });
         }
 
@@ -1075,6 +1071,30 @@ EDITOR.prototype = {
             this.currentpenposition.x = null;
             this.currentpenposition.y = null;
             this.currentpenpath = [];
+        } else if (this.currenttool === 'highlight') {
+            // Work out the boundary box.
+            x = this.currentedit.start.x;
+            if (this.currentedit.end.x > x) {
+                width = this.currentedit.end.x - x;
+            } else {
+                x = this.currentedit.end.x;
+                width = this.currentedit.start.x - x;
+            }
+            y = this.currentedit.start.y;
+            height = 16;
+
+            data = {
+                    gradeid : this.get('gradeid'),
+                    x : x,
+                    y : y,
+                    endx : x + width,
+                    endy : y + height,
+                    type : this.currenttool,
+                    pageno : this.currentpage,
+                    colour : this.currentannotationcolour
+                };
+
+            this.pages[this.currentpage].annotations.push(data);
         } else {
             data = {
                     gradeid : this.get('gradeid'),
@@ -1248,6 +1268,49 @@ EDITOR.prototype = {
                 stroke: {
                    weight: STROKEWEIGHT,
                    color: ANNOTATIONCOLOUR[annotation.colour]
+                },
+                x: topleftx,
+                y: toplefty
+            });
+        }
+        if (annotation.type === 'highlight' ) {
+            // Convert data to integer to avoid wrong > or < results.
+            annotation.x = parseInt(annotation.x, 10);
+            annotation.y = parseInt(annotation.y, 10);
+            annotation.endx = parseInt(annotation.endx, 10);
+            annotation.endy = parseInt(annotation.endy, 10);
+
+            // Work out the boundary box.
+            topleftx = annotation.x;
+            if (annotation.endx > topleftx) {
+                width = annotation.endx - topleftx;
+            } else {
+                topleftx = annotation.endx;
+                width = annotation.x - topleftx;
+            }
+            toplefty = annotation.y;
+
+            if (annotation.endy > toplefty) {
+                height = annotation.endy - toplefty;
+            } else {
+                toplefty = annotation.endy;
+                height = annotation.y - toplefty;
+            }
+
+            highlightcolour = ANNOTATIONCOLOUR[annotation.colour];
+
+            // Add an alpha channel to the rgb colour.
+
+            highlightcolour = highlightcolour.replace('rgb', 'rgba');
+            highlightcolour = highlightcolour.replace(')', ',0.5)');
+
+            shape = this.graphic.addShape({
+                type: Y.Rect,
+                width: width,
+                height: height,
+                stroke: false,
+                fill: {
+                    color: highlightcolour
                 },
                 x: topleftx,
                 y: toplefty
