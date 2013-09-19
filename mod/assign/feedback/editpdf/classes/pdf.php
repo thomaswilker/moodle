@@ -235,8 +235,8 @@ class pdf extends \FPDI {
      * @param $ex int ending x-coordinate (in pixels)
      * @param $ey int ending y-coordinate (in pixels)
      * @param $colour string optional the colour of the annotation (red, yellow, green, blue, white, black)
-     * @param $type string optional the type of annotation (line, oval, rectangle, highlight, freehand, stamp)
-     * @param $path mixed int[]|string optional for 'freehand' annotations this is an array of x and y coordinates for
+     * @param $type string optional the type of annotation (line, oval, rectangle, highlight, pen, stamp)
+     * @param $path mixed int[]|string optional for 'pen' annotations this is an array of x and y coordinates for
      *              the line, for 'stamp' annotations it is the name of the stamp file (without the path)
      * @return bool true if successful (always)
      */

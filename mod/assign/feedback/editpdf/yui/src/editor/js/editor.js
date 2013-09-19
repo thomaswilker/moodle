@@ -38,9 +38,12 @@ var AJAXBASE = M.cfg.wwwroot + '/mod/assign/feedback/editpdf/ajax.php',
         COMMENTCOLOURBUTTON : '.' + CSS.DIALOGUE + ' .commentcolourbutton',
         COMMENTMENU : ' .commentdrawable a',
         ANNOTATIONCOLOURBUTTON : '.' + CSS.DIALOGUE + ' .annotationcolourbutton',
+        DELETEANNOTATIONBUTTON : '.' + CSS.DIALOGUE + ' .deleteannotationbutton',
         STAMPSBUTTON : '.' + CSS.DIALOGUE + ' .currentstampbutton',
         DIALOGUE : '.' + CSS.DIALOGUE
     },
+    SELECTEDBORDERCOLOUR = 'rgba(200, 200, 255, 0.9)',
+    SELECTEDFILLCOLOUR = 'rgba(200, 200, 255, 0.5)',
     COMMENTCOLOUR = {
         'white' : 'rgb(255,255,255)',
         'yellow' : 'rgb(255,255,176)',
@@ -238,6 +241,14 @@ EDITOR.prototype = {
     currentcomment : null,
 
     /**
+     * Current annotation when the select tool is used.
+     * @property currentannotation
+     * @type Object
+     * @protected
+     */
+    currentannotation : null,
+
+    /**
      * The link that opened the current comment menu.
      * @property currentcommentmenulink
      * @type Y.Node
@@ -362,6 +373,8 @@ EDITOR.prototype = {
             drawingregion.delegate('click', this.open_comment_menu, SELECTOR.COMMENTMENU, this);
             drawingregion.delegate('key', this.open_comment_menu, 'down:13', SELECTOR.COMMENTMENU, this);
 
+            //drawingregion.delegate('click', this.delete_annotation, SELECTOR.DELETEANNOTATIONBUTTON, this);
+            //drawingregion.delegate('key', this.delete_annotation, 'down:13', SELECTOR.DELETEANNOTATIONBUTTON, this);
             this.refresh_button_state();
         } else {
             this.dialogue.show();
@@ -751,6 +764,12 @@ EDITOR.prototype = {
         this.currentedit.starttime = new Date().getTime();
         this.currentedit.start = point;
         this.currentedit.end = {x : point.x, y : point.y};
+
+        if (this.currentannotation) {
+            // Used to calculate drag offset.
+            this.currentedit.annotationstart = { x : this.currentannotation.x,
+                                                 y : this.currentannotation.y };
+        }
     },
 
     /**
@@ -938,6 +957,37 @@ EDITOR.prototype = {
     },
 
     /**
+     * Move an annotation to a new location.
+     * @protected
+     * @param Event
+     * @method move_annotation
+     */
+    move_annotation : function(annotation, newx, newy) {
+        var diffx = newx - annotation.x,
+            diffy = newy - annotation.y,
+            newpath, oldpath, xy;
+
+        annotation.x += diffx;
+        annotation.y += diffy;
+        annotation.endx += diffx;
+        annotation.endy += diffy;
+
+        if (annotation.path) {
+            newpath = [];
+            oldpath = annotation.path.split(':');
+            Y.each(oldpath, function(position) {
+                xy = position.split(',');
+                newpath.push((parseInt(xy[0], 10) + diffx) + ',' + (parseInt(xy[1], 10) + diffy));
+            });
+
+            annotation.path = newpath.join(':');
+
+        }
+        this.erase_drawable(annotation.drawable);
+        this.drawables.push(this.draw_annotation(annotation));
+    },
+
+    /**
      * Event handler for mousemove.
      * @protected
      * @param Event
@@ -950,9 +1000,17 @@ EDITOR.prototype = {
             point = {x : e.clientX - offset[0] + scrollleft,
                      y : e.clientY - offset[1] + scrolltop};
 
-        if (this.currentedit.start) {
-            this.currentedit.end = point;
-            this.redraw_current_edit();
+        if (this.currenttool === 'select') {
+            if (this.currentannotation) {
+                this.move_annotation(this.currentannotation,
+                                     this.currentedit.annotationstart.x + point.x - this.currentedit.start.x,
+                                     this.currentedit.annotationstart.y + point.y - this.currentedit.start.y);
+            }
+        } else {
+            if (this.currentedit.start) {
+                this.currentedit.end = point;
+                this.redraw_current_edit();
+            }
         }
     },
 
@@ -1003,14 +1061,14 @@ EDITOR.prototype = {
      * @method edit_end
      */
     edit_end : function() {
-
         var data,
             width,
             height,
             x,
             y,
             duration,
-            thepath;
+            thepath,
+            selected = false;
 
         duration = new Date().getTime() - this.currentedit.start;
 
@@ -1052,14 +1110,34 @@ EDITOR.prototype = {
 
             this.pages[this.currentpage].comments.push(data);
             this.drawables.push(this.draw_comment(data, true));
-            this.erase_drawable(this.currentdrawable);
         } else if (this.currenttool === 'pen') {
             // Create the path string.
             thepath = '';
+            var minx = null,
+                miny = null,
+                maxx = null,
+                maxy = null;
             Y.each(this.currentpenpath, function(position) {
                 thepath = thepath + position.x + "," + position.y + ":";
-                // Remove the last ":".
+                if (minx === null) {
+                    minx = maxx = position.x;
+                    miny = maxy = position.y;
+                } else {
+                    if (position.x < minx) {
+                        minx = position.x;
+                    }
+                    if (position.y < miny) {
+                        miny = position.y;
+                    }
+                    if (position.x > maxx) {
+                        maxx = position.x;
+                    }
+                    if (position.y > maxy) {
+                        maxy = position.y;
+                    }
+                }
             }, this);
+            // Remove the last ":".
             thepath = thepath.substring(0, thepath.length - 1);
 
             data = {
@@ -1067,10 +1145,15 @@ EDITOR.prototype = {
                 path : thepath,
                 type : 'pen',
                 pageno : this.currentpage,
-                colour : this.currentannotationcolour
+                colour : this.currentannotationcolour,
+                x : minx,
+                y : miny,
+                endx : maxx,
+                endy : maxy
             };
 
             this.pages[this.currentpage].annotations.push(data);
+            this.drawables.push(this.draw_annotation(data));
 
             // Reset the mouse position for the pen tool.
             this.currentpenposition.x = null;
@@ -1099,8 +1182,23 @@ EDITOR.prototype = {
                     colour : this.currentannotationcolour
                 };
 
-            Y.log(data);
             this.pages[this.currentpage].annotations.push(data);
+            this.drawables.push(this.draw_annotation(data));
+        } else if (this.currenttool === 'select') {
+            x = this.currentedit.end.x;
+            y = this.currentedit.end.y;
+            annotations = this.pages[this.currentpage].annotations;
+            Y.each(annotations, function(annotation) {
+                if (((x - annotation.x) * (x - annotation.endx)) <= 0 &&
+                    ((y - annotation.y) * (y - annotation.endy)) <= 0) {
+                    selected = annotation;
+                }
+            });
+
+            if (selected) {
+                this.currentannotation = selected;
+            }
+            this.redraw();
         } else {
             data = {
                     gradeid : this.get('gradeid'),
@@ -1114,6 +1212,7 @@ EDITOR.prototype = {
                 };
 
             this.pages[this.currentpage].annotations.push(data);
+            this.drawables.push(this.draw_annotation(data));
         }
 
         this.save_current_page();
@@ -1121,6 +1220,7 @@ EDITOR.prototype = {
         this.currentedit.starttime = 0;
         this.currentedit.start = false;
         this.currentedit.end = false;
+        this.erase_drawable(this.currentdrawable);
         this.currentdrawable = false;
     },
 
@@ -1170,6 +1270,33 @@ EDITOR.prototype = {
     },
 
     /**
+     * Handle a delete annotation event (click on the button)
+     * @protected
+     * @method delete_annotation
+     * @param event
+     */
+    delete_annotation : function(e) {
+        var target = e.target,
+            annotation = target.getData('annotation'),
+            annotations;
+
+        if (!annotation) {
+            target = target.ancestor();
+            annotation = target.getData('annotation');
+        }
+
+        annotations = this.pages[this.currentpage].annotations;
+        for (i = 0; i < annotations.length; i++) {
+            if (annotations[i] === annotation) {
+                annotations.splice(i, 1);
+                this.erase_drawable(annotation.drawable);
+                this.save_current_page();
+                return;
+            }
+        }
+    },
+
+    /**
      * Draw an annotation
      * @protected
      * @method draw_annotation
@@ -1185,8 +1312,9 @@ EDITOR.prototype = {
             height,
             topleftx,
             toplefty,
-            annotationtype;
-
+            annotationtype,
+            drawingregion = Y.one(SELECTOR.DRAWINGREGION),
+            offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY();
 
         drawable = new Drawable();
 
@@ -1325,6 +1453,68 @@ EDITOR.prototype = {
         }
 
         drawable.shapes.push(shape);
+        if (this.currentannotation === annotation) {
+            // Draw a highlight around the annotation.
+            annotation.x = parseInt(annotation.x, 10);
+            annotation.y = parseInt(annotation.y, 10);
+            annotation.endx = parseInt(annotation.endx, 10);
+            annotation.endy = parseInt(annotation.endy, 10);
+
+            // Work out the boundary box.
+            topleftx = annotation.x;
+            if (annotation.endx > topleftx) {
+                width = annotation.endx - topleftx;
+            } else {
+                topleftx = annotation.endx;
+                width = annotation.x - topleftx;
+            }
+            toplefty = annotation.y;
+
+            if (annotation.endy > toplefty) {
+                height = annotation.endy - toplefty;
+            } else {
+                toplefty = annotation.endy;
+                height = annotation.y - toplefty;
+            }
+
+            shape = this.graphic.addShape({
+                type: Y.Rect,
+                width: width,
+                height: height,
+                stroke: {
+                   weight: STROKEWEIGHT,
+                   color: SELECTEDBORDERCOLOUR
+                },
+                fill: {
+                   color: SELECTEDFILLCOLOUR
+                },
+                x: topleftx,
+                y: toplefty
+            });
+            drawable.shapes.push(shape);
+
+            // Add a delete X to the annotation.
+            var deleteicon = Y.Node.create('<img src="' + M.util.image_url('t/delete', 'core') + '"/>'),
+                deletelink = Y.Node.create('<a href="#" role="button"></a>');
+
+            deleteicon.setAttrs({
+                'alt': M.util.get_string('deleteannotation', 'assignfeedback_editpdf')
+            });
+            deletelink.addClass('deleteannotationbutton');
+            deletelink.append(deleteicon);
+
+            drawingregion.append(deletelink);
+            deletelink.setData('annotation', annotation);
+            deletelink.setStyle('zIndex', '1000');
+
+            deletelink.on('click', this.delete_annotation, this);
+            deletelink.on('key', this.delete_annotation, 'space,enter', this);
+
+            deletelink.setX(offsetcanvas[0] + topleftx + width - 16);
+            deletelink.setY(offsetcanvas[1] + toplefty + 4);
+            drawable.nodes.push(deletelink);
+        }
+        annotation.drawable = drawable;
 
         return drawable;
     },

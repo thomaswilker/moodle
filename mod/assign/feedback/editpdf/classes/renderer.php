@@ -195,7 +195,8 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
             'deletecomment',
             'addtoquicklist',
             'filter',
-            'searchcomments'
+            'searchcomments',
+            'deleteannotation'
         ), 'assignfeedback_editpdf');
 
         return $html;

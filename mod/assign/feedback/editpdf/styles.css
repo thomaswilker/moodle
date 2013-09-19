@@ -12,6 +12,11 @@
     cursor: crosshair;
 }
 
+// Disable text selection effects for the entire popup.
+.assignfeedback_editpdf_widget {
+    user-select: none;
+}
+
 .assignfeedback_editpdf_widget .pageheader {
     background-color: #ebebeb;
     border-bottom: 1px solid #cccccc;
