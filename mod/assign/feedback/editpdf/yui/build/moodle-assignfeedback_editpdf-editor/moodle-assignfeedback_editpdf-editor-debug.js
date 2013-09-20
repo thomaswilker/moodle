@@ -1487,11 +1487,15 @@ EDITOR.prototype = {
             drawable.shapes.push(shape);
 
             // Add a delete X to the annotation.
-            var deleteicon = Y.Node.create('<img src="' + M.util.image_url('t/delete', 'core') + '"/>'),
+            var deleteicon = Y.Node.create('<img src="' + M.util.image_url('trash', 'assignfeedback_editpdf') + '"/>'),
                 deletelink = Y.Node.create('<a href="#" role="button"></a>');
 
             deleteicon.setAttrs({
                 'alt': M.util.get_string('deleteannotation', 'assignfeedback_editpdf')
+            });
+            deleteicon.setStyles({
+                'backgroundColor' : 'white',
+                'border' : '2px solid ' + SELECTEDBORDERCOLOUR
             });
             deletelink.addClass('deleteannotationbutton');
             deletelink.append(deleteicon);
@@ -1503,8 +1507,8 @@ EDITOR.prototype = {
             deletelink.on('click', this.delete_annotation, this);
             deletelink.on('key', this.delete_annotation, 'space,enter', this);
 
-            deletelink.setX(offsetcanvas[0] + topleftx + width - 16);
-            deletelink.setY(offsetcanvas[1] + toplefty + 4);
+            deletelink.setX(offsetcanvas[0] + topleftx + width - 20);
+            deletelink.setY(offsetcanvas[1] + toplefty + 2);
             drawable.nodes.push(deletelink);
         }
         annotation.drawable = drawable;

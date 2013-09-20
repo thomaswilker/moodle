@@ -76,8 +76,15 @@
 .assignfeedback_editpdf_widget .navigation {
     float: left;
 }
+
+.dir-rtl .assignfeedback_editpdf_widget .navigation {
+    float: right;
+}
 .assignfeedback_editpdf_widget .toolbar {
     float: right;
+}
+.dir-rtl .assignfeedback_editpdf_widget .navigation {
+    float: left;
 }
 .assignfeedback_editpdf_widget .navigation,
 .assignfeedback_editpdf_widget .toolbar {
