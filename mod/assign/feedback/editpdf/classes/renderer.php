@@ -102,8 +102,6 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
         $html .= html_writer::div($links, 'visibleifjs');
         $header = get_string('pluginname', 'assignfeedback_editpdf');
         $body = '';
-        $spacer = '<span class="verticaldivider"></span>';
-
         // Create the page navigation.
         $navigation = '';
 
@@ -150,12 +148,13 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
 
         $toolbar5 = html_writer::div($toolbar5, 'toolbar', array('role'=>'toolbar'));
 
-        $pageheader = html_writer::div($navigation . $spacer .
-                                       $toolbar1 . $spacer .
-                                       $toolbar2 . $spacer .
-                                       $toolbar3 . $spacer .
-                                       $toolbar4 . $spacer .
-                                       $toolbar5,
+        // Toobars written in reverse order because they are floated right.
+        $pageheader = html_writer::div($navigation .
+                                       $toolbar5 .
+                                       $toolbar4 .
+                                       $toolbar3 .
+                                       $toolbar2 .
+                                       $toolbar1,
                                         'pageheader');
         $body = $pageheader;
 

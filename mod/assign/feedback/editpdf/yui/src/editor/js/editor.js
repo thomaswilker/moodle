@@ -320,17 +320,19 @@ EDITOR.prototype = {
         // Initalise the colour buttons.
         button = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
         button.setStyle('backgroundImage', 'none');
-        button.setStyle('background', COMMENTCOLOUR[this.currentcommentcolour]);
+        button.one('img').setStyle('background', COMMENTCOLOUR[this.currentcommentcolour]);
+        button.one('img').setStyle('border', '2px solid #cccccc');
 
         if (this.currentcommentcolour === 'clear') {
-            button.setStyle('borderStyle', 'dashed');
+            button.one('img').setStyle('borderStyle', 'dashed');
         } else {
-            button.setStyle('borderStyle', 'solid');
+            button.one('img').setStyle('borderStyle', 'solid');
         }
 
         button = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
         button.setStyle('backgroundImage', 'none');
-        button.setStyle('backgroundColor', ANNOTATIONCOLOUR[this.currentannotationcolour]);
+        button.one('img').setStyle('backgroundColor', ANNOTATIONCOLOUR[this.currentannotationcolour]);
+        button.one('img').setStyle('border', '2px solid #cccccc');
 
         currenttoolnode = Y.one(TOOLSELECTOR[this.currenttool]);
         currenttoolnode.addClass('assignfeedback_editpdf_selectedbutton');
@@ -501,19 +503,19 @@ EDITOR.prototype = {
             showhandler;
 
         Y.each(colours, function(rgb, colour) {
-            var button, listitem;
+            var button, listitem, title, img;
 
-            button = Y.Node.create('<button/>');
-            button.setAttribute('title', M.util.get_string(colour, 'assignfeedback_editpdf'));
+            title = M.util.get_string(colour, 'assignfeedback_editpdf');
+            img = M.util.image_url('commentcolour', 'assignfeedback_editpdf');
+            button = Y.Node.create('<button><img alt="' + title + '" src="' + img + '"/></button>');
             button.setAttribute('data-colour', colour);
             button.setAttribute('data-rgb', rgb);
             button.addClass('colour_' + colour);
             button.setStyle('backgroundImage', 'none');
-            button.setStyle('background', rgb);
+            button.one('img').setStyle('background', rgb);
+            button.one('img').setStyle('border', '2px solid #cccccc');
             if (colour === 'clear') {
-                button.setStyle('borderStyle', 'dashed');
-            } else {
-                button.setStyle('borderStyle', 'solid');
+                button.one('img').setStyle('borderStyle', 'dashed');
             }
             listitem = Y.Node.create('<li/>');
             listitem.append(button);
@@ -586,13 +588,21 @@ EDITOR.prototype = {
 
         commentcolourbutton = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
         this.setup_colour_picker(commentcolourbutton, COMMENTCOLOUR, function (e) {
-            this.currentcommentcolour = e.target.getAttribute('data-colour');
+            var colour = e.target.getAttribute('data-colour');
+            if (!colour) {
+                colour = e.target.ancestor().getAttribute('data-colour');
+            }
+            this.currentcommentcolour = colour;
             this.refresh_button_state();
             this.currentcolourpicker.hide();
         });
         annotationcolourbutton = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
         this.setup_colour_picker(annotationcolourbutton, ANNOTATIONCOLOUR, function (e) {
-            this.currentannotationcolour = e.target.getAttribute('data-colour');
+            var colour = e.target.getAttribute('data-colour');
+            if (!colour) {
+                colour = e.target.ancestor().getAttribute('data-colour');
+            }
+            this.currentannotationcolour = colour;
             this.refresh_button_state();
             this.currentcolourpicker.hide();
         });
@@ -614,25 +624,6 @@ EDITOR.prototype = {
         currenttoolnode.setAttribute('aria-pressed', 'false');
         this.currenttool = tool;
         this.refresh_button_state();
-    },
-
-    /**
-     * Change the current color.
-     * @protected
-     * @method changecolor
-     */
-    changecolor : function(e, color, editor, colourpicker) {
-        var imgcoloururl,
-            colourbutton;
-
-        imgcoloururl = M.cfg.wwwroot + '/theme/image.php?theme=standard&component=assignfeedback_editpdf&image=';
-        Y.one('.pdfbutton_colour').get('childNodes').item(0).setAttribute('src', imgcoloururl+color);
-        editor.currentcolour = color;
-        colourbutton = Y.one(SELECTOR.COLOURBUTTON);
-        colourbutton.setAttribute('title', M.util.get_string(color, 'assignfeedback_editpdf'));
-        colourpicker.hide();
-        // Restoring focus to the color button.
-        colourbutton.focus();
     },
 
     /**

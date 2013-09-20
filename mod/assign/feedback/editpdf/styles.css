@@ -21,7 +21,9 @@
     background-color: #ebebeb;
     border-bottom: 1px solid #cccccc;
     padding: 4px;
-    text-align: center;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 50px;
 }
 
 .moodle-dialogue-base .moodle-dialogue.assignfeedback_editpdf_widget .moodle-dialogue-bd {
@@ -30,22 +32,29 @@
 
 .assignfeedback_editpdf_widget .pageheader select,
 .assignfeedback_editpdf_widget .pageheader button {
-    background-image: none;
-    background-color: white;
-    margin: 6px 0 6px 5px;
-    padding: 4px 9px;
+    background: none;
+    padding: 4px 10px;
+    border: 0px;
+    border-radius: 0px;
+    margin: 0px;
 }
 
-.assignfeedback_editpdf_widget .verticaldivider {
-    vertical-align: center;
-    position: relative;
-    width: 0px;
-    padding-top: 14px;
-    padding-bottom: 15px;
-    overflow: hidden;
-    border-left: 1px solid #999;
-    border-right: 1px solid white;
-    margin-left: 5px;
+.assignfeedback_editpdf_widget .pageheader button + button,
+.assignfeedback_editpdf_widget .pageheader select + button {
+    border-left: 1px solid #cccccc;
+    border-right: 0px;
+}
+
+.assignfeedback_editpdf_widget .pageheader .navigation button {
+    border-right: 1px solid #cccccc;
+}
+.assignfeedback_editpdf_widget .pageheader .toolbar,
+.assignfeedback_editpdf_widget .pageheader .navigation {
+    border: 1px solid #cccccc;
+    border-bottom-color: #b3b3b3;
+    border-radius: 4px;
+    margin: 10px 4px;
+    background-color: white;
 }
 
 .assignfeedback_editpdf_searchcomments ul {
@@ -59,15 +68,17 @@
 .assignfeedback_editpdf_downloadlink {
     margin-top: 1em;
 }
-.assignfeedback_editpdf_widget .moodle-dialogue-bd,
-.moodle-dialogue-base .moodle-dialogue.assignfeedback_editpdf_widget .moodle-dialogue-content .moodle-dialogue-ft {
-    text-align: center;
-}
 
 .assignfeedback_editpdf_downloadlink .hidden {
     display: none;
 }
 
+.assignfeedback_editpdf_widget .navigation {
+    float: left;
+}
+.assignfeedback_editpdf_widget .toolbar {
+    float: right;
+}
 .assignfeedback_editpdf_widget .navigation,
 .assignfeedback_editpdf_widget .toolbar {
     display: inline-block;
@@ -127,17 +138,13 @@ ul.assignfeedback_editpdf_menu {
 }
 
 .assignfeedback_editpdf_colourpicker li button {
-    width: 42px;
-    height: 30px;
 }
 
-.assignfeedback_editpdf_widget .pageheader button.assignfeedback_editpdf_selectedbutton:hover {
-    background-image: none;
-    background-color: #CCF;
-}
-
+.assignfeedback_editpdf_widget .pageheader button.assignfeedback_editpdf_selectedbutton:hover,
 .assignfeedback_editpdf_widget .pageheader button.assignfeedback_editpdf_selectedbutton {
     background-color: #CCF;
+    border-top: 1px solid #CCf;
+    border-bottom: 1px solid #CCf;
     background-image: none;
 }
 
