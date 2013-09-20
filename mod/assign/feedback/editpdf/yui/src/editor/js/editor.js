@@ -371,7 +371,6 @@ EDITOR.prototype = {
             drawingcanvas.on('gesturemoveend', this.edit_end, null, this);
 
             drawingregion = Y.one(SELECTOR.DRAWINGREGION),
-            Y.log(drawingregion);
             drawingregion.delegate('click', this.open_comment_menu, SELECTOR.COMMENTMENU, this);
             drawingregion.delegate('key', this.open_comment_menu, 'down:13', SELECTOR.COMMENTMENU, this);
 

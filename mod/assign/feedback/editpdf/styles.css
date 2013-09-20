@@ -155,19 +155,27 @@ ul.assignfeedback_editpdf_menu {
 }
 
 .assignfeedback_editpdf_widget .commentdrawable img {
-    padding: 4px;
+    padding: 1px;
 }
 
 .assignfeedback_editpdf_widget .commentdrawable a {
     float: right;
     position: relative;
-    left: -20px;
+    left: -17px;
+    top: 2px;
+    height: 14px;
+    background-color: white;
+    border-left: 1px solid #ccc;
+    border-bottom: 1px solid #ccc;
+    line-height: 14px;
 }
 
 .dir-rtl .assignfeedback_editpdf_widget .commentdrawable a {
     float: left;
     left: none;
-    right: -20px;
+    right: -17px;
+    border-left: 0px;
+    border-right: 1px solid #ccc;
 }
 
 .assignfeedback_editpdf_widget .commentdrawable textarea {
@@ -176,7 +184,8 @@ ul.assignfeedback_editpdf_menu {
     resize: horizontal;
     overflow: hidden;
     color: black;
-    border: 2px solid black;
+    border: 2px solid #ccc;
+    border-radius: 4px;
     font-size: 16px;
     font-family: helvetica;
     min-height: 1.2em;
