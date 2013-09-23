@@ -1,5 +1,82 @@
 YUI.add('moodle-assignfeedback_editpdf-editor', function (Y, NAME) {
 
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Class representing a drawable thing which contains both
+ * Y.Nodes, and Y.Shapes.
+ *
+ * @module moodle-assignfeedback_editpdf-editor
+ */
+
+/**
+ * DRAWABLE
+ *
+ * @namespace M.assignfeedback_editpdf
+ * @param M.assignfeedback_editpdf.editor editor
+ * @class drawable
+ */
+DRAWABLE = function(editor) {
+
+    /**
+     * Reference to M.assignfeedback_editpdf.editor.
+     * @property editor
+     * @type M.assignfeedback_editpdf.editor
+     * @public
+     */
+    this.editor = editor;
+
+    /**
+     * Array of Y.Shape
+     * @property shapes
+     * @type Y.Shape[]
+     * @public
+     */
+    this.shapes = [];
+
+    /**
+     * Array of Y.Node
+     * @property nodes
+     * @type Y.Node[]
+     * @public
+     */
+    this.nodes = [];
+
+    /**
+     * Delete the shapes from the drawable.
+     * @protected
+     * @method erase_drawable
+     */
+    this.erase = function() {
+        if (drawable.shapes) {
+            while (drawable.shapes.length > 0) {
+                this.editor.graphic.removeShape(drawable.shapes.pop());
+            }
+        }
+        if (drawable.nodes) {
+            while (drawable.nodes.length > 0) {
+                drawable.nodes.pop().remove();
+            }
+        }
+    };
+
+};
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.drawable = DRAWABLE;
 var DROPDOWN_NAME = "Dropdown menu",
     DROPDOWN;
 
@@ -291,30 +368,6 @@ var AJAXBASE = M.cfg.wwwroot + '/mod/assign/feedback/editpdf/ajax.php',
     STROKEWEIGHT = 4;
 
 /**
- * Drawable
- *
- * @namespace M.assignfeedback_editpdf.editor
- * @class Drawable
- */
-Drawable = function() {
-    /**
-     * Array of Y.Shape
-     * @property type
-     * @type Y.Shape[]
-     * @public
-     */
-    this.shapes = [];
-
-    /**
-     * Array of Y.Node
-     * @property type
-     * @type Y.Node[]
-     * @public
-     */
-    this.nodes = [];
-};
-
-/**
  * Stamp
  *
  * @namespace M.assignfeedback_editpdf.editor
@@ -452,7 +505,7 @@ EDITOR.prototype = {
     /**
      * Current drawable.
      * @property currentdrawable
-     * @type Drawable (or false)
+     * @type M.assignfeedback_editpdf.drawable (or false)
      * @protected
      */
     currentdrawable : false,
@@ -460,7 +513,7 @@ EDITOR.prototype = {
     /**
      * Current drawables.
      * @property drawables
-     * @type array(Drawable)
+     * @type array(M.assignfeedback_editpdf.drawable)
      * @protected
      */
     drawables : [],
@@ -1084,7 +1137,7 @@ EDITOR.prototype = {
      * @method get_current_drawable
      */
     get_current_drawable : function() {
-        var drawable = new Drawable(),
+        var drawable = new M.assignfeedback_editpdf.drawable(this),
             shape, width, height, x, y, highlightcolour;
 
         if (!this.currentedit.start || !this.currentedit.end) {
@@ -1251,34 +1304,13 @@ EDITOR.prototype = {
     },
 
     /**
-     * Delete the shapes from the drawable.
-     * @protected
-     * @method erase_drawable
-     */
-    erase_drawable : function(drawable) {
-        if (!drawable) {
-            return;
-        }
-        if (drawable.shapes) {
-            while (drawable.shapes.length > 0) {
-                this.graphic.removeShape(drawable.shapes.pop());
-            }
-        }
-        if (drawable.nodes) {
-            while (drawable.nodes.length > 0) {
-                drawable.nodes.pop().remove();
-            }
-        }
-    },
-
-    /**
      * Redraw the active edit.
      * @protected
      * @method redraw_active_edit
      */
     redraw_current_edit : function() {
         if (this.currentdrawable) {
-            this.erase_drawable(this.currentdrawable);
+            this.currentdrawable.erase();
         }
         this.currentdrawable = this.get_current_drawable();
     },
@@ -1310,7 +1342,7 @@ EDITOR.prototype = {
             annotation.path = newpath.join(':');
 
         }
-        this.erase_drawable(annotation.drawable);
+        annotation.drawable.erase();
         this.drawables.push(this.draw_annotation(annotation));
     },
 
@@ -1563,7 +1595,7 @@ EDITOR.prototype = {
         this.currentedit.starttime = 0;
         this.currentedit.start = false;
         this.currentedit.end = false;
-        this.erase_drawable(this.currentdrawable);
+        this.currentdrawable.erase();
         this.currentdrawable = false;
     },
 
@@ -1631,7 +1663,7 @@ EDITOR.prototype = {
         for (i = 0; i < annotations.length; i++) {
             if (annotations[i] === annotation) {
                 annotations.splice(i, 1);
-                this.erase_drawable(annotation.drawable);
+                annotation.drawable.erase();
                 this.save_current_page();
                 return;
             }
@@ -1643,7 +1675,7 @@ EDITOR.prototype = {
      * @protected
      * @method draw_annotation
      * @param annotation
-     * @return Drawable
+     * @return M.assignfeedback_editpdf.drawable
      */
     draw_annotation : function(annotation) {
         var drawable,
@@ -1659,7 +1691,7 @@ EDITOR.prototype = {
             offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY(),
             shape;
 
-        drawable = new Drawable();
+        drawable = new M.assignfeedback_editpdf.drawable(this);
 
         if (annotation.type === 'stamp') {
             // Find the matching stamp
@@ -1920,7 +1952,7 @@ EDITOR.prototype = {
         for (i = 0; i < comments.length; i++) {
             if (comments[i] === comment) {
                 comments.splice(i, 1);
-                this.erase_drawable(comment.drawable);
+                comment.drawable.erase();
                 this.save_current_page();
                 return;
             }
@@ -1933,10 +1965,10 @@ EDITOR.prototype = {
      * @method draw_comment
      * @param comment
      * @param boolean focus - Set the keyboard focus to the new comment if true
-     * @return Drawable
+     * @return M.assignfeedback_editpdf.drawable
      */
     draw_comment : function(comment, focus) {
-        var drawable = new Drawable(),
+        var drawable = new M.assignfeedback_editpdf.drawable(this),
             node,
             drawingregion = Y.one(SELECTOR.DRAWINGREGION),
             offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY(),
@@ -2467,7 +2499,7 @@ EDITOR.prototype = {
 
         page = this.pages[this.currentpage];
         while (this.drawables.length > 0) {
-            this.erase_drawable(this.drawables.pop());
+            this.drawables.pop.erase();
         }
 
         for (i = 0; i < page.annotations.length; i++) {
