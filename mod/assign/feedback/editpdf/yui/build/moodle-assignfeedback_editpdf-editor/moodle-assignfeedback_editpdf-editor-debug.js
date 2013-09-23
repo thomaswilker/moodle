@@ -16,6 +16,153 @@ YUI.add('moodle-assignfeedback_editpdf-editor', function (Y, NAME) {
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Class representing a 2d point.
+ *
+ * @module moodle-assignfeedback_editpdf-editor
+ */
+
+/**
+ * POINT
+ *
+ * @namespace M.assignfeedback_editpdf
+ * @param int x
+ * @param int y
+ * @class point
+ */
+POINT = function(x, y) {
+
+    /**
+     * X coordinate.
+     * @property x
+     * @type int
+     * @public
+     */
+    this.x = x;
+
+    /**
+     * Y coordinate.
+     * @property y
+     * @type int
+     * @public
+     */
+    this.y = y;
+
+};
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.point = POINT;
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Class representing a partially completed edit operation.
+ *
+ * @module moodle-assignfeedback_editpdf-editor
+ */
+
+/**
+ * EDIT
+ *
+ * @namespace M.assignfeedback_editpdf
+ * @class edit
+ */
+EDIT = function() {
+
+    /**
+     * Starting point for the edit.
+     * @property start
+     * @type M.assignfeedback_editpdf.point|false
+     * @public
+     */
+    this.start = false;
+
+    /**
+     * Finishing point for the edit.
+     * @property end
+     * @type M.assignfeedback_editpdf.point|false
+     * @public
+     */
+    this.end = false;
+
+    /**
+     * Starting time for the edit.
+     * @property starttime
+     * @type int
+     * @public
+     */
+    this.starttime = 0;
+
+    /**
+     * Starting point for the currently selected annotation.
+     * @property annotationstart
+     * @type M.assignfeedback_editpdf.point|false
+     * @public
+     */
+    this.annotationstart = false;
+
+    /**
+     * The currently selected tool
+     * @property tool
+     * @type String
+     * @public
+     */
+    this.tool = "comment";
+
+    /**
+     * The currently comment colour
+     * @property commentcolour
+     * @type String
+     * @public
+     */
+    this.commentcolour = 'yellow';
+
+    /**
+     * The currently annotation colour
+     * @property annotationcolour
+     * @type String
+     * @public
+     */
+    this.annotationcolour = 'red';
+
+    /**
+     * List of points the the current drawing path.
+     * @property path
+     * @type M.assignfeedback_editpdf.point[]
+     * @public
+     */
+    this.path = [];
+};
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.edit = EDIT;
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
  * Class representing a drawable thing which contains both
  * Y.Nodes, and Y.Shapes.
  *
@@ -61,14 +208,14 @@ DRAWABLE = function(editor) {
      * @method erase_drawable
      */
     this.erase = function() {
-        if (drawable.shapes) {
-            while (drawable.shapes.length > 0) {
-                this.editor.graphic.removeShape(drawable.shapes.pop());
+        if (this.shapes) {
+            while (this.shapes.length > 0) {
+                this.editor.graphic.removeShape(this.shapes.pop());
             }
         }
-        if (drawable.nodes) {
-            while (drawable.nodes.length > 0) {
-                drawable.nodes.pop().remove();
+        if (this.nodes) {
+            while (this.nodes.length > 0) {
+                this.nodes.pop().remove();
             }
         }
     };
@@ -471,36 +618,12 @@ EDITOR.prototype = {
     graphic : null,
 
     /**
-     * Current comment colour.
-     * @property type
-     * @type string
-     * @protected
-     */
-    currentcommentcolour : 'yellow',
-
-    /**
-     * Current annotation colour.
-     * @property type
-     * @type string
-     * @protected
-     */
-    currentannotationcolour : 'red',
-
-    /**
-     * Selected tool
-     * @property type
-     * @type string
-     * @protected
-     */
-    currenttool : 'comment',
-
-    /**
      * Info about the current edit operation.
-     * @property type
-     * @type object containing start and end points (x and y)
+     * @property currentedit
+     * @type M.assignfeedback_editpdf.edit
      * @protected
      */
-    currentedit : {},
+    currentedit : new M.assignfeedback_editpdf.edit(),
 
     /**
      * Current drawable.
@@ -549,22 +672,6 @@ EDITOR.prototype = {
      * @protected
      */
     currentcommentmenulink : null,
-
-    /**
-     * The pen tool position (also known as the mouse position :P).
-     * @property currentpenposition
-     * @type Object
-     * @protected
-     */
-    currentpenposition : {x:null,y:null},
-
-    /**
-     * The pen tool path being drawn.
-     * @property currentpenpath
-     * @type Array
-     * @protected
-     */
-    currentpenpath : [],
 
     /**
      * The users comments quick list
@@ -647,9 +754,9 @@ EDITOR.prototype = {
         // Initalise the colour buttons.
         button = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
         button.setStyle('backgroundImage', 'none');
-        button.one('img').setStyle('background', COMMENTCOLOUR[this.currentcommentcolour]);
+        button.one('img').setStyle('background', COMMENTCOLOUR[this.currentedit.commentcolour]);
 
-        if (this.currentcommentcolour === 'clear') {
+        if (this.currentedit.commentcolour === 'clear') {
             button.one('img').setStyle('borderStyle', 'dashed');
         } else {
             button.one('img').setStyle('borderStyle', 'solid');
@@ -657,9 +764,9 @@ EDITOR.prototype = {
 
         button = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
         button.setStyle('backgroundImage', 'none');
-        button.one('img').setStyle('backgroundColor', ANNOTATIONCOLOUR[this.currentannotationcolour]);
+        button.one('img').setStyle('backgroundColor', ANNOTATIONCOLOUR[this.currentedit.annotationcolour]);
 
-        currenttoolnode = Y.one(TOOLSELECTOR[this.currenttool]);
+        currenttoolnode = Y.one(TOOLSELECTOR[this.currentedit.tool]);
         currenttoolnode.addClass('assignfeedback_editpdf_selectedbutton');
         currenttoolnode.setAttribute('aria-pressed', 'true');
     },
@@ -919,7 +1026,7 @@ EDITOR.prototype = {
                 if (!colour) {
                     colour = e.target.ancestor().getAttribute('data-colour');
                 }
-                this.currentcommentcolour = colour;
+                this.currentedit.commentcolour = colour;
                 this.refresh_button_state();
             },
             context: this
@@ -934,7 +1041,7 @@ EDITOR.prototype = {
                 if (!colour) {
                     colour = e.target.ancestor().getAttribute('data-colour');
                 }
-                this.currentannotationcolour = colour;
+                this.currentedit.annotationcolour = colour;
                 this.refresh_button_state();
             },
             context: this
@@ -990,10 +1097,10 @@ EDITOR.prototype = {
         e.preventDefault();
 
         // Change style of the pressed button.
-        currenttoolnode = Y.one(TOOLSELECTOR[this.currenttool]);
+        currenttoolnode = Y.one(TOOLSELECTOR[this.currentedit.tool]);
         currenttoolnode.removeClass('assignfeedback_editpdf_selectedbutton');
         currenttoolnode.setAttribute('aria-pressed', 'false');
-        this.currenttool = tool;
+        this.currentedit.tool = tool;
         this.refresh_button_state();
     },
 
@@ -1132,7 +1239,7 @@ EDITOR.prototype = {
             this.currentedit.annotationstart = { x : this.currentannotation.x,
                                                  y : this.currentannotation.y };
         }
-        if (this.currenttool === 'stamp') {
+        if (this.currentedit.tool === 'stamp') {
             this.redraw_current_edit();
         }
     },
@@ -1144,53 +1251,34 @@ EDITOR.prototype = {
      */
     get_current_drawable : function() {
         var drawable = new M.assignfeedback_editpdf.drawable(this),
-            shape, width, height, x, y, highlightcolour;
+            shape, width, height, x, y, highlightcolour, first;
 
         if (!this.currentedit.start || !this.currentedit.end) {
             return false;
         }
 
-        if (this.currenttool === 'pen') {
+        if (this.currentedit.tool === 'pen') {
 
             shape = this.graphic.addShape({
                type: Y.Path,
-                fill: {
-                    color: ANNOTATIONCOLOUR[this.currentannotationcolour]
-                },
+                fill: false,
                 stroke: {
                     weight: STROKEWEIGHT,
-                    color: ANNOTATIONCOLOUR[this.currentannotationcolour]
+                    color: ANNOTATIONCOLOUR[this.currentedit.annotationcolour]
                 }
             });
 
-            // If position is different from last position.
-            if (!this.currentpenposition.x || !this.currentpenposition.y ||
-                this.currentpenposition.x !== this.currentedit.end.x ||
-                this.currentpenposition.y !== this.currentedit.end.y) {
-                // Save the mouse postion to the list of position.
-                if (this.currentpenpath.length === 0) {
-                    this.currentpenpath.push({x:this.currentedit.start.x,y:this.currentedit.start.y});
-                }
-                this.currentpenpath.push({x:this.currentedit.end.x,y:this.currentedit.end.y});
-
-                // Redraw all the lines.
-                var previousposition = {x:null,y:null};
-                Y.each(this.currentpenpath, function(position) {
-                    if (!previousposition.x) {
-                        previousposition.x = this.currentedit.start.x;
-                        previousposition.y = this.currentedit.start.y;
-                    }
-                    shape.moveTo(previousposition.x, previousposition.y);
+            // Redraw all the lines.
+            first = true;
+            Y.each(this.currentedit.path, function(position) {
+                if (first) {
+                    shape.moveTo(position.x, position.y);
+                    first = false;
+                } else {
                     shape.lineTo(position.x, position.y);
-                    previousposition.x = position.x;
-                    previousposition.y = position.y;
-                }, this);
-                shape.end();
-
-                // Save the mouse position as the current one.
-                this.currentpenposition.x = this.currentedit.end.x;
-                this.currentpenposition.y = this.currentedit.end.y;
-            }
+                }
+            }, this);
+            shape.end();
         }
 
         // Work out the boundary box.
@@ -1209,7 +1297,7 @@ EDITOR.prototype = {
             height = this.currentedit.start.y - y;
         }
 
-        if (this.currenttool === 'stamp') {
+        if (this.currentedit.tool === 'stamp') {
             // Delete previous stamp if it exists.
 
             // Redraw stamp.
@@ -1231,29 +1319,27 @@ EDITOR.prototype = {
             return drawable;
         }
 
-        if (this.currenttool === 'comment') {
+        if (this.currentedit.tool === 'comment') {
             // We will draw a box with the current background colour.
             shape = this.graphic.addShape({
                 type: Y.Rect,
                 width: width,
                 height: height,
                 fill: {
-                   color: COMMENTCOLOUR[this.currentcommentcolour]
+                   color: COMMENTCOLOUR[this.currentedit.commentcolour]
                 },
                 x: x,
                 y: y
             });
         }
 
-        if (this.currenttool === 'line') {
+        if (this.currentedit.tool === 'line') {
             shape = this.graphic.addShape({
                type: Y.Path,
-                fill: {
-                    color: ANNOTATIONCOLOUR[this.currentannotationcolour]
-                },
+                fill: false,
                 stroke: {
                     weight: STROKEWEIGHT,
-                    color: ANNOTATIONCOLOUR[this.currentannotationcolour]
+                    color: ANNOTATIONCOLOUR[this.currentedit.annotationcolour]
                 }
             });
 
@@ -1262,11 +1348,11 @@ EDITOR.prototype = {
             shape.end();
         }
 
-        if (this.currenttool === 'rectangle' || this.currenttool === 'oval') {
+        if (this.currentedit.tool === 'rectangle' || this.currentedit.tool === 'oval') {
 
-            if (this.currenttool === 'rectangle') {
+            if (this.currentedit.tool === 'rectangle') {
                 tooltype = Y.Rect;
-            } if (this.currenttool === 'oval') {
+            } if (this.currentedit.tool === 'oval') {
                 tooltype = Y.Ellipse;
             }
 
@@ -1276,15 +1362,15 @@ EDITOR.prototype = {
                 height: height,
                 stroke: {
                    weight: STROKEWEIGHT,
-                   color: ANNOTATIONCOLOUR[this.currentannotationcolour]
+                   color: ANNOTATIONCOLOUR[this.currentedit.annotationcolour]
                 },
                 x: x,
                 y: y
             });
         }
 
-        if (this.currenttool === 'highlight') {
-            highlightcolour = ANNOTATIONCOLOUR[this.currentannotationcolour];
+        if (this.currentedit.tool === 'highlight') {
+            highlightcolour = ANNOTATIONCOLOUR[this.currentedit.annotationcolour];
 
             // Add an alpha channel to the rgb colour.
 
@@ -1360,14 +1446,26 @@ EDITOR.prototype = {
      * @method edit_move
      */
     edit_move : function(e) {
-        var offset = Y.one(SELECTOR.DRAWINGCANVAS).getXY(),
+        var canvas = Y.one(SELECTOR.DRAWINGCANVAS),
+            width = parseInt(canvas.getStyle('width'), 10),
+            height = parseInt(canvas.getStyle('height'), 10),
+            offset = canvas.getXY(),
             scrolltop = document.body.scrollTop,
             scrollleft = document.body.scrollLeft,
             point = {x : e.clientX - offset[0] + scrollleft,
                      y : e.clientY - offset[1] + scrolltop};
 
-        if (this.currenttool === 'select') {
-            if (this.currentannotation) {
+        // Ignore events out of the canvas area.
+        if (point.x < 0 || point.x > width || point.y < 0 || point.y > height) {
+            return;
+        }
+
+        if (this.currentedit.tool === 'pen') {
+            this.currentedit.path.push(point);
+        }
+
+        if (this.currentedit.tool === 'select') {
+            if (this.currentannotation && this.currentedit) {
                 this.move_annotation(this.currentannotation,
                                      this.currentedit.annotationstart.x + point.x - this.currentedit.start.x,
                                      this.currentedit.annotationstart.y + point.y - this.currentedit.start.y);
@@ -1442,7 +1540,7 @@ EDITOR.prototype = {
             return;
         }
 
-        if (this.currenttool === 'comment') {
+        if (this.currentedit.tool === 'comment') {
             // Work out the boundary box.
             x = this.currentedit.start.x;
             if (this.currentedit.end.x > x) {
@@ -1471,19 +1569,19 @@ EDITOR.prototype = {
                 width : width,
                 rawtext : '',
                 pageno : this.currentpage,
-                colour : this.currentcommentcolour
+                colour : this.currentedit.commentcolour
             };
 
             this.pages[this.currentpage].comments.push(data);
             this.drawables.push(this.draw_comment(data, true));
-        } else if (this.currenttool === 'pen') {
+        } else if (this.currentedit.tool === 'pen') {
             // Create the path string.
             thepath = '';
             var minx = null,
                 miny = null,
                 maxx = null,
                 maxy = null;
-            Y.each(this.currentpenpath, function(position) {
+            Y.each(this.currentedit.path, function(position) {
                 thepath = thepath + position.x + "," + position.y + ":";
                 if (minx === null) {
                     minx = maxx = position.x;
@@ -1511,7 +1609,7 @@ EDITOR.prototype = {
                 path : thepath,
                 type : 'pen',
                 pageno : this.currentpage,
-                colour : this.currentannotationcolour,
+                colour : this.currentedit.annotationcolour,
                 x : minx,
                 y : miny,
                 endx : maxx,
@@ -1522,10 +1620,8 @@ EDITOR.prototype = {
             this.drawables.push(this.draw_annotation(data));
 
             // Reset the mouse position for the pen tool.
-            this.currentpenposition.x = null;
-            this.currentpenposition.y = null;
-            this.currentpenpath = [];
-        } else if (this.currenttool === 'highlight') {
+            this.currentedit.path = [];
+        } else if (this.currentedit.tool === 'highlight') {
             // Work out the boundary box.
             x = this.currentedit.start.x;
             if (this.currentedit.end.x > x) {
@@ -1543,14 +1639,14 @@ EDITOR.prototype = {
                     y : y,
                     endx : x + width,
                     endy : y + height,
-                    type : this.currenttool,
+                    type : this.currentedit.tool,
                     pageno : this.currentpage,
-                    colour : this.currentannotationcolour
+                    colour : this.currentedit.annotationcolour
                 };
 
             this.pages[this.currentpage].annotations.push(data);
             this.drawables.push(this.draw_annotation(data));
-        } else if (this.currenttool === 'select') {
+        } else if (this.currentedit.tool === 'select') {
             x = this.currentedit.end.x;
             y = this.currentedit.end.y;
             annotations = this.pages[this.currentpage].annotations;
@@ -1565,7 +1661,7 @@ EDITOR.prototype = {
                 this.currentannotation = selected;
             }
             this.redraw();
-        } else if (this.currenttool === 'stamp') {
+        } else if (this.currentedit.tool === 'stamp') {
             // In path we will save the file name.
             data = {
                 gradeid : this.get('gradeid'),
@@ -1573,9 +1669,9 @@ EDITOR.prototype = {
                 y : this.currentedit.start.y,
                 endx : this.currentedit.end.x,
                 endy : this.currentedit.end.y,
-                type : this.currenttool,
+                type : this.currentedit.tool,
                 pageno : this.currentpage,
-                colour : this.currentannotationcolour,
+                colour : this.currentedit.annotationcolour,
                 path : this.stamps[this.currentstamp].url.replace(/^.*[\\\/]/, '')
             };
 
@@ -1588,9 +1684,9 @@ EDITOR.prototype = {
                 y : this.currentedit.start.y,
                 endx : this.currentedit.end.x,
                 endy : this.currentedit.end.y,
-                type : this.currenttool,
+                type : this.currentedit.tool,
                 pageno : this.currentpage,
-                colour : this.currentannotationcolour
+                colour : this.currentedit.annotationcolour
             };
 
             this.pages[this.currentpage].annotations.push(data);
@@ -1602,7 +1698,9 @@ EDITOR.prototype = {
         this.currentedit.starttime = 0;
         this.currentedit.start = false;
         this.currentedit.end = false;
-        this.currentdrawable.erase();
+        if (this.currentdrawable) {
+            this.currentdrawable.erase();
+        }
         this.currentdrawable = false;
     },
 
@@ -1688,7 +1786,6 @@ EDITOR.prototype = {
     draw_annotation : function(annotation) {
         var drawable,
             positions,
-            previousposition,
             xy,
             width,
             height,
@@ -1697,7 +1794,8 @@ EDITOR.prototype = {
             annotationtype,
             drawingregion = Y.one(SELECTOR.DRAWINGREGION),
             offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY(),
-            shape;
+            shape,
+            first;
 
         drawable = new M.assignfeedback_editpdf.drawable(this);
 
@@ -1741,9 +1839,7 @@ EDITOR.prototype = {
         if (annotation.type === 'line') {
             shape = this.graphic.addShape({
                 type: Y.Path,
-                fill: {
-                    color: ANNOTATIONCOLOUR[annotation.colour]
-                },
+                fill: false,
                 stroke: {
                     weight: STROKEWEIGHT,
                     color: ANNOTATIONCOLOUR[annotation.colour]
@@ -1758,29 +1854,25 @@ EDITOR.prototype = {
         if (annotation.type === 'pen') {
             shape = this.graphic.addShape({
                type: Y.Path,
-                fill: {
-                    color: ANNOTATIONCOLOUR[annotation.colour]
-                },
+                fill: false,
                 stroke: {
                     weight: STROKEWEIGHT,
                     color: ANNOTATIONCOLOUR[annotation.colour]
                 }
             });
 
+            first = true;
             // Recreate the pen path array.
             positions = annotation.path.split(':');
             // Redraw all the lines.
-            previousposition = {x:null,y:null};
             Y.each(positions, function(position) {
                 xy = position.split(',');
-                if (!previousposition.x) {
-                    previousposition.x = xy[0];
-                    previousposition.y = xy[1];
+                if (first) {
+                    shape.moveTo(xy[0], xy[1]);
+                    first = false;
+                } else {
+                    shape.lineTo(xy[0], xy[1]);
                 }
-                shape.moveTo(previousposition.x, previousposition.y);
-                shape.lineTo(xy[0], xy[1]);
-                previousposition.x = xy[0];
-                previousposition.y = xy[1];
             }, this);
 
             shape.end();
@@ -2510,7 +2602,7 @@ EDITOR.prototype = {
 
         page = this.pages[this.currentpage];
         while (this.drawables.length > 0) {
-            this.drawables.pop.erase();
+            this.drawables.pop().erase();
         }
 
         for (i = 0; i < page.annotations.length; i++) {

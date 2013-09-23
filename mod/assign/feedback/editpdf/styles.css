@@ -12,9 +12,11 @@
     cursor: crosshair;
 }
 
-// Disable text selection effects for the entire popup.
 .assignfeedback_editpdf_widget {
     user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -o-user-select: none;
 }
 
 .assignfeedback_editpdf_widget .pageheader {

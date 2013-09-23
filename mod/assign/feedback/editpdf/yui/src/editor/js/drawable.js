@@ -59,14 +59,14 @@ DRAWABLE = function(editor) {
      * @method erase_drawable
      */
     this.erase = function() {
-        if (drawable.shapes) {
-            while (drawable.shapes.length > 0) {
-                this.editor.graphic.removeShape(drawable.shapes.pop());
+        if (this.shapes) {
+            while (this.shapes.length > 0) {
+                this.editor.graphic.removeShape(this.shapes.pop());
             }
         }
-        if (drawable.nodes) {
-            while (drawable.nodes.length > 0) {
-                drawable.nodes.pop().remove();
+        if (this.nodes) {
+            while (this.nodes.length > 0) {
+                this.nodes.pop().remove();
             }
         }
     };
