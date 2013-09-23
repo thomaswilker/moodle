@@ -235,10 +235,10 @@ EDITOR.prototype = {
     /**
      * The users comments quick list
      * @property quicklist
-     * @type Array
+     * @type M.assignfeedback_editpdf.quickcommentlist
      * @protected
      */
-    quicklist : [],
+    quicklist : null,
 
     /**
      * The search comments window.
@@ -288,6 +288,8 @@ EDITOR.prototype = {
     initializer : function() {
         var link,
             deletelink;
+
+        this.quicklist = new M.assignfeedback_editpdf.quickcommentlist(this);
 
         Y.log('Initialising M.assignfeedback_editpdf.editor');
         link = Y.one('#' + this.get('linkid'));
@@ -365,8 +367,6 @@ EDITOR.prototype = {
             drawingregion.delegate('click', this.open_comment_menu, SELECTOR.COMMENTMENU, this);
             drawingregion.delegate('key', this.open_comment_menu, 'down:13', SELECTOR.COMMENTMENU, this);
 
-            //drawingregion.delegate('click', this.delete_annotation, SELECTOR.DELETEANNOTATIONBUTTON, this);
-            //drawingregion.delegate('key', this.delete_annotation, 'down:13', SELECTOR.DELETEANNOTATIONBUTTON, this);
             this.refresh_button_state();
         } else {
             this.dialogue.show();
@@ -470,7 +470,7 @@ EDITOR.prototype = {
         this.pages = data.pages;
 
         // Update the ui.
-        this.load_quicklist();
+        this.quicklist.load();
         this.setup_navigation();
         this.setup_toolbar();
         this.change_page();
@@ -1670,103 +1670,14 @@ EDITOR.prototype = {
     },
 
     /**
-     * Event handler to load the users quick comments list.
-     *
-     * @protected
-     * @method load_quicklist
-     */
-    load_quicklist : function() {
-        var ajaxurl = AJAXBASE,
-            config;
-
-        config = {
-            method: 'get',
-            context: this,
-            sync: false,
-            data : {
-                'sesskey' : M.cfg.sesskey,
-                'action' : 'loadquicklist',
-                'userid' : this.get('userid'),
-                'attemptnumber' : this.get('attemptnumber'),
-                'assignmentid' : this.get('assignmentid')
-            },
-            on: {
-                success: function(tid, response) {
-                    var jsondata;
-                    try {
-                        jsondata = Y.JSON.parse(response.responseText);
-                        if (jsondata.error) {
-                            return new M.core.ajaxException(jsondata);
-                        } else {
-                            this.quicklist = [];
-                            Y.each(jsondata, function(comment) {
-                                this.quicklist.push(comment);
-                            }, this);
-                        }
-                    } catch (e) {
-                        return new M.core.exception(e);
-                    }
-                },
-                failure: function(tid, response) {
-                    return M.core.exception(response.responseText);
-                }
-            }
-        };
-
-        Y.io(ajaxurl, config);
-    },
-
-    /**
      * Event handler to add a comment to the users quicklist.
      *
      * @protected
      * @method add_to_quicklist
      */
     add_to_quicklist : function() {
-        var ajaxurl = AJAXBASE,
-            config;
-
         this.commentmenu.hide();
-        // Do not save empty comments.
-        if (this.currentcomment.rawtext === '') {
-            return;
-        }
-
-        config = {
-            method: 'post',
-            context: this,
-            sync: false,
-            data : {
-                'sesskey' : M.cfg.sesskey,
-                'action' : 'addtoquicklist',
-                'userid' : this.get('userid'),
-                'commenttext' : this.currentcomment.rawtext,
-                'width' : this.currentcomment.width,
-                'colour' : this.currentcomment.colour,
-                'attemptnumber' : this.get('attemptnumber'),
-                'assignmentid' : this.get('assignmentid')
-            },
-            on: {
-                success: function(tid, response) {
-                    var jsondata;
-                    try {
-                        jsondata = Y.JSON.parse(response.responseText);
-                        if (jsondata.error) {
-                            return new M.core.ajaxException(jsondata);
-                        } else {
-                            this.quicklist.push(jsondata);
-                        }
-                    } catch (e) {
-                        return new M.core.exception(e);
-                    }
-                },
-                failure: function(tid, response) {
-                    return M.core.exception(response.responseText);
-                }
-            }
-        };
-
-        Y.io(ajaxurl, config);
+        this.quicklist.add(this.currentcomment);
     },
 
     /**
@@ -1777,9 +1688,7 @@ EDITOR.prototype = {
      */
     remove_from_quicklist : function(e) {
         var target = e.target,
-            comment = target.getData('comment'),
-            ajaxurl = AJAXBASE,
-            config;
+            comment = target.getData('comment');
 
         this.commentmenu.hide();
 
@@ -1793,35 +1702,7 @@ EDITOR.prototype = {
             return;
         }
 
-        config = {
-            method: 'post',
-            context: this,
-            sync: false,
-            data : {
-                'sesskey' : M.cfg.sesskey,
-                'action' : 'removefromquicklist',
-                'userid' : this.get('userid'),
-                'commentid' : comment.id,
-                'attemptnumber' : this.get('attemptnumber'),
-                'assignmentid' : this.get('assignmentid')
-            },
-            on: {
-                success: function() {
-                    var i;
-
-                    // Find and remove the comment from the quicklist.
-                    i = this.quicklist.indexOf(comment);
-                    if (i >= 0) {
-                        this.quicklist.splice(i, 1);
-                    }
-                },
-                failure: function(tid, response) {
-                    return M.core.exception(response.responseText);
-                }
-            }
-        };
-
-        Y.io(ajaxurl, config);
+        this.quicklist.remove(comment);
     },
 
     /**
@@ -1898,7 +1779,7 @@ EDITOR.prototype = {
         if (comment.pageno === this.currentpage) {
             comment.drawable.nodes[0].one('textarea').focus();
         } else {
-            // comment is on a different page.
+            // Comment is on a different page.
             this.currentpage = comment.pageno;
             this.change_page();
             comment.drawable.nodes[0].one('textarea').focus();
@@ -2031,7 +1912,7 @@ EDITOR.prototype = {
         }
 
         // Now build the list of quicklist comments.
-        Y.each(this.quicklist, function(comment) {
+        Y.each(this.quicklist.comments, function(comment) {
             var listitem = Y.Node.create('<li class="quicklist_comment"></li>'),
                 linkitem = Y.Node.create('<a href="#" tabindex="-1">' + comment.rawtext + '</a>'),
                 deletelinkitem = Y.Node.create('<a href="#" tabindex="-1" class="delete_quicklist_comment">' +

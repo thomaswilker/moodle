@@ -10,8 +10,9 @@
         "dropdown.js",
         "colourpicker.js",
         "comments.js",
+        "quickcomment.js",
+        "quickcommentlist.js",
         "editor.js",
-        "quicklist.js",
         "stamps.js"
       ]
     }

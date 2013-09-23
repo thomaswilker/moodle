@@ -455,6 +455,270 @@ M.assignfeedback_editpdf.colourpicker = COLOURPICKER;
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Class representing a users quick comment.
+ *
+ * @module moodle-assignfeedback_editpdf-editor
+ */
+
+/**
+ * QUICKCOMMENT
+ *
+ * @namespace M.assignfeedback_editpdf
+ * @class quickcomment
+ */
+QUICKCOMMENT = function(id, rawtext, width, colour) {
+
+    /**
+     * Quick comment text.
+     * @property rawtext
+     * @type String
+     * @public
+     */
+    this.rawtext = rawtext || '';
+
+    /**
+     * ID of the comment
+     * @property id
+     * @type Int
+     * @public
+     */
+    this.id = id || 0;
+
+    /**
+     * Width of the comment
+     * @property width
+     * @type Int
+     * @public
+     */
+    this.width = width || 100;
+
+    /**
+     * Colour of the comment.
+     * @property colour
+     * @type String
+     * @public
+     */
+    this.colour = colour || "yellow";
+};
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.quickcomment = QUICKCOMMENT;
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Class representing a users list of quick comments.
+ *
+ * @module moodle-assignfeedback_editpdf-editor
+ */
+
+/**
+ * QUICKLIST
+ *
+ * @namespace M.assignfeedback_editpdf
+ * @class quickcommentlist
+ */
+QUICKCOMMENTLIST = function(editor) {
+
+    /**
+     * Reference to M.assignfeedback_editpdf.editor.
+     * @property editor
+     * @type M.assignfeedback_editpdf.editor
+     * @public
+     */
+    this.editor = editor;
+
+    /**
+     * Array of Comments
+     * @property shapes
+     * @type M.assignfeedback_editpdf.quickcomment[]
+     * @public
+     */
+    this.comments = [];
+
+    /**
+     * Add a comment to the users quicklist.
+     *
+     * @protected
+     * @method add
+     */
+    this.add = function(comment) {
+        var ajaxurl = AJAXBASE,
+            config;
+
+        // Do not save empty comments.
+        if (comment.rawtext === '') {
+            return;
+        }
+
+        config = {
+            method: 'post',
+            context: this,
+            sync: false,
+            data : {
+                'sesskey' : M.cfg.sesskey,
+                'action' : 'addtoquicklist',
+                'userid' : this.editor.get('userid'),
+                'commenttext' : comment.rawtext,
+                'width' : comment.width,
+                'colour' : comment.colour,
+                'attemptnumber' : this.editor.get('attemptnumber'),
+                'assignmentid' : this.editor.get('assignmentid')
+            },
+            on: {
+                success: function(tid, response) {
+                    var jsondata, quickcomment;
+                    try {
+                        jsondata = Y.JSON.parse(response.responseText);
+                        if (jsondata.error) {
+                            return new M.core.ajaxException(jsondata);
+                        } else {
+                            quickcomment = new M.assignfeedback_editpdf.quickcomment(jsondata.id,
+                                                                                     jsondata.rawtext,
+                                                                                     jsondata.width,
+                                                                                     jsondata.colour);
+                            this.comments.push(quickcomment);
+                        }
+                    } catch (e) {
+                        return new M.core.exception(e);
+                    }
+                },
+                failure: function(tid, response) {
+                    return M.core.exception(response.responseText);
+                }
+            }
+        };
+
+        Y.io(ajaxurl, config);
+    };
+
+    /**
+     * Remove a comment from the users quicklist.
+     *
+     * @public
+     * @method remove
+     */
+    this.remove = function(comment) {
+        var ajaxurl = AJAXBASE,
+            config;
+
+        // Should not happen.
+        if (!comment) {
+            return;
+        }
+
+        config = {
+            method: 'post',
+            context: this,
+            sync: false,
+            data : {
+                'sesskey' : M.cfg.sesskey,
+                'action' : 'removefromquicklist',
+                'userid' : this.editor.get('userid'),
+                'commentid' : comment.id,
+                'attemptnumber' : this.editor.get('attemptnumber'),
+                'assignmentid' : this.editor.get('assignmentid')
+            },
+            on: {
+                success: function() {
+                    var i;
+
+                    // Find and remove the comment from the quicklist.
+                    i = this.comments.indexOf(comment);
+                    if (i >= 0) {
+                        this.comments.splice(i, 1);
+                    }
+                },
+                failure: function(tid, response) {
+                    return M.core.exception(response.responseText);
+                }
+            }
+        };
+
+        Y.io(ajaxurl, config);
+    };
+
+    /**
+     * Load the users quick comments list.
+     *
+     * @protected
+     * @method load_quicklist
+     */
+    this.load = function() {
+        var ajaxurl = AJAXBASE,
+            config;
+
+        config = {
+            method: 'get',
+            context: this,
+            sync: false,
+            data : {
+                'sesskey' : M.cfg.sesskey,
+                'action' : 'loadquicklist',
+                'userid' : this.editor.get('userid'),
+                'attemptnumber' : this.editor.get('attemptnumber'),
+                'assignmentid' : this.editor.get('assignmentid')
+            },
+            on: {
+                success: function(tid, response) {
+                    var jsondata;
+                    try {
+                        jsondata = Y.JSON.parse(response.responseText);
+                        if (jsondata.error) {
+                            return new M.core.ajaxException(jsondata);
+                        } else {
+                            Y.each(jsondata, function(comment) {
+                                var quickcomment = new M.assignfeedback_editpdf.quickcomment(comment.id,
+                                                                                             comment.rawtext,
+                                                                                             comment.width,
+                                                                                             comment.colour);
+                                this.comments.push(quickcomment);
+                            }, this);
+                        }
+                    } catch (e) {
+                        return new M.core.exception(e);
+                    }
+                },
+                failure: function(tid, response) {
+                    return M.core.exception(response.responseText);
+                }
+            }
+        };
+
+        Y.io(ajaxurl, config);
+    };
+};
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.quickcommentlist = QUICKCOMMENTLIST;
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
  * Provides an in browser PDF editor.
  *
  * @module moodle-assignfeedback_editpdf-editor
@@ -676,10 +940,10 @@ EDITOR.prototype = {
     /**
      * The users comments quick list
      * @property quicklist
-     * @type Array
+     * @type M.assignfeedback_editpdf.quickcommentlist
      * @protected
      */
-    quicklist : [],
+    quicklist : null,
 
     /**
      * The search comments window.
@@ -729,6 +993,8 @@ EDITOR.prototype = {
     initializer : function() {
         var link,
             deletelink;
+
+        this.quicklist = new M.assignfeedback_editpdf.quickcommentlist(this);
 
         link = Y.one('#' + this.get('linkid'));
 
@@ -803,8 +1069,6 @@ EDITOR.prototype = {
             drawingregion.delegate('click', this.open_comment_menu, SELECTOR.COMMENTMENU, this);
             drawingregion.delegate('key', this.open_comment_menu, 'down:13', SELECTOR.COMMENTMENU, this);
 
-            //drawingregion.delegate('click', this.delete_annotation, SELECTOR.DELETEANNOTATIONBUTTON, this);
-            //drawingregion.delegate('key', this.delete_annotation, 'down:13', SELECTOR.DELETEANNOTATIONBUTTON, this);
             this.refresh_button_state();
         } else {
             this.dialogue.show();
@@ -907,7 +1171,7 @@ EDITOR.prototype = {
         this.pages = data.pages;
 
         // Update the ui.
-        this.load_quicklist();
+        this.quicklist.load();
         this.setup_navigation();
         this.setup_toolbar();
         this.change_page();
@@ -2103,103 +2367,14 @@ EDITOR.prototype = {
     },
 
     /**
-     * Event handler to load the users quick comments list.
-     *
-     * @protected
-     * @method load_quicklist
-     */
-    load_quicklist : function() {
-        var ajaxurl = AJAXBASE,
-            config;
-
-        config = {
-            method: 'get',
-            context: this,
-            sync: false,
-            data : {
-                'sesskey' : M.cfg.sesskey,
-                'action' : 'loadquicklist',
-                'userid' : this.get('userid'),
-                'attemptnumber' : this.get('attemptnumber'),
-                'assignmentid' : this.get('assignmentid')
-            },
-            on: {
-                success: function(tid, response) {
-                    var jsondata;
-                    try {
-                        jsondata = Y.JSON.parse(response.responseText);
-                        if (jsondata.error) {
-                            return new M.core.ajaxException(jsondata);
-                        } else {
-                            this.quicklist = [];
-                            Y.each(jsondata, function(comment) {
-                                this.quicklist.push(comment);
-                            }, this);
-                        }
-                    } catch (e) {
-                        return new M.core.exception(e);
-                    }
-                },
-                failure: function(tid, response) {
-                    return M.core.exception(response.responseText);
-                }
-            }
-        };
-
-        Y.io(ajaxurl, config);
-    },
-
-    /**
      * Event handler to add a comment to the users quicklist.
      *
      * @protected
      * @method add_to_quicklist
      */
     add_to_quicklist : function() {
-        var ajaxurl = AJAXBASE,
-            config;
-
         this.commentmenu.hide();
-        // Do not save empty comments.
-        if (this.currentcomment.rawtext === '') {
-            return;
-        }
-
-        config = {
-            method: 'post',
-            context: this,
-            sync: false,
-            data : {
-                'sesskey' : M.cfg.sesskey,
-                'action' : 'addtoquicklist',
-                'userid' : this.get('userid'),
-                'commenttext' : this.currentcomment.rawtext,
-                'width' : this.currentcomment.width,
-                'colour' : this.currentcomment.colour,
-                'attemptnumber' : this.get('attemptnumber'),
-                'assignmentid' : this.get('assignmentid')
-            },
-            on: {
-                success: function(tid, response) {
-                    var jsondata;
-                    try {
-                        jsondata = Y.JSON.parse(response.responseText);
-                        if (jsondata.error) {
-                            return new M.core.ajaxException(jsondata);
-                        } else {
-                            this.quicklist.push(jsondata);
-                        }
-                    } catch (e) {
-                        return new M.core.exception(e);
-                    }
-                },
-                failure: function(tid, response) {
-                    return M.core.exception(response.responseText);
-                }
-            }
-        };
-
-        Y.io(ajaxurl, config);
+        this.quicklist.add(this.currentcomment);
     },
 
     /**
@@ -2210,9 +2385,7 @@ EDITOR.prototype = {
      */
     remove_from_quicklist : function(e) {
         var target = e.target,
-            comment = target.getData('comment'),
-            ajaxurl = AJAXBASE,
-            config;
+            comment = target.getData('comment');
 
         this.commentmenu.hide();
 
@@ -2226,35 +2399,7 @@ EDITOR.prototype = {
             return;
         }
 
-        config = {
-            method: 'post',
-            context: this,
-            sync: false,
-            data : {
-                'sesskey' : M.cfg.sesskey,
-                'action' : 'removefromquicklist',
-                'userid' : this.get('userid'),
-                'commentid' : comment.id,
-                'attemptnumber' : this.get('attemptnumber'),
-                'assignmentid' : this.get('assignmentid')
-            },
-            on: {
-                success: function() {
-                    var i;
-
-                    // Find and remove the comment from the quicklist.
-                    i = this.quicklist.indexOf(comment);
-                    if (i >= 0) {
-                        this.quicklist.splice(i, 1);
-                    }
-                },
-                failure: function(tid, response) {
-                    return M.core.exception(response.responseText);
-                }
-            }
-        };
-
-        Y.io(ajaxurl, config);
+        this.quicklist.remove(comment);
     },
 
     /**
@@ -2331,7 +2476,7 @@ EDITOR.prototype = {
         if (comment.pageno === this.currentpage) {
             comment.drawable.nodes[0].one('textarea').focus();
         } else {
-            // comment is on a different page.
+            // Comment is on a different page.
             this.currentpage = comment.pageno;
             this.change_page();
             comment.drawable.nodes[0].one('textarea').focus();
@@ -2464,7 +2609,7 @@ EDITOR.prototype = {
         }
 
         // Now build the list of quicklist comments.
-        Y.each(this.quicklist, function(comment) {
+        Y.each(this.quicklist.comments, function(comment) {
             var listitem = Y.Node.create('<li class="quicklist_comment"></li>'),
                 linkitem = Y.Node.create('<a href="#" tabindex="-1">' + comment.rawtext + '</a>'),
                 deletelinkitem = Y.Node.create('<a href="#" tabindex="-1" class="delete_quicklist_comment">' +
