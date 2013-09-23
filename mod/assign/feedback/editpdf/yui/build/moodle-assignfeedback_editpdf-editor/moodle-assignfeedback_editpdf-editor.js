@@ -16,6 +16,78 @@ YUI.add('moodle-assignfeedback_editpdf-editor', function (Y, NAME) {
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * A list of globals used by this module.
+ *
+ * @module moodle-assignfeedback_editpdf-editor
+ */
+var AJAXBASE = M.cfg.wwwroot + '/mod/assign/feedback/editpdf/ajax.php',
+    CSS = {
+        DIALOGUE : 'assignfeedback_editpdf_widget'
+    },
+    SELECTOR = {
+        PREVIOUSBUTTON : '.' + CSS.DIALOGUE + ' .navigate-previous-button',
+        NEXTBUTTON : '.' + CSS.DIALOGUE + ' .navigate-next-button',
+        SEARCHCOMMENTSBUTTON : '.' + CSS.DIALOGUE + ' .searchcommentsbutton',
+        SEARCHFILTER : '.assignfeedback_editpdf_searchcomments input',
+        SEARCHCOMMENTSLIST : '.assignfeedback_editpdf_searchcomments ul',
+        PAGESELECT : '.' + CSS.DIALOGUE + ' .navigate-page-select',
+        LOADINGICON : '.' + CSS.DIALOGUE + ' .loading',
+        DRAWINGREGION : '.' + CSS.DIALOGUE + ' .drawingregion',
+        DRAWINGCANVAS : '.' + CSS.DIALOGUE + ' .drawingcanvas',
+        SAVE : '.' + CSS.DIALOGUE + ' .savebutton',
+        COMMENTCOLOURBUTTON : '.' + CSS.DIALOGUE + ' .commentcolourbutton',
+        COMMENTMENU : ' .commentdrawable a',
+        ANNOTATIONCOLOURBUTTON : '.' + CSS.DIALOGUE + ' .annotationcolourbutton',
+        DELETEANNOTATIONBUTTON : '.' + CSS.DIALOGUE + ' .deleteannotationbutton',
+        STAMPSBUTTON : '.' + CSS.DIALOGUE + ' .currentstampbutton',
+        DIALOGUE : '.' + CSS.DIALOGUE
+    },
+    SELECTEDBORDERCOLOUR = 'rgba(200, 200, 255, 0.9)',
+    SELECTEDFILLCOLOUR = 'rgba(200, 200, 255, 0.5)',
+    COMMENTCOLOUR = {
+        'white' : 'rgb(255,255,255)',
+        'yellow' : 'rgb(255,255,176)',
+        'red' : 'rgb(255,176,176)',
+        'green' : 'rgb(176,255,176)',
+        'blue' : 'rgb(208,208,255)',
+        'clear' : 'rgba(255,255,255, 0)'
+    },
+    ANNOTATIONCOLOUR = {
+        'white' : 'rgb(255,255,255)',
+        'yellow' : 'rgb(255,255,0)',
+        'red' : 'rgb(255,0,0)',
+        'green' : 'rgb(0,255,0)',
+        'blue' : 'rgb(0,0,255)',
+        'black' : 'rgb(0,0,0)'
+    },
+    CLICKTIMEOUT = 300,
+    TOOLSELECTOR = {
+        'comment': '.' + CSS.DIALOGUE + ' .commentbutton',
+        'pen': '.' + CSS.DIALOGUE + ' .penbutton',
+        'line': '.' + CSS.DIALOGUE + ' .linebutton',
+        'rectangle': '.' + CSS.DIALOGUE + ' .rectanglebutton',
+        'oval': '.' + CSS.DIALOGUE + ' .ovalbutton',
+        'stamp': '.' + CSS.DIALOGUE + ' .stampbutton',
+        'select': '.' + CSS.DIALOGUE + ' .selectbutton',
+        'highlight': '.' + CSS.DIALOGUE + ' .highlightbutton'
+    },
+    STROKEWEIGHT = 4;
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
  * Class representing a 2d point.
  *
  * @module moodle-assignfeedback_editpdf-editor
@@ -455,6 +527,304 @@ M.assignfeedback_editpdf.colourpicker = COLOURPICKER;
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Class representing a list of comments.
+ *
+ * @module moodle-assignfeedback_editpdf-editor
+ */
+
+/**
+ * COMMENT
+ *
+ * @namespace M.assignfeedback_editpdf
+ * @class quickcommentlist
+ * @param M.assignfeedback_editpdf.editor editor
+ * @param Int gradeid
+ * @param Int pageno
+ * @param Int x
+ * @param Int y
+ * @param Int width
+ * @param String colour
+ * @param String rawtext
+ */
+COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
+
+    /**
+     * Reference to M.assignfeedback_editpdf.editor.
+     * @property editor
+     * @type M.assignfeedback_editpdf.editor
+     * @public
+     */
+    this.editor = editor;
+
+    /**
+     * Grade id
+     * @property gradeid
+     * @type Int
+     * @public
+     */
+    this.gradeid = gradeid || 0;
+
+    /**
+     * X position
+     * @property x
+     * @type Int
+     * @public
+     */
+    this.x = x || 0;
+
+    /**
+     * Y position
+     * @property y
+     * @type Int
+     * @public
+     */
+    this.y = y || 0;
+
+    /**
+     * Comment width
+     * @property width
+     * @type Int
+     * @public
+     */
+    this.width = width || 0;
+
+    /**
+     * Comment rawtext
+     * @property rawtext
+     * @type String
+     * @public
+     */
+    this.rawtext = rawtext || '';
+
+    /**
+     * Comment page number
+     * @property pageno
+     * @type Int
+     * @public
+     */
+    this.pageno = pageno || 0;
+
+    /**
+     * Comment background colour.
+     * @property colour
+     * @type String
+     * @public
+     */
+    this.colour = colour || 'yellow';
+
+    /**
+     * Reference to M.assignfeedback_editpdf.drawable
+     * @property drawable
+     * @type M.assignfeedback_editpdf.drawable
+     * @public
+     */
+    this.drawable = false;
+
+    /**
+     * Boolean used by a timeout to delete empty comments after a short delay.
+     * @property deleteme
+     * @type Boolean
+     * @public
+     */
+    this.deleteme = false;
+
+    /**
+     * Clean a comment record, returning an oject with only fields that are valid.
+     * @public
+     * @method clean
+     * @return {}
+     */
+    this.clean = function() {
+        return {
+            gradeid : this.gradeid,
+            x : this.x,
+            y : this.y,
+            width : this.width,
+            rawtext : this.rawtext,
+            pageno : this.currentpage,
+            colour : this.colour
+        };
+    };
+
+    /**
+     * Draw a comment.
+     * @public
+     * @method draw_comment
+     * @param boolean focus - Set the keyboard focus to the new comment if true
+     * @return M.assignfeedback_editpdf.drawable
+     */
+    this.draw = function(focus) {
+        var drawable = new M.assignfeedback_editpdf.drawable(this.editor),
+            node,
+            drawingregion = Y.one(SELECTOR.DRAWINGREGION),
+            offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY(),
+            offsetdialogue = Y.one(SELECTOR.DIALOGUE).getXY(),
+            offsetleft = offsetcanvas[0] - offsetdialogue[0],
+            offsettop = offsetcanvas[1] - offsetdialogue[1],
+            container,
+            menu;
+
+        // Lets add a contenteditable div.
+        node = Y.Node.create('<textarea/>');
+        container = Y.Node.create('<div class="commentdrawable"/>');
+        menu = Y.Node.create('<a href="#"><img src="' + this.editor.get('menuicon') + '"/></a>');
+        container.append(node);
+        container.append(menu);
+        if (this.width < 100) {
+            this.width = 100;
+        }
+        container.setStyles({
+            position: 'absolute',
+            left: (parseInt(this.x, 10) + offsetleft) + 'px',
+            top: (parseInt(this.y, 10) + offsettop) + 'px'
+        });
+        node.setStyles({
+            width: this.width + 'px',
+            backgroundColor: COMMENTCOLOUR[this.colour]
+        });
+
+        drawingregion.append(container);
+        drawable.nodes.push(container);
+        node.set('value', this.rawtext);
+        node.setStyle('height', node.get('scrollHeight') - 8 + 'px');
+        this.attach_events(node, menu);
+        if (focus) {
+            node.focus();
+        }
+        this.drawable = drawable;
+
+        return drawable;
+    };
+
+    /**
+     * Delete an empty comment if it's menu hasn't been opened in time.
+     * @method delete_comment_later
+     */
+    this.delete_comment_later = function() {
+        if (this.deleteme) {
+            this.remove();
+        }
+    };
+
+    /**
+     * Comment nodes have a bunch of event handlers attached to them directly.
+     * This is all done here for neatness.
+     *
+     * @protected
+     * @method attach_comment_events
+     * @param node - The Y.Node representing the comment.
+     * @param menu - The Y.Node representing the menu.
+     */
+    this.attach_events = function(node, menu) {
+        // Save the text on blur.
+        node.on('blur', function() {
+            // Save the changes back to the comment.
+            this.rawtext = node.get('value');
+            this.width = parseInt(node.getStyle('width'), 10);
+
+            // Trim.
+            if (this.rawtext.replace(/^\s+|\s+$/g, "") === '') {
+                // Delete empty comments.
+                this.deleteme = true;
+                Y.later(400, this, this.delete_comment_later);
+            }
+            this.editor.save_current_page();
+        }, this);
+
+        // For delegated event handler.
+        menu.setData('comment', this);
+
+        node.on('keyup', function() {
+            var scrollHeight = node.get('scrollHeight') - 8;
+            node.setStyle('height', scrollHeight + 'px');
+        });
+
+        node.on('gesturemovestart', function(e) {
+            node.setData('dragging', true);
+            node.setData('offsetx', e.clientX - node.getX());
+            node.setData('offsety', e.clientY - node.getY());
+        });
+        node.on('gesturemoveend', function() {
+            node.setData('dragging', false);
+            this.editor.save_current_page();
+        }, null, this);
+        node.on('gesturemove', function(e) {
+            var x = e.clientX - node.getData('offsetx'),
+                y = e.clientY - node.getData('offsety'),
+                canvas = Y.one(SELECTOR.DRAWINGCANVAS),
+                offsetcanvas = canvas.getXY(),
+                canvaswidth,
+                canvasheight,
+                nodewidth,
+                nodeheight,
+                offsetleft = offsetcanvas[0],
+                offsettop = offsetcanvas[1];
+
+            canvaswidth = parseInt(canvas.getStyle('width'), 10);
+            canvasheight = parseInt(canvas.getStyle('height'), 10);
+            nodewidth = parseInt(node.getStyle('width'), 10);
+            nodeheight = parseInt(node.getStyle('height'), 10);
+
+            // Constrain the comment to the canvas.
+            if (x < offsetleft) {
+                x = offsetleft;
+            }
+            if (y < offsettop) {
+                y = offsettop;
+            }
+            if (x - offsetleft + nodewidth > canvaswidth) {
+                x = offsetleft + canvaswidth - nodewidth;
+            }
+            if (y - offsettop + nodeheight > canvasheight) {
+                y = offsettop + canvasheight - nodeheight;
+            }
+
+            this.x = x - offsetleft;
+            this.y = y - offsettop;
+
+            node.ancestor().setX(x);
+            node.ancestor().setY(y);
+        });
+    };
+
+    /**
+     * Delete a comment.
+     * @method remove
+     */
+    this.remove = function() {
+        var i = 0, comments;
+
+        comments = this.editor.pages[this.editor.currentpage].comments;
+        for (i = 0; i < comments.length; i++) {
+            if (comments[i] === this) {
+                comments.splice(i, 1);
+                this.drawable.erase();
+                this.editor.save_current_page();
+                return;
+            }
+        }
+    };
+
+};
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.comment = COMMENT;
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
  * Class representing a users quick comment.
  *
  * @module moodle-assignfeedback_editpdf-editor
@@ -725,59 +1095,6 @@ M.assignfeedback_editpdf.quickcommentlist = QUICKCOMMENTLIST;
  */
 
 // Globals.
-var AJAXBASE = M.cfg.wwwroot + '/mod/assign/feedback/editpdf/ajax.php',
-    CSS = {
-        DIALOGUE : 'assignfeedback_editpdf_widget'
-    },
-    SELECTOR = {
-        PREVIOUSBUTTON : '.' + CSS.DIALOGUE + ' .navigate-previous-button',
-        NEXTBUTTON : '.' + CSS.DIALOGUE + ' .navigate-next-button',
-        SEARCHCOMMENTSBUTTON : '.' + CSS.DIALOGUE + ' .searchcommentsbutton',
-        SEARCHFILTER : '.assignfeedback_editpdf_searchcomments input',
-        SEARCHCOMMENTSLIST : '.assignfeedback_editpdf_searchcomments ul',
-        PAGESELECT : '.' + CSS.DIALOGUE + ' .navigate-page-select',
-        LOADINGICON : '.' + CSS.DIALOGUE + ' .loading',
-        DRAWINGREGION : '.' + CSS.DIALOGUE + ' .drawingregion',
-        DRAWINGCANVAS : '.' + CSS.DIALOGUE + ' .drawingcanvas',
-        SAVE : '.' + CSS.DIALOGUE + ' .savebutton',
-        COMMENTCOLOURBUTTON : '.' + CSS.DIALOGUE + ' .commentcolourbutton',
-        COMMENTMENU : ' .commentdrawable a',
-        ANNOTATIONCOLOURBUTTON : '.' + CSS.DIALOGUE + ' .annotationcolourbutton',
-        DELETEANNOTATIONBUTTON : '.' + CSS.DIALOGUE + ' .deleteannotationbutton',
-        STAMPSBUTTON : '.' + CSS.DIALOGUE + ' .currentstampbutton',
-        DIALOGUE : '.' + CSS.DIALOGUE
-    },
-    SELECTEDBORDERCOLOUR = 'rgba(200, 200, 255, 0.9)',
-    SELECTEDFILLCOLOUR = 'rgba(200, 200, 255, 0.5)',
-    COMMENTCOLOUR = {
-        'white' : 'rgb(255,255,255)',
-        'yellow' : 'rgb(255,255,176)',
-        'red' : 'rgb(255,176,176)',
-        'green' : 'rgb(176,255,176)',
-        'blue' : 'rgb(208,208,255)',
-        'clear' : 'rgba(255,255,255, 0)'
-    },
-    ANNOTATIONCOLOUR = {
-        'white' : 'rgb(255,255,255)',
-        'yellow' : 'rgb(255,255,0)',
-        'red' : 'rgb(255,0,0)',
-        'green' : 'rgb(0,255,0)',
-        'blue' : 'rgb(0,0,255)',
-        'black' : 'rgb(0,0,0)'
-    },
-    CLICKTIMEOUT = 300,
-    TOOLSELECTOR = {
-        'comment': '.' + CSS.DIALOGUE + ' .commentbutton',
-        'pen': '.' + CSS.DIALOGUE + ' .penbutton',
-        'line': '.' + CSS.DIALOGUE + ' .linebutton',
-        'rectangle': '.' + CSS.DIALOGUE + ' .rectanglebutton',
-        'oval': '.' + CSS.DIALOGUE + ' .ovalbutton',
-        'stamp': '.' + CSS.DIALOGUE + ' .stampbutton',
-        'select': '.' + CSS.DIALOGUE + ' .selectbutton',
-        'highlight': '.' + CSS.DIALOGUE + ' .highlightbutton'
-    },
-    STROKEWEIGHT = 4;
-
 /**
  * Stamp
  *
@@ -1158,7 +1475,7 @@ EDITOR.prototype = {
      * @method all_pages_loaded
      */
     all_pages_loaded : function(responsetext) {
-        var data;
+        var data, i, j, comment;
 
         try {
             data = Y.JSON.parse(responsetext);
@@ -1169,6 +1486,20 @@ EDITOR.prototype = {
 
         this.pagecount = data.pagecount;
         this.pages = data.pages;
+
+        for (i = 0; i < this.pages.length; i++) {
+            for (j = 0; j < this.pages[i].comments.length; j++) {
+                comment = this.pages[i].comments[j];
+                this.pages[i].comments[j] = new M.assignfeedback_editpdf.comment(this,
+                                                                                 comment.gradeid,
+                                                                                 comment.pageno,
+                                                                                 comment.x,
+                                                                                 comment.y,
+                                                                                 comment.width,
+                                                                                 comment.colour,
+                                                                                 comment.rawtext);
+            }
+        }
 
         // Update the ui.
         this.quicklist.load();
@@ -1401,7 +1732,7 @@ EDITOR.prototype = {
             i = 0;
 
         for (i = 0; i < this.pages[this.currentpage].comments.length; i++) {
-            comments[i] = this.clean_comment_data(this.pages[this.currentpage].comments[i]);
+            comments[i] = this.pages[this.currentpage].comments[i].clean();
         }
         for (i = 0; i < this.pages[this.currentpage].annotations.length; i++) {
             annotations[i] = this.clean_annotation_data(this.pages[this.currentpage].annotations[i]);
@@ -1736,25 +2067,6 @@ EDITOR.prototype = {
     },
 
     /**
-     * Clean a comment record, returning an oject with only fields that are valid.
-     * @protected
-     * @method clean_comment_data
-     * @param comment
-     * @return string
-     */
-    clean_comment_data : function(comment) {
-        return {
-            gradeid : comment.gradeid,
-            x : comment.x,
-            y : comment.y,
-            width : comment.width,
-            rawtext : comment.rawtext,
-            pageno : comment.currentpage,
-            colour : comment.colour
-        };
-    },
-
-    /**
      * Clean a annotation record, returning an oject with only fields that are valid.
      * @protected
      * @method clean_annotation_data
@@ -1819,18 +2131,18 @@ EDITOR.prototype = {
 
             // Save the current edit to the server and the current page list.
 
-            data = {
-                gradeid : this.get('gradeid'),
-                x : x,
-                y : y,
-                width : width,
-                rawtext : '',
-                pageno : this.currentpage,
-                colour : this.currentedit.commentcolour
-            };
+            data = new M.assignfeedback_editpdf.comment(this,
+                this.get('gradeid'),
+                this.currentpage,
+                x,
+                y,
+                width,
+                this.currentedit.commentcolour,
+                ''
+            );
 
             this.pages[this.currentpage].comments.push(data);
-            this.drawables.push(this.draw_comment(data, true));
+            this.drawables.push(data.draw(true));
         } else if (this.currentedit.tool === 'pen') {
             // Create the path string.
             thepath = '';
@@ -2296,77 +2608,6 @@ EDITOR.prototype = {
     },
 
     /**
-     * Delete a comment from the current page.
-     * @protected
-     * @method delete_comment
-     * @param comment
-     */
-    delete_comment : function(comment) {
-        var i = 0, comments;
-
-        comments = this.pages[this.currentpage].comments;
-        for (i = 0; i < comments.length; i++) {
-            if (comments[i] === comment) {
-                comments.splice(i, 1);
-                comment.drawable.erase();
-                this.save_current_page();
-                return;
-            }
-        }
-    },
-
-    /**
-     * Draw a comment.
-     * @protected
-     * @method draw_comment
-     * @param comment
-     * @param boolean focus - Set the keyboard focus to the new comment if true
-     * @return M.assignfeedback_editpdf.drawable
-     */
-    draw_comment : function(comment, focus) {
-        var drawable = new M.assignfeedback_editpdf.drawable(this),
-            node,
-            drawingregion = Y.one(SELECTOR.DRAWINGREGION),
-            offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY(),
-            offsetdialogue = Y.one(SELECTOR.DIALOGUE).getXY(),
-            offsetleft = offsetcanvas[0] - offsetdialogue[0],
-            offsettop = offsetcanvas[1] - offsetdialogue[1],
-            container,
-            menu;
-
-        // Lets add a contenteditable div.
-        node = Y.Node.create('<textarea/>');
-        container = Y.Node.create('<div class="commentdrawable"/>');
-        menu = Y.Node.create('<a href="#"><img src="' + this.get('menuicon') + '"/></a>');
-        container.append(node);
-        container.append(menu);
-        if (comment.width < 100) {
-            comment.width = 100;
-        }
-        container.setStyles({
-            position: 'absolute',
-            left: (parseInt(comment.x, 10) + offsetleft) + 'px',
-            top: (parseInt(comment.y, 10) + offsettop) + 'px'
-        });
-        node.setStyles({
-            width: comment.width + 'px',
-            backgroundColor: COMMENTCOLOUR[comment.colour]
-        });
-
-        drawingregion.append(container);
-        drawable.nodes.push(container);
-        node.set('value', comment.rawtext);
-        node.setStyle('height', node.get('scrollHeight') - 8 + 'px');
-        this.attach_comment_events(comment, node, menu);
-        if (focus) {
-            node.focus();
-        }
-        comment.drawable = drawable;
-
-        return drawable;
-    },
-
-    /**
      * Event handler to add a comment to the users quicklist.
      *
      * @protected
@@ -2561,6 +2802,7 @@ EDITOR.prototype = {
         }
 
         this.currentcomment = comment;
+        comment.deleteme = false;
         this.currentcommentmenulink = target;
 
         // Build the comment menu only the first time.
@@ -2575,8 +2817,8 @@ EDITOR.prototype = {
             commentlinks.append(link);
 
             link = Y.Node.create('<li><a tabindex="-1" href="#">' + M.util.get_string('deletecomment', 'assignfeedback_editpdf') + '</a></li>');
-            link.on('click', function() { this.commentmenu.hide(); this.delete_comment(this.currentcomment); }, this);
-            link.on('key', function() { this.commentmenu.hide(); this.delete_comment(this.currentcomment); }, 'enter,space', this);
+            link.on('click', function() { this.commentmenu.hide(); this.currentcomment.remove(); }, this);
+            link.on('key', function() { this.commentmenu.hide(); this.currentcomment.remove(); }, 'enter,space', this);
 
             commentlinks.append(link);
 
@@ -2635,97 +2877,6 @@ EDITOR.prototype = {
     },
 
     /**
-     * Delete an empty comment if it's menu hasn't been opened in time.
-     * @method delete_comment_later
-     */
-    delete_comment_later : function() {
-        if (this.commenttodelete !== null) {
-            this.delete_comment(this.commenttodelete);
-        }
-    },
-
-    /**
-     * Comment nodes have a bunch of event handlers attached to them directly.
-     * This is all done here for neatness.
-     *
-     * @protected
-     * @method attach_comment_events
-     * @param comment - The comment structure
-     * @param node - The Y.Node representing the comment.
-     */
-    attach_comment_events : function(comment, node, menu) {
-        // Save the text on blur.
-        node.on('blur', function() {
-            // Save the changes back to the comment.
-            comment.rawtext = node.get('value');
-            comment.width = parseInt(node.getStyle('width'), 10);
-
-            // Trim.
-            if (comment.rawtext.replace(/^\s+|\s+$/g, "") === '') {
-                // Delete empty comments.
-                this.commenttodelete = comment;
-                Y.later(400, this, this.delete_comment_later);
-            }
-            this.save_current_page();
-        }, this);
-
-        // For delegated event handler.
-        menu.setData('comment', comment);
-
-        node.on('keyup', function() {
-            var scrollHeight = node.get('scrollHeight') - 8;
-            this.setStyle('height', scrollHeight + 'px');
-        });
-
-        node.on('gesturemovestart', function(e) {
-            node.setData('dragging', true);
-            node.setData('offsetx', e.clientX - node.getX());
-            node.setData('offsety', e.clientY - node.getY());
-        });
-        node.on('gesturemoveend', function() {
-            node.setData('dragging', false);
-            this.save_current_page();
-        }, null, this);
-        node.on('gesturemove', function(e) {
-            var x = e.clientX - node.getData('offsetx'),
-                y = e.clientY - node.getData('offsety'),
-                canvas = Y.one(SELECTOR.DRAWINGCANVAS),
-                offsetcanvas = canvas.getXY(),
-                canvaswidth,
-                canvasheight,
-                nodewidth,
-                nodeheight,
-                offsetleft = offsetcanvas[0],
-                offsettop = offsetcanvas[1];
-
-            canvaswidth = parseInt(canvas.getStyle('width'), 10);
-            canvasheight = parseInt(canvas.getStyle('height'), 10);
-            nodewidth = parseInt(node.getStyle('width'), 10);
-            nodeheight = parseInt(node.getStyle('height'), 10);
-
-            // Constrain the comment to the canvas.
-            if (x < offsetleft) {
-                x = offsetleft;
-            }
-            if (y < offsettop) {
-                y = offsettop;
-            }
-            if (x - offsetleft + nodewidth > canvaswidth) {
-                x = offsetleft + canvaswidth - nodewidth;
-            }
-            if (y - offsettop + nodeheight > canvasheight) {
-                y = offsettop + canvasheight - nodeheight;
-            }
-
-            comment.x = x - offsetleft;
-            comment.y = y - offsettop;
-
-            node.ancestor().setX(x);
-            node.ancestor().setY(y);
-        });
-    },
-
-    /**
      * Redraw all the comments and annotations.
      * @protected
      * @method redraw
@@ -2743,7 +2894,7 @@ EDITOR.prototype = {
             this.drawables.push(this.draw_annotation(page.annotations[i]));
         }
         for (i = 0; i < page.comments.length; i++) {
-            this.drawables.push(this.draw_comment(page.comments[i], false));
+            this.drawables.push(page.comments[i].draw(false));
         }
     },
 
