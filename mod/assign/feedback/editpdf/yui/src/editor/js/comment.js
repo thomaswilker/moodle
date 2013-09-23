@@ -23,7 +23,7 @@
  * COMMENT
  *
  * @namespace M.assignfeedback_editpdf
- * @class quickcommentlist
+ * @class comment
  * @param M.assignfeedback_editpdf.editor editor
  * @param Int gradeid
  * @param Int pageno

@@ -428,6 +428,19 @@ EDITOR.prototype = {
                                                                                  comment.colour,
                                                                                  comment.rawtext);
             }
+            for (j = 0; j < this.pages[i].annotations.length; j++) {
+                annotation = this.pages[i].annotations[j];
+                this.pages[i].annotations[j] = new M.assignfeedback_editpdf.annotation(this,
+                                                                                 annotation.gradeid,
+                                                                                 annotation.pageno,
+                                                                                 annotation.x,
+                                                                                 annotation.y,
+                                                                                 annotation.endx,
+                                                                                 annotation.endy,
+                                                                                 annotation.type,
+                                                                                 annotation.colour,
+                                                                                 annotation.path);
+            }
         }
 
         // Update the ui.
@@ -665,7 +678,7 @@ EDITOR.prototype = {
             comments[i] = this.pages[this.currentpage].comments[i].clean();
         }
         for (i = 0; i < this.pages[this.currentpage].annotations.length; i++) {
-            annotations[i] = this.clean_annotation_data(this.pages[this.currentpage].annotations[i]);
+            annotations[i] = this.pages[this.currentpage].annotations[i].clean();
         }
 
         page = { comments : comments, annotations : annotations };
@@ -956,7 +969,7 @@ EDITOR.prototype = {
 
         }
         annotation.drawable.erase();
-        this.drawables.push(this.draw_annotation(annotation));
+        this.drawables.push(annotation.draw());
     },
 
     /**
@@ -996,27 +1009,6 @@ EDITOR.prototype = {
                 this.redraw_current_edit();
             }
         }
-    },
-
-    /**
-     * Clean a annotation record, returning an oject with only fields that are valid.
-     * @protected
-     * @method clean_annotation_data
-     * @param annotation
-     * @return string
-     */
-    clean_annotation_data : function(annotation) {
-        return {
-            gradeid : annotation.gradeid,
-            x : annotation.x,
-            y : annotation.y,
-            endx : annotation.endx,
-            endy : annotation.endy,
-            type : annotation.type,
-            path : annotation.path,
-            pageno : annotation.pageno,
-            colour : annotation.colour
-        };
     },
 
     /**
@@ -1105,20 +1097,21 @@ EDITOR.prototype = {
             // Remove the last ":".
             thepath = thepath.substring(0, thepath.length - 1);
 
-            data = {
-                gradeid : this.get('gradeid'),
-                path : thepath,
-                type : 'pen',
-                pageno : this.currentpage,
-                colour : this.currentedit.annotationcolour,
-                x : minx,
-                y : miny,
-                endx : maxx,
-                endy : maxy
-            };
+            data = new M.assignfeedback_editpdf.annotation(
+                this,
+                this.get('gradeid'),
+                this.currentpage,
+                minx,
+                miny,
+                maxx,
+                maxy,
+                this.currentedit.tool,
+                this.currentedit.annotationcolour,
+                this.currentedit.path
+            );
 
             this.pages[this.currentpage].annotations.push(data);
-            this.drawables.push(this.draw_annotation(data));
+            this.drawables.push(data.draw());
 
             // Reset the mouse position for the pen tool.
             this.currentedit.path = [];
@@ -1134,19 +1127,21 @@ EDITOR.prototype = {
             y = this.currentedit.start.y;
             height = 16;
 
-            data = {
-                    gradeid : this.get('gradeid'),
-                    x : x,
-                    y : y,
-                    endx : x + width,
-                    endy : y + height,
-                    type : this.currentedit.tool,
-                    pageno : this.currentpage,
-                    colour : this.currentedit.annotationcolour
-                };
+            data = new M.assignfeedback_editpdf.annotation(
+                this,
+                this.get('gradeid'),
+                this.currentpage,
+                this.currentedit.start.x,
+                this.currentedit.start.y,
+                this.currentedit.end.x,
+                this.currentedit.end.y,
+                this.currentedit.tool,
+                this.currentedit.annotationcolour,
+                this.currentedit.path
+            );
 
             this.pages[this.currentpage].annotations.push(data);
-            this.drawables.push(this.draw_annotation(data));
+            this.drawables.push(data.draw());
         } else if (this.currentedit.tool === 'select') {
             x = this.currentedit.end.x;
             y = this.currentedit.end.y;
@@ -1162,36 +1157,22 @@ EDITOR.prototype = {
                 this.currentannotation = selected;
             }
             this.redraw();
-        } else if (this.currentedit.tool === 'stamp') {
-            // In path we will save the file name.
-            data = {
-                gradeid : this.get('gradeid'),
-                x : this.currentedit.start.x,
-                y : this.currentedit.start.y,
-                endx : this.currentedit.end.x,
-                endy : this.currentedit.end.y,
-                type : this.currentedit.tool,
-                pageno : this.currentpage,
-                colour : this.currentedit.annotationcolour,
-                path : this.stamps[this.currentstamp].url.replace(/^.*[\\\/]/, '')
-            };
-
-            this.pages[this.currentpage].annotations.push(data);
-            this.drawables.push(this.draw_annotation(data));
         } else {
-            data = {
-                gradeid : this.get('gradeid'),
-                x : this.currentedit.start.x,
-                y : this.currentedit.start.y,
-                endx : this.currentedit.end.x,
-                endy : this.currentedit.end.y,
-                type : this.currentedit.tool,
-                pageno : this.currentpage,
-                colour : this.currentedit.annotationcolour
-            };
+            data = new M.assignfeedback_editpdf.annotation(
+                this,
+                this.get('gradeid'),
+                this.currentpage,
+                this.currentedit.start.x,
+                this.currentedit.start.y,
+                this.currentedit.end.x,
+                this.currentedit.end.y,
+                this.currentedit.tool,
+                this.currentedit.annotationcolour,
+                this.currentedit.path
+            );
 
             this.pages[this.currentpage].annotations.push(data);
-            this.drawables.push(this.draw_annotation(data));
+            this.drawables.push(data.draw());
         }
 
         this.save_current_page();
@@ -1248,296 +1229,6 @@ EDITOR.prototype = {
 
         Y.io(ajaxurl, config);
 
-    },
-
-    /**
-     * Handle a delete annotation event (click on the button)
-     * @protected
-     * @method delete_annotation
-     * @param event
-     */
-    delete_annotation : function(e) {
-        var target = e.target,
-            annotation = target.getData('annotation'),
-            annotations;
-
-        if (!annotation) {
-            target = target.ancestor();
-            annotation = target.getData('annotation');
-        }
-
-        annotations = this.pages[this.currentpage].annotations;
-        for (i = 0; i < annotations.length; i++) {
-            if (annotations[i] === annotation) {
-                annotations.splice(i, 1);
-                annotation.drawable.erase();
-                this.save_current_page();
-                return;
-            }
-        }
-    },
-
-    /**
-     * Draw an annotation
-     * @protected
-     * @method draw_annotation
-     * @param annotation
-     * @return M.assignfeedback_editpdf.drawable
-     */
-    draw_annotation : function(annotation) {
-        var drawable,
-            positions,
-            xy,
-            width,
-            height,
-            topleftx,
-            toplefty,
-            annotationtype,
-            drawingregion = Y.one(SELECTOR.DRAWINGREGION),
-            offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY(),
-            shape,
-            first;
-
-        drawable = new M.assignfeedback_editpdf.drawable(this);
-
-        if (annotation.type === 'stamp') {
-            // Find the matching stamp
-            Y.each(this.stamps, function(stamp) {
-                if (annotation.path === stamp.url.replace(/^.*[\\\/]/, '')) {
-                    // Redraw stamp.
-                    this.currentstampnodeid = (Math.random()*10000000000000000)+1;
-                    // We need to put the image as background otherwise the browser will try to drag the image.
-                    // Also we don't want to disable the image drag event (dragstart event), so we use background image.
-                    stampnode = Y.Node.create('<div id="'+this.currentstampnodeid+
-                        '" class="stamp" style="background-image:url(\'' + stamp.url + '\')"/>');
-                    Y.one('.drawingcanvas').append(stampnode);
-                    stampnode.setStyles({
-                        position: "absolute",
-                        left: annotation.endx,
-                        top: annotation.endy,
-                        height: stamp.height,
-                        width: stamp.width
-                    });
-
-                    // Resize the stamp to the correct heigth/width.
-                    var img = new Image();
-                    img.src = stamp.url;
-                    img.stampnode = stampnode;
-                    img.onload = function() {
-                        this.stampnode.setStyles({
-                            height: this.height,
-                            width: this.width
-                        });
-                    };
-
-                    drawable.nodes.push(stampnode);
-                }
-            }, this);
-            return drawable;
-
-        }
-
-        if (annotation.type === 'line') {
-            shape = this.graphic.addShape({
-                type: Y.Path,
-                fill: false,
-                stroke: {
-                    weight: STROKEWEIGHT,
-                    color: ANNOTATIONCOLOUR[annotation.colour]
-                }
-            });
-
-            shape.moveTo(annotation.x, annotation.y);
-            shape.lineTo(annotation.endx, annotation.endy);
-            shape.end();
-        }
-
-        if (annotation.type === 'pen') {
-            shape = this.graphic.addShape({
-               type: Y.Path,
-                fill: false,
-                stroke: {
-                    weight: STROKEWEIGHT,
-                    color: ANNOTATIONCOLOUR[annotation.colour]
-                }
-            });
-
-            first = true;
-            // Recreate the pen path array.
-            positions = annotation.path.split(':');
-            // Redraw all the lines.
-            Y.each(positions, function(position) {
-                xy = position.split(',');
-                if (first) {
-                    shape.moveTo(xy[0], xy[1]);
-                    first = false;
-                } else {
-                    shape.lineTo(xy[0], xy[1]);
-                }
-            }, this);
-
-            shape.end();
-        }
-
-        if (annotation.type === 'rectangle' || annotation.type === 'oval' ) {
-            if (annotation.type === 'rectangle') {
-                annotationtype = Y.Rect;
-            } if (annotation.type === 'oval') {
-                annotationtype = Y.Ellipse;
-            }
-
-            // Convert data to integer to avoid wrong > or < results.
-            annotation.x = parseInt(annotation.x, 10);
-            annotation.y = parseInt(annotation.y, 10);
-            annotation.endx = parseInt(annotation.endx, 10);
-            annotation.endy = parseInt(annotation.endy, 10);
-
-            // Work out the boundary box.
-            topleftx = annotation.x;
-            if (annotation.endx > topleftx) {
-                width = annotation.endx - topleftx;
-            } else {
-                topleftx = annotation.endx;
-                width = annotation.x - topleftx;
-            }
-            toplefty = annotation.y;
-
-            if (annotation.endy > toplefty) {
-                height = annotation.endy - toplefty;
-            } else {
-                toplefty = annotation.endy;
-                height = annotation.y - toplefty;
-            }
-
-            shape = this.graphic.addShape({
-                type: annotationtype,
-                width: width,
-                height: height,
-                stroke: {
-                   weight: STROKEWEIGHT,
-                   color: ANNOTATIONCOLOUR[annotation.colour]
-                },
-                x: topleftx,
-                y: toplefty
-            });
-        }
-        if (annotation.type === 'highlight' ) {
-            // Convert data to integer to avoid wrong > or < results.
-            annotation.x = parseInt(annotation.x, 10);
-            annotation.y = parseInt(annotation.y, 10);
-            annotation.endx = parseInt(annotation.endx, 10);
-            annotation.endy = parseInt(annotation.endy, 10);
-
-            // Work out the boundary box.
-            topleftx = annotation.x;
-            if (annotation.endx > topleftx) {
-                width = annotation.endx - topleftx;
-            } else {
-                topleftx = annotation.endx;
-                width = annotation.x - topleftx;
-            }
-            toplefty = annotation.y;
-
-            if (annotation.endy > toplefty) {
-                height = annotation.endy - toplefty;
-            } else {
-                toplefty = annotation.endy;
-                height = annotation.y - toplefty;
-            }
-
-            highlightcolour = ANNOTATIONCOLOUR[annotation.colour];
-
-            // Add an alpha channel to the rgb colour.
-
-            highlightcolour = highlightcolour.replace('rgb', 'rgba');
-            highlightcolour = highlightcolour.replace(')', ',0.5)');
-
-            shape = this.graphic.addShape({
-                type: Y.Rect,
-                width: width,
-                height: height,
-                stroke: false,
-                fill: {
-                    color: highlightcolour
-                },
-                x: topleftx,
-                y: toplefty
-            });
-        }
-
-        if (!shape) {
-            return drawable;
-        }
-
-        drawable.shapes.push(shape);
-        if (this.currentannotation === annotation) {
-            // Draw a highlight around the annotation.
-            annotation.x = parseInt(annotation.x, 10);
-            annotation.y = parseInt(annotation.y, 10);
-            annotation.endx = parseInt(annotation.endx, 10);
-            annotation.endy = parseInt(annotation.endy, 10);
-
-            // Work out the boundary box.
-            topleftx = annotation.x;
-            if (annotation.endx > topleftx) {
-                width = annotation.endx - topleftx;
-            } else {
-                topleftx = annotation.endx;
-                width = annotation.x - topleftx;
-            }
-            toplefty = annotation.y;
-
-            if (annotation.endy > toplefty) {
-                height = annotation.endy - toplefty;
-            } else {
-                toplefty = annotation.endy;
-                height = annotation.y - toplefty;
-            }
-
-            shape = this.graphic.addShape({
-                type: Y.Rect,
-                width: width,
-                height: height,
-                stroke: {
-                   weight: STROKEWEIGHT,
-                   color: SELECTEDBORDERCOLOUR
-                },
-                fill: {
-                   color: SELECTEDFILLCOLOUR
-                },
-                x: topleftx,
-                y: toplefty
-            });
-            drawable.shapes.push(shape);
-
-            // Add a delete X to the annotation.
-            var deleteicon = Y.Node.create('<img src="' + M.util.image_url('trash', 'assignfeedback_editpdf') + '"/>'),
-                deletelink = Y.Node.create('<a href="#" role="button"></a>');
-
-            deleteicon.setAttrs({
-                'alt': M.util.get_string('deleteannotation', 'assignfeedback_editpdf')
-            });
-            deleteicon.setStyles({
-                'backgroundColor' : 'white',
-                'border' : '2px solid ' + SELECTEDBORDERCOLOUR
-            });
-            deletelink.addClass('deleteannotationbutton');
-            deletelink.append(deleteicon);
-
-            drawingregion.append(deletelink);
-            deletelink.setData('annotation', annotation);
-            deletelink.setStyle('zIndex', '1000');
-
-            deletelink.on('click', this.delete_annotation, this);
-            deletelink.on('key', this.delete_annotation, 'space,enter', this);
-
-            deletelink.setX(offsetcanvas[0] + topleftx + width - 20);
-            deletelink.setY(offsetcanvas[1] + toplefty + 2);
-            drawable.nodes.push(deletelink);
-        }
-        annotation.drawable = drawable;
-
-        return drawable;
     },
 
     /**
@@ -1824,7 +1515,7 @@ EDITOR.prototype = {
         }
 
         for (i = 0; i < page.annotations.length; i++) {
-            this.drawables.push(this.draw_annotation(page.annotations[i]));
+            this.drawables.push(page.annotations[i].draw());
         }
         for (i = 0; i < page.comments.length; i++) {
             this.drawables.push(page.comments[i].draw(false));
