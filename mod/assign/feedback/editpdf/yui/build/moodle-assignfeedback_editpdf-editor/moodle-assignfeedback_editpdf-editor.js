@@ -1,5 +1,220 @@
 YUI.add('moodle-assignfeedback_editpdf-editor', function (Y, NAME) {
 
+var DROPDOWN_NAME = "Dropdown menu",
+    DROPDOWN;
+
+/**
+ * DROPDOWN
+ * This is a drop down list of buttons triggered (and aligned to) a button.
+ *
+ * @namespace M.assignfeedback_editpdf.widget.dropdown
+ * @class dropdown
+ * @constructor
+ * @extends Y.Base
+ */
+DROPDOWN = function(config) {
+    config.draggable = false;
+    config.centered = false;
+    config.width = 'auto';
+    config.lightbox = false;
+    config.visible = false;
+    config.zIndex = 100;
+    config.footerContent = '';
+    DROPDOWN.superclass.constructor.apply(this, [config]);
+};
+
+Y.extend(DROPDOWN, M.core.dialogue, {
+    /**
+     * Initialise the menu.
+     *
+     * @method initializer
+     * @return void
+     */
+    initializer : function(config) {
+        var button, body, headertext, bb;
+        DROPDOWN.superclass.initializer.call(this, config);
+
+        bb = this.get('boundingBox');
+        bb.addClass('assignfeedback_editpdf_dropdown');
+
+        // Align the menu to the button that opens it.
+        button = this.get('buttonNode');
+
+        // Close the menu when clicked outside (excluding the button that opened the menu).
+        body = this.bodyNode;
+
+        headertext = Y.Node.create('<h3/>');
+        headertext.addClass('accesshide');
+        headertext.setHTML(this.get('headerText'));
+        body.prepend(headertext);
+
+        body.on('clickoutside', function(e) {
+            if (e.target !== button && e.target.ancestor() !== button) {
+                e.preventDefault();
+                this.hide();
+            }
+        }, this);
+
+        button.on('click', this.show, this);
+        button.on('key', this.show, 'enter,space', this);
+    },
+
+    /**
+     * Override the show method to align to the button.
+     *
+     * @method show
+     * @return void
+     */
+    show : function() {
+        var button = this.get('buttonNode');
+
+        result = DROPDOWN.superclass.show.call(this);
+        this.align(button, [Y.WidgetPositionAlign.TL, Y.WidgetPositionAlign.BL]);
+    }
+}, {
+    NAME : DROPDOWN_NAME,
+    ATTRS : {
+        /**
+         * The header for the drop down (only accessible to screen readers).
+         *
+         * @attribute headerText
+         * @type String
+         * @default ''
+         */
+        headerText : {
+            value : ''
+        },
+
+        /**
+         * The button used to show/hide this drop down menu.
+         *
+         * @attribute buttonNode
+         * @type Y.Node
+         * @default null
+         */
+        buttonNode : {
+            value : null
+        }
+    }
+});
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.dropdown = DROPDOWN;
+var COLOURPICKER_NAME = "Colourpicker",
+    COLOURPICKER;
+
+/**
+ * COLOURPICKER
+ * This is a drop down list of colours.
+ *
+ * @namespace M.assignfeedback_editpdf.colourpicker
+ * @class dropdown
+ * @constructor
+ * @extends Y.Base
+ */
+COLOURPICKER = function(config) {
+    COLOURPICKER.superclass.constructor.apply(this, [config]);
+};
+
+Y.extend(COLOURPICKER, M.assignfeedback_editpdf.dropdown, {
+
+    /**
+     * Initialise the menu.
+     *
+     * @method initializer
+     * @return void
+     */
+    initializer : function(config) {
+        var colourlist = Y.Node.create('<ul role="menu" class="assignfeedback_editpdf_menu"/>'),
+            body;
+
+        // Build a list of coloured buttons.
+        Y.each(this.get('colours'), function(rgb, colour) {
+            var button, listitem, title, img;
+
+            title = M.util.get_string(colour, 'assignfeedback_editpdf');
+            img = M.util.image_url('commentcolour', 'assignfeedback_editpdf');
+            button = Y.Node.create('<button><img alt="' + title + '" src="' + img + '"/></button>');
+            button.setAttribute('data-colour', colour);
+            button.setAttribute('data-rgb', rgb);
+            button.addClass('colour_' + colour);
+            button.setStyle('backgroundImage', 'none');
+            button.one('img').setStyle('background', rgb);
+            if (colour === 'clear') {
+                button.one('img').setStyle('borderStyle', 'dashed');
+            }
+            listitem = Y.Node.create('<li/>');
+            listitem.append(button);
+            colourlist.append(listitem);
+        }, this);
+
+        body = Y.Node.create('<div/>');
+
+        // Set the call back.
+        colourlist.delegate('click', this.callback_handler, 'button', this);
+        colourlist.delegate('key', this.callback_handler, 'down:13', 'button', this);
+
+        // Set the accessible header text.
+        this.set('headerText', M.util.get_string('colourpicker', 'assignfeedback_editpdf'));
+
+        // Set the body content.
+        body.append(colourlist);
+        this.set('bodyContent', body);
+
+        COLOURPICKER.superclass.initializer.call(this, config);
+    },
+    callback_handler : function(e) {
+        var callback = this.get('callback'),
+            callbackcontext = this.get('context'),
+            bind;
+
+        this.hide();
+
+        // Call the callback with the specified context.
+        bind = Y.bind(callback, callbackcontext, e);
+
+        bind();
+    }
+}, {
+    NAME : COLOURPICKER_NAME,
+    ATTRS : {
+        /**
+         * The list of colours this colour picker supports.
+         *
+         * @attribute colours
+         * @type {String: String} (The keys of the array are the colour names and the values are localized strings)
+         * @default {}
+         */
+        colours : {
+            value : {}
+        },
+
+        /**
+         * The function called when a new colour is chosen.
+         *
+         * @attribute callback
+         * @type function
+         * @default null
+         */
+        callback : {
+            value : null
+        },
+
+        /**
+         * The context passed to the callback when a colour is chosen.
+         *
+         * @attribute context
+         * @type Y.Node
+         * @default null
+         */
+        context : {
+            value : null
+        }
+    }
+});
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.colourpicker = COLOURPICKER;
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -249,14 +464,6 @@ EDITOR.prototype = {
      * @protected
      */
     drawables : [],
-
-    /**
-     * The colour picker dialogue box.
-     * @property currentcolourpicker
-     * @type M.core.dialogue
-     * @protected
-     */
-    currentcolourpicker : null,
 
     /**
      * The comment menu dialogue.
@@ -548,79 +755,6 @@ EDITOR.prototype = {
     },
 
     /**
-     * Setup colour picker
-     * @protected
-     * @method setup_colour_picker
-     * @param Y.Node button - The button to open the picker
-     * @param colours - List of colours
-     * @param {function} callback when a new colour is chosen.
-     */
-    setup_colour_picker : function(node, colours, callback) {
-        var colourlist = Y.Node.create('<ul role="menu" class="assignfeedback_editpdf_menu"/>'),
-            colourpicker,
-            body,
-            headertext,
-            showhandler;
-
-        Y.each(colours, function(rgb, colour) {
-            var button, listitem, title, img;
-
-            title = M.util.get_string(colour, 'assignfeedback_editpdf');
-            img = M.util.image_url('commentcolour', 'assignfeedback_editpdf');
-            button = Y.Node.create('<button><img alt="' + title + '" src="' + img + '"/></button>');
-            button.setAttribute('data-colour', colour);
-            button.setAttribute('data-rgb', rgb);
-            button.addClass('colour_' + colour);
-            button.setStyle('backgroundImage', 'none');
-            button.one('img').setStyle('background', rgb);
-            if (colour === 'clear') {
-                button.one('img').setStyle('borderStyle', 'dashed');
-            }
-            listitem = Y.Node.create('<li/>');
-            listitem.append(button);
-            colourlist.append(listitem);
-        }, this);
-
-        body = Y.Node.create('<div/>');
-
-        colourlist.delegate('click', callback, 'button', this);
-        colourlist.delegate('key', callback, 'down:13', 'button', this);
-        headertext = Y.Node.create('<h3/>');
-        headertext.addClass('accesshide');
-        headertext.setHTML(M.util.get_string('colourpicker', 'assignfeedback_editpdf'));
-        body.append(headertext);
-        body.append(colourlist);
-
-        colourpicker = new M.core.dialogue({
-            extraClasses : ['assignfeedback_editpdf_colourpicker'],
-            draggable: false,
-            centered: false,
-            width: 'auto',
-            lightbox: false,
-            visible: false,
-            bodyContent: body,
-            zIndex: 100,
-            footerContent: '',
-            align: {node: node, points: [Y.WidgetPositionAlign.TL, Y.WidgetPositionAlign.BL]}
-        });
-
-        body.on('clickoutside', function(e) {
-            if (e.target !== node && e.target.ancestor() !== node) {
-                e.preventDefault();
-                colourpicker.hide();
-            }
-        });
-
-        showhandler = function() {
-            this.currentcolourpicker = colourpicker;
-            colourpicker.show();
-        };
-        node.on('click', showhandler, this);
-        node.on('key', showhandler, 'down:13', this);
-
-    },
-
-    /**
      * Setup stamp picker
      * @protected
      * @method setup_stamp_picker
@@ -702,7 +836,8 @@ EDITOR.prototype = {
             searchcommentsbutton,
             i,
             stampurls,
-            stamponload;
+            stamponload,
+            picker;
 
         // Setup the tool buttons.
         Y.each(TOOLSELECTOR, function(selector, tool) {
@@ -719,24 +854,33 @@ EDITOR.prototype = {
 
 
         commentcolourbutton = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
-        this.setup_colour_picker(commentcolourbutton, COMMENTCOLOUR, function (e) {
-            var colour = e.target.getAttribute('data-colour');
-            if (!colour) {
-                colour = e.target.ancestor().getAttribute('data-colour');
-            }
-            this.currentcommentcolour = colour;
-            this.refresh_button_state();
-            this.currentcolourpicker.hide();
+        picker = new M.assignfeedback_editpdf.colourpicker({
+            buttonNode: commentcolourbutton,
+            colours: COMMENTCOLOUR,
+            callback: function (e) {
+                var colour = e.target.getAttribute('data-colour');
+                if (!colour) {
+                    colour = e.target.ancestor().getAttribute('data-colour');
+                }
+                this.currentcommentcolour = colour;
+                this.refresh_button_state();
+            },
+            context: this
         });
+
         annotationcolourbutton = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
-        this.setup_colour_picker(annotationcolourbutton, ANNOTATIONCOLOUR, function (e) {
-            var colour = e.target.getAttribute('data-colour');
-            if (!colour) {
-                colour = e.target.ancestor().getAttribute('data-colour');
-            }
-            this.currentannotationcolour = colour;
-            this.refresh_button_state();
-            this.currentcolourpicker.hide();
+        picker = new M.assignfeedback_editpdf.colourpicker({
+            buttonNode: annotationcolourbutton,
+            colours: ANNOTATIONCOLOUR,
+            callback: function (e) {
+                var colour = e.target.getAttribute('data-colour');
+                if (!colour) {
+                    colour = e.target.ancestor().getAttribute('data-colour');
+                }
+                this.currentannotationcolour = colour;
+                this.refresh_button_state();
+            },
+            context: this
         });
 
         // Save all stamps into the stamps variable.

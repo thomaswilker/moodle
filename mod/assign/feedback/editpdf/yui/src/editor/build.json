@@ -3,7 +3,13 @@
   "builds": {
     "moodle-assignfeedback_editpdf-editor": {
       "jsfiles": [
-        "editor.js"
+        "annotations.js",
+        "dropdown.js",
+        "colourpicker.js",
+        "comments.js",
+        "editor.js",
+        "quicklist.js",
+        "stamps.js"
       ]
     }
   }
