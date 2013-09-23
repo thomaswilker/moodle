@@ -170,11 +170,13 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
         $stampfilenames = get_config('assignfeedback_editpdf', 'stamps_jsonfilenames');
         $stampfilenames = json_decode($stampfilenames);
         $fileurls = array();
-        foreach ($stampfilenames as $stampfilename) {
-            $stampfileurl = moodle_url::make_pluginfile_url(context_system::instance()->id,
-                'assignfeedback_editpdf', 'stamps', 0, '/', $stampfilename)->out(false);
-            // Strip the wwwroot.
-            $fileurls[] = str_replace($CFG->wwwroot,"",$stampfileurl);;
+        if ($stampfilenames) {
+            foreach ($stampfilenames as $stampfilename) {
+                $stampfileurl = moodle_url::make_pluginfile_url(context_system::instance()->id,
+                    'assignfeedback_editpdf', 'stamps', 0, '/', $stampfilename)->out(false);
+                // Strip the wwwroot.
+                $fileurls[] = str_replace($CFG->wwwroot,"",$stampfileurl);;
+            }
         }
 
         $editorparams = array(array('header'=>$header,

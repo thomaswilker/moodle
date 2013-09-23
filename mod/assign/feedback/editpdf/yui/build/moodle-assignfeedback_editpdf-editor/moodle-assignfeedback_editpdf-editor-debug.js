@@ -388,7 +388,6 @@ EDITOR.prototype = {
         button = Y.one(SELECTOR.COMMENTCOLOURBUTTON);
         button.setStyle('backgroundImage', 'none');
         button.one('img').setStyle('background', COMMENTCOLOUR[this.currentcommentcolour]);
-        button.one('img').setStyle('border', '2px solid #cccccc');
 
         if (this.currentcommentcolour === 'clear') {
             button.one('img').setStyle('borderStyle', 'dashed');
@@ -399,7 +398,6 @@ EDITOR.prototype = {
         button = Y.one(SELECTOR.ANNOTATIONCOLOURBUTTON);
         button.setStyle('backgroundImage', 'none');
         button.one('img').setStyle('backgroundColor', ANNOTATIONCOLOUR[this.currentannotationcolour]);
-        button.one('img').setStyle('border', '2px solid #cccccc');
 
         currenttoolnode = Y.one(TOOLSELECTOR[this.currenttool]);
         currenttoolnode.addClass('assignfeedback_editpdf_selectedbutton');
@@ -579,7 +577,6 @@ EDITOR.prototype = {
             button.addClass('colour_' + colour);
             button.setStyle('backgroundImage', 'none');
             button.one('img').setStyle('background', rgb);
-            button.one('img').setStyle('border', '2px solid #cccccc');
             if (colour === 'clear') {
                 button.one('img').setStyle('borderStyle', 'dashed');
             }
@@ -706,7 +703,10 @@ EDITOR.prototype = {
         var toolnode,
             commentcolourbutton,
             annotationcolourbutton,
-            searchcommentsbutton;
+            searchcommentsbutton,
+            i,
+            stampurls,
+            stamponload;
 
         // Setup the tool buttons.
         Y.each(TOOLSELECTOR, function(selector, tool) {
@@ -744,9 +744,13 @@ EDITOR.prototype = {
         });
 
         // Save all stamps into the stamps variable.
-        var i =0;
-        Y.each(this.get('stampfileurls'), function(stampfileurl) {
-
+        stampurls = this.get('stampfileurls');
+        Y.log(stampurls);
+        stamponload = function() {
+            this.rootcontext.stamps[this.stampindex].height = this.height;
+            this.rootcontext.stamps[this.stampindex].width = this.width;
+        };
+        for (i = 0; i < stampurls.length; i++) {
             var stamp = new Stamp();
             stamp.url = M.cfg.wwwroot + stampfileurl;
             this.stamps[i] = stamp;
@@ -755,26 +759,27 @@ EDITOR.prototype = {
             img.src = M.cfg.wwwroot + stampfileurl;
             img.stampindex = i;
             img.rootcontext = this;
-            img.onload = function() {
-                this.rootcontext.stamps[this.stampindex].height = this.height;
-                this.rootcontext.stamps[this.stampindex].width = this.width;
-            };
-            i=i+1;
-        }, this);
+            img.onload = stamponload;
+        }
+
         // Setup the stamp picker
-        this.currentstamp = 0;
         stampsbutton = Y.one(SELECTOR.STAMPSBUTTON);
-        stampsbutton.setStyle('backgroundImage', 'url(\'' + this.stamps[this.currentstamp].url + '\')');
-        stampsbutton.setStyle('backgroundSize', '100% 100%');
-        stampsbutton.setStyle('backgroundRepeat', 'no-repeat');
-        this.setup_stamp_picker(stampsbutton, this.stamps, function (e) {
-            this.currentstamp = e.target.getAttribute('stampindex');
-            button = Y.one(SELECTOR.STAMPSBUTTON);
-            button.setStyle('backgroundImage', 'url(\'' + this.stamps[this.currentstamp].url + '\')');
-            button.setStyle('backgroundSize', '100% 100%');
-            button.setStyle('backgroundRepeat', 'no-repeat');
-            this.currentstamppicker.hide();
-        });
+        if (stampurls.length <= 0) {
+            stampsbutton.setAttribute('disabled', 'true');
+        } else {
+            this.currentstamp = 0;
+            stampsbutton.setStyle('backgroundImage', 'url(\'' + this.stamps[this.currentstamp].url + '\')');
+            stampsbutton.setStyle('backgroundSize', '100% 100%');
+            stampsbutton.setStyle('backgroundRepeat', 'no-repeat');
+            this.setup_stamp_picker(stampsbutton, this.stamps, function (e) {
+                this.currentstamp = e.target.getAttribute('stampindex');
+                button = Y.one(SELECTOR.STAMPSBUTTON);
+                button.setStyle('backgroundImage', 'url(\'' + this.stamps[this.currentstamp].url + '\')');
+                button.setStyle('backgroundSize', '100% 100%');
+                button.setStyle('backgroundRepeat', 'no-repeat');
+                this.currentstamppicker.hide();
+            });
+        }
     },
 
     /**
@@ -1515,7 +1520,8 @@ EDITOR.prototype = {
             toplefty,
             annotationtype,
             drawingregion = Y.one(SELECTOR.DRAWINGREGION),
-            offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY();
+            offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY(),
+            shape;
 
         drawable = new Drawable();
 
@@ -1688,6 +1694,10 @@ EDITOR.prototype = {
                 x: topleftx,
                 y: toplefty
             });
+        }
+
+        if (!shape) {
+            return drawable;
         }
 
         drawable.shapes.push(shape);

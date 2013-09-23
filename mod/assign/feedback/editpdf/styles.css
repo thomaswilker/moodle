@@ -37,6 +37,8 @@
     border: 0px;
     border-radius: 0px;
     margin: 0px;
+    height: 30px;
+    cursor: pointer;
 }
 
 .assignfeedback_editpdf_widget .pageheader button + button,
@@ -55,6 +57,9 @@
     border-radius: 4px;
     margin: 10px 4px;
     background-color: white;
+    height: 30px;
+    line-height: 30px;
+    padding: 0px;
 }
 
 .assignfeedback_editpdf_searchcomments ul {
