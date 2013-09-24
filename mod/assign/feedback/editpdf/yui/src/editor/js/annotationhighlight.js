@@ -69,8 +69,48 @@ Y.extend(ANNOTATIONHIGHLIGHT, M.assignfeedback_editpdf.annotation, {
         this.drawable = drawable;
 
         return ANNOTATIONHIGHLIGHT.superclass.draw.apply(this);
-    }
+    },
 
+    /**
+     * Draw the in progress edit.
+     *
+     * @public
+     * @method draw_current_edit
+     * @param M.assignfeedback_editpdf.edit edit
+     */
+    draw_current_edit : function(edit) {
+        var drawable = new M.assignfeedback_editpdf.drawable(this.editor),
+            shape,
+            bounds,
+            highlightcolour;
+
+        bounds = new M.assignfeedback_editpdf.rect();
+        bounds.bound([new M.assignfeedback_editpdf.point(edit.start.x, edit.start.y),
+                      new M.assignfeedback_editpdf.point(edit.end.x, edit.end.y)]);
+
+        highlightcolour = ANNOTATIONCOLOUR[edit.annotationcolour];
+        // Add an alpha channel to the rgb colour.
+
+        highlightcolour = highlightcolour.replace('rgb', 'rgba');
+        highlightcolour = highlightcolour.replace(')', ',0.5)');
+
+        // We will draw a box with the current background colour.
+        shape = this.editor.graphic.addShape({
+            type: Y.Rect,
+            width: bounds.width,
+            height: 16,
+            stroke: false,
+            fill: {
+               color: highlightcolour
+            },
+            x: bounds.x,
+            y: bounds.y
+        });
+
+        drawable.shapes.push(shape);
+
+        return drawable;
+    }
 });
 
 M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};

@@ -57,8 +57,36 @@ Y.extend(ANNOTATIONLINE, M.assignfeedback_editpdf.annotation, {
         this.drawable = drawable;
 
         return ANNOTATIONLINE.superclass.draw.apply(this);
-    }
+    },
 
+    /**
+     * Draw the in progress edit.
+     *
+     * @public
+     * @method draw_current_edit
+     * @param M.assignfeedback_editpdf.edit edit
+     */
+    draw_current_edit : function(edit) {
+        var drawable = new M.assignfeedback_editpdf.drawable(this.editor),
+            shape;
+
+        shape = this.editor.graphic.addShape({
+           type: Y.Path,
+            fill: false,
+            stroke: {
+                weight: STROKEWEIGHT,
+                color: ANNOTATIONCOLOUR[edit.annotationcolour]
+            }
+        });
+
+        shape.moveTo(edit.start.x, edit.start.y);
+        shape.lineTo(edit.end.x, edit.end.y);
+        shape.end();
+
+        drawable.shapes.push(shape);
+
+        return drawable;
+    }
 });
 
 M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};

@@ -881,6 +881,19 @@ Y.extend(ANNOTATION, Y.Base, {
         }
         this.drawable.erase();
         this.editor.drawables.push(this.draw());
+    },
+
+    /**
+     * Draw the in progress edit.
+     *
+     * @public
+     * @method draw_current_edit
+     * @param M.assignfeedback_editpdf.edit edit
+     */
+    draw_current_edit : function(edit) {
+        var noop = edit && false;
+        // Override me please.
+        return noop;
     }
 
 });
@@ -946,8 +959,36 @@ Y.extend(ANNOTATIONLINE, M.assignfeedback_editpdf.annotation, {
         this.drawable = drawable;
 
         return ANNOTATIONLINE.superclass.draw.apply(this);
-    }
+    },
 
+    /**
+     * Draw the in progress edit.
+     *
+     * @public
+     * @method draw_current_edit
+     * @param M.assignfeedback_editpdf.edit edit
+     */
+    draw_current_edit : function(edit) {
+        var drawable = new M.assignfeedback_editpdf.drawable(this.editor),
+            shape;
+
+        shape = this.editor.graphic.addShape({
+           type: Y.Path,
+            fill: false,
+            stroke: {
+                weight: STROKEWEIGHT,
+                color: ANNOTATIONCOLOUR[edit.annotationcolour]
+            }
+        });
+
+        shape.moveTo(edit.start.x, edit.start.y);
+        shape.lineTo(edit.end.x, edit.end.y);
+        shape.end();
+
+        drawable.shapes.push(shape);
+
+        return drawable;
+    }
 });
 
 M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
@@ -1014,8 +1055,40 @@ Y.extend(ANNOTATIONRECTANGLE, M.assignfeedback_editpdf.annotation, {
         this.drawable = drawable;
 
         return ANNOTATIONRECTANGLE.superclass.draw.apply(this);
-    }
+    },
 
+    /**
+     * Draw the in progress edit.
+     *
+     * @public
+     * @method draw_current_edit
+     * @param M.assignfeedback_editpdf.edit edit
+     */
+    draw_current_edit : function(edit) {
+        var drawable = new M.assignfeedback_editpdf.drawable(this.editor),
+            shape,
+            bounds;
+
+        bounds = new M.assignfeedback_editpdf.rect();
+        bounds.bound([new M.assignfeedback_editpdf.point(edit.start.x, edit.start.y),
+                      new M.assignfeedback_editpdf.point(edit.end.x, edit.end.y)]);
+
+        shape = this.editor.graphic.addShape({
+            type: Y.Rect,
+            width: bounds.width,
+            height: bounds.height,
+            stroke: {
+               weight: STROKEWEIGHT,
+               color: ANNOTATIONCOLOUR[edit.annotationcolour]
+            },
+            x: bounds.x,
+            y: bounds.y
+        });
+
+        drawable.shapes.push(shape);
+
+        return drawable;
+    }
 });
 
 M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
@@ -1082,8 +1155,40 @@ Y.extend(ANNOTATIONOVAL, M.assignfeedback_editpdf.annotation, {
         this.drawable = drawable;
 
         return ANNOTATIONOVAL.superclass.draw.apply(this);
-    }
+    },
 
+    /**
+     * Draw the in progress edit.
+     *
+     * @public
+     * @method draw_current_edit
+     * @param M.assignfeedback_editpdf.edit edit
+     */
+    draw_current_edit : function(edit) {
+        var drawable = new M.assignfeedback_editpdf.drawable(this.editor),
+            shape,
+            bounds;
+
+        bounds = new M.assignfeedback_editpdf.rect();
+        bounds.bound([new M.assignfeedback_editpdf.point(edit.start.x, edit.start.y),
+                      new M.assignfeedback_editpdf.point(edit.end.x, edit.end.y)]);
+
+        shape = this.editor.graphic.addShape({
+            type: Y.Ellipse,
+            width: bounds.width,
+            height: bounds.height,
+            stroke: {
+               weight: STROKEWEIGHT,
+               color: ANNOTATIONCOLOUR[edit.annotationcolour]
+            },
+            x: bounds.x,
+            y: bounds.y
+        });
+
+        drawable.shapes.push(shape);
+
+        return drawable;
+    }
 });
 
 M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
@@ -1240,8 +1345,48 @@ Y.extend(ANNOTATIONHIGHLIGHT, M.assignfeedback_editpdf.annotation, {
         this.drawable = drawable;
 
         return ANNOTATIONHIGHLIGHT.superclass.draw.apply(this);
-    }
+    },
 
+    /**
+     * Draw the in progress edit.
+     *
+     * @public
+     * @method draw_current_edit
+     * @param M.assignfeedback_editpdf.edit edit
+     */
+    draw_current_edit : function(edit) {
+        var drawable = new M.assignfeedback_editpdf.drawable(this.editor),
+            shape,
+            bounds,
+            highlightcolour;
+
+        bounds = new M.assignfeedback_editpdf.rect();
+        bounds.bound([new M.assignfeedback_editpdf.point(edit.start.x, edit.start.y),
+                      new M.assignfeedback_editpdf.point(edit.end.x, edit.end.y)]);
+
+        highlightcolour = ANNOTATIONCOLOUR[edit.annotationcolour];
+        // Add an alpha channel to the rgb colour.
+
+        highlightcolour = highlightcolour.replace('rgb', 'rgba');
+        highlightcolour = highlightcolour.replace(')', ',0.5)');
+
+        // We will draw a box with the current background colour.
+        shape = this.editor.graphic.addShape({
+            type: Y.Rect,
+            width: bounds.width,
+            height: 16,
+            stroke: false,
+            fill: {
+               color: highlightcolour
+            },
+            x: bounds.x,
+            y: bounds.y
+        });
+
+        drawable.shapes.push(shape);
+
+        return drawable;
+    }
 });
 
 M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
@@ -2076,6 +2221,39 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
     this.add_to_quicklist = function() {
         this.menu.hide();
         this.editor.quicklist.add(this);
+    };
+
+    /**
+     * Draw the in progress edit.
+     *
+     * @public
+     * @method draw_current_edit
+     * @param M.assignfeedback_editpdf.edit edit
+     */
+    this.draw_current_edit = function(edit) {
+        var drawable = new M.assignfeedback_editpdf.drawable(this.editor),
+            shape,
+            bounds;
+
+        bounds = new M.assignfeedback_editpdf.rect();
+        bounds.bound([new M.assignfeedback_editpdf.point(edit.start.x, edit.start.y),
+                     new M.assignfeedback_editpdf.point(edit.end.x, edit.end.y)]);
+
+        // We will draw a box with the current background colour.
+        shape = this.graphic.addShape({
+            type: Y.Rect,
+            width: bounds.width,
+            height: bounds.height,
+            fill: {
+               color: COMMENTCOLOUR[edit.commentcolour]
+            },
+            x: bounds.x,
+            y: bounds.y
+        });
+
+        drawable.shapes.push(shape);
+
+        return drawable;
     };
 
 };
@@ -3093,10 +3271,6 @@ EDITOR.prototype = {
             this.currentedit.annotationstart = { x : this.currentannotation.x,
                                                  y : this.currentannotation.y };
         }
-        /*
-        if (this.currentedit.tool === 'stamp') {
-            this.redraw_current_edit();
-        }*/
     },
 
     /**
@@ -3105,150 +3279,25 @@ EDITOR.prototype = {
      * @method get_current_drawable
      */
     get_current_drawable : function() {
-        var drawable = new M.assignfeedback_editpdf.drawable(this),
-            shape, width, height, x, y, highlightcolour, first;
+        /**var drawable = new M.assignfeedback_editpdf.drawable(this),
+            shape, width, height, x, y, highlightcolour, first; **/
+        var comment,
+            annotation,
+            drawable = false;
 
         if (!this.currentedit.start || !this.currentedit.end) {
             return false;
         }
 
-        if (this.currentedit.tool === 'pen') {
-
-            shape = this.graphic.addShape({
-               type: Y.Path,
-                fill: false,
-                stroke: {
-                    weight: STROKEWEIGHT,
-                    color: ANNOTATIONCOLOUR[this.currentedit.annotationcolour]
-                }
-            });
-
-            // Redraw all the lines.
-            first = true;
-            Y.each(this.currentedit.path, function(position) {
-                if (first) {
-                    shape.moveTo(position.x, position.y);
-                    first = false;
-                } else {
-                    shape.lineTo(position.x, position.y);
-                }
-            }, this);
-            shape.end();
-        }
-
-        // Work out the boundary box.
-        x = this.currentedit.start.x;
-        if (this.currentedit.end.x > x) {
-            width = this.currentedit.end.x - x;
-        } else {
-            x = this.currentedit.end.x;
-            width = this.currentedit.start.x - x;
-        }
-        y = this.currentedit.start.y;
-        if (this.currentedit.end.y > y) {
-            height = this.currentedit.end.y - y;
-        } else {
-            y = this.currentedit.end.y;
-            height = this.currentedit.start.y - y;
-        }
-
-        /*
-        if (this.currentedit.tool === 'stamp') {
-            // Delete previous stamp if it exists.
-
-            // Redraw stamp.
-            this.currentstampnodeid = (Math.random()*10000000000000000)+1;
-            // We need to put the image as background otherwise the browser will try to drag the image.
-            // We don't want to disable the on dragstart event.
-            stampnode = Y.Node.create('<div id="'+this.currentstampnodeid+
-                '" class="stamp" style="background-image:url(\'' + this.stamps[this.currentstamp].url + '\')"/>');
-            Y.one('.drawingcanvas').append(stampnode);
-            stampnode.setStyles({
-                position: "absolute",
-                left: this.currentedit.end.x,
-                top: this.currentedit.end.y,
-                height: this.stamps[this.currentstamp].height,
-                width: this.stamps[this.currentstamp].width
-            });
-
-            drawable.nodes.push(stampnode);
-            return drawable;
-        }
-        */
-
         if (this.currentedit.tool === 'comment') {
-            // We will draw a box with the current background colour.
-            shape = this.graphic.addShape({
-                type: Y.Rect,
-                width: width,
-                height: height,
-                fill: {
-                   color: COMMENTCOLOUR[this.currentedit.commentcolour]
-                },
-                x: x,
-                y: y
-            });
-        }
-
-        if (this.currentedit.tool === 'line') {
-            shape = this.graphic.addShape({
-               type: Y.Path,
-                fill: false,
-                stroke: {
-                    weight: STROKEWEIGHT,
-                    color: ANNOTATIONCOLOUR[this.currentedit.annotationcolour]
-                }
-            });
-
-            shape.moveTo(this.currentedit.start.x, this.currentedit.start.y);
-            shape.lineTo(this.currentedit.end.x, this.currentedit.end.y);
-            shape.end();
-        }
-
-        if (this.currentedit.tool === 'rectangle' || this.currentedit.tool === 'oval') {
-
-            if (this.currentedit.tool === 'rectangle') {
-                tooltype = Y.Rect;
-            } if (this.currentedit.tool === 'oval') {
-                tooltype = Y.Ellipse;
+            comment = new M.assignfeedback_editpdf.comment(this);
+            drawable = comment.draw_current_edit(this.currentedit);
+        } else {
+            annotation = this.create_annotation(this.currentedit.tool, {});
+            if (annotation) {
+                drawable = annotation.draw_current_edit(this.currentedit);
             }
-
-            shape = this.graphic.addShape({
-                type: tooltype,
-                width: width,
-                height: height,
-                stroke: {
-                   weight: STROKEWEIGHT,
-                   color: ANNOTATIONCOLOUR[this.currentedit.annotationcolour]
-                },
-                x: x,
-                y: y
-            });
         }
-
-        if (this.currentedit.tool === 'highlight') {
-            highlightcolour = ANNOTATIONCOLOUR[this.currentedit.annotationcolour];
-
-            // Add an alpha channel to the rgb colour.
-
-            highlightcolour = highlightcolour.replace('rgb', 'rgba');
-            highlightcolour = highlightcolour.replace(')', ',0.5)');
-
-            Y.log(highlightcolour);
-            shape = this.graphic.addShape({
-                type: Y.Rect,
-                width: width,
-                height: 16,
-                stroke: false,
-                fill: {
-                    color: highlightcolour
-                },
-                x: x,
-                y: this.currentedit.start.y
-            });
-        }
-
-        drawable.shapes.push(shape);
 
         return drawable;
     },
@@ -3423,7 +3472,7 @@ EDITOR.prototype = {
                 x: this.currentedit.start.x,
                 y: this.currentedit.start.y,
                 endx: this.currentedit.end.x,
-                endy: this.currentedit.end.y,
+                endy: this.currentedit.start.y + 16,
                 type: this.currentedit.tool,
                 colour: this.currentedit.annotationcolour,
                 path: ''

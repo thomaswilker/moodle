@@ -60,8 +60,40 @@ Y.extend(ANNOTATIONRECTANGLE, M.assignfeedback_editpdf.annotation, {
         this.drawable = drawable;
 
         return ANNOTATIONRECTANGLE.superclass.draw.apply(this);
-    }
+    },
 
+    /**
+     * Draw the in progress edit.
+     *
+     * @public
+     * @method draw_current_edit
+     * @param M.assignfeedback_editpdf.edit edit
+     */
+    draw_current_edit : function(edit) {
+        var drawable = new M.assignfeedback_editpdf.drawable(this.editor),
+            shape,
+            bounds;
+
+        bounds = new M.assignfeedback_editpdf.rect();
+        bounds.bound([new M.assignfeedback_editpdf.point(edit.start.x, edit.start.y),
+                      new M.assignfeedback_editpdf.point(edit.end.x, edit.end.y)]);
+
+        shape = this.editor.graphic.addShape({
+            type: Y.Rect,
+            width: bounds.width,
+            height: bounds.height,
+            stroke: {
+               weight: STROKEWEIGHT,
+               color: ANNOTATIONCOLOUR[edit.annotationcolour]
+            },
+            x: bounds.x,
+            y: bounds.y
+        });
+
+        drawable.shapes.push(shape);
+
+        return drawable;
+    }
 });
 
 M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};

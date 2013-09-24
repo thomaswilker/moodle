@@ -349,6 +349,39 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
         this.editor.quicklist.add(this);
     };
 
+    /**
+     * Draw the in progress edit.
+     *
+     * @public
+     * @method draw_current_edit
+     * @param M.assignfeedback_editpdf.edit edit
+     */
+    this.draw_current_edit = function(edit) {
+        var drawable = new M.assignfeedback_editpdf.drawable(this.editor),
+            shape,
+            bounds;
+
+        bounds = new M.assignfeedback_editpdf.rect();
+        bounds.bound([new M.assignfeedback_editpdf.point(edit.start.x, edit.start.y),
+                     new M.assignfeedback_editpdf.point(edit.end.x, edit.end.y)]);
+
+        // We will draw a box with the current background colour.
+        shape = this.graphic.addShape({
+            type: Y.Rect,
+            width: bounds.width,
+            height: bounds.height,
+            fill: {
+               color: COMMENTCOLOUR[edit.commentcolour]
+            },
+            x: bounds.x,
+            y: bounds.y
+        });
+
+        drawable.shapes.push(shape);
+
+        return drawable;
+    };
+
 };
 
 M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};

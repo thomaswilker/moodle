@@ -456,6 +456,19 @@ Y.extend(ANNOTATION, Y.Base, {
         }
         this.drawable.erase();
         this.editor.drawables.push(this.draw());
+    },
+
+    /**
+     * Draw the in progress edit.
+     *
+     * @public
+     * @method draw_current_edit
+     * @param M.assignfeedback_editpdf.edit edit
+     */
+    draw_current_edit : function(edit) {
+        var noop = edit && false;
+        // Override me please.
+        return noop;
     }
 
 });
