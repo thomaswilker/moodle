@@ -51,7 +51,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.gradeid = gradeid || 0;
+    this.gradeid = parseInt(gradeid, 10) || 0;
 
     /**
      * Comment page number
@@ -59,7 +59,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.pageno = pageno || 0;
+    this.pageno = parseInt(pageno, 10) || 0;
 
     /**
      * X position
@@ -67,7 +67,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.x = x || 0;
+    this.x = parseInt(x, 10) || 0;
 
     /**
      * Y position
@@ -75,7 +75,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.y = y || 0;
+    this.y = parseInt(y, 10) || 0;
 
     /**
      * Ending x position
@@ -83,7 +83,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.endx = endx || 0;
+    this.endx = parseInt(endx, 10) || 0;
 
     /**
      * Ending y position
@@ -91,15 +91,15 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.endy = endy || 0;
+    this.endy = parseInt(endy, 10) || 0;
 
     /**
      * Path
      * @property path
-     * @type M.assignfeedback_editpdf.point[]
+     * @type String - list of points like x1,y1:x2,y2
      * @public
      */
-    this.path = path || [];
+    this.path = path || '';
 
     /**
      * Tool.
@@ -156,10 +156,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
         var drawable,
             positions,
             xy,
-            width,
-            height,
-            topleftx,
-            toplefty,
+            bounds,
             annotationtype,
             drawingregion = Y.one(SELECTOR.DRAWINGREGION),
             offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY(),
@@ -236,64 +233,26 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
                 annotationtype = Y.Ellipse;
             }
 
-            // Convert data to integer to avoid wrong > or < results.
-            this.x = parseInt(this.x, 10);
-            this.y = parseInt(this.y, 10);
-            this.endx = parseInt(this.endx, 10);
-            this.endy = parseInt(this.endy, 10);
-
-            // Work out the boundary box.
-            topleftx = this.x;
-            if (this.endx > topleftx) {
-                width = this.endx - topleftx;
-            } else {
-                topleftx = this.endx;
-                width = this.x - topleftx;
-            }
-            toplefty = this.y;
-
-            if (this.endy > toplefty) {
-                height = this.endy - toplefty;
-            } else {
-                toplefty = this.endy;
-                height = this.y - toplefty;
-            }
+            bounds = new M.assignfeedback_editpdf.rect();
+            bounds.bound([new M.assignfeedback_editpdf.point(this.x, this.y),
+                          new M.assignfeedback_editpdf.point(this.endx, this.endy)]);
 
             shape = this.editor.graphic.addShape({
                 type: annotationtype,
-                width: width,
-                height: height,
+                width: bounds.width,
+                height: bounds.height,
                 stroke: {
                    weight: STROKEWEIGHT,
                    color: ANNOTATIONCOLOUR[this.colour]
                 },
-                x: topleftx,
-                y: toplefty
+                x: bounds.x,
+                y: bounds.y
             });
         }
         if (this.type === 'highlight' ) {
-            // Convert data to integer to avoid wrong > or < results.
-            this.x = parseInt(this.x, 10);
-            this.y = parseInt(this.y, 10);
-            this.endx = parseInt(this.endx, 10);
-            this.endy = parseInt(this.endy, 10);
-
-            // Work out the boundary box.
-            topleftx = this.x;
-            if (this.endx > topleftx) {
-                width = this.endx - topleftx;
-            } else {
-                topleftx = this.endx;
-                width = this.x - topleftx;
-            }
-            toplefty = this.y;
-
-            if (this.endy > toplefty) {
-                height = this.endy - toplefty;
-            } else {
-                toplefty = this.endy;
-                height = this.y - toplefty;
-            }
+            bounds = new M.assignfeedback_editpdf.rect();
+            bounds.bound([new M.assignfeedback_editpdf.point(this.x, this.y),
+                          new M.assignfeedback_editpdf.point(this.endx, this.endy)]);
 
             highlightcolour = ANNOTATIONCOLOUR[this.colour];
 
@@ -304,46 +263,28 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
 
             shape = this.editor.graphic.addShape({
                 type: Y.Rect,
-                width: width,
-                height: height,
+                width: bounds.width,
+                height: bounds.height,
                 stroke: false,
                 fill: {
                     color: highlightcolour
                 },
-                x: topleftx,
-                y: toplefty
+                x: bounds.x,
+                y: bounds.y
             });
         }
 
         drawable.shapes.push(shape);
         if (this.editor.currentannotation === this) {
             // Draw a highlight around the annotation.
-            this.x = parseInt(this.x, 10);
-            this.y = parseInt(this.y, 10);
-            this.endx = parseInt(this.endx, 10);
-            this.endy = parseInt(this.endy, 10);
-
-            // Work out the boundary box.
-            topleftx = this.x;
-            if (this.endx > topleftx) {
-                width = this.endx - topleftx;
-            } else {
-                topleftx = this.endx;
-                width = this.x - topleftx;
-            }
-            toplefty = this.y;
-
-            if (this.endy > toplefty) {
-                height = this.endy - toplefty;
-            } else {
-                toplefty = this.endy;
-                height = this.y - toplefty;
-            }
+            bounds = new M.assignfeedback_editpdf.rect();
+            bounds.bound([new M.assignfeedback_editpdf.point(this.x, this.y),
+                          new M.assignfeedback_editpdf.point(this.endx, this.endy)]);
 
             shape = this.editor.graphic.addShape({
                 type: Y.Rect,
-                width: width,
-                height: height,
+                width: bounds.width,
+                height: bounds.height,
                 stroke: {
                    weight: STROKEWEIGHT,
                    color: SELECTEDBORDERCOLOUR
@@ -351,8 +292,8 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
                 fill: {
                    color: SELECTEDFILLCOLOUR
                 },
-                x: topleftx,
-                y: toplefty
+                x: bounds.x,
+                y: bounds.y
             });
             drawable.shapes.push(shape);
 
@@ -372,13 +313,13 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
 
             drawingregion.append(deletelink);
             deletelink.setData('annotation', this);
-            deletelink.setStyle('zIndex', '1000');
+            deletelink.setStyle('zIndex', '200');
 
             deletelink.on('click', this.remove, this);
             deletelink.on('key', this.remove, 'space,enter', this);
 
-            deletelink.setX(offsetcanvas[0] + topleftx + width - 20);
-            deletelink.setY(offsetcanvas[1] + toplefty + 2);
+            deletelink.setX(offsetcanvas[0] + bounds.x + bounds.width - 20);
+            deletelink.setY(offsetcanvas[1] + bounds.y + 4);
             drawable.nodes.push(deletelink);
         }
         this.drawable = drawable;
@@ -404,6 +345,46 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
                 return;
             }
         }
+    };
+
+    /**
+     * Move an annotation to a new location.
+     * @public
+     * @param int newx
+     * @param int newy
+     * @method move_annotation
+     */
+    this.move = function(newx, newy) {
+        var diffx = newx - this.x,
+            diffy = newy - this.y,
+            newpath, oldpath, xy,
+            x, y;
+
+        Y.log('Move');
+        Y.log(newx);
+        Y.log(newy);
+        Y.log(this.x);
+        Y.log(this.y);
+        this.x += diffx;
+        this.y += diffy;
+        this.endx += diffx;
+        this.endy += diffy;
+
+        if (this.path) {
+            newpath = [];
+            oldpath = this.path.split(':');
+            Y.each(oldpath, function(position) {
+                xy = position.split(',');
+                x = parseInt(xy[0], 10);
+                y = parseInt(xy[1], 10);
+                newpath.push((x + diffx) + ',' + (y + diffy));
+            });
+
+            this.path = newpath.join(':');
+
+        }
+        this.drawable.erase();
+        this.editor.drawables.push(this.draw());
     };
 
 };

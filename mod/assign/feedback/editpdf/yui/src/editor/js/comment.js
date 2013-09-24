@@ -57,7 +57,7 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
      * @type Int
      * @public
      */
-    this.x = x || 0;
+    this.x = parseInt(x, 10) || 0;
 
     /**
      * Y position
@@ -65,7 +65,7 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
      * @type Int
      * @public
      */
-    this.y = y || 0;
+    this.y = parseInt(y, 10) || 0;
 
     /**
      * Comment width
@@ -73,7 +73,7 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
      * @type Int
      * @public
      */
-    this.width = width || 0;
+    this.width = parseInt(width, 10) || 0;
 
     /**
      * Comment rawtext
@@ -160,12 +160,9 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
         var drawable = new M.assignfeedback_editpdf.drawable(this.editor),
             node,
             drawingregion = Y.one(SELECTOR.DRAWINGREGION),
-            offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY(),
-            offsetdialogue = Y.one(SELECTOR.DIALOGUE).getXY(),
-            offsetleft = offsetcanvas[0] - offsetdialogue[0],
-            offsettop = offsetcanvas[1] - offsetdialogue[1],
             container,
-            menu;
+            menu,
+            position;
 
         // Lets add a contenteditable div.
         node = Y.Node.create('<textarea/>');
@@ -178,10 +175,12 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
         if (this.width < 100) {
             this.width = 100;
         }
+
+        position = this.editor.get_window_coordinates(new M.assignfeedback_editpdf.point(this.x, this.y));
         container.setStyles({
             position: 'absolute',
-            left: (parseInt(this.x, 10) + offsetleft) + 'px',
-            top: (parseInt(this.y, 10) + offsettop) + 'px'
+            left: position.x + 'px',
+            top: position.y + 'px'
         });
         node.setStyles({
             width: this.width + 'px',
@@ -257,40 +256,32 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
         node.on('gesturemove', function(e) {
             var x = e.clientX - node.getData('offsetx'),
                 y = e.clientY - node.getData('offsety'),
-                canvas = Y.one(SELECTOR.DRAWINGCANVAS),
-                offsetcanvas = canvas.getXY(),
-                canvaswidth,
-                canvasheight,
                 nodewidth,
                 nodeheight,
-                offsetleft = offsetcanvas[0],
-                offsettop = offsetcanvas[1];
+                newlocation,
+                windowlocation,
+                bounds;
 
-            canvaswidth = parseInt(canvas.getStyle('width'), 10);
-            canvasheight = parseInt(canvas.getStyle('height'), 10);
             nodewidth = parseInt(node.getStyle('width'), 10);
             nodeheight = parseInt(node.getStyle('height'), 10);
 
-            // Constrain the comment to the canvas.
-            if (x < offsetleft) {
-                x = offsetleft;
-            }
-            if (y < offsettop) {
-                y = offsettop;
-            }
-            if (x - offsetleft + nodewidth > canvaswidth) {
-                x = offsetleft + canvaswidth - nodewidth;
-            }
-            if (y - offsettop + nodeheight > canvasheight) {
-                y = offsettop + canvasheight - nodeheight;
-            }
+            newlocation = this.editor.get_canvas_coordinates(new M.assignfeedback_editpdf.point(x, y), true);
+            bounds = this.editor.get_canvas_bounds(true);
+            bounds.x = 0;
+            bounds.y = 0;
 
-            this.x = x - offsetleft;
-            this.y = y - offsettop;
+            bounds.width -= nodewidth + 42;
+            bounds.height -= nodeheight + 8;
+            // Clip to the window size - the comment size.
+            newlocation.clip(bounds);
 
-            node.ancestor().setX(x);
-            node.ancestor().setY(y);
-        });
+            this.x = newlocation.x;
+            this.y = newlocation.y;
+
+            windowlocation = this.editor.get_window_coordinates(newlocation, true);
+            node.ancestor().setX(windowlocation.x);
+            node.ancestor().setY(windowlocation.y);
+        }, null, this);
 
         this.menu = new M.assignfeedback_editpdf.commentmenu({
             buttonNode: this.menulink,

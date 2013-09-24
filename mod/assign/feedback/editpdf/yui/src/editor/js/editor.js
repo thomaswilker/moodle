@@ -264,6 +264,55 @@ EDITOR.prototype = {
     },
 
     /**
+     * Called to get the bounds of the drawing region.
+     * @method get_canvas_bounds
+     * @param boolean relative - if true, will be relative to the canvas (suitable for Node.setXY).
+     */
+    get_canvas_bounds : function(relative) {
+        var canvas = Y.one(SELECTOR.DRAWINGCANVAS),
+            offsetcanvas = canvas.getXY(),
+            offsetdialogue = Y.one(SELECTOR.DIALOGUE).getXY(),
+            offsetleft = offsetcanvas[0] - offsetdialogue[0],
+            offsettop = offsetcanvas[1] - offsetdialogue[1],
+            width = parseInt(canvas.getStyle('width'), 10),
+            height = parseInt(canvas.getStyle('height'), 10);
+
+        if (relative) {
+            offsetleft += offsetdialogue[0];
+            offsettop += offsetdialogue[1];
+        }
+
+        return new M.assignfeedback_editpdf.rect(offsetleft, offsettop, width, height);
+    },
+
+    /**
+     * Called to translate from window coordinates to canvas coordinates.
+     * @method get_canvas_coordinates
+     * @param M.assignfeedback_editpdf.point point in window coordinats.
+     */
+    get_canvas_coordinates : function(point, relative) {
+        var bounds = this.get_canvas_bounds(relative),
+            newpoint = new M.assignfeedback_editpdf.point(point.x - bounds.x, point.y - bounds.y);
+
+        bounds.x = bounds.y = 0;
+
+        newpoint.clip(bounds);
+        return newpoint;
+    },
+
+    /**
+     * Called to translate from canvas coordinates to window coordinates.
+     * @method get_window_coordinates
+     * @param M.assignfeedback_editpdf.point point in window coordinats.
+     */
+    get_window_coordinates : function(point, relative) {
+        var bounds = this.get_canvas_bounds(relative),
+            newpoint = new M.assignfeedback_editpdf.point(point.x + bounds.x, point.y + bounds.y);
+
+        return newpoint;
+    },
+
+    /**
      * Called to open the pdf editing dialogue.
      * @method link_handler
      */
@@ -979,9 +1028,8 @@ EDITOR.prototype = {
 
         if (this.currentedit.tool === 'select') {
             if (this.currentannotation && this.currentedit) {
-                this.move_annotation(this.currentannotation,
-                                     this.currentedit.annotationstart.x + point.x - this.currentedit.start.x,
-                                     this.currentedit.annotationstart.y + point.y - this.currentedit.start.y);
+                this.currentannotation.move( this.currentedit.annotationstart.x + point.x - this.currentedit.start.x,
+                                             this.currentedit.annotationstart.y + point.y - this.currentedit.start.y);
             }
         } else {
             if (this.currentedit.start) {
@@ -1087,7 +1135,7 @@ EDITOR.prototype = {
                 maxy,
                 this.currentedit.tool,
                 this.currentedit.annotationcolour,
-                this.currentedit.path
+                thepath
             );
 
             this.pages[this.currentpage].annotations.push(data);
@@ -1117,7 +1165,7 @@ EDITOR.prototype = {
                 this.currentedit.end.y,
                 this.currentedit.tool,
                 this.currentedit.annotationcolour,
-                this.currentedit.path
+                ''
             );
 
             this.pages[this.currentpage].annotations.push(data);
@@ -1148,7 +1196,7 @@ EDITOR.prototype = {
                 this.currentedit.end.y,
                 this.currentedit.tool,
                 this.currentedit.annotationcolour,
-                this.currentedit.path
+                ''
             );
 
             this.pages[this.currentpage].annotations.push(data);

@@ -35,7 +35,7 @@ POINT = function(x, y) {
      * @type int
      * @public
      */
-    this.x = x;
+    this.x = parseInt(x, 10);
 
     /**
      * Y coordinate.
@@ -43,8 +43,30 @@ POINT = function(x, y) {
      * @type int
      * @public
      */
-    this.y = y;
+    this.y = parseInt(y, 10);
 
+    /**
+     * Clip this point to the rect
+     * @method clip
+     * @param M.assignfeedback_editpdf.point
+     * @public
+     */
+    this.clip = function(bounds) {
+        if (this.x < bounds.x) {
+            this.x = bounds.x;
+        }
+        if (this.x > (bounds.x + bounds.width)) {
+            this.x = bounds.x + bounds.width;
+        }
+        if (this.y < bounds.y) {
+            this.y = bounds.y;
+        }
+        if (this.y > (bounds.y + bounds.height)) {
+            this.y = bounds.y + bounds.height;
+        }
+        // For chaining.
+        return this;
+    };
 };
 
 M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};

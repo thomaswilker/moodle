@@ -5,6 +5,7 @@
       "jsfiles": [
         "globals.js",
         "point.js",
+        "rect.js",
         "edit.js",
         "drawable.js",
         "annotation.js",
