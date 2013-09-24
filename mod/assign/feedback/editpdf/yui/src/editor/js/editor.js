@@ -326,6 +326,7 @@ EDITOR.prototype = {
                 headerContent: this.get('header'),
                 bodyContent: this.get('body'),
                 footerContent: this.get('footer'),
+                draggable: true,
                 width: '840px',
                 visible: true
             });
@@ -971,37 +972,6 @@ EDITOR.prototype = {
     },
 
     /**
-     * Move an annotation to a new location.
-     * @protected
-     * @param Event
-     * @method move_annotation
-     */
-    move_annotation : function(annotation, newx, newy) {
-        var diffx = newx - annotation.x,
-            diffy = newy - annotation.y,
-            newpath, oldpath, xy;
-
-        annotation.x += diffx;
-        annotation.y += diffy;
-        annotation.endx += diffx;
-        annotation.endy += diffy;
-
-        if (annotation.path) {
-            newpath = [];
-            oldpath = annotation.path.split(':');
-            Y.each(oldpath, function(position) {
-                xy = position.split(',');
-                newpath.push((parseInt(xy[0], 10) + diffx) + ',' + (parseInt(xy[1], 10) + diffy));
-            });
-
-            annotation.path = newpath.join(':');
-
-        }
-        annotation.drawable.erase();
-        this.drawables.push(annotation.draw());
-    },
-
-    /**
      * Event handler for mousemove.
      * @protected
      * @param Event
@@ -1260,56 +1230,6 @@ EDITOR.prototype = {
     },
 
     /**
-     * Event handler to filter the list of comments.
-     *
-     * @protected
-     * @method filter_search_comments
-     */
-    filter_search_comments : function() {
-        var filternode,
-            commentslist,
-            filtertext;
-
-        filternode = Y.one(SELECTOR.SEARCHFILTER);
-        commentslist = Y.one(SELECTOR.SEARCHCOMMENTSLIST);
-
-        filtertext = filternode.get('value');
-
-        commentslist.all('li').each(function (node) {
-            if (node.get('text').indexOf(filtertext) !== -1) {
-                node.show();
-            } else {
-                node.hide();
-            }
-        });
-
-
-    },
-
-    /**
-     * Event handler to focus on a selected comment.
-     *
-     * @param Event e
-     * @protected
-     * @method focus_on_comment
-     */
-    focus_on_comment : function(e) {
-        var target = e.target.ancestor('li'),
-            comment = target.getData('comment');
-
-        this.searchcommentswindow.hide();
-
-        if (comment.pageno === this.currentpage) {
-            comment.drawable.nodes[0].one('textarea').focus();
-        } else {
-            // Comment is on a different page.
-            this.currentpage = comment.pageno;
-            this.change_page();
-            comment.drawable.nodes[0].one('textarea').focus();
-        }
-    },
-
-    /**
      * Event handler to open the comment search interface.
      *
      * @param Event e
@@ -1317,49 +1237,12 @@ EDITOR.prototype = {
      * @method open_search_comments
      */
     open_search_comments : function(e) {
-        var commentlist, commentfilter, container, placeholder;
-
         if (!this.searchcommentswindow) {
-            container = Y.Node.create('<div/>');
-
-            placeholder = M.util.get_string('filter', 'assignfeedback_editpdf');
-            commentfilter = Y.Node.create('<input type="text" size="20" placeholder="' + placeholder + '"/>');
-            container.append(commentfilter);
-            commentlist = Y.Node.create('<ul role="menu" class="assignfeedback_editpdf_menu"/>');
-            container.append(commentlist);
-
-            this.searchcommentswindow = new M.core.dialogue({
-                extraClasses : ['assignfeedback_editpdf_searchcomments'],
-                draggable: false,
-                centered: true,
-                lightbox: true,
-                width: '400px',
-                visible: false,
-                zIndex: 100,
-                headerContent: M.util.get_string('searchcomments', 'assignfeedback_editpdf'),
-                bodyContent: container,
-                footerContent: ''
+            this.searchcommentswindow = new M.assignfeedback_editpdf.commentsearch({
+                editor : this
             });
-
-            commentfilter.on('keyup', this.filter_search_comments, null, this);
-
-            commentlist.delegate('click', this.focus_on_comment, 'a', this);
-            commentlist.delegate('key', this.focus_on_comment, 'enter,space', 'a', this);
-        } else {
-            commentlist = this.searchcommentswindow.get('boundingBox').one('ul');
-            commentlist.all('li').remove(true);
         }
 
-        // Rebuild the latest list of comments.
-        Y.each(this.pages, function(page) {
-            Y.each(page.comments, function(comment) {
-                var commentnode = Y.Node.create('<li><a href="#" tabindex="-1"><pre>' + comment.rawtext + '</pre></a></li>');
-                commentlist.append(commentnode);
-                commentnode.setData('comment', comment);
-            }, this);
-        }, this);
-
-        this.searchcommentswindow.centerDialogue();
         this.searchcommentswindow.show();
         e.preventDefault();
     },

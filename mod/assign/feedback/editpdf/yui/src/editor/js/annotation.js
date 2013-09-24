@@ -360,11 +360,6 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
             newpath, oldpath, xy,
             x, y;
 
-        Y.log('Move');
-        Y.log(newx);
-        Y.log(newy);
-        Y.log(this.x);
-        Y.log(this.y);
         this.x += diffx;
         this.y += diffy;
         this.endx += diffx;

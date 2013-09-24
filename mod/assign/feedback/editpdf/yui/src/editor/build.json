@@ -12,6 +12,7 @@
         "dropdown.js",
         "colourpicker.js",
         "commentmenu.js",
+        "commentsearch.js",
         "comment.js",
         "quickcomment.js",
         "quickcommentlist.js",
