@@ -32,6 +32,7 @@ $string['downloadfeedback'] = 'Download feedback PDF';
 $string['deletefeedback'] = 'Delete feedback PDF';
 $string['deletecomment'] = 'Delete comment';
 $string['deleteannotation'] = 'Delete annotation';
+$string['commentcontextmenu'] = 'Comment context menu';
 $string['addtoquicklist'] = 'Add to quicklist';
 $string['launcheditor'] = 'Launch PDF editor...';
 $string['gotopage'] = 'Go to page';

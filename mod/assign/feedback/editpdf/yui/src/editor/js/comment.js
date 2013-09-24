@@ -116,6 +116,22 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
     this.deleteme = false;
 
     /**
+     * Reference to the link that opens the menu.
+     * @property menulink
+     * @type Y.Node
+     * @public
+     */
+    this.menulink = null;
+
+    /**
+     * Reference to the dialogue that is the context menu.
+     * @property menu
+     * @type M.assignfeedback_editpdf.dropdown
+     * @public
+     */
+    this.menu = null;
+
+    /**
      * Clean a comment record, returning an oject with only fields that are valid.
      * @public
      * @method clean
@@ -155,6 +171,8 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
         node = Y.Node.create('<textarea/>');
         container = Y.Node.create('<div class="commentdrawable"/>');
         menu = Y.Node.create('<a href="#"><img src="' + this.editor.get('menuicon') + '"/></a>');
+
+        this.menulink = menu;
         container.append(node);
         container.append(menu);
         if (this.width < 100) {
@@ -179,6 +197,7 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
             node.focus();
         }
         this.drawable = drawable;
+
 
         return drawable;
     };
@@ -272,6 +291,11 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
             node.ancestor().setX(x);
             node.ancestor().setY(y);
         });
+
+        this.menu = new M.assignfeedback_editpdf.commentmenu({
+            buttonNode: this.menulink,
+            comment: this
+        });
     };
 
     /**
@@ -290,6 +314,48 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
                 return;
             }
         }
+    };
+
+    /**
+     * Event handler to remove a comment from the users quicklist.
+     *
+     * @protected
+     * @method remove_from_quicklist
+     */
+    this.remove_from_quicklist = function(e, quickcomment) {
+        this.menu.hide();
+
+        this.editor.quicklist.remove(quickcomment);
+    };
+
+    /**
+     * A quick comment was selected in the list, update the active comment and redraw the page.
+     *
+     * @param Event e
+     * @protected
+     * @method set_from_quick_comment
+     */
+    this.set_from_quick_comment = function(e, quickcomment) {
+        this.menu.hide();
+
+        this.rawtext = quickcomment.rawtext;
+        this.width = quickcomment.width;
+        this.colour = quickcomment.colour;
+
+        this.editor.save_current_page();
+
+        this.editor.redraw();
+    };
+
+    /**
+     * Event handler to add a comment to the users quicklist.
+     *
+     * @protected
+     * @method add_to_quicklist
+     */
+    this.add_to_quicklist = function() {
+        this.menu.hide();
+        this.editor.quicklist.add(this);
     };
 
 };

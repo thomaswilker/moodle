@@ -32,7 +32,8 @@
     padding: 0px;
 }
 
-.yui3-colourpicker-hidden {
+.yui3-colourpicker-hidden,
+.yui3-commentmenu-hidden {
     display: none;
 }
 .assignfeedback_editpdf_widget .pageheader select,

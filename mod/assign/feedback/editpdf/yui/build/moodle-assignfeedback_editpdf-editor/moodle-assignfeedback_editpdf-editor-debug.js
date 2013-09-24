@@ -923,6 +923,119 @@ Y.extend(COLOURPICKER, M.assignfeedback_editpdf.dropdown, {
 
 M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
 M.assignfeedback_editpdf.colourpicker = COLOURPICKER;
+var COMMENTMENUNAME = "Commentmenu",
+    COMMENTMENU;
+
+/**
+ * COMMENTMENU
+ * This is a drop down list of comment context functions.
+ *
+ * @namespace M.assignfeedback_editpdf.editor
+ * @class commentmenu
+ * @constructor
+ * @extends Y.Base
+ */
+COMMENTMENU = function(config) {
+    COMMENTMENU.superclass.constructor.apply(this, [config]);
+};
+
+Y.extend(COMMENTMENU, M.assignfeedback_editpdf.dropdown, {
+
+    /**
+     * Initialise the menu.
+     *
+     * @method initializer
+     * @return void
+     */
+    initializer : function(config) {
+        var commentlinks,
+            link,
+            body,
+            comment;
+
+        comment = this.get('comment');
+        // Build the list of menu items.
+        commentlinks = Y.Node.create('<ul role="menu" class="assignfeedback_editpdf_menu"/>');
+
+        link = Y.Node.create('<li><a tabindex="-1" href="#">' + M.util.get_string('addtoquicklist', 'assignfeedback_editpdf') + '</a></li>');
+        link.on('click', comment.add_to_quicklist, comment);
+        link.on('key', comment.add_to_quicklist, 'enter,space', comment);
+
+        commentlinks.append(link);
+
+        link = Y.Node.create('<li><a tabindex="-1" href="#">' + M.util.get_string('deletecomment', 'assignfeedback_editpdf') + '</a></li>');
+        link.on('click', function() { comment.menu.hide(); comment.remove(); }, comment);
+        link.on('key', function() { comment.menu.hide(); comment.remove(); }, 'enter,space', comment);
+
+        commentlinks.append(link);
+
+        link = Y.Node.create('<li><hr/></li>');
+        commentlinks.append(link);
+
+        // Set the accessible header text.
+        this.set('headerText', M.util.get_string('commentcontextmenu', 'assignfeedback_editpdf'));
+
+        body = Y.Node.create('<div/>');
+
+        // Set the body content.
+        body.append(commentlinks);
+        this.set('bodyContent', body);
+
+        COMMENTMENU.superclass.initializer.call(this, config);
+    },
+
+    /**
+     * Show the menu.
+     *
+     * @method show
+     * @return void
+     */
+    show : function() {
+        var commentlinks = this.get('boundingBox').one('ul');
+            commentlinks.all('.quicklist_comment').remove(true),
+            comment = this.get('comment');
+
+        // Now build the list of quicklist comments.
+        Y.each(comment.editor.quicklist.comments, function(quickcomment) {
+            var listitem = Y.Node.create('<li class="quicklist_comment"></li>'),
+                linkitem = Y.Node.create('<a href="#" tabindex="-1">' + quickcomment.rawtext + '</a>'),
+                deletelinkitem = Y.Node.create('<a href="#" tabindex="-1" class="delete_quicklist_comment">' +
+                                               '<img src="' + M.util.image_url('t/delete', 'core') + '" ' +
+                                               'alt="' + M.util.get_string('deletecomment', 'assignfeedback_editpdf') + '"/>' +
+                                               '</a>');
+            listitem.append(linkitem);
+            listitem.append(deletelinkitem);
+
+            commentlinks.append(listitem);
+
+            linkitem.on('click', comment.set_from_quick_comment, comment, quickcomment);
+            linkitem.on('key', comment.set_from_quick_comment, 'space,enter', comment, quickcomment);
+
+            deletelinkitem.on('click', comment.remove_from_quicklist, comment, quickcomment);
+            deletelinkitem.on('key', comment.remove_from_quicklist, 'space,enter', comment, quickcomment);
+        }, this);
+
+        COMMENTMENU.superclass.show.call(this);
+    }
+}, {
+    NAME : COMMENTMENUNAME,
+    ATTRS : {
+        /**
+         * The comment this menu is attached to.
+         *
+         * @attribute comment
+         * @type M.assignfeedback_editpdf.comment
+         * @default null
+         */
+        comment : {
+            value : null
+        }
+
+    }
+});
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.commentmenu = COMMENTMENU;
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -1041,6 +1154,22 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
     this.deleteme = false;
 
     /**
+     * Reference to the link that opens the menu.
+     * @property menulink
+     * @type Y.Node
+     * @public
+     */
+    this.menulink = null;
+
+    /**
+     * Reference to the dialogue that is the context menu.
+     * @property menu
+     * @type M.assignfeedback_editpdf.dropdown
+     * @public
+     */
+    this.menu = null;
+
+    /**
      * Clean a comment record, returning an oject with only fields that are valid.
      * @public
      * @method clean
@@ -1080,6 +1209,8 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
         node = Y.Node.create('<textarea/>');
         container = Y.Node.create('<div class="commentdrawable"/>');
         menu = Y.Node.create('<a href="#"><img src="' + this.editor.get('menuicon') + '"/></a>');
+
+        this.menulink = menu;
         container.append(node);
         container.append(menu);
         if (this.width < 100) {
@@ -1104,6 +1235,7 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
             node.focus();
         }
         this.drawable = drawable;
+
 
         return drawable;
     };
@@ -1197,6 +1329,11 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
             node.ancestor().setX(x);
             node.ancestor().setY(y);
         });
+
+        this.menu = new M.assignfeedback_editpdf.commentmenu({
+            buttonNode: this.menulink,
+            comment: this
+        });
     };
 
     /**
@@ -1215,6 +1352,48 @@ COMMENT = function(editor, gradeid, pageno, x, y, width, colour, rawtext) {
                 return;
             }
         }
+    };
+
+    /**
+     * Event handler to remove a comment from the users quicklist.
+     *
+     * @protected
+     * @method remove_from_quicklist
+     */
+    this.remove_from_quicklist = function(e, quickcomment) {
+        this.menu.hide();
+
+        this.editor.quicklist.remove(quickcomment);
+    };
+
+    /**
+     * A quick comment was selected in the list, update the active comment and redraw the page.
+     *
+     * @param Event e
+     * @protected
+     * @method set_from_quick_comment
+     */
+    this.set_from_quick_comment = function(e, quickcomment) {
+        this.menu.hide();
+
+        this.rawtext = quickcomment.rawtext;
+        this.width = quickcomment.width;
+        this.colour = quickcomment.colour;
+
+        this.editor.save_current_page();
+
+        this.editor.redraw();
+    };
+
+    /**
+     * Event handler to add a comment to the users quicklist.
+     *
+     * @protected
+     * @method add_to_quicklist
+     */
+    this.add_to_quicklist = function() {
+        this.menu.hide();
+        this.editor.quicklist.add(this);
     };
 
 };
@@ -1637,14 +1816,6 @@ EDITOR.prototype = {
     drawables : [],
 
     /**
-     * The comment menu dialogue.
-     * @property commentmenu
-     * @type M.core.dialogue
-     * @protected
-     */
-    commentmenu : null,
-
-    /**
      * Current comment when the comment menu is open.
      * @property currentcomment
      * @type Object
@@ -1659,14 +1830,6 @@ EDITOR.prototype = {
      * @protected
      */
     currentannotation : null,
-
-    /**
-     * The link that opened the current comment menu.
-     * @property currentcommentmenulink
-     * @type Y.Node
-     * @protected
-     */
-    currentcommentmenulink : null,
 
     /**
      * The users comments quick list
@@ -1773,7 +1936,7 @@ EDITOR.prototype = {
      * @method link_handler
      */
     link_handler : function(e) {
-        var drawingcanvas, drawingregion;
+        var drawingcanvas;
         Y.log('Launch pdf editor');
         e.preventDefault();
 
@@ -1798,10 +1961,6 @@ EDITOR.prototype = {
             drawingcanvas.on('gesturemovestart', this.edit_start, null, this);
             drawingcanvas.on('gesturemove', this.edit_move, null, this);
             drawingcanvas.on('gesturemoveend', this.edit_end, null, this);
-
-            drawingregion = Y.one(SELECTOR.DRAWINGREGION),
-            drawingregion.delegate('click', this.open_comment_menu, SELECTOR.COMMENTMENU, this);
-            drawingregion.delegate('key', this.open_comment_menu, 'down:13', SELECTOR.COMMENTMENU, this);
 
             this.refresh_button_state();
         } else {
@@ -2721,73 +2880,6 @@ EDITOR.prototype = {
     },
 
     /**
-     * Event handler to add a comment to the users quicklist.
-     *
-     * @protected
-     * @method add_to_quicklist
-     */
-    add_to_quicklist : function() {
-        this.commentmenu.hide();
-        this.quicklist.add(this.currentcomment);
-    },
-
-    /**
-     * Event handler to remove a comment from the users quicklist.
-     *
-     * @protected
-     * @method remove_from_quicklist
-     */
-    remove_from_quicklist : function(e) {
-        var target = e.target,
-            comment = target.getData('comment');
-
-        this.commentmenu.hide();
-
-        if (!comment) {
-            target = target.ancestor();
-            comment = target.getData('comment');
-        }
-
-        // Should not happen.
-        if (!comment) {
-            return;
-        }
-
-        this.quicklist.remove(comment);
-    },
-
-    /**
-     * A quick comment was selected in the list, update the active comment and redraw the page.
-     *
-     * @param Event e
-     * @protected
-     * @method set_comment_from_quick_comment
-     */
-    set_comment_from_quick_comment : function(e) {
-        var target = e.target,
-            comment = target.getData('comment');
-
-        this.commentmenu.hide();
-
-        if (!comment) {
-            target = target.ancestor();
-            comment = target.getData('comment');
-        }
-
-        // Should not happen.
-        if (!comment || !this.currentcomment) {
-            return;
-        }
-        this.currentcomment.rawtext = comment.rawtext;
-        this.currentcomment.width = comment.width;
-        this.currentcomment.colour = comment.colour;
-
-        this.save_current_page();
-
-        this.redraw();
-    },
-
-    /**
      * Event handler to filter the list of comments.
      *
      * @protected
@@ -2890,103 +2982,6 @@ EDITOR.prototype = {
         this.searchcommentswindow.centerDialogue();
         this.searchcommentswindow.show();
         e.preventDefault();
-    },
-
-    /**
-     * Event handler to open the quicklist/delete menu for a comment.
-     *
-     * @param Event e
-     * @protected
-     * @method open_comment_menu
-     */
-    open_comment_menu : function(e) {
-        var target = e.target,
-            comment = e.target.getData('comment'),
-            commentlinks,
-            link;
-
-        // Cancel deleting of empty comment.
-        this.commenttodelete = null;
-
-        if (!comment) {
-            // The event triggered on the img tag, not the a.
-            target = target.ancestor();
-            comment = target.getData('comment');
-        }
-
-        this.currentcomment = comment;
-        comment.deleteme = false;
-        this.currentcommentmenulink = target;
-
-        // Build the comment menu only the first time.
-        if (!this.commentmenu) {
-            // Build the list of comments.
-            commentlinks = Y.Node.create('<ul role="menu" class="assignfeedback_editpdf_menu"/>');
-
-            link = Y.Node.create('<li><a tabindex="-1" href="#">' + M.util.get_string('addtoquicklist', 'assignfeedback_editpdf') + '</a></li>');
-            link.on('click', this.add_to_quicklist, this);
-            link.on('key', this.add_to_quicklist, 'enter,space', this);
-
-            commentlinks.append(link);
-
-            link = Y.Node.create('<li><a tabindex="-1" href="#">' + M.util.get_string('deletecomment', 'assignfeedback_editpdf') + '</a></li>');
-            link.on('click', function() { this.commentmenu.hide(); this.currentcomment.remove(); }, this);
-            link.on('key', function() { this.commentmenu.hide(); this.currentcomment.remove(); }, 'enter,space', this);
-
-            commentlinks.append(link);
-
-            link = Y.Node.create('<li><hr/></li>');
-            commentlinks.append(link);
-
-            this.commentmenu = new M.core.dialogue({
-                extraClasses : ['assignfeedback_editpdf_commentmenu'],
-                draggable: false,
-                centered: false,
-                lightbox: false,
-                width: 'auto',
-                visible: false,
-                zIndex: 100,
-                bodyContent: commentlinks,
-                footerContent: '',
-                align: {node: target, points: [Y.WidgetPositionAlign.TL, Y.WidgetPositionAlign.BL]}
-            });
-            // Close the menu on click outside.
-            commentlinks.on('clickoutside', function(e) {
-                if (e.target !== this.currentcommentmenulink && e.target.ancestor() !== this.currentcommentmenulink) {
-                    e.preventDefault();
-                    this.commentmenu.hide();
-                }
-            }, this);
-        } else {
-            this.commentmenu.align( target, [Y.WidgetPositionAlign.TL, Y.WidgetPositionAlign.BL]);
-            commentlinks = this.commentmenu.get('boundingBox').one('ul');
-            commentlinks.all('.quicklist_comment').remove(true);
-        }
-
-        // Now build the list of quicklist comments.
-        Y.each(this.quicklist.comments, function(comment) {
-            var listitem = Y.Node.create('<li class="quicklist_comment"></li>'),
-                linkitem = Y.Node.create('<a href="#" tabindex="-1">' + comment.rawtext + '</a>'),
-                deletelinkitem = Y.Node.create('<a href="#" tabindex="-1" class="delete_quicklist_comment">' +
-                                               '<img src="' + M.util.image_url('t/delete', 'core') + '" ' +
-                                               'alt="' + M.util.get_string('deletecomment', 'assignfeedback_editpdf') + '"/>' +
-                                               '</a>');
-            listitem.append(linkitem);
-            listitem.append(deletelinkitem);
-            listitem.setData('comment', comment);
-
-            commentlinks.append(listitem);
-
-            linkitem.on('click', this.set_comment_from_quick_comment, this);
-            linkitem.on('key', this.set_comment_from_quick_comment, 'space,enter', this);
-
-            deletelinkitem.setData('comment', comment);
-
-            deletelinkitem.on('click', this.remove_from_quicklist, this);
-            deletelinkitem.on('key', this.remove_from_quicklist, 'space,enter', this);
-        }, this);
-
-        this.commentmenu.show();
     },
 
     /**
