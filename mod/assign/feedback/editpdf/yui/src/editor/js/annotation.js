@@ -18,32 +18,21 @@
  *
  * @module moodle-assignfeedback_editpdf-editor
  */
+ANNOTATION = function(config) {
+    ANNOTATION.superclass.constructor.apply(this, [config]);
+};
 
-/**
- * ANNOTATION
- *
- * @namespace M.assignfeedback_editpdf
- * @class annotation
- * @param M.assignfeedback_editpdf.editor editor
- * @param Int gradeid
- * @param Int pageno
- * @param Int x
- * @param Int y
- * @param Int endx
- * @param Int endy
- * @param String type
- * @param String colour
- * @param M.assignfeedback_editpdf.point[] path
- */
-ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, path) {
+ANNOTATION.NAME = "annotation";
+ANNOTATION.ATTRS = {};
 
+Y.extend(ANNOTATION, Y.Base, {
     /**
      * Reference to M.assignfeedback_editpdf.editor.
      * @property editor
      * @type M.assignfeedback_editpdf.editor
      * @public
      */
-    this.editor = editor;
+    editor : null,
 
     /**
      * Grade id
@@ -51,7 +40,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.gradeid = parseInt(gradeid, 10) || 0;
+    gradeid : 0,
 
     /**
      * Comment page number
@@ -59,7 +48,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.pageno = parseInt(pageno, 10) || 0;
+    pageno : 0,
 
     /**
      * X position
@@ -67,7 +56,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.x = parseInt(x, 10) || 0;
+    x : 0,
 
     /**
      * Y position
@@ -75,7 +64,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.y = parseInt(y, 10) || 0;
+    y : 0,
 
     /**
      * Ending x position
@@ -83,7 +72,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.endx = parseInt(endx, 10) || 0;
+    endx : 0,
 
     /**
      * Ending y position
@@ -91,7 +80,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.endy = parseInt(endy, 10) || 0;
+    endy : 0,
 
     /**
      * Path
@@ -99,7 +88,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type String - list of points like x1,y1:x2,y2
      * @public
      */
-    this.path = path || '';
+    path : '',
 
     /**
      * Tool.
@@ -107,7 +96,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type String
      * @public
      */
-    this.type = type || 'rect';
+    type : 'rect',
 
     /**
      * Annotation colour.
@@ -115,7 +104,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type String
      * @public
      */
-    this.colour = colour || 'red';
+    colour : 'red',
 
     /**
      * Reference to M.assignfeedback_editpdf.drawable
@@ -123,7 +112,27 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type M.assignfeedback_editpdf.drawable
      * @public
      */
-    this.drawable = false;
+    drawable : false,
+
+    /**
+     * Initialise the annotation.
+     *
+     * @method initializer
+     * @return void
+     */
+    initializer : function(config) {
+        this.editor = config.editor || null;
+        this.gradeid = parseInt(config.gradeid, 10) || 0;
+        this.pageno = parseInt(config.pageno, 10) || 0;
+        this.x = parseInt(config.x, 10) || 0;
+        this.y = parseInt(config.y, 10) || 0;
+        this.endx = parseInt(config.endx, 10) || 0;
+        this.endy = parseInt(config.endy, 10) || 0;
+        this.path = config.path || '';
+        this.type = config.type || 'rect';
+        this.colour = config.colour || 'red';
+        this.drawable = false;
+    },
 
     /**
      * Clean a comment record, returning an oject with only fields that are valid.
@@ -131,7 +140,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @method clean
      * @return {}
      */
-    this.clean = function() {
+    clean : function() {
         return {
             gradeid : this.gradeid,
             x : this.x,
@@ -143,17 +152,83 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
             pageno : this.pageno,
             colour : this.colour
         };
-    };
+    },
+
+    /**
+     * Draw a selection around this annotation if it is selected.
+     * @public
+     * @method draw_highlight
+     * @return M.assignfeedback_editpdf.drawable
+     */
+    draw_highlight : function() {
+        var bounds,
+            drawingregion = Y.one(SELECTOR.DRAWINGREGION),
+            offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY(),
+            shape;
+
+        if (this.editor.currentannotation === this) {
+            // Draw a highlight around the annotation.
+            bounds = new M.assignfeedback_editpdf.rect();
+            bounds.bound([new M.assignfeedback_editpdf.point(this.x, this.y),
+                          new M.assignfeedback_editpdf.point(this.endx, this.endy)]);
+
+            shape = this.editor.graphic.addShape({
+                type: Y.Rect,
+                width: bounds.width,
+                height: bounds.height,
+                stroke: {
+                   weight: STROKEWEIGHT,
+                   color: SELECTEDBORDERCOLOUR
+                },
+                fill: {
+                   color: SELECTEDFILLCOLOUR
+                },
+                x: bounds.x,
+                y: bounds.y
+            });
+            this.drawable.shapes.push(shape);
+
+            // Add a delete X to the annotation.
+            var deleteicon = Y.Node.create('<img src="' + M.util.image_url('trash', 'assignfeedback_editpdf') + '"/>'),
+                deletelink = Y.Node.create('<a href="#" role="button"></a>');
+
+            deleteicon.setAttrs({
+                'alt': M.util.get_string('deleteannotation', 'assignfeedback_editpdf')
+            });
+            deleteicon.setStyles({
+                'backgroundColor' : 'white',
+                'border' : '2px solid ' + SELECTEDBORDERCOLOUR
+            });
+            deletelink.addClass('deleteannotationbutton');
+            deletelink.append(deleteicon);
+
+            drawingregion.append(deletelink);
+            deletelink.setData('annotation', this);
+            deletelink.setStyle('zIndex', '200');
+
+            deletelink.on('click', this.remove, this);
+            deletelink.on('key', this.remove, 'space,enter', this);
+
+            deletelink.setX(offsetcanvas[0] + bounds.x + bounds.width - 20);
+            deletelink.setY(offsetcanvas[1] + bounds.y + 4);
+            this.drawable.nodes.push(deletelink);
+        }
+        return this.drawable;
+    },
 
     /**
      * Draw an annotation
-     * @protected
-     * @method draw_annotation
-     * @param annotation
-     * @return M.assignfeedback_editpdf.drawable
+     * @public
+     * @method draw
+     * @return M.assignfeedback_editpdf.drawable|false
      */
-    this.draw = function() {
-        var drawable,
+    draw : function() {
+        // Should be overridden by the subclass.
+        this.draw_highlight();
+        return this.drawable;
+    },
+
+        /**
             positions,
             xy,
             bounds,
@@ -325,7 +400,8 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
         this.drawable = drawable;
 
         return drawable;
-    };
+    },
+    */
 
     /**
      * Delete an annotation
@@ -333,7 +409,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @method remove
      * @param event
      */
-    this.remove = function() {
+    remove : function() {
         var annotations;
 
         annotations = this.editor.pages[this.editor.currentpage].annotations;
@@ -345,7 +421,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
                 return;
             }
         }
-    };
+    },
 
     /**
      * Move an annotation to a new location.
@@ -354,7 +430,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @param int newy
      * @method move_annotation
      */
-    this.move = function(newx, newy) {
+    move : function(newx, newy) {
         var diffx = newx - this.x,
             diffy = newy - this.y,
             newpath, oldpath, xy,
@@ -380,9 +456,9 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
         }
         this.drawable.erase();
         this.editor.drawables.push(this.draw());
-    };
+    }
 
-};
+});
 
 M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
 M.assignfeedback_editpdf.annotation = ANNOTATION;

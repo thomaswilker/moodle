@@ -443,32 +443,21 @@ M.assignfeedback_editpdf.drawable = DRAWABLE;
  *
  * @module moodle-assignfeedback_editpdf-editor
  */
+ANNOTATION = function(config) {
+    ANNOTATION.superclass.constructor.apply(this, [config]);
+};
 
-/**
- * ANNOTATION
- *
- * @namespace M.assignfeedback_editpdf
- * @class annotation
- * @param M.assignfeedback_editpdf.editor editor
- * @param Int gradeid
- * @param Int pageno
- * @param Int x
- * @param Int y
- * @param Int endx
- * @param Int endy
- * @param String type
- * @param String colour
- * @param M.assignfeedback_editpdf.point[] path
- */
-ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, path) {
+ANNOTATION.NAME = "annotation";
+ANNOTATION.ATTRS = {};
 
+Y.extend(ANNOTATION, Y.Base, {
     /**
      * Reference to M.assignfeedback_editpdf.editor.
      * @property editor
      * @type M.assignfeedback_editpdf.editor
      * @public
      */
-    this.editor = editor;
+    editor : null,
 
     /**
      * Grade id
@@ -476,7 +465,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.gradeid = parseInt(gradeid, 10) || 0;
+    gradeid : 0,
 
     /**
      * Comment page number
@@ -484,7 +473,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.pageno = parseInt(pageno, 10) || 0;
+    pageno : 0,
 
     /**
      * X position
@@ -492,7 +481,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.x = parseInt(x, 10) || 0;
+    x : 0,
 
     /**
      * Y position
@@ -500,7 +489,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.y = parseInt(y, 10) || 0;
+    y : 0,
 
     /**
      * Ending x position
@@ -508,7 +497,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.endx = parseInt(endx, 10) || 0;
+    endx : 0,
 
     /**
      * Ending y position
@@ -516,7 +505,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type Int
      * @public
      */
-    this.endy = parseInt(endy, 10) || 0;
+    endy : 0,
 
     /**
      * Path
@@ -524,7 +513,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type String - list of points like x1,y1:x2,y2
      * @public
      */
-    this.path = path || '';
+    path : '',
 
     /**
      * Tool.
@@ -532,7 +521,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type String
      * @public
      */
-    this.type = type || 'rect';
+    type : 'rect',
 
     /**
      * Annotation colour.
@@ -540,7 +529,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type String
      * @public
      */
-    this.colour = colour || 'red';
+    colour : 'red',
 
     /**
      * Reference to M.assignfeedback_editpdf.drawable
@@ -548,7 +537,27 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @type M.assignfeedback_editpdf.drawable
      * @public
      */
-    this.drawable = false;
+    drawable : false,
+
+    /**
+     * Initialise the annotation.
+     *
+     * @method initializer
+     * @return void
+     */
+    initializer : function(config) {
+        this.editor = config.editor || null;
+        this.gradeid = parseInt(config.gradeid, 10) || 0;
+        this.pageno = parseInt(config.pageno, 10) || 0;
+        this.x = parseInt(config.x, 10) || 0;
+        this.y = parseInt(config.y, 10) || 0;
+        this.endx = parseInt(config.endx, 10) || 0;
+        this.endy = parseInt(config.endy, 10) || 0;
+        this.path = config.path || '';
+        this.type = config.type || 'rect';
+        this.colour = config.colour || 'red';
+        this.drawable = false;
+    },
 
     /**
      * Clean a comment record, returning an oject with only fields that are valid.
@@ -556,7 +565,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @method clean
      * @return {}
      */
-    this.clean = function() {
+    clean : function() {
         return {
             gradeid : this.gradeid,
             x : this.x,
@@ -568,17 +577,83 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
             pageno : this.pageno,
             colour : this.colour
         };
-    };
+    },
+
+    /**
+     * Draw a selection around this annotation if it is selected.
+     * @public
+     * @method draw_highlight
+     * @return M.assignfeedback_editpdf.drawable
+     */
+    draw_highlight : function() {
+        var bounds,
+            drawingregion = Y.one(SELECTOR.DRAWINGREGION),
+            offsetcanvas = Y.one(SELECTOR.DRAWINGCANVAS).getXY(),
+            shape;
+
+        if (this.editor.currentannotation === this) {
+            // Draw a highlight around the annotation.
+            bounds = new M.assignfeedback_editpdf.rect();
+            bounds.bound([new M.assignfeedback_editpdf.point(this.x, this.y),
+                          new M.assignfeedback_editpdf.point(this.endx, this.endy)]);
+
+            shape = this.editor.graphic.addShape({
+                type: Y.Rect,
+                width: bounds.width,
+                height: bounds.height,
+                stroke: {
+                   weight: STROKEWEIGHT,
+                   color: SELECTEDBORDERCOLOUR
+                },
+                fill: {
+                   color: SELECTEDFILLCOLOUR
+                },
+                x: bounds.x,
+                y: bounds.y
+            });
+            this.drawable.shapes.push(shape);
+
+            // Add a delete X to the annotation.
+            var deleteicon = Y.Node.create('<img src="' + M.util.image_url('trash', 'assignfeedback_editpdf') + '"/>'),
+                deletelink = Y.Node.create('<a href="#" role="button"></a>');
+
+            deleteicon.setAttrs({
+                'alt': M.util.get_string('deleteannotation', 'assignfeedback_editpdf')
+            });
+            deleteicon.setStyles({
+                'backgroundColor' : 'white',
+                'border' : '2px solid ' + SELECTEDBORDERCOLOUR
+            });
+            deletelink.addClass('deleteannotationbutton');
+            deletelink.append(deleteicon);
+
+            drawingregion.append(deletelink);
+            deletelink.setData('annotation', this);
+            deletelink.setStyle('zIndex', '200');
+
+            deletelink.on('click', this.remove, this);
+            deletelink.on('key', this.remove, 'space,enter', this);
+
+            deletelink.setX(offsetcanvas[0] + bounds.x + bounds.width - 20);
+            deletelink.setY(offsetcanvas[1] + bounds.y + 4);
+            this.drawable.nodes.push(deletelink);
+        }
+        return this.drawable;
+    },
 
     /**
      * Draw an annotation
-     * @protected
-     * @method draw_annotation
-     * @param annotation
-     * @return M.assignfeedback_editpdf.drawable
+     * @public
+     * @method draw
+     * @return M.assignfeedback_editpdf.drawable|false
      */
-    this.draw = function() {
-        var drawable,
+    draw : function() {
+        // Should be overridden by the subclass.
+        this.draw_highlight();
+        return this.drawable;
+    },
+
+        /**
             positions,
             xy,
             bounds,
@@ -750,7 +825,8 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
         this.drawable = drawable;
 
         return drawable;
-    };
+    },
+    */
 
     /**
      * Delete an annotation
@@ -758,7 +834,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @method remove
      * @param event
      */
-    this.remove = function() {
+    remove : function() {
         var annotations;
 
         annotations = this.editor.pages[this.editor.currentpage].annotations;
@@ -770,7 +846,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
                 return;
             }
         }
-    };
+    },
 
     /**
      * Move an annotation to a new location.
@@ -779,7 +855,7 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
      * @param int newy
      * @method move_annotation
      */
-    this.move = function(newx, newy) {
+    move : function(newx, newy) {
         var diffx = newx - this.x,
             diffy = newy - this.y,
             newpath, oldpath, xy,
@@ -805,12 +881,371 @@ ANNOTATION = function(editor, gradeid, pageno, x, y, endx, endy, type, colour, p
         }
         this.drawable.erase();
         this.editor.drawables.push(this.draw());
-    };
+    }
 
-};
+});
 
 M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
 M.assignfeedback_editpdf.annotation = ANNOTATION;
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Class representing a line.
+ *
+ * @namespace M.assignfeedback_editpdf
+ * @class annotationline
+ * @extends annotation
+ * @module moodle-assignfeedback_editpdf-editor
+ */
+ANNOTATIONLINE = function(config) {
+    ANNOTATIONLINE.superclass.constructor.apply(this, [config]);
+};
+
+ANNOTATIONLINE.NAME = "annotationline";
+ANNOTATIONLINE.ATTRS = {};
+
+Y.extend(ANNOTATIONLINE, M.assignfeedback_editpdf.annotation, {
+    /**
+     * Draw a line annotation
+     * @protected
+     * @method draw
+     * @return M.assignfeedback_editpdf.drawable
+     */
+    draw : function() {
+        var drawable,
+            shape;
+
+        drawable = new M.assignfeedback_editpdf.drawable(this.editor);
+
+        shape = this.editor.graphic.addShape({
+        type: Y.Path,
+            fill: false,
+            stroke: {
+                weight: STROKEWEIGHT,
+                color: ANNOTATIONCOLOUR[this.colour]
+            }
+        });
+
+        shape.moveTo(this.x, this.y);
+        shape.lineTo(this.endx, this.endy);
+        shape.end();
+        drawable.shapes.push(shape);
+        this.drawable = drawable;
+
+        return ANNOTATIONLINE.superclass.draw.apply(this);
+    }
+
+});
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.annotationline = ANNOTATIONLINE;
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Class representing a rectangle.
+ *
+ * @namespace M.assignfeedback_editpdf
+ * @class annotationrectangle
+ * @extends annotation
+ * @module moodle-assignfeedback_editpdf-editor
+ */
+ANNOTATIONRECTANGLE = function(config) {
+    ANNOTATIONRECTANGLE.superclass.constructor.apply(this, [config]);
+};
+
+ANNOTATIONRECTANGLE.NAME = "annotationrectangle";
+ANNOTATIONRECTANGLE.ATTRS = {};
+
+Y.extend(ANNOTATIONRECTANGLE, M.assignfeedback_editpdf.annotation, {
+    /**
+     * Draw a rectangle annotation
+     * @protected
+     * @method draw
+     * @return M.assignfeedback_editpdf.drawable
+     */
+    draw : function() {
+        var drawable,
+            shape;
+
+        drawable = new M.assignfeedback_editpdf.drawable(this.editor);
+
+        bounds = new M.assignfeedback_editpdf.rect();
+        bounds.bound([new M.assignfeedback_editpdf.point(this.x, this.y),
+                      new M.assignfeedback_editpdf.point(this.endx, this.endy)]);
+
+        shape = this.editor.graphic.addShape({
+            type: Y.Rect,
+            width: bounds.width,
+            height: bounds.height,
+            stroke: {
+               weight: STROKEWEIGHT,
+               color: ANNOTATIONCOLOUR[this.colour]
+            },
+            x: bounds.x,
+            y: bounds.y
+        });
+        drawable.shapes.push(shape);
+        this.drawable = drawable;
+
+        return ANNOTATIONRECTANGLE.superclass.draw.apply(this);
+    }
+
+});
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.annotationrectangle = ANNOTATIONRECTANGLE;
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Class representing a oval.
+ *
+ * @namespace M.assignfeedback_editpdf
+ * @class annotationoval
+ * @extends annotation
+ * @module moodle-assignfeedback_editpdf-editor
+ */
+ANNOTATIONOVAL = function(config) {
+    ANNOTATIONOVAL.superclass.constructor.apply(this, [config]);
+};
+
+ANNOTATIONOVAL.NAME = "annotationoval";
+ANNOTATIONOVAL.ATTRS = {};
+
+Y.extend(ANNOTATIONOVAL, M.assignfeedback_editpdf.annotation, {
+    /**
+     * Draw a oval annotation
+     * @protected
+     * @method draw
+     * @return M.assignfeedback_editpdf.drawable
+     */
+    draw : function() {
+        var drawable,
+            shape;
+
+        drawable = new M.assignfeedback_editpdf.drawable(this.editor);
+
+        bounds = new M.assignfeedback_editpdf.rect();
+        bounds.bound([new M.assignfeedback_editpdf.point(this.x, this.y),
+                      new M.assignfeedback_editpdf.point(this.endx, this.endy)]);
+
+        shape = this.editor.graphic.addShape({
+            type: Y.Ellipse,
+            width: bounds.width,
+            height: bounds.height,
+            stroke: {
+               weight: STROKEWEIGHT,
+               color: ANNOTATIONCOLOUR[this.colour]
+            },
+            x: bounds.x,
+            y: bounds.y
+        });
+        drawable.shapes.push(shape);
+        this.drawable = drawable;
+
+        return ANNOTATIONOVAL.superclass.draw.apply(this);
+    }
+
+});
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.annotationoval = ANNOTATIONOVAL;
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Class representing a pen.
+ *
+ * @namespace M.assignfeedback_editpdf
+ * @class annotationpen
+ * @extends annotation
+ * @module moodle-assignfeedback_editpdf-editor
+ */
+ANNOTATIONPEN = function(config) {
+    ANNOTATIONPEN.superclass.constructor.apply(this, [config]);
+};
+
+ANNOTATIONPEN.NAME = "annotationpen";
+ANNOTATIONPEN.ATTRS = {};
+
+Y.extend(ANNOTATIONPEN, M.assignfeedback_editpdf.annotation, {
+    /**
+     * Draw a pen annotation
+     * @protected
+     * @method draw
+     * @return M.assignfeedback_editpdf.drawable
+     */
+    draw : function() {
+        var drawable,
+            shape,
+            first,
+            positions,
+            xy;
+
+        drawable = new M.assignfeedback_editpdf.drawable(this.editor);
+
+        shape = this.editor.graphic.addShape({
+           type: Y.Path,
+            fill: false,
+            stroke: {
+                weight: STROKEWEIGHT,
+                color: ANNOTATIONCOLOUR[this.colour]
+            }
+        });
+
+        first = true;
+        // Recreate the pen path array.
+        positions = this.path.split(':');
+        // Redraw all the lines.
+        Y.each(positions, function(position) {
+            xy = position.split(',');
+            if (first) {
+                shape.moveTo(xy[0], xy[1]);
+                first = false;
+            } else {
+                shape.lineTo(xy[0], xy[1]);
+            }
+        }, this);
+
+        shape.end();
+
+        drawable.shapes.push(shape);
+        this.drawable = drawable;
+
+        return ANNOTATIONPEN.superclass.draw.apply(this);
+    }
+
+});
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.annotationpen = ANNOTATIONPEN;
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Class representing a highlight.
+ *
+ * @namespace M.assignfeedback_editpdf
+ * @class annotationhighlight
+ * @extends annotation
+ * @module moodle-assignfeedback_editpdf-editor
+ */
+ANNOTATIONHIGHLIGHT = function(config) {
+    ANNOTATIONHIGHLIGHT.superclass.constructor.apply(this, [config]);
+};
+
+ANNOTATIONHIGHLIGHT.NAME = "annotationhighlight";
+ANNOTATIONHIGHLIGHT.ATTRS = {};
+
+Y.extend(ANNOTATIONHIGHLIGHT, M.assignfeedback_editpdf.annotation, {
+    /**
+     * Draw a highlight annotation
+     * @protected
+     * @method draw
+     * @return M.assignfeedback_editpdf.drawable
+     */
+    draw : function() {
+        var drawable,
+            shape,
+            bounds,
+            highlightcolour;
+
+        drawable = new M.assignfeedback_editpdf.drawable(this.editor);
+        bounds = new M.assignfeedback_editpdf.rect();
+        bounds.bound([new M.assignfeedback_editpdf.point(this.x, this.y),
+                      new M.assignfeedback_editpdf.point(this.endx, this.endy)]);
+
+        highlightcolour = ANNOTATIONCOLOUR[this.colour];
+
+        // Add an alpha channel to the rgb colour.
+
+        highlightcolour = highlightcolour.replace('rgb', 'rgba');
+        highlightcolour = highlightcolour.replace(')', ',0.5)');
+
+        shape = this.editor.graphic.addShape({
+            type: Y.Rect,
+            width: bounds.width,
+            height: bounds.height,
+            stroke: false,
+            fill: {
+                color: highlightcolour
+            },
+            x: bounds.x,
+            y: bounds.y
+        });
+
+        drawable.shapes.push(shape);
+        this.drawable = drawable;
+
+        return ANNOTATIONHIGHLIGHT.superclass.draw.apply(this);
+    }
+
+});
+
+M.assignfeedback_editpdf = M.assignfeedback_editpdf || {};
+M.assignfeedback_editpdf.annotationhighlight = ANNOTATIONHIGHLIGHT;
 var DROPDOWN_NAME = "Dropdown menu",
     DROPDOWN;
 
@@ -1932,39 +2367,6 @@ M.assignfeedback_editpdf.quickcommentlist = QUICKCOMMENTLIST;
  * @module moodle-assignfeedback_editpdf-editor
  */
 
-// Globals.
-/**
- * Stamp
- *
- * @namespace M.assignfeedback_editpdf.editor
- * @class Stamp
- */
-Stamp = function() {
-    /**
-     * Stamp pluginfile url (without wwwroot)
-     * @property type
-     * @type String
-     * @public
-     */
-    this.url = '';
-
-    /**
-     * Stamp width
-     * @property type
-     * @type Integer
-     * @public
-     */
-    this.width = 0;
-
-    /**
-     * Stamp height
-     * @property type
-     * @type Integer
-     * @public
-     */
-    this.height = 0;
-};
-
 /**
  * EDITOR
  * This is an in browser PDF editor.
@@ -2108,22 +2510,6 @@ EDITOR.prototype = {
      * @protected
      */
     stamps : [],
-
-    /**
-     * The current stamp node id.
-     * @property currentstampnodeid
-     * @type Integer
-     * @protected
-     */
-    currentstampnodeid : null,
-
-    /**
-     * The current stamp picker.
-     * @property currentstamppicker
-     * @type M.core.dialogue
-     * @protected
-     */
-    currentstamppicker: null,
 
     /**
      * Called during the initialisation process of the object.
@@ -2368,17 +2754,8 @@ EDITOR.prototype = {
                                                                                  comment.rawtext);
             }
             for (j = 0; j < this.pages[i].annotations.length; j++) {
-                annotation = this.pages[i].annotations[j];
-                this.pages[i].annotations[j] = new M.assignfeedback_editpdf.annotation(this,
-                                                                                 annotation.gradeid,
-                                                                                 annotation.pageno,
-                                                                                 annotation.x,
-                                                                                 annotation.y,
-                                                                                 annotation.endx,
-                                                                                 annotation.endy,
-                                                                                 annotation.type,
-                                                                                 annotation.colour,
-                                                                                 annotation.path);
+                data = this.pages[i].annotations[j];
+                this.pages[i].annotations[j] = this.create_annotation(data.type, data);
             }
         }
 
@@ -2397,7 +2774,6 @@ EDITOR.prototype = {
      * @param Y.Node button - The button to open the picker
      * @param stamps - List of stamps (from this.stamps)
      * @param {function} callback when a new stamp is chosen.
-     */
     setup_stamp_picker : function(node, stamps, callback) {
         var stamplist = Y.Node.create('<ul role="menu" class="assignfeedback_editpdf_menu"/>'),
             stamppicker,
@@ -2459,6 +2835,7 @@ EDITOR.prototype = {
         node.on('key', showhandler, 'down:13', this);
 
     },
+     */
 
     /**
      * Attach listeners and enable the color picker buttons.
@@ -2470,9 +2847,6 @@ EDITOR.prototype = {
             commentcolourbutton,
             annotationcolourbutton,
             searchcommentsbutton,
-            i,
-            stampurls,
-            stamponload,
             picker;
 
         // Setup the tool buttons.
@@ -2519,6 +2893,7 @@ EDITOR.prototype = {
             context: this
         });
 
+        /**
         // Save all stamps into the stamps variable.
         stampurls = this.get('stampfileurls');
         stamponload = function() {
@@ -2555,6 +2930,7 @@ EDITOR.prototype = {
                 this.currentstamppicker.hide();
             });
         }
+        */
     },
 
     /**
@@ -2709,9 +3085,10 @@ EDITOR.prototype = {
             this.currentedit.annotationstart = { x : this.currentannotation.x,
                                                  y : this.currentannotation.y };
         }
+        /*
         if (this.currentedit.tool === 'stamp') {
             this.redraw_current_edit();
-        }
+        }*/
     },
 
     /**
@@ -2767,6 +3144,7 @@ EDITOR.prototype = {
             height = this.currentedit.start.y - y;
         }
 
+        /*
         if (this.currentedit.tool === 'stamp') {
             // Delete previous stamp if it exists.
 
@@ -2788,6 +3166,7 @@ EDITOR.prototype = {
             drawable.nodes.push(stampnode);
             return drawable;
         }
+        */
 
         if (this.currentedit.tool === 'comment') {
             // We will draw a box with the current background colour.
@@ -3001,18 +3380,16 @@ EDITOR.prototype = {
             // Remove the last ":".
             thepath = thepath.substring(0, thepath.length - 1);
 
-            data = new M.assignfeedback_editpdf.annotation(
-                this,
-                this.get('gradeid'),
-                this.currentpage,
-                minx,
-                miny,
-                maxx,
-                maxy,
-                this.currentedit.tool,
-                this.currentedit.annotationcolour,
-                thepath
-            );
+            data = this.create_annotation(this.currentedit.tool, {
+                gradeid: this.get('gradeid'),
+                pageno: this.currentpage,
+                x: minx,
+                y: miny,
+                endx: maxx,
+                endy: maxy,
+                colour: this.currentedit.annotationcolour,
+                path: thepath
+            });
 
             this.pages[this.currentpage].annotations.push(data);
             this.drawables.push(data.draw());
@@ -3031,18 +3408,17 @@ EDITOR.prototype = {
             y = this.currentedit.start.y;
             height = 16;
 
-            data = new M.assignfeedback_editpdf.annotation(
-                this,
-                this.get('gradeid'),
-                this.currentpage,
-                this.currentedit.start.x,
-                this.currentedit.start.y,
-                this.currentedit.end.x,
-                this.currentedit.end.y,
-                this.currentedit.tool,
-                this.currentedit.annotationcolour,
-                ''
-            );
+            data = this.create_annotation(this.currentedit.tool, {
+                gradeid: this.get('gradeid'),
+                pageno: this.currentpage,
+                x: this.currentedit.start.x,
+                y: this.currentedit.start.y,
+                endx: this.currentedit.end.x,
+                endy: this.currentedit.end.y,
+                type: this.currentedit.tool,
+                colour: this.currentedit.annotationcolour,
+                path: ''
+            });
 
             this.pages[this.currentpage].annotations.push(data);
             this.drawables.push(data.draw());
@@ -3062,18 +3438,16 @@ EDITOR.prototype = {
             }
             this.redraw();
         } else {
-            data = new M.assignfeedback_editpdf.annotation(
-                this,
-                this.get('gradeid'),
-                this.currentpage,
-                this.currentedit.start.x,
-                this.currentedit.start.y,
-                this.currentedit.end.x,
-                this.currentedit.end.y,
-                this.currentedit.tool,
-                this.currentedit.annotationcolour,
-                ''
-            );
+            data = this.create_annotation(this.currentedit.tool, {
+                gradeid: this.get('gradeid'),
+                pageno: this.currentpage,
+                x: this.currentedit.start.x,
+                y: this.currentedit.start.y,
+                endx: this.currentedit.end.x,
+                endy: this.currentedit.end.y,
+                colour: this.currentedit.annotationcolour,
+                path: ''
+            });
 
             this.pages[this.currentpage].annotations.push(data);
             this.drawables.push(data.draw());
@@ -3088,6 +3462,28 @@ EDITOR.prototype = {
             this.currentdrawable.erase();
         }
         this.currentdrawable = false;
+    },
+
+    /**
+     * Factory method for creating annotations of the correct subclass.
+     * @public
+     * @method create_annotation
+     */
+    create_annotation : function(type, data) {
+        data.type = type;
+        data.editor = this;
+        if (type === "line") {
+            return new M.assignfeedback_editpdf.annotationline(data);
+        } else if (type === "rectangle") {
+            return new M.assignfeedback_editpdf.annotationrectangle(data);
+        } else if (type === "oval") {
+            return new M.assignfeedback_editpdf.annotationoval(data);
+        } else if (type === "pen") {
+            return new M.assignfeedback_editpdf.annotationpen(data);
+        } else if (type === "highlight") {
+            return new M.assignfeedback_editpdf.annotationhighlight(data);
+        }
+        return new M.assignfeedback_editpdf.annotation(data);
     },
 
     /**

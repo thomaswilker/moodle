@@ -9,6 +9,11 @@
         "edit.js",
         "drawable.js",
         "annotation.js",
+        "annotationline.js",
+        "annotationrectangle.js",
+        "annotationoval.js",
+        "annotationpen.js",
+        "annotationhighlight.js",
         "dropdown.js",
         "colourpicker.js",
         "commentmenu.js",
@@ -16,8 +21,7 @@
         "comment.js",
         "quickcomment.js",
         "quickcommentlist.js",
-        "editor.js",
-        "stamp.js"
+        "editor.js"
       ]
     }
   }

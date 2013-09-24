@@ -19,39 +19,6 @@
  * @module moodle-assignfeedback_editpdf-editor
  */
 
-// Globals.
-/**
- * Stamp
- *
- * @namespace M.assignfeedback_editpdf.editor
- * @class Stamp
- */
-Stamp = function() {
-    /**
-     * Stamp pluginfile url (without wwwroot)
-     * @property type
-     * @type String
-     * @public
-     */
-    this.url = '';
-
-    /**
-     * Stamp width
-     * @property type
-     * @type Integer
-     * @public
-     */
-    this.width = 0;
-
-    /**
-     * Stamp height
-     * @property type
-     * @type Integer
-     * @public
-     */
-    this.height = 0;
-};
-
 /**
  * EDITOR
  * This is an in browser PDF editor.
@@ -195,22 +162,6 @@ EDITOR.prototype = {
      * @protected
      */
     stamps : [],
-
-    /**
-     * The current stamp node id.
-     * @property currentstampnodeid
-     * @type Integer
-     * @protected
-     */
-    currentstampnodeid : null,
-
-    /**
-     * The current stamp picker.
-     * @property currentstamppicker
-     * @type M.core.dialogue
-     * @protected
-     */
-    currentstamppicker: null,
 
     /**
      * Called during the initialisation process of the object.
@@ -459,17 +410,8 @@ EDITOR.prototype = {
                                                                                  comment.rawtext);
             }
             for (j = 0; j < this.pages[i].annotations.length; j++) {
-                annotation = this.pages[i].annotations[j];
-                this.pages[i].annotations[j] = new M.assignfeedback_editpdf.annotation(this,
-                                                                                 annotation.gradeid,
-                                                                                 annotation.pageno,
-                                                                                 annotation.x,
-                                                                                 annotation.y,
-                                                                                 annotation.endx,
-                                                                                 annotation.endy,
-                                                                                 annotation.type,
-                                                                                 annotation.colour,
-                                                                                 annotation.path);
+                data = this.pages[i].annotations[j];
+                this.pages[i].annotations[j] = this.create_annotation(data.type, data);
             }
         }
 
@@ -488,7 +430,6 @@ EDITOR.prototype = {
      * @param Y.Node button - The button to open the picker
      * @param stamps - List of stamps (from this.stamps)
      * @param {function} callback when a new stamp is chosen.
-     */
     setup_stamp_picker : function(node, stamps, callback) {
         var stamplist = Y.Node.create('<ul role="menu" class="assignfeedback_editpdf_menu"/>'),
             stamppicker,
@@ -550,6 +491,7 @@ EDITOR.prototype = {
         node.on('key', showhandler, 'down:13', this);
 
     },
+     */
 
     /**
      * Attach listeners and enable the color picker buttons.
@@ -561,9 +503,6 @@ EDITOR.prototype = {
             commentcolourbutton,
             annotationcolourbutton,
             searchcommentsbutton,
-            i,
-            stampurls,
-            stamponload,
             picker;
 
         // Setup the tool buttons.
@@ -610,6 +549,7 @@ EDITOR.prototype = {
             context: this
         });
 
+        /**
         // Save all stamps into the stamps variable.
         stampurls = this.get('stampfileurls');
         Y.log(stampurls);
@@ -647,6 +587,7 @@ EDITOR.prototype = {
                 this.currentstamppicker.hide();
             });
         }
+        */
     },
 
     /**
@@ -802,9 +743,10 @@ EDITOR.prototype = {
             this.currentedit.annotationstart = { x : this.currentannotation.x,
                                                  y : this.currentannotation.y };
         }
+        /*
         if (this.currentedit.tool === 'stamp') {
             this.redraw_current_edit();
-        }
+        }*/
     },
 
     /**
@@ -860,6 +802,7 @@ EDITOR.prototype = {
             height = this.currentedit.start.y - y;
         }
 
+        /*
         if (this.currentedit.tool === 'stamp') {
             // Delete previous stamp if it exists.
 
@@ -881,6 +824,7 @@ EDITOR.prototype = {
             drawable.nodes.push(stampnode);
             return drawable;
         }
+        */
 
         if (this.currentedit.tool === 'comment') {
             // We will draw a box with the current background colour.
@@ -1095,18 +1039,16 @@ EDITOR.prototype = {
             // Remove the last ":".
             thepath = thepath.substring(0, thepath.length - 1);
 
-            data = new M.assignfeedback_editpdf.annotation(
-                this,
-                this.get('gradeid'),
-                this.currentpage,
-                minx,
-                miny,
-                maxx,
-                maxy,
-                this.currentedit.tool,
-                this.currentedit.annotationcolour,
-                thepath
-            );
+            data = this.create_annotation(this.currentedit.tool, {
+                gradeid: this.get('gradeid'),
+                pageno: this.currentpage,
+                x: minx,
+                y: miny,
+                endx: maxx,
+                endy: maxy,
+                colour: this.currentedit.annotationcolour,
+                path: thepath
+            });
 
             this.pages[this.currentpage].annotations.push(data);
             this.drawables.push(data.draw());
@@ -1125,18 +1067,17 @@ EDITOR.prototype = {
             y = this.currentedit.start.y;
             height = 16;
 
-            data = new M.assignfeedback_editpdf.annotation(
-                this,
-                this.get('gradeid'),
-                this.currentpage,
-                this.currentedit.start.x,
-                this.currentedit.start.y,
-                this.currentedit.end.x,
-                this.currentedit.end.y,
-                this.currentedit.tool,
-                this.currentedit.annotationcolour,
-                ''
-            );
+            data = this.create_annotation(this.currentedit.tool, {
+                gradeid: this.get('gradeid'),
+                pageno: this.currentpage,
+                x: this.currentedit.start.x,
+                y: this.currentedit.start.y,
+                endx: this.currentedit.end.x,
+                endy: this.currentedit.end.y,
+                type: this.currentedit.tool,
+                colour: this.currentedit.annotationcolour,
+                path: ''
+            });
 
             this.pages[this.currentpage].annotations.push(data);
             this.drawables.push(data.draw());
@@ -1156,18 +1097,16 @@ EDITOR.prototype = {
             }
             this.redraw();
         } else {
-            data = new M.assignfeedback_editpdf.annotation(
-                this,
-                this.get('gradeid'),
-                this.currentpage,
-                this.currentedit.start.x,
-                this.currentedit.start.y,
-                this.currentedit.end.x,
-                this.currentedit.end.y,
-                this.currentedit.tool,
-                this.currentedit.annotationcolour,
-                ''
-            );
+            data = this.create_annotation(this.currentedit.tool, {
+                gradeid: this.get('gradeid'),
+                pageno: this.currentpage,
+                x: this.currentedit.start.x,
+                y: this.currentedit.start.y,
+                endx: this.currentedit.end.x,
+                endy: this.currentedit.end.y,
+                colour: this.currentedit.annotationcolour,
+                path: ''
+            });
 
             this.pages[this.currentpage].annotations.push(data);
             this.drawables.push(data.draw());
@@ -1182,6 +1121,28 @@ EDITOR.prototype = {
             this.currentdrawable.erase();
         }
         this.currentdrawable = false;
+    },
+
+    /**
+     * Factory method for creating annotations of the correct subclass.
+     * @public
+     * @method create_annotation
+     */
+    create_annotation : function(type, data) {
+        data.type = type;
+        data.editor = this;
+        if (type === "line") {
+            return new M.assignfeedback_editpdf.annotationline(data);
+        } else if (type === "rectangle") {
+            return new M.assignfeedback_editpdf.annotationrectangle(data);
+        } else if (type === "oval") {
+            return new M.assignfeedback_editpdf.annotationoval(data);
+        } else if (type === "pen") {
+            return new M.assignfeedback_editpdf.annotationpen(data);
+        } else if (type === "highlight") {
+            return new M.assignfeedback_editpdf.annotationhighlight(data);
+        }
+        return new M.assignfeedback_editpdf.annotation(data);
     },
 
     /**
