@@ -17,8 +17,7 @@
 /**
  * Library code for manipulating PDFs
  *
- * @package   mod_assign
- * @subpackage assignfeedback_editpdf
+ * @package assignfeedback_editpdf
  * @copyright 2012 Davo Smith
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -31,6 +30,13 @@ global $CFG;
 require_once($CFG->libdir.'/pdflib.php');
 require_once($CFG->dirroot.'/mod/assign/feedback/editpdf/fpdi/fpdi.php');
 
+/**
+ * Library code for manipulating PDFs
+ *
+ * @package assignfeedback_editpdf
+ * @copyright 2012 Davo Smith
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
 class pdf extends \FPDI {
 
     /** @var int the number of the current page in the PDF being processed */
@@ -44,18 +50,25 @@ class pdf extends \FPDI {
     /** @var string the path to the PDF currently being processed */
     protected $filename = null;
 
+    /** No errors */
     const GSPATH_OK = 'ok';
+    /** Not set */
     const GSPATH_EMPTY = 'empty';
+    /** Does not exist */
     const GSPATH_DOESNOTEXIST = 'doesnotexist';
+    /** Is a dir */
     const GSPATH_ISDIR = 'isdir';
+    /** Not executable */
     const GSPATH_NOTEXECUTABLE = 'notexecutable';
+    /** Test file missing */
     const GSPATH_NOTESTFILE = 'notestfile';
+    /** Any other error */
     const GSPATH_ERROR = 'error';
 
     /**
      * Combine the given PDF files into a single PDF. Optionally add a coversheet and coversheet fields.
-     * @param $pdflist string[] the filenames of the files to combine
-     * @param $outfilename string the filename to write to
+     * @param string[] $pdflist  the filenames of the files to combine
+     * @param string $outfilename the filename to write to
      * @return int the number of pages in the combined PDF
      */
     public function combine_pdfs($pdflist, $outfilename) {
@@ -101,7 +114,7 @@ class pdf extends \FPDI {
     /**
      * Load the specified PDF and set the initial output configuration
      * Used when processing comments and outputting a new PDF
-     * @param $filename string the path to the PDF to load
+     * @param string $filename the path to the PDF to load
      * @return int the number of pages in the PDF
      */
     public function load_pdf($filename) {
@@ -123,8 +136,8 @@ class pdf extends \FPDI {
      * Sets the name of the PDF to process, but only loads the file if the
      * pagecount is zero (in order to count the number of pages)
      * Used when generating page images (but not a new PDF)
-     * @param $filename string the path to the PDF to process
-     * @param $pagecount int optional the number of pages in the PDF, if known
+     * @param string $filename the path to the PDF to process
+     * @param int $pagecount optional the number of pages in the PDF, if known
      * @return int the number of pages in the PDF
      */
     public function set_pdf($filename, $pagecount = 0) {
@@ -153,6 +166,11 @@ class pdf extends \FPDI {
         return true;
     }
 
+    /**
+     * Create a page from a source PDF.
+     *
+     * @param int $pageno
+     */
     protected function create_page_from_source($pageno) {
         // Get the size (and deduce the orientation) of the next page.
         $template = $this->importPage($pageno);
@@ -181,11 +199,11 @@ class pdf extends \FPDI {
 
     /**
      * Add a comment to the current page
-     * @param $text string the text of the comment
-     * @param $x int the x-coordinate of the comment (in pixels)
-     * @param $y int the y-coordinate of the comment (in pixels)
-     * @param $width int the width of the comment (in pixels)
-     * @param $colour string optional the background colour of the comment (red, yellow, green, blue, white, clear)
+     * @param string $text the text of the comment
+     * @param int $x the x-coordinate of the comment (in pixels)
+     * @param int $y the y-coordinate of the comment (in pixels)
+     * @param int $width the width of the comment (in pixels)
+     * @param string $colour optional the background colour of the comment (red, yellow, green, blue, white, clear)
      * @return bool true if successful (always)
      */
     public function add_comment($text, $x, $y, $width, $colour = 'yellow') {
@@ -230,13 +248,13 @@ class pdf extends \FPDI {
 
     /**
      * Add an annotation to the current page
-     * @param $sx int starting x-coordinate (in pixels)
-     * @param $sy int starting y-coordinate (in pixels)
-     * @param $ex int ending x-coordinate (in pixels)
-     * @param $ey int ending y-coordinate (in pixels)
-     * @param $colour string optional the colour of the annotation (red, yellow, green, blue, white, black)
-     * @param $type string optional the type of annotation (line, oval, rectangle, highlight, pen, stamp)
-     * @param $path mixed int[]|string optional for 'pen' annotations this is an array of x and y coordinates for
+     * @param int $sx starting x-coordinate (in pixels)
+     * @param int $sy starting y-coordinate (in pixels)
+     * @param int $ex ending x-coordinate (in pixels)
+     * @param int $ey ending y-coordinate (in pixels)
+     * @param string $colour optional the colour of the annotation (red, yellow, green, blue, white, black)
+     * @param string $type optional the type of annotation (line, oval, rectangle, highlight, pen, stamp)
+     * @param int[]|string $path optional for 'pen' annotations this is an array of x and y coordinates for
      *              the line, for 'stamp' annotations it is the name of the stamp file (without the path)
      * @return bool true if successful (always)
      */
@@ -353,7 +371,7 @@ class pdf extends \FPDI {
 
     /**
      * Get the location of the image file for a given stamp (or false, if it does not exist)
-     * @param $stampname
+     * @param string $stampname
      * @return mixed string|false the path to the image file for the stamp
      */
     public static function get_stamp_file($stampname) {
@@ -369,7 +387,7 @@ class pdf extends \FPDI {
 
     /**
      * Save the completed PDF to the given file
-     * @param $filename string the filename for the PDF (including the full path)
+     * @param string $filename the filename for the PDF (including the full path)
      */
     public function save_pdf($filename) {
         $this->Output($filename, 'F');
@@ -377,7 +395,7 @@ class pdf extends \FPDI {
 
     /**
      * Set the path to the folder in which to generate page image files
-     * @param $folder string
+     * @param string $folder
      */
     public function set_image_folder($folder) {
         $this->imagefolder = $folder;
@@ -385,7 +403,7 @@ class pdf extends \FPDI {
 
     /**
      * Generate an image of the specified page in the PDF
-     * @param $pageno int the page to generate the image of
+     * @param int $pageno the page to generate the image of
      * @throws moodle_exception
      * @throws coding_exception
      * @return string the filename of the generated image
@@ -536,6 +554,9 @@ class pdf extends \FPDI {
         return $ret;
     }
 
+    /**
+     * If the test image has been generated correctly - send it direct to the browser.
+     */
     public static function send_test_image() {
         global $CFG;
         header('Content-type: image/png');

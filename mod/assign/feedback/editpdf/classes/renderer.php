@@ -36,7 +36,7 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
     /**
      * Return the PDF button shortcut.
      *
-     * @param string $class the name of a specific button.
+     * @param string $name the name of a specific button.
      * @return string the specific shortcut.
      */
     private function get_shortcut($name) {
@@ -65,9 +65,10 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
     /**
      * Render a single colour button.
      *
-     * @param $icon string - The key for the icon
-     * @param $colour string - The key for the lang string.
-     * @param $disabled bool - The is this button disabled.
+     * @param string $icon - The key for the icon
+     * @param string $tool - The key for the lang string.
+     * @param string $accesskey Optional - The access key for the button.
+     * @param bool $disabled Optional - Is this button disabled.
      * @return string
      */
     private function render_toolbar_button($icon, $tool, $accesskey = null, $disabled=false) {
@@ -97,7 +98,7 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
     /**
      * Render the editpdf widget in the grading form.
      *
-     * @param assignfeedback_editpdf_widget - Renderable widget containing assignment, user and attempt number.
+     * @param assignfeedback_editpdf_widget $widget - Renderable widget containing assignment, user and attempt number.
      * @return string
      */
     public function render_assignfeedback_editpdf_widget(assignfeedback_editpdf_widget $widget) {

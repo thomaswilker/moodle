@@ -25,22 +25,30 @@
 namespace assignfeedback_editpdf;
 
 /**
+ * Functions for generating the annotated pdf.
+ *
  * This class controls the ingest of student submission files to a normalised
  * PDF 1.4 document with all submission files concatinated together. It also
  * provides the functions to generate a downloadable pdf with all comments and
  * annotations embedded.
+ * @copyright 2012 Davo Smith
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class document_services {
 
+    /** File area for generated pdf */
     const FINAL_PDF_FILEAREA = 'download';
+    /** File area for combined pdf */
     const COMBINED_PDF_FILEAREA = 'combined';
+    /** File area for page images */
     const PAGE_IMAGE_FILEAREA = 'pages';
+    /** Filename for combined pdf */
     const COMBINED_PDF_FILENAME = 'combined.pdf';
 
     /**
      * This function will take an int or an assignment instance and
      * return an assignment instance. It is just for convenience.
-     * @param mixed id or assign class
+     * @param int|\assign $assignment
      * @return assign
      */
     private static function get_assignment_from_param($assignment) {
@@ -59,9 +67,9 @@ class document_services {
 
     /**
      * Get a hash that will be unique and can be used in a path name.
-     * @param mixed id or assign class
-     * @param int userid
-     * @param int attemptnumber (-1 means latest attempt)
+     * @param int|\assign $assignment
+     * @param int $userid
+     * @param int $attemptnumber (-1 means latest attempt)
      */
     private static function hash($assignment, $userid, $attemptnumber) {
         if (is_object($assignment)) {
@@ -76,9 +84,9 @@ class document_services {
      * This function will search for all files that can be converted
      * and concatinated into a PDF (1.4) - for any submission plugin
      * for this students attempt.
-     * @param mixed id or assign class
-     * @param int userid
-     * @param int attemptnumber (-1 means latest attempt)
+     * @param int|\assign $assignment
+     * @param int $userid
+     * @param int $attemptnumber (-1 means latest attempt)
      * @return array(stored_file)
      */
     public static function list_compatible_submission_files_for_attempt($assignment, $userid, $attemptnumber) {
@@ -120,9 +128,9 @@ class document_services {
 
     /**
      * This function return the combined pdf for all valid submission files.
-     * @param mixed id or assign class
-     * @param int userid
-     * @param int attemptnumber (-1 means latest attempt)
+     * @param int|\assign $assignment
+     * @param int $userid
+     * @param int $attemptnumber (-1 means latest attempt)
      * @return stored_file
      */
     public static function get_combined_pdf_for_attempt($assignment, $userid, $attemptnumber) {
@@ -162,9 +170,9 @@ class document_services {
     /**
      * This function will take all of the compatible files for a submission
      * and combine them into one PDF.
-     * @param mixed id or assign class
-     * @param int userid
-     * @param int attemptnumber (-1 means latest attempt)
+     * @param int|\assign $assignment
+     * @param int $userid
+     * @param int $attemptnumber (-1 means latest attempt)
      * @return stored_file
      */
     public static function generate_combined_pdf_for_attempt($assignment, $userid, $attemptnumber) {
@@ -236,9 +244,9 @@ class document_services {
 
     /**
      * This function will generate and return a list of the page images from a pdf.
-     * @param mixed id or assign class
-     * @param int userid
-     * @param int attemptnumber (-1 means latest attempt)
+     * @param int|\assign $assignment
+     * @param int $userid
+     * @param int $attemptnumber (-1 means latest attempt)
      * @return array(stored_file)
      */
     public static function generate_page_images_for_attempt($assignment, $userid, $attemptnumber) {
@@ -296,9 +304,9 @@ class document_services {
 
     /**
      * This function returns a list of the page images from a pdf.
-     * @param mixed id or assign class
-     * @param int userid
-     * @param int attemptnumber (-1 means latest attempt)
+     * @param int|\assign $assignment
+     * @param int $userid
+     * @param int $attemptnumber (-1 means latest attempt)
      * @return array(stored_file)
      */
     public static function get_page_images_for_attempt($assignment, $userid, $attemptnumber) {
@@ -342,9 +350,9 @@ class document_services {
 
     /**
      * This function returns sensible filename for a feedback file.
-     * @param mixed id or assign class
-     * @param int userid
-     * @param int attemptnumber (-1 means latest attempt)
+     * @param int|\assign $assignment
+     * @param int $userid
+     * @param int $attemptnumber (-1 means latest attempt)
      * @return string
      */
     protected static function get_downloadable_feedback_filename($assignment, $userid, $attemptnumber) {
@@ -380,9 +388,9 @@ class document_services {
 
     /**
      * This function takes the combined pdf and embeds all the comments and annotations.
-     * @param mixed id or assign class
-     * @param int userid
-     * @param int attemptnumber (-1 means latest attempt)
+     * @param int|\assign $assignment
+     * @param int $userid
+     * @param int $attemptnumber (-1 means latest attempt)
      * @return stored_file
      */
     public static function generate_feedback_document($assignment, $userid, $attemptnumber) {
@@ -469,9 +477,9 @@ class document_services {
 
     /**
      * This function returns the generated pdf (if it exists).
-     * @param mixed id or assign class
-     * @param int userid
-     * @param int attemptnumber (-1 means latest attempt)
+     * @param int|\assign $assignment
+     * @param int $userid
+     * @param int $attemptnumber (-1 means latest attempt)
      * @return stored_file
      */
     public static function get_feedback_document($assignment, $userid, $attemptnumber) {
@@ -505,9 +513,9 @@ class document_services {
 
     /**
      * This function deletes the generated pdf for a student.
-     * @param mixed id or assign class
-     * @param int userid
-     * @param int attemptnumber (-1 means latest attempt)
+     * @param int|\assign $assignment
+     * @param int $userid
+     * @param int $attemptnumber (-1 means latest attempt)
      * @return bool
      */
     public static function delete_feedback_document($assignment, $userid, $attemptnumber) {

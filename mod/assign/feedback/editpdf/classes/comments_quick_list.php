@@ -26,7 +26,11 @@ namespace assignfeedback_editpdf;
 
 /**
  * This class performs crud operations on a users quicklist comments.
+ *
  * No capability checks are done - they should be done by the calling class.
+ * @package   assignfeedback_editpdf
+ * @copyright 2012 Davo Smith
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class comments_quick_list {
 
@@ -45,9 +49,9 @@ class comments_quick_list {
 
     /**
      * Add a comment to the quick list.
-     * @param string commenttext
-     * @param int width
-     * @param string colour
+     * @param string $commenttext
+     * @param int $width
+     * @param string $colour
      * @return stdClass - the comment record (with new id set)
      */
     public static function add_comment($commenttext, $width, $colour) {
@@ -65,7 +69,7 @@ class comments_quick_list {
 
     /**
      * Get a single comment by id.
-     * @param int commentid
+     * @param int $commentid
      * @return comment or false
      */
     public static function get_comment($commentid) {
@@ -80,7 +84,7 @@ class comments_quick_list {
 
     /**
      * Remove a comment from the quick list.
-     * @param int commentid
+     * @param int $commentid
      * @return bool
      */
     public static function remove_comment($commentid) {

@@ -26,6 +26,10 @@ namespace assignfeedback_editpdf;
 
 /**
  * This class adds and removes annotations from a page of a response.
+ *
+ * @package   assignfeedback_editpdf
+ * @copyright 2012 Davo Smith
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class annotation {
 

@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'assignfeedback_corepdf', language 'en'
+ * Strings for component 'assignfeedback_editpdf', language 'en'
  *
- * @package   assignfeedback_corepdf
+ * @package   assignfeedback_editpdf
  * @copyright 2012 Davo Smith
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

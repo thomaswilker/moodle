@@ -190,6 +190,7 @@ class assign_feedback_editpdf extends assign_feedback_plugin {
      * Display the list of files in the feedback status table.
      *
      * @param stdClass $grade
+     * @param bool $showviewlink (Always set to false).
      * @return string
      */
     public function view_summary(stdClass $grade, & $showviewlink) {

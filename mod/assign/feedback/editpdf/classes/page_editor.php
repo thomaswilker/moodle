@@ -26,15 +26,21 @@ namespace assignfeedback_editpdf;
 
 /**
  * This class performs crud operations on comments and annotations from a page of a response.
+ *
  * No capability checks are done - they should be done by the calling class.
+ *
+ * @package   assignfeedback_editpdf
+ * @copyright 2012 Davo Smith
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class page_editor {
 
     /**
      * Get all comments for a page.
-     * @param int gradeid
-     * @param int pageno
-     * @return array(comment)
+     * @param int $gradeid
+     * @param int $pageno
+     * @param bool $draft
+     * @return comment[]
      */
     public static function get_comments($gradeid, $pageno, $draft) {
         global $DB;
@@ -54,9 +60,9 @@ class page_editor {
 
     /**
      * Set all comments for a page.
-     * @param int gradeid
-     * @param int pageno
-     * @param comment[]
+     * @param int $gradeid
+     * @param int $pageno
+     * @param comment[] $comments
      * @return int - the number of comments.
      */
     public static function set_comments($gradeid, $pageno, $comments) {
@@ -84,7 +90,7 @@ class page_editor {
 
     /**
      * Get a single comment by id.
-     * @param int commentid
+     * @param int $commentid
      * @return comment or false
      */
     public static function get_comment($commentid) {
@@ -97,9 +103,7 @@ class page_editor {
 
     /**
      * Add a comment to a page.
-     * @param int gradeid
-     * @param int pageno
-     * @param comment
+     * @param comment $comment
      * @return bool
      */
     public static function add_comment(comment $comment) {
@@ -110,7 +114,7 @@ class page_editor {
 
     /**
      * Remove a comment from a page.
-     * @param int commentid
+     * @param int $commentid
      * @return bool
      */
     public static function remove_comment($commentid) {
@@ -120,9 +124,10 @@ class page_editor {
 
     /**
      * Get all annotations for a page.
-     * @param int gradeid
-     * @param int pageno
-     * @return array(annotations)
+     * @param int $gradeid
+     * @param int $pageno
+     * @param bool $draft
+     * @return annotation[]
      */
     public static function get_annotations($gradeid, $pageno, $draft) {
         global $DB;
@@ -142,9 +147,9 @@ class page_editor {
 
     /**
      * Set all annotations for a page.
-     * @param int gradeid
-     * @param int pageno
-     * @param annotation[]
+     * @param int $gradeid
+     * @param int $pageno
+     * @param annotation[] $annotations
      * @return int - the number of annotations.
      */
     public static function set_annotations($gradeid, $pageno, $annotations) {
@@ -168,7 +173,7 @@ class page_editor {
 
     /**
      * Get a single annotation by id.
-     * @param int annotationid
+     * @param int $annotationid
      * @return annotation or false
      */
     public static function get_annotation($annotationid) {
@@ -183,7 +188,7 @@ class page_editor {
 
     /**
      * Unrelease drafts
-     * @param int gradeid
+     * @param int $gradeid
      * @return bool
      */
     public static function unrelease_drafts($gradeid) {
@@ -197,7 +202,7 @@ class page_editor {
 
     /**
      * Release the draft comments and annotations to students.
-     * @param int gradeid
+     * @param int $gradeid
      * @return bool
      */
     public static function release_drafts($gradeid) {
@@ -226,7 +231,7 @@ class page_editor {
 
     /**
      * Has annotations or comments.
-     * @param int gradeid
+     * @param int $gradeid
      * @return bool
      */
     public static function has_annotations_or_comments($gradeid) {
@@ -243,7 +248,7 @@ class page_editor {
 
     /**
      * Aborts all draft annotations and reverts to the last version released to students.
-     * @param int gradeid
+     * @param int $gradeid
      * @return bool
      */
     public static function revert_drafts($gradeid) {
@@ -272,9 +277,7 @@ class page_editor {
 
     /**
      * Add a annotation to a page.
-     * @param int gradeid
-     * @param int pageno
-     * @param annotation
+     * @param annotation $annotation
      * @return bool
      */
     public static function add_annotation(annotation $annotation) {
@@ -286,7 +289,7 @@ class page_editor {
 
     /**
      * Remove a annotation from a page.
-     * @param int annotationid
+     * @param int $annotationid
      * @return bool
      */
     public static function remove_annotation($annotationid) {
