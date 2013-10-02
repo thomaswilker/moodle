@@ -40,7 +40,7 @@ $result = assignfeedback_editpdf\pdf::test_gs_path();
 
 switch ($result->status) {
     case assignfeedback_editpdf\pdf::GSPATH_OK:
-        $msg = get_string('test_ok', 'assignfeedback_pdf');
+        $msg = get_string('test_ok', 'assignfeedback_editpdf');
         $msg .= html_writer::empty_tag('br');
         $imgurl = new moodle_url($PAGE->url, array('sendimage' => 1));
         $msg .= html_writer::empty_tag('img', array('src' => $imgurl));
@@ -51,14 +51,14 @@ switch ($result->status) {
         break;
 
     default:
-        $msg = get_string("test_{$result->status}", 'assignfeedback_pdf');
+        $msg = get_string("test_{$result->status}", 'assignfeedback_editpdf');
         break;
 }
 
-$returl = new moodle_url('/admin/settings.php', array('section' => 'assignfeedback_pdf'));
+$returl = new moodle_url('/admin/settings.php', array('section' => 'assignfeedback_editpdf'));
 $msg .= $OUTPUT->continue_button($returl);
 
-$strheading = get_string('testgs', 'assignfeedback_pdf');
+$strheading = get_string('testgs', 'assignfeedback_editpdf');
 $PAGE->set_heading($strheading);
 $PAGE->set_title($strheading);
 
