@@ -219,7 +219,8 @@ EDITOR.prototype = {
 
         button = Y.one(SELECTOR.STAMPSBUTTON);
         button.one('img').setAttrs({'src': this.currentedit.stamp,
-                                    'height': '16'});
+                                    'height': '16',
+                                    'width': '16'});
     },
 
     /**

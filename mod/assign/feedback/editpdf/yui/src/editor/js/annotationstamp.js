@@ -48,7 +48,7 @@ Y.extend(ANNOTATIONSTAMP, M.assignfeedback_editpdf.annotation, {
             'backgroundImage': 'url(' + this.path + ')',
             'width': (this.endx - this.x),
             'height': (this.endy - this.y),
-            'backgroundSize': '100%',
+            'backgroundSize': '100% 100%',
             'zIndex': 50
         });
 
@@ -90,7 +90,7 @@ Y.extend(ANNOTATIONSTAMP, M.assignfeedback_editpdf.annotation, {
             'backgroundImage': 'url(' + edit.stamp + ')',
             'width': bounds.width,
             'height': bounds.height,
-            'backgroundSize': '100%',
+            'backgroundSize': '100% 100%',
             'zIndex': 50
         });
 

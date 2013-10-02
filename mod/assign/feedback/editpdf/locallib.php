@@ -57,6 +57,8 @@ class assign_feedback_editpdf extends assign_feedback_plugin {
         $attempt = -1;
         if ($grade) {
             $attempt = $grade->attemptnumber;
+        } else {
+            $grade = $this->assignment->get_user_grade($userid, true);
         }
 
         $feedbackfile = document_services::get_feedback_document($this->assignment->get_instance()->id,
@@ -67,14 +69,47 @@ class assign_feedback_editpdf extends assign_feedback_plugin {
         $fs = get_file_storage();
         $syscontext = context_system::instance();
 
-        if ($files = $fs->get_area_files($syscontext->id, 'assignfeedback_editpdf', 'stamps', 0, "filename", false)) {
+        // Copy any new stamps to this instance.
+        if ($files = $fs->get_area_files($syscontext->id,
+                                         'assignfeedback_editpdf',
+                                         'stamps',
+                                         0,
+                                         "filename",
+                                         false)) {
             foreach ($files as $file) {
                 $filename = $file->get_filename();
                 if ($filename !== '.') {
-                    $url = moodle_url::make_pluginfile_url($syscontext->id,
+
+                    $existingfile = $fs->get_file($this->assignment->get_context()->id,
+                                                  'assignfeedback_editpdf',
+                                                  'stamps',
+                                                  $grade->id,
+                                                  '/',
+                                                  $file->get_filename());
+                    if (!$existingfile) {
+                        $newrecord = new stdClass();
+                        $newrecord->contextid = $this->assignment->get_context()->id;
+                        $newrecord->itemid = $grade->id;
+                        $fs->create_file_from_storedfile($newrecord, $file);
+                    }
+                }
+            }
+        }
+
+        // Now get the full list of stamp files for this instance.
+        if ($files = $fs->get_area_files($this->assignment->get_context()->id,
+                                         'assignfeedback_editpdf',
+                                         'stamps',
+                                         $grade->id,
+                                         "filename",
+                                         false)) {
+            foreach ($files as $file) {
+                $filename = $file->get_filename();
+                if ($filename !== '.') {
+                    $url = moodle_url::make_pluginfile_url($this->assignment->get_context()->id,
                                                    'assignfeedback_editpdf',
                                                    'stamps',
-                                                   0,
+                                                   $grade->id,
                                                    '/',
                                                    $file->get_filename(),
                                                    false);
@@ -85,7 +120,7 @@ class assign_feedback_editpdf extends assign_feedback_plugin {
 
         $url = false;
         $filename = '';
-        if ($feedbackfile && $grade) {
+        if ($feedbackfile) {
             $url = moodle_url::make_pluginfile_url($this->assignment->get_context()->id,
                                                    'assignfeedback_editpdf',
                                                    document_services::FINAL_PDF_FILEAREA,

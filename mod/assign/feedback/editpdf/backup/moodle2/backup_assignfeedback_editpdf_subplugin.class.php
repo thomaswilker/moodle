@@ -63,6 +63,7 @@ class backup_assignfeedback_editpdf_subplugin extends backup_subplugin {
         $subpluginelementcomment->set_source_table('assignfeedback_editpdf_cmnt', array('gradeid' => backup::VAR_PARENTID));
         // We only need to backup the files in the final pdf area - all the others can be regenerated.
         $subpluginelementfiles->annotate_files('assignfeedback_editpdf', 'download', 'gradeid');
+        $subpluginelementfiles->annotate_files('assignfeedback_editpdf', 'stamps', 'gradeid');
         return $subplugin;
     }
 
