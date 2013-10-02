@@ -45,7 +45,7 @@ Y.extend(ANNOTATIONSTAMP, M.assignfeedback_editpdf.annotation, {
         node = Y.Node.create('<div/>');
         node.setStyles({
             'display': 'inline-block',
-            'backgroundImage': 'url(' + this.path + ')',
+            'backgroundImage': 'url(' + this.editor.get_stamp_image_url(this.path) + ')',
             'width': (this.endx - this.x),
             'height': (this.endy - this.y),
             'backgroundSize': '100% 100%',
@@ -87,7 +87,7 @@ Y.extend(ANNOTATIONSTAMP, M.assignfeedback_editpdf.annotation, {
         node = Y.Node.create('<div/>');
         node.setStyles({
             'display': 'inline-block',
-            'backgroundImage': 'url(' + edit.stamp + ')',
+            'backgroundImage': 'url(' + this.editor.get_stamp_image_url(edit.stamp) + ')',
             'width': bounds.width,
             'height': bounds.height,
             'backgroundSize': '100% 100%',

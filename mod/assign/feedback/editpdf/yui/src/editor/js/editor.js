@@ -218,7 +218,7 @@ EDITOR.prototype = {
         currenttoolnode.setAttribute('aria-pressed', 'true');
 
         button = Y.one(SELECTOR.STAMPSBUTTON);
-        button.one('img').setAttrs({'src': this.currentedit.stamp,
+        button.one('img').setAttrs({'src': this.get_stamp_image_url(this.currentedit.stamp),
                                     'height': '16',
                                     'width': '16'});
     },
@@ -385,6 +385,26 @@ EDITOR.prototype = {
     },
 
     /**
+     * Get the full pluginfile url for an image file - just given the filename.
+     *
+     * @public
+     * @method get_stamp_image_url
+     * @param string filename
+     */
+    get_stamp_image_url : function(filename) {
+        var urls = this.get('stampfiles'),
+            fullurl = '';
+
+        Y.Array.each(urls, function(url) {
+            if (url.indexOf(filename) > 0) {
+                fullurl = url;
+            }
+        }, this);
+
+        return fullurl;
+    },
+
+    /**
      * Attach listeners and enable the color picker buttons.
      * @protected
      * @method setup_toolbar
@@ -396,7 +416,8 @@ EDITOR.prototype = {
             searchcommentsbutton,
             currentstampbutton,
             stampfiles,
-            picker;
+            picker,
+            filename;
 
         searchcommentsbutton = Y.one(SELECTOR.SEARCHCOMMENTSBUTTON);
         searchcommentsbutton.on('click', this.open_search_comments, this);
@@ -456,18 +477,22 @@ EDITOR.prototype = {
             Y.one(SELECTOR.STAMPSBUTTON).hide();
             Y.one(TOOLSELECTOR.stamp).hide();
         } else {
-            this.currentedit.stamp = stampfiles[0];
+            filename = stampfiles[0].substr(stampfiles[0].lastIndexOf('/') + 1);
+            this.currentedit.stamp = filename;
             currentstampbutton = Y.one(SELECTOR.STAMPSBUTTON);
 
             picker = new M.assignfeedback_editpdf.stamppicker({
                 buttonNode: currentstampbutton,
                 stamps: stampfiles,
                 callback: function(e) {
-                    var stamp = e.target.getAttribute('data-stamp');
+                    var stamp = e.target.getAttribute('data-stamp'),
+                        filename;
+
                     if (!stamp) {
                         stamp = e.target.ancestor().getAttribute('data-stamp');
                     }
-                    this.currentedit.stamp = stamp;
+                    filename = stamp.substr(stamp.lastIndexOf('/'));
+                    this.currentedit.stamp = filename;
                     this.refresh_button_state();
                 },
                 context: this

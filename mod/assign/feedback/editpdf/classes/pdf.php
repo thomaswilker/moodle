@@ -256,9 +256,10 @@ class pdf extends \FPDI {
      * @param string $type optional the type of annotation (line, oval, rectangle, highlight, pen, stamp)
      * @param int[]|string $path optional for 'pen' annotations this is an array of x and y coordinates for
      *              the line, for 'stamp' annotations it is the name of the stamp file (without the path)
+     * @param string $imagefolder - Folder containing stamp images.
      * @return bool true if successful (always)
      */
-    public function add_annotation($sx, $sy, $ex, $ey, $colour = 'yellow', $type = 'line', $path = null) {
+    public function add_annotation($sx, $sy, $ex, $ey, $colour = 'yellow', $type = 'line', $path, $imagefolder) {
         global $CFG;
         if (!$this->filename) {
             return false;
@@ -328,9 +329,7 @@ class pdf extends \FPDI {
                 }
                 break;
             case 'stamp':
-                if (!$imgfile = self::get_stamp_file($path)) {
-                    break;
-                }
+                $imgfile = $imagefolder . '/' . clean_filename($path);
                 $w = abs($sx - $ex);
                 $h = abs($sy - $ey);
                 $sx = min($sx, $ex);
@@ -345,44 +344,6 @@ class pdf extends \FPDI {
         $this->SetLineWidth(1.0 * $this->scale);
 
         return true;
-    }
-
-    /**
-     * Get a list of the available stamp images - the PNG files found within the mod/assign/feedback/pdf/pix/stamps folder
-     * @return string[] 'stampname' => 'filepath'
-     */
-    public static function get_stamps() {
-        global $CFG;
-        static $stamplist = null;
-        if ($stamplist == null) {
-            $stamplist = array();
-            $basedir = $CFG->dirroot . '/mod/assign/feedback/pdf/pix/stamps';
-            if ($dir = opendir($basedir)) {
-                while (false !== ($file = readdir($dir))) {
-                    $pathinfo = pathinfo($file);
-                    if (isset($pathinfo['extension']) && strtolower($pathinfo['extension']) == 'png') {
-                        $stamplist[$pathinfo['filename']] = $basedir . '/' . $file;
-                    }
-                }
-            }
-        }
-        return $stamplist;
-    }
-
-    /**
-     * Get the location of the image file for a given stamp (or false, if it does not exist)
-     * @param string $stampname
-     * @return mixed string|false the path to the image file for the stamp
-     */
-    public static function get_stamp_file($stampname) {
-        if (!$stampname) {
-            return false;
-        }
-        $stamps = self::get_stamps();
-        if (!array_key_exists($stampname, $stamps)) {
-            return false;
-        }
-        return $stamps[$stampname];
     }
 
     /**
