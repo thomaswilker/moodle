@@ -154,6 +154,7 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
         $toolbar2 = '';
         $toolbar3 = '';
         $toolbar4 = '';
+        $clearfix = html_writer::div('', 'clearfix');
         if (!$widget->readonly) {
 
             // Comments.
@@ -186,7 +187,8 @@ class assignfeedback_editpdf_renderer extends plugin_renderer_base {
                                        $toolbar4 .
                                        $toolbar3 .
                                        $toolbar2 .
-                                       $toolbar1,
+                                       $toolbar1 .
+                                       $clearfix,
                                        'pageheader');
         $body = $pageheader;
 
