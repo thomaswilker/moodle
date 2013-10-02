@@ -3282,7 +3282,7 @@ EDITOR.prototype = {
         });
 
         stampfiles = this.get('stampfiles');
-        if (stampfiles.length < 0) {
+        if (stampfiles.length <= 0) {
             Y.one(SELECTOR.STAMPSBUTTON).hide();
             Y.one(TOOLSELECTOR.stamp).hide();
         } else {
