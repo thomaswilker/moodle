@@ -3158,26 +3158,15 @@ EDITOR.prototype = {
      * @method all_pages_loaded
      */
     all_pages_loaded : function(responsetext) {
-        var data, i, j, comment, errormsg;
+        var data, i, j, comment, error;
         try {
             data = Y.JSON.parse(responsetext);
         } catch (e) {
             this.dialogue.hide();
             // Display alert dialogue.
-            if (M.cfg.developerdebug) {
-                errormsg = responsetext;
-            } else {
-                errormsg = M.util.get_string('cannotopenpdf', 'assignfeedback_editpdf');
-            }
-            errordialog = new M.core.dialogue({
-                centered: true,
-                width: '40%',
-                lightbox: true,
-                visible: true,
-                headerContent: M.util.get_string('cannotopenpdf', 'assignfeedback_editpdf'),
-                bodyContent: errormsg
-            });
-            return new M.core.exception(e);
+            error = new M.core.alert({ title: M.util.get_string('cannotopenpdf', 'assignfeedback_editpdf')});
+            error.show();
+            return;
         }
 
         this.pagecount = data.pagecount;
