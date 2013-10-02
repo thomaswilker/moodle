@@ -27,7 +27,7 @@ namespace assignfeedback_editpdf;
 /**
  * This class adds and removes annotations from a page of a response.
  */
-class annotation extends \stdClass {
+class annotation {
 
     /** @var int unique id for this annotation */
     public $id = 0;
@@ -59,4 +59,20 @@ class annotation extends \stdClass {
     /** @var string type - One of line, oval, rect, etc */
     public $type = 'line';
 
+    /**
+     * Convert a compatible stdClass into an instance of this class.
+     * @param stdClass $record
+     */
+    public function __construct(\stdClass $record) {
+        $intcols = array('endx', 'endy', 'x', 'y');
+        foreach ($this as $key => $value) {
+            if (isset($record->$key)) {
+                if (in_array($key, $intcols)) {
+                    $this->$key = intval($record->$key);
+                } else {
+                    $this->$key = $record->$key;
+                }
+            }
+        }
+    }
 }

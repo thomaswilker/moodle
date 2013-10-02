@@ -46,7 +46,7 @@ class page_editor {
         }
         $records = $DB->get_records('assignfeedback_editpdf_cmnt', $params);
         foreach ($records as $record) {
-            array_push($comments, self::comment_from_record($record));
+            array_push($comments, new comment($record));
         }
 
         return $comments;
@@ -67,7 +67,7 @@ class page_editor {
         $added = 0;
         foreach ($comments as $record) {
             // Force these.
-            $comment = self::comment_from_record($record);
+            $comment = new comment($record);
             if (trim($comment->rawtext) === '') {
                 continue;
             }
@@ -83,27 +83,6 @@ class page_editor {
     }
 
     /**
-     * Convert a compatible stdClass into an instance of a comment.
-     * @param int gradeid
-     * @param int pageno
-     * @return array(comment)
-     */
-    public static function comment_from_record(\stdClass $record) {
-        $intcols = array('width', 'x', 'y');
-        $comment = new comment();
-        foreach ($comment as $key => $value) {
-            if (isset($record->$key)) {
-                if (in_array($key, $intcols)) {
-                    $comment->$key = intval($record->$key);
-                } else {
-                    $comment->$key = $record->$key;
-                }
-            }
-        }
-        return $comment;
-    }
-
-    /**
      * Get a single comment by id.
      * @param int commentid
      * @return comment or false
@@ -111,7 +90,7 @@ class page_editor {
     public static function get_comment($commentid) {
         $record = $DB->get_record('assignfeedback_editpdf_cmnt', array('id'=>$commentid), '*', IGNORE_MISSING);
         if ($record) {
-            return self::comment_from_record($record);
+            return new comment($record);
         }
         return false;
     }
@@ -155,7 +134,7 @@ class page_editor {
         $annotations = array();
         $records = $DB->get_records('assignfeedback_editpdf_annot', $params);
         foreach ($records as $record) {
-            array_push($annotations, self::annotation_from_record($record));
+            array_push($annotations, new annotation($record));
         }
 
         return $annotations;
@@ -173,9 +152,9 @@ class page_editor {
 
         $DB->delete_records('assignfeedback_editpdf_annot', array('gradeid'=>$gradeid, 'pageno'=>$pageno));
         $added = 0;
-        foreach ($annotations as $annotation) {
+        foreach ($annotations as $record) {
             // Force these.
-            $annotation = self::annotation_from_record($annotation);
+            $annotation = new annotation($record);
             $annotation->gradeid = $gradeid;
             $annotation->pageno = $pageno;
             $annotation->draft = 1;
@@ -185,28 +164,6 @@ class page_editor {
         }
 
         return $added;
-    }
-
-
-    /**
-     * Convert a compatible stdClass into an instance of a annotation.
-     * @param int gradeid
-     * @param int pageno
-     * @return annotation
-     */
-    public static function annotation_from_record(\stdClass $record) {
-        $intcols = array('endx', 'endy', 'x', 'y');
-        $annotation = new annotation();
-        foreach ($annotation as $key => $value) {
-            if (isset($record->$key)) {
-                if (in_array($key, $intcols)) {
-                    $annotation->$key = intval($record->$key);
-                } else {
-                    $annotation->$key = $record->$key;
-                }
-            }
-        }
-        return $annotation;
     }
 
     /**
@@ -219,7 +176,7 @@ class page_editor {
 
         $record = $DB->get_record('assignfeedback_editpdf_annot', array('id'=>$annotationid), '*', IGNORE_MISSING);
         if ($record) {
-            return self::annotation_from_record($record);
+            return new annotation($record);
         }
         return false;
     }

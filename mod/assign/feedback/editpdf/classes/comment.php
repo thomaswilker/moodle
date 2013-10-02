@@ -27,7 +27,7 @@ namespace assignfeedback_editpdf;
 /**
  * This class represents a comment box on a page of feedback.
  */
-class comment extends \stdClass {
+class comment {
 
     /** @var int unique id for this annotation */
     public $id = 0;
@@ -53,4 +53,20 @@ class comment extends \stdClass {
     /** @var string colour - One of red, yellow, green, blue, white */
     public $colour = 'yellow';
 
+    /**
+     * Convert a compatible stdClass into an instance of a comment.
+     * @param \stdClass $record
+     */
+    public function __construct(\stdClass $record) {
+        $intcols = array('width', 'x', 'y');
+        foreach ($this as $key => $value) {
+            if (isset($record->$key)) {
+                if (in_array($key, $intcols)) {
+                    $this->$key = intval($record->$key);
+                } else {
+                    $this->$key = $record->$key;
+                }
+            }
+        }
+    }
 }
