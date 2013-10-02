@@ -3396,6 +3396,11 @@ EDITOR.prototype = {
             selected = false,
             lastannotation;
 
+        // Ignore right mouse click.
+        if (e.button === 3) {
+            return;
+        }
+
         if (this.currentedit.starttime) {
             return;
         }
