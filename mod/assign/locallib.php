@@ -1165,9 +1165,17 @@ class assign {
                 $o .= '<input type="hidden" name="grademodified_' . $userid . '" value="' . $modified . '"/>';
                 if ($grade == -1 || $grade === null) {
                     $o .= '-';
+                } else if ($this->can_grade()) {
+                    $instance = $this->get_instance();
+                    $o .= format_float($grade, 2) . '&nbsp;/&nbsp;' . format_float($instance->grade, 2);
                 } else {
                     $instance = $this->get_instance();
-                    $item = grade_item::fetch(array('itemtype' => 'mod', 'itemmodule' => 'assign', 'iteminstance' => $instance->id, 'courseid' => $instance->course, 'itemnumber' => 0));
+                    $params = array('itemtype' => 'mod',
+                                    'itemmodule' => 'assign',
+                                    'iteminstance' => $instance->id,
+                                    'courseid' => $instance->course,
+                                    'itemnumber' => 0);
+                    $item = grade_item::fetch($params);
                     $o .= grade_format_gradevalue($grade, $item);
                     if ($item->get_displaytype() == GRADE_DISPLAY_TYPE_REAL) {
                         // If displaying the raw grade, also display the total value.
