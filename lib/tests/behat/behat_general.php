@@ -529,4 +529,15 @@ class behat_general extends behat_base {
         }
     }
 
+    /**
+     * Wait for any pending javascript (registered with M.util.js_pending)
+     * to complete.
+     */
+    public function i_wait_for_javascript() {
+        if (!$this->running_javascript()) {
+            return;
+        }
+        $this->getSession()->wait($this::TIMEOUT, 'M.util.js_pending()');
+    }
+
 }
