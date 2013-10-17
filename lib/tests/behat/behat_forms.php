@@ -60,6 +60,21 @@ class behat_forms extends behat_base {
         $buttonnode->press();
     }
 
+    public function set_field_value($field, $value) {
+        // Spin on this - certain fields, e.g. text editors (I'm looking at you TinyMCE) load slowly and randomly.
+        $retries = 50;
+        while ($retries > 0) {
+            try {
+                $field->set_value($value);
+                return;
+            } catch (Exception $e) {
+                print("R");
+                usleep(100000);
+                $retries--;
+            }
+        }
+    }
+
     /**
      * Fills a moodle form with field/value data.
      *
@@ -84,7 +99,7 @@ class behat_forms extends behat_base {
             $field = behat_field_manager::get_form_field($fieldnode, $this->getSession());
 
             // Delegates to the field class.
-            $field->set_value($value);
+            $this->set_field_value($field, $value);
         }
     }
 
