@@ -226,27 +226,30 @@ class behat_hooks extends behat_base {
      * @BeforeStep @javascript
      */
     public function before_step_javascript($event) {
+        $lastpending = '';
         // Wait for all pending JS to complete.
         for ($i = 0; $i < 100; $i++) {
             $pending = ($this->getSession()->evaluateScript('return (M && M.util && M.util.pending_js) ? M.util.pending_js.join(":") : "not loaded";'));
             //$complete = ($this->getSession()->evaluateScript('return (M && M.util && M.util.complete_js) ? M.util.complete_js.join(":") : "not loaded";'));
 
-        /*
+    /*
             if ($i > 0) {
                 if ($i == 1) {
                     print("\n");
                 }
                 print('Pending: ' . $pending . "\n");
-                print('Complete: ' . $complete . "\n");
+             //   print('Complete: ' . $complete . "\n");
                 print('Loop: ' . $i . "\n");
             }
-        */
+    */
             if ($pending === "") {
                 if ($i > 0) {
-                    print('wait(' . ($i * 100) . ')');
+                    print("W$i");
+                    //print('wait(' . ($i * 100) . ', ' . $lastpending . ')');
                 }
                 return;
             }
+            $lastpending = $pending;
             usleep(100000);
         }
         throw new \Exception('Timeout waiting for javascript to complete');
