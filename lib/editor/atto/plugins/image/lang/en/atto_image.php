@@ -22,13 +22,12 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Image';
-$string['image'] = 'Image';
-$string['createimage'] = 'Insert image';
-$string['enterurl'] = 'Enter URL';
-$string['enteralt'] = 'Enter alternative text';
-$string['browserepositories'] = 'Browse repositories...';
 $string['accessibilityhint'] = '<p>Web content accessibility guidelines (WCAG):<br/><ul><li><a href="http://www.w3.org/TR/WCAG20/#text-equiv" target="_blank">Text Alternatives</a></li></ul></p>';
-$string['width'] = 'Width';
+$string['browserepositories'] = 'Browse repositories...';
+$string['createimage'] = 'Insert image';
+$string['enteralt'] = 'Enter alternative text';
+$string['enterurl'] = 'Enter URL';
 $string['height'] = 'Height';
+$string['pluginname'] = 'Image';
 $string['preview'] = 'Preview';
+$string['width'] = 'Width';

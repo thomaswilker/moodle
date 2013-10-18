@@ -31,14 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 function atto_title_init_editor($elementid) {
     global $PAGE, $OUTPUT;
 
-    $icon = $OUTPUT->pix_icon('e/styleprops',
-                              get_string('title', 'atto_title'),
-                              'moodle',
-                              array('class'=>'icon'));
-    $icon .= $OUTPUT->pix_icon('t/expanded',
-                              get_string('title', 'atto_title'),
-                              'moodle',
-                              array('class'=>'icon'));
+    $icon = array('e/styleprops', 'moodle');
 
     $PAGE->requires->strings_for_js(array('h3',
                                           'h4',

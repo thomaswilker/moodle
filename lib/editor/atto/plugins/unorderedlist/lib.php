@@ -29,10 +29,7 @@
 function atto_unorderedlist_init_editor($elementid) {
     global $PAGE, $OUTPUT;
 
-    $icon = $OUTPUT->pix_icon('e/bullet_list',
-                              get_string('unorderedlist', 'atto_unorderedlist'),
-                              'moodle',
-                              array('class'=>'icon'));
+    $icon = array('e/bullet_list', 'moodle');
 
     $PAGE->requires->yui_module('moodle-atto_unorderedlist-button',
                                 'M.atto_unorderedlist.init',

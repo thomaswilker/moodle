@@ -31,10 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 function atto_link_init_editor($elementid) {
     global $PAGE, $OUTPUT;
 
-    $icon = $OUTPUT->pix_icon('e/insert_edit_link',
-                              get_string('link', 'atto_link'),
-                              'moodle',
-                              array('class'=>'icon'));
+    $icon = array('e/insert_edit_link', 'moodle');
 
     $PAGE->requires->strings_for_js(array('createlink',
                                           'enterurl',

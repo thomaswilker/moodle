@@ -31,10 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 function atto_strike_init_editor($elementid) {
     global $PAGE, $OUTPUT;
 
-    $icon = $OUTPUT->pix_icon('e/strikethrough',
-                              get_string('strike', 'atto_strike'),
-                              'moodle',
-                              array('class'=>'icon'));
+    $icon = array('e/strikethrough', 'moodle');
 
     $PAGE->requires->yui_module('moodle-atto_strike-button',
                                 'M.atto_strike.init',

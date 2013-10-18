@@ -82,6 +82,7 @@ class atto_texteditor extends texteditor {
         $plugins = core_component::get_plugin_list('atto');
 
         foreach ($plugins as $name => $fulldir) {
+            $PAGE->requires->string_for_js('pluginname', 'atto_' . $name);
             $plugins[$name] = component_callback('atto_' . $name, 'sort_order', array($elementid));
         }
 

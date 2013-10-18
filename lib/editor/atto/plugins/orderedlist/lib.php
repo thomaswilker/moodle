@@ -31,10 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 function atto_orderedlist_init_editor($elementid) {
     global $PAGE, $OUTPUT;
 
-    $icon = $OUTPUT->pix_icon('e/numbered_list',
-                              get_string('orderedlist', 'atto_orderedlist'),
-                              'moodle',
-                              array('class'=>'icon'));
+    $icon = array('e/numbered_list', 'moodle');
 
     $PAGE->requires->yui_module('moodle-atto_orderedlist-button',
                                 'M.atto_orderedlist.init',

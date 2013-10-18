@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 function atto_html_init_editor($elementid) {
     global $PAGE, $OUTPUT;
 
-    $icon = $OUTPUT->pix_icon('e/source_code', get_string('html', 'atto_html'), 'moodle', array('class'=>'icon'));
+    $icon = array('e/source_code', 'moodle');
 
     $PAGE->requires->yui_module('moodle-atto_html-button',
                                 'M.atto_html.init',

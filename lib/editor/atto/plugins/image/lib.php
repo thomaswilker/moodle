@@ -31,10 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 function atto_image_init_editor($elementid) {
     global $PAGE, $OUTPUT;
 
-    $icon = $OUTPUT->pix_icon('e/insert_edit_image',
-                              get_string('image', 'atto_image'),
-                              'moodle',
-                              array('class'=>'icon'));
+    $icon = array('e/insert_edit_image', 'moodle');
 
     $PAGE->requires->strings_for_js(array('createimage',
                                           'enterurl',

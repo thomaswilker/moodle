@@ -23,4 +23,3 @@
  */
 
 $string['pluginname'] = 'Outdent';
-$string['outdent'] = 'Outdent';

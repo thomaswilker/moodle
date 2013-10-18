@@ -31,10 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 function atto_clear_init_editor($elementid) {
     global $PAGE, $OUTPUT;
 
-    $icon = $OUTPUT->pix_icon('e/clear_formatting',
-                              get_string('clear', 'atto_clear'),
-                              'moodle',
-                              array('class'=>'icon'));
+    $icon = array('e/clear_formatting', 'moodle');
 
     $PAGE->requires->yui_module('moodle-atto_clear-button',
                                 'M.atto_clear.init',

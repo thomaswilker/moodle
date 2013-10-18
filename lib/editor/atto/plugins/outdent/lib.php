@@ -29,10 +29,7 @@
 function atto_outdent_init_editor($elementid) {
     global $PAGE, $OUTPUT;
 
-    $icon = $OUTPUT->pix_icon('e/decrease_indent',
-                              get_string('outdent', 'atto_outdent'),
-                              'moodle',
-                              array('class'=>'icon'));
+    $icon = array('e/decrease_indent', 'moodle');
 
     $PAGE->requires->yui_module('moodle-atto_outdent-button',
                                 'M.atto_outdent.init',

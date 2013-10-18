@@ -31,10 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 function atto_italic_init_editor($elementid) {
     global $PAGE, $OUTPUT;
 
-    $icon = $OUTPUT->pix_icon('e/italic',
-                              get_string('italic', 'atto_italic'),
-                              'moodle',
-                              array('class'=>'icon'));
+    $icon = array('e/italic', 'moodle');
 
     $PAGE->requires->yui_module('moodle-atto_italic-button',
                                 'M.atto_italic.init',

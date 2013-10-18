@@ -29,10 +29,7 @@
 function atto_media_init_editor($elementid) {
     global $PAGE, $OUTPUT;
 
-    $icon = $OUTPUT->pix_icon('e/insert_edit_video',
-                              get_string('media', 'atto_media'),
-                              'moodle',
-                              array('class'=>'icon'));
+    $icon = array('e/insert_edit_video', 'moodle');
 
     $PAGE->requires->strings_for_js(array('createmedia',
                                           'enterurl',

@@ -23,4 +23,3 @@
  */
 
 $string['pluginname'] = 'Unlink';
-$string['unlink'] = 'Unlink';

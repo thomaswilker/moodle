@@ -22,11 +22,11 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Paragraph styles';
-$string['title'] = 'Paragraph styles';
+$string['blockquote'] = 'Quoted';
 $string['h3'] = 'Heading 1';
 $string['h4'] = 'Heading 2';
 $string['h5'] = 'Heading 3';
-$string['blockquote'] = 'Quoted';
 $string['p'] = 'Plain';
+$string['pluginname'] = 'Paragraph styles';
 $string['pre'] = 'Pre-formatted';
+$string['title'] = 'Paragraph styles';

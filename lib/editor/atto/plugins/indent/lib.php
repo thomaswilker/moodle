@@ -31,10 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 function atto_indent_init_editor($elementid) {
     global $PAGE, $OUTPUT;
 
-    $icon = $OUTPUT->pix_icon('e/increase_indent',
-                              get_string('indent', 'atto_indent'),
-                              'moodle',
-                              array('class'=>'icon'));
+    $icon = array('e/increase_indent', 'moodle');
 
     $PAGE->requires->yui_module('moodle-atto_indent-button',
                                 'M.atto_indent.init',

@@ -31,7 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 function atto_bold_init_editor($elementid) {
     global $PAGE, $OUTPUT;
 
-    $icon = $OUTPUT->pix_icon('e/bold', get_string('bold', 'atto_bold'), 'moodle', array('class'=>'icon'));
+    $icon = array('e/bold', 'moodle');
 
     $PAGE->requires->yui_module('moodle-atto_bold-button',
                                 'M.atto_bold.init',
