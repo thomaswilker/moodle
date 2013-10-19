@@ -36,9 +36,11 @@ function atto_image_init_editor($elementid) {
     $PAGE->requires->strings_for_js(array('createimage',
                                           'enterurl',
                                           'enteralt',
+                                          'presentation',
                                           'preview',
                                           'browserepositories',
                                           'accessibilityhint',
+                                          'presentationoraltrequired',
                                           'width',
                                           'height'), 'atto_image');
     $PAGE->requires->yui_module('moodle-atto_image-button',
