@@ -102,6 +102,17 @@ div.editor_atto_toolbar div.atto_group {
 }
 
 
+.atto_form label.sameline {
+    display: inline-block;
+    min-width: 4em;
+}
+.atto_form input.fullwidth {
+    width: 100%;
+}
+.atto_form {
+    padding-left: 30px;
+    padding-right: 30px;
+}
 .atto_form label {
     display: block;
     margin: 5px;
