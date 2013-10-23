@@ -641,9 +641,6 @@ span.editinstructions {
     > div > div {
         min-height:300px;
         border:1px solid #e1e1e8;
-        > ul.ml > li:first-child > div {
-            border-top:0;
-        }
     }
     h3 {
         margin:0;
@@ -685,6 +682,7 @@ span.editinstructions {
     ul.ml {
         list-style: none;
         margin:1rem 0;
+        margin-bottom: 0.9rem;
         ul.ml {
             margin:0;
         }
@@ -692,8 +690,6 @@ span.editinstructions {
     li {
         line-height:2.2em;
         > div {
-            border-bottom:1px solid #fff;
-            border-top:1px solid #fff;
             &:hover {
                 background-color:#fafafa;
             }
@@ -705,8 +701,8 @@ span.editinstructions {
         &[data-selected='1'] {
             > div {
                 background-color:#FFFFD8;
-                border-top-color: #e1e1e8;
-                border-bottom-color:#f7f7f9;
+                border-top: 1px solid #e1e1e8;
+                border-bottom:1px solid #e1e1e8;
             }
             li:first-of-type > div,
             &[data-expandable='0']+li > div {
@@ -726,11 +722,6 @@ span.editinstructions {
         li li li li li .tree-icon {margin-left:4.5em;}
         li li li li li li .tree-icon {margin-left:5em;}
         li li li li li li li .tree-icon {margin-left:5.5em;}
-
-        &+li > div,
-        &:first-child > div {
-            border-top-color:#f7f7f9;
-        }
     }
 
     .item-actions {
@@ -843,8 +834,8 @@ span.editinstructions {
                     vertical-align:middle;
                     width:2.2em;
                     text-align:center;
-                    margin:-1px 0.5em 0 0;
-                    padding-top:2px;
+                    margin:0 0.5em 0 0;
+                    padding-top:1px;
                 }
             }
             &.highlight > div > .ba-checkbox {
