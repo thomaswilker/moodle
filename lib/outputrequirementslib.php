@@ -1271,6 +1271,7 @@ class page_requirements_manager {
                 }
                 $code .= '<link rel="stylesheet" type="text/css" href="'.$this->yui3loader->comboBase.implode('&amp;', $modules).'" />';
             }
+            $code .= '<link rel="stylesheet" type="text/css" href="'.$this->yui3loader->local_comboBase.'rollup/'.$CFG->yui3version.'/yui-moodlesimple-min.css" />';
             $code .= '<script type="text/javascript" src="'.$this->yui3loader->local_comboBase
                     . implode('&amp;', $baserollups) . '"></script>';
             $code .= '<script type="text/javascript" src="'.$this->yui3loader->local_comboBase
@@ -1282,6 +1283,7 @@ class page_requirements_manager {
                     $code .= '<link rel="stylesheet" type="text/css" href="'.$this->yui3loader->base.$module.'/'.$module.'-min.css" />';
                 }
             }
+            $code .= '<link rel="stylesheet" type="text/css" href="'.$this->yui3loader->local_comboBase.'rollup/'.$CFG->yui3version.'/yui-moodlesimple-min.css" />';
             foreach ($baserollups as $rollup) {
                 $code .= '<script type="text/javascript" src="'.$this->yui3loader->local_comboBase.$rollup.'"></script>';
             }
