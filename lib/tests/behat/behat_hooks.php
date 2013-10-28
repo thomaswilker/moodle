@@ -229,7 +229,13 @@ class behat_hooks extends behat_base {
         $lastpending = '';
         // Wait for all pending JS to complete.
         for ($i = 0; $i < 100; $i++) {
-            $pending = ($this->getSession()->evaluateScript('return (M && M.util && M.util.pending_js) ? M.util.pending_js.join(":") : "not loaded";'));
+            $pending = '';
+            try {
+                $pending = ($this->getSession()->evaluateScript('return (M && M.util && M.util.pending_js) ? M.util.pending_js.join(":") : "not loaded";'));
+            } catch (NoSuchWindow $nsw) {
+                // No javascript is running if there is no window right?
+                $pending = '';
+            }
             //$complete = ($this->getSession()->evaluateScript('return (M && M.util && M.util.complete_js) ? M.util.complete_js.join(":") : "not loaded";'));
 
     /*
@@ -242,7 +248,7 @@ class behat_hooks extends behat_base {
                 print('Loop: ' . $i . "\n");
             }
     */
-            if ($pending === "") {
+            if ($pending === '') {
                 if ($i > 0) {
                     print("W$i");
                     //print('wait(' . ($i * 100) . ', ' . $lastpending . ')');
@@ -252,7 +258,9 @@ class behat_hooks extends behat_base {
             $lastpending = $pending;
             usleep(100000);
         }
-        throw new \Exception('Timeout waiting for javascript to complete');
+        //$debug = ($this->getSession()->evaluateScript('return (M && M.util && M.util.debug_js) ? M.util.debug_js.join(":") : "no debug";'));
+        //throw new \Exception('Timeout waiting for javascript to complete: ' . $lastpending . ' : ' . $debug);
+        print('T');
     }
 
     /**

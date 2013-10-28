@@ -1043,7 +1043,7 @@ class page_requirements_manager {
     public function js_init_code($jscode, $ondomready = false, array $module = null) {
         $jscode = trim($jscode, " ;\n"). ';';
 
-        $hash = substr($jscode, 0, 20) . '...';
+        $hash = addslashes(substr($jscode, 0, 20)) . '...';
         $startjs = " M.util.js_pending('" . $hash . "');";
         $endjs = " M.util.js_complete('" . $hash . "');";
 
