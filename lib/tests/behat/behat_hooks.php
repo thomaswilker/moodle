@@ -227,7 +227,7 @@ class behat_hooks extends behat_base {
      */
     public function before_step_javascript($event) {
         $lastpending = '';
-        // Wait for all pending JS to complete.
+        // Wait for all pending JS to complete (max 10 seconds).
         for ($i = 0; $i < 100; $i++) {
             $pending = '';
             try {
@@ -236,70 +236,15 @@ class behat_hooks extends behat_base {
                 // No javascript is running if there is no window right?
                 $pending = '';
             }
-            //$complete = ($this->getSession()->evaluateScript('return (M && M.util && M.util.complete_js) ? M.util.complete_js.join(":") : "not loaded";'));
-
-    /*
-            if ($i > 0) {
-                if ($i == 1) {
-                    print("\n");
-                }
-                print('Pending: ' . $pending . "\n");
-             //   print('Complete: ' . $complete . "\n");
-                print('Loop: ' . $i . "\n");
-            }
-    */
             if ($pending === '') {
-                if ($i > 0) {
-                    print("W$i");
-                    //print('wait(' . ($i * 100) . ', ' . $lastpending . ')');
-                }
                 return;
             }
             $lastpending = $pending;
+            // 0.1 seconds.
             usleep(100000);
         }
-        //$debug = ($this->getSession()->evaluateScript('return (M && M.util && M.util.debug_js) ? M.util.debug_js.join(":") : "no debug";'));
-        //throw new \Exception('Timeout waiting for javascript to complete: ' . $lastpending . ' : ' . $debug);
-        print('T');
-    }
-
-    /**
-     * Checks that all DOM is ready.
-     *
-     * Executed only when running against a real browser.
-     *
-     * @AfterStep @javascript
-     */
-    public function after_step_javascript($event) {
-
-        // If it doesn't have definition or it fails there is no need to check it.
-        if ($event->getResult() != StepEvent::PASSED ||
-            !$event->hasDefinition()) {
-            return;
-        }
-       // Wait until the page is ready.
-       // We are already checking that we use a JS browser, this could
-       // change in case we use another JS driver.
-       try {
-
-            // Safari and Internet Explorer requires time between steps,
-            // otherwise Selenium tries to click in the previous page's DOM.
-            if ($this->getSession()->getDriver()->getBrowserName() == 'safari' ||
-                    $this->getSession()->getDriver()->getBrowserName() == 'internet explorer') {
-                $this->getSession()->wait(self::TIMEOUT * 1000, false);
-
-            } else {
-                // With other browsers we just wait for the DOM ready.
-                //$this->getSession()->wait(self::TIMEOUT * 1000, '(document.readyState === "complete")');
-            }
-
-        } catch (NoSuchWindow $e) {
-            // If we were interacting with a popup window it will not exists after closing it.
-        } catch (UnknownError $e) {
-            // Custom exception to provide more feedback about possible solutions.
-            $this->throw_unknown_exception($e);
-        }
-
+        // Timeout waiting for JS to complete.
+        // We could throw an exception here - as this is a likely indicator of slow JS or JS errors.
     }
 
     /**

@@ -60,19 +60,28 @@ class behat_forms extends behat_base {
         $buttonnode->press();
     }
 
+    /**
+     * Try a few times to set a field value as it may not be visible yet (TinyMCE).
+     *
+     * @param string $field
+     * @param string $value
+     */
     public function set_field_value($field, $value) {
+        $lastexception = null;
         // Spin on this - certain fields, e.g. text editors (I'm looking at you TinyMCE) load slowly and randomly.
-        $retries = 50;
+        $retries = 5;
         while ($retries > 0) {
             try {
                 $field->set_value($value);
                 return;
             } catch (Exception $e) {
-                print("R");
                 usleep(100000);
                 $retries--;
+                $lastexception = $e;
             }
         }
+        // If we timeout - throw the last exception.
+        throw $lastexception;
     }
 
     /**
