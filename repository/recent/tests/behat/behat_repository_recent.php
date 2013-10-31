@@ -57,12 +57,6 @@ class behat_repository_recent extends behat_files {
         $this->open_element_contextual_menu($filename);
 
         $this->find_button(get_string('getfile', 'repository'))->click();
-
-        // Ensure the file has been selected and we returned to the form page.
-        $this->wait_until_return_to_form();
-
-        // Wait until file manager contents are updated.
-        $this->wait_until_contents_are_updated($filepickernode);
     }
 
 }

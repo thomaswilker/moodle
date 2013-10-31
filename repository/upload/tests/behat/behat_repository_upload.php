@@ -54,14 +54,10 @@ class behat_repository_upload extends behat_files {
 
         $filepickernode = $this->get_filepicker_node($filepickerelement);
 
-        // Wait until file manager is completely loaded.
-        $this->wait_until_contents_are_updated($filepickernode);
-
         // Opening the select repository window and selecting the upload repository.
         $this->open_add_file_window($filepickernode, get_string('pluginname', 'repository_upload'));
 
         // Ensure all the form is ready.
-        $this->getSession()->wait(2 * 1000, false);
         $noformexception = new ExpectationException('The upload file form is not ready', $this->getSession());
         $this->find(
             'xpath',
@@ -90,12 +86,6 @@ class behat_repository_upload extends behat_files {
 
         // Submit the file.
         $submit->press();
-
-        // Ensure the file has been uploaded and all ajax processes finished.
-        $this->wait_until_return_to_form();
-
-        // Wait until file manager contents are updated.
-        $this->wait_until_contents_are_updated($filepickernode);
     }
 
 }

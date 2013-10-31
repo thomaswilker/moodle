@@ -93,6 +93,7 @@ class behat_files extends behat_base {
         $classname = 'fp-file-' . $action;
         $button = $this->find('css', '.moodle-dialogue-focused button.' . $classname, $exception);
 
+        $this->ensure_node_is_visible($button);
         $button->click();
     }
 
@@ -145,13 +146,14 @@ class behat_files extends behat_base {
                 "//div[@class='fp-content']" .
                 "//descendant::*[self::div | self::a][contains(concat(' ', normalize-space(@class), ' '), ' fp-file ')]" .
                 "[normalize-space(.)=$name]" .
-                "//descendant::div[contains(concat(' ', normalize-space(@class), ' '), ' fp-thumbnail ')]",
+                "//descendant::div[contains(concat(' ', normalize-space(@class), ' '), ' fp-filename-field ')]",
                 false,
                 $containernode
             );
         }
 
         // Click opens the contextual menu when clicking on files.
+        $this->ensure_node_is_visible($node);
         $node->click();
     }
 
@@ -176,6 +178,7 @@ class behat_files extends behat_base {
             // Otherwise should be a single-file filepicker.
             $add = $this->find('css', 'input.fp-btn-choose', $exception, $filepickernode);
         }
+        $this->ensure_node_is_visible($add);
         $add->click();
 
         // Getting the repository link and opening it.
@@ -194,11 +197,15 @@ class behat_files extends behat_base {
         );
 
         // Selecting the repo.
+        $this->ensure_node_is_visible($repositorylink);
         $repositorylink->click();
     }
 
     /**
      * Waits until the file manager modal windows are closed.
+     *
+     * This method is not used by any of our step definitions,
+     * keeping it here for users already using it.
      *
      * @throws ExpectationException
      * @return void
@@ -216,6 +223,9 @@ class behat_files extends behat_base {
 
     /**
      * Checks that the file manager contents are not being updated.
+     *
+     * This method is not used by any of our step definitions,
+     * keeping it here for users already using it.
      *
      * @throws ExpectationException
      * @param NodeElement $filepickernode The file manager DOM node
@@ -240,9 +250,6 @@ class behat_files extends behat_base {
             $exception,
             $filepickernode
         );
-
-        // After removing the class FileManagerHelper.view_files() performs other actions.
-        $this->getSession()->wait(4 * 1000, false);
     }
 
 }

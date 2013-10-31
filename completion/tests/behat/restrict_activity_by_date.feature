@@ -27,6 +27,8 @@ Feature: Restrict activity availability through date conditions
     And I follow "Course 1"
     And I turn editing mode on
     And I add a "Assignment" to section "1"
+    And I expand all fieldsets
+    And I click on "id_availablefrom_enabled" "checkbox"
     And I fill the moodle form with:
       | Assignment name | Test assignment 1 |
       | Description | This assignment is restricted by date |
@@ -36,7 +38,6 @@ Feature: Restrict activity availability through date conditions
       | id_availablefrom_month | 12 |
       | id_availablefrom_year | 2050 |
       | id_showavailability | 1 |
-    And I click on "id_availablefrom_enabled" "checkbox"
     And I press "Save and return to course"
     And I log out
     When I log in as "student1"

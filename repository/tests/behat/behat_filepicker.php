@@ -67,12 +67,6 @@ class behat_filepicker extends behat_files {
         $dialognode = $this->find('css', '.moodle-dialogue-focused');
         $buttonnode = $this->find('css', '.fp-dlg-butcreate', $exception, $dialognode);
         $buttonnode->click();
-
-        // Wait until the process finished and modal windows are hidden.
-        $this->wait_until_return_to_form();
-
-        // Wait until the current folder contents are updated
-        $this->wait_until_contents_are_updated($fieldnode);
     }
 
     /**
@@ -91,9 +85,6 @@ class behat_filepicker extends behat_files {
             'The "'.$foldername.'" folder can not be found in the "'.$filepickerelement.'" filepicker',
             $this->getSession()
         );
-
-        // Just in case there is any contents refresh in progress.
-        $this->wait_until_contents_are_updated($fieldnode);
 
         $folderliteral = $this->getSession()->getSelectorsHandler()->xpathLiteral($foldername);
 
@@ -123,9 +114,6 @@ class behat_filepicker extends behat_files {
 
         // It should be a NodeElement, otherwise an exception would have been thrown.
         $folder->click();
-
-        // Wait until the current folder contents are updated
-        $this->wait_until_contents_are_updated($fieldnode);
     }
 
     /**
@@ -144,13 +132,6 @@ class behat_filepicker extends behat_files {
         // Execute the action.
         $exception = new ExpectationException($filename.' element can not be unzipped', $this->getSession());
         $this->perform_on_element('unzip', $exception);
-
-        // Wait until the process finished and modal windows are hidden.
-        $this->wait_until_return_to_form();
-
-        // Wait until the current folder contents are updated
-        $containernode = $this->get_filepicker_node($filepickerelement);
-        $this->wait_until_contents_are_updated($containernode);
     }
 
     /**
@@ -169,13 +150,6 @@ class behat_filepicker extends behat_files {
         // Execute the action.
         $exception = new ExpectationException($foldername.' element can not be zipped', $this->getSession());
         $this->perform_on_element('zip', $exception);
-
-        // Wait until the process finished and modal windows are hidden.
-        $this->wait_until_return_to_form();
-
-        // Wait until the current folder contents are updated
-        $containernode = $this->get_filepicker_node($filepickerelement);
-        $this->wait_until_contents_are_updated($containernode);
     }
 
     /**
@@ -199,13 +173,6 @@ class behat_filepicker extends behat_files {
         // Using xpath + click instead of pressButton as 'Ok' it is a common string.
         $okbutton = $this->find('css', 'div.fp-dlg button.fp-dlg-butconfirm');
         $okbutton->click();
-
-        // Wait until the process finished and modal windows are hidden.
-        $this->wait_until_return_to_form();
-
-        // Wait until file manager contents are updated.
-        $containernode = $this->get_filepicker_node($filepickerelement);
-        $this->wait_until_contents_are_updated($containernode);
     }
 
 }

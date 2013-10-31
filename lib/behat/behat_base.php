@@ -49,7 +49,17 @@ class behat_base extends Behat\MinkExtension\Context\RawMinkContext {
     /**
      * The timeout for each Behat step (load page, wait for an element to load...).
      */
-    const TIMEOUT = 6;
+    const TIMEOUT = 3;
+
+    /**
+     * And extended timeout for specific cases.
+     */
+    const EXTENDED_TIMEOUT = 10;
+
+    /**
+     * The JS code to check that the page is ready.
+     */
+    const PAGE_READY_JS = '(M && M.util && M.util.pending_js && !Boolean(M.util.pending_js.length))';
 
     /**
      * Locates url, based on provided path.
@@ -412,6 +422,124 @@ class behat_base extends Behat\MinkExtension\Context\RawMinkContext {
      */
     protected function running_javascript() {
         return get_class($this->getSession()->getDriver()) !== 'Behat\Mink\Driver\GoutteDriver';
+    }
+
+    /**
+     * Spins around an element until it exists
+     *
+     * @throws ExpectationException
+     * @param string $element
+     * @param string $selectortype
+     * @return void
+     */
+    protected function ensure_element_exists($element, $selectortype) {
+
+        // Getting the behat selector & locator.
+        list($selector, $locator) = $this->transform_selector($selectortype, $element);
+
+        // Exception if it timesout and the element is still there.
+        $msg = 'The ' . self::EXTENDED_TIMEOUT . ' seconds timeout expired and the element "' . $element . '" is not there';
+        $exception = new ExpectationException($msg, $this->getSession());
+
+        // Will stop spinning the find() return false.
+        $this->spin(
+            function($context, $args) {
+                // We don't use behat_base::find as it is already spinning.
+                if ($context->getSession()->getPage()->find($args['selector'], $args['locator'])) {
+                    return true;
+                }
+            },
+            array('selector' => $selector, 'locator' => $locator),
+            self::EXTENDED_TIMEOUT,
+            $exception,
+            true
+        );
+
+    }
+
+    /**
+     * Spins until the element does not exist
+     *
+     * @throws ExpectationException
+     * @param string $element
+     * @param string $selectortype
+     * @return void
+     */
+    protected function ensure_element_does_not_exist($element, $selectortype) {
+
+        // Getting the behat selector & locator.
+        list($selector, $locator) = $this->transform_selector($selectortype, $element);
+
+        // Exception if it timesout and the element is still there.
+        $msg = 'The ' . self::EXTENDED_TIMEOUT . ' seconds timeout expired and the "' . $element . '" element is still there';
+        $exception = new ExpectationException($msg, $this->getSession());
+
+        // Will stop spinning the find() return false.
+        $this->spin(
+            function($context, $args) {
+                // We don't use behat_base::find as it is already spinning.
+                if (!$context->getSession()->getPage()->find($args['selector'], $args['locator'])) {
+                    return true;
+                }
+            },
+            array('selector' => $selector, 'locator' => $locator),
+            self::EXTENDED_TIMEOUT,
+            $exception,
+            true
+        );
+    }
+
+    /**
+     * Ensures that the provided node is visible and we can interact with it.
+     *
+     * @throws ExpectationException
+     * @param NodeElement $node
+     * @return void Throws an exception if it times out without the element being visible
+     */
+    protected function ensure_node_is_visible($node) {
+
+        if (!$this->running_javascript()) {
+            return;
+        }
+
+        // Exception if it timesout and the element is still there.
+        $msg = 'The ' . self::EXTENDED_TIMEOUT . ' seconds timeout expired and the "' . $node->getXPath() . '" element is not visible';
+        $exception = new ExpectationException($msg, $this->getSession());
+
+        // Will stop spinning the find() return false.
+        $this->spin(
+            function($context, $args) {
+                if ($args->isVisible()) {
+                    return true;
+                }
+            },
+            $node,
+            self::EXTENDED_TIMEOUT,
+            $exception,
+            true
+        );
+    }
+
+    /**
+     * Ensures that the provided element is visible and we can interact with it.
+     *
+     * Returns the node in case other actions are interested in using it.
+     *
+     * @throws ExpectationException
+     * @param string $element
+     * @param string $selectortype
+     * @return NodeElement Throws an exception if it times out without being visible
+     */
+    protected function ensure_element_is_visible($element, $selectortype) {
+
+        if (!$this->running_javascript()) {
+            return;
+        }
+
+        $node = $this->get_selected_node($selectortype, $element);
+        $this->ensure_node_is_visible($node);
+
+        return $node;
     }
 
 }

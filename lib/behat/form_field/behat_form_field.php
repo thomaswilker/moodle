@@ -137,6 +137,7 @@ class behat_form_field {
             $classname = 'behat_form_select';
 
         } else {
+            // We can not provide a closer field type.
             return false;
         }
 

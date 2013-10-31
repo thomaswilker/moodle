@@ -44,6 +44,7 @@ class behat_form_select extends behat_form_field {
      * @return void
      */
     public function set_value($value) {
+
         $this->field->selectOption($value);
 
         // Adding a click as Selenium requires it to fire some JS events.
@@ -52,19 +53,23 @@ class behat_form_select extends behat_form_field {
             // In some browsers the selectOption actions can perform a page reload
             // so we need to ensure the element is still available to continue interacting
             // with it. We don't wait here.
-            if (!$this->session->getDriver()->find($this->field->getXpath())) {
+            $selectxpath = $this->field->getXpath();
+            if (!$this->session->getDriver()->find($selectxpath)) {
                 return;
             }
 
-            // Single select needs an extra click in the option.
-            if (!$this->field->hasAttribute('multiple')) {
+            // We also check that the option is still there. We neither wait.
+            $valueliteral = $this->session->getSelectorsHandler()->xpathLiteral($value);
+            $optionxpath = $selectxpath . "/descendant::option[(./@value=$valueliteral or normalize-space(.)=$valueliteral)]";
+            if (!$this->session->getDriver()->find($optionxpath)) {
+                return;
+            }
 
-                $value = $this->session->getSelectorsHandler()->xpathLiteral($value);
+            // Single select sometimes needs an extra click in the option.
+            if (!$this->field->hasAttribute('multiple')) {
 
                 // Using the driver direcly because Element methods are messy when dealing
                 // with elements inside containers.
-                $optionxpath = $this->field->getXpath() .
-                    "/descendant::option[(./@value=$value or normalize-space(.)=$value)]";
                 $optionnodes = $this->session->getDriver()->find($optionxpath);
                 if ($optionnodes) {
                     current($optionnodes)->click();
@@ -73,6 +78,15 @@ class behat_form_select extends behat_form_field {
             } else {
                 // Multiple ones needs the click in the select.
                 $this->field->click();
+
+                // We ensure that the option is still there.
+                if (!$this->session->getDriver()->find($optionxpath)) {
+                    return;
+                }
+
+                // Repeating the select as some drivers (chrome that I know) are moving
+                // to another option after the general select field click above.
+                $this->field->selectOption($value);
             }
         }
     }

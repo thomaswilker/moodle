@@ -4,7 +4,7 @@ Feature: A teacher can preview questions in the question bank
   As a teacher
   I need to preview the questions
 
-  @javascript
+  @javascript @_switch_window
   Scenario: Preview a previously created question
     Given the following "users" exists:
       | username | firstname | lastname | email |
