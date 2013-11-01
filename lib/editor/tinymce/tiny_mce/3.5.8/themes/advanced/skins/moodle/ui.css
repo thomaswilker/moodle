@@ -106,9 +106,9 @@
 /* SplitButton */
 .moodleSkin .mceSplitButton a {display:block; direction:ltr; height: 22px;}
 .moodleSkin .mceSplitButton, .moodleSkin .mceSplitButton span {display:block; height:30px; direction:ltr; }
-.moodleSkin .mceSplitButton { width: 50px; }
-.moodleSkin .mceSplitButton:hover {background-image: radial-gradient(ellipse at center, #ffffff 60%,#dfdfdf 100%); cursor: pointer;}
-.moodleSkin .mceSplitButton:active {background-image: radial-gradient(ellipse at center, #ffffff 40%,#dfdfdf 100%);}
+.moodleSkin .mceSplitButton { width: 53px; }
+.moodleSkin .mceSplitButton td.mceFirst:hover {background-image: radial-gradient(ellipse at center, #ffffff 60%,#dfdfdf 100%); cursor: pointer;}
+.moodleSkin .mceSplitButton td.mceFirst:active {background-image: radial-gradient(ellipse at center, #ffffff 40%,#dfdfdf 100%);}
 .moodleSkin .mceSplitButton .mceFirst { padding: 4px 0 0 9px; }
 .moodleSkin .mceSplitButton .mceLast { background: transparent;}
 .moodleSkin .mceSplitButton a.mceAction {width:20px}
@@ -117,6 +117,8 @@
 .moodleSkin table.mceSplitButtonEnabled:hover a.mceOpen, .moodleSkin .mceSplitButtonHover a.mceOpen, .moodleSkin .mceSplitButtonSelected a.mceOpen {background-position:-44px -44px}
 .moodleSkin .mceSplitButtonDisabled .mceAction {opacity:0.3;}
 .moodleSkin .mceSplitButtonActive {background-position:0 -44px}
+.moodleSkin .mceToolbar .mceSplitButton td.mceLast {height: 26px; border-radius: 0px; border-left: 1px dashed #dfdfdf; padding-left: 4px; padding-right: 4px;}
+.moodleSkin .mceToolbar .mceSplitButton td.mceFirst {height: 26px; padding-right: 4px;}
 
 /* ColorSplitButton */
 .moodleSkin div.mceColorSplitMenu table {background:#FFF; border: 1px solid #BBB;}
@@ -126,6 +128,8 @@
 .moodleSkin .mceColorSplitMenu a.mceMoreColors {width:100%; height:auto; text-align:center; font-family:Tahoma,Verdana,Arial,Helvetica; font-size:11px; line-height:20px; border:1px solid #FFF}
 .moodleSkin .mceColorSplitMenu a.mceMoreColors:hover {border:1px solid #0A246A; background-color:#B6BDD2}
 .moodleSkin a.mceMoreColors:hover {border:1px solid #0A246A}
+
+
 /* Font selector preview stuff */
 .moodleSkin .mce_forecolor span.mceAction, .moodleSkin .mce_backcolor span.mceAction {height:21px;overflow:hidden; position: relative; z-index: 1 }
 .moodleSkin .mceColorPreview {width:16px; height:16px; overflow:hidden; margin-left: 2px; position: relative; top: -18px;}
