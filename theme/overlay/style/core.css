@@ -22,7 +22,7 @@ body,h1,h2,h3,h4,h5,h6,p,ul,ol,dl,input,textarea {
 
 .wrapper {
     margin: 0 35px;
-    min-width: 910px;
+    min-width: 1030px;
 }
 
 a:hover,a:active {

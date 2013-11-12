@@ -2,6 +2,13 @@ This files describes API changes in /theme/* themes,
 information provided here is intended especially for theme designer.
 
 === 2.6 ===
+Text editor changes and flow on effects:
+The text editor has been restyled to make it usable on touchscreen devices. As a result with the default configuration of the text
+editor and all 3 toolbars visible, the text editor can take up 120px more horizontal room than before. Themes that define a minimum
+width for their content region need to be adjusted to prevent forms with text editors from becoming clipped due to this larger
+size. The easiest way to test this adjustment is with the front page settings form. Set the browser window to 1024 pixels wide,
+make all 3 toolbars visible in the text editor and keep increasing the min-width for the content region, until all of the buttons
+and the right hand border of the text editor are visible. For core themes, it was necessary to increase this width by approx 120px.
 
 Removed themes:
 * "My Mobile" theme has been removed (see MDL-40874).
