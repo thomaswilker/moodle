@@ -1278,6 +1278,90 @@ class mod_assign_locallib_testcase extends mod_assign_base_testcase {
         $this->editingteachers[0]->ignoresesskey = false;
     }
 
+    public function test_teacher_submit_for_student() {
+        global $PAGE;
+
+        $this->preventResetByRollback();
+        $sink = $this->redirectMessages();
+
+        $this->setUser($this->editingteachers[0]);
+
+        $assign = $this->create_instance(array('assignsubmission_onlinetext_enabled'=>1, 'submissiondrafts'=>1));
+        $PAGE->set_url(new moodle_url('/mod/assign/view.php', array('id' => $assign->get_course_module()->id)));
+
+        $this->setUser($this->students[0]);
+        // Simulate a submission.
+        $data = new stdClass();
+        $data->onlinetext_editor = array('itemid'=>file_get_unused_draft_itemid(),
+                                         'text'=>'Student submission text',
+                                         'format'=>FORMAT_MOODLE);
+
+        $notices = array();
+        $assign->save_submission($data, $notices);
+
+        // Check that the submission text was saved.
+        $output = $assign->view_student_summary($this->students[0], true);
+        $this->assertContains('Student submission text', $output, 'Contains student submission text');
+
+        // Check that a teacher teacher with the extra capability can edit a students submission.
+        $this->setUser($this->teachers[0]);
+        $data = new stdClass();
+        $data->userid = $this->students[0]->id;
+        $data->onlinetext_editor = array('itemid'=>file_get_unused_draft_itemid(),
+                                         'text'=>'Teacher edited submission text',
+                                         'format'=>FORMAT_MOODLE);
+
+        // Add the required capability.
+        $roleid = create_role('Dummy role', 'dummyrole', 'dummy role description');
+        assign_capability('mod/assign:editothersubmission', CAP_ALLOW, $roleid, $assign->get_context()->id);
+        role_assign($roleid, $this->teachers[0]->id, $assign->get_context()->id);
+        accesslib_clear_all_caches_for_unit_testing();
+
+        // Try to save the submission.
+        $notices = array();
+        $assign->save_submission($data, $notices);
+
+        // Check that the teacher can submit the students work.
+        $data = new stdClass();
+        $data->userid = $this->students[0]->id;
+        $notices = array();
+        $assign->submit_for_grading($data, $notices);
+
+        // Revert to draft so the student can edit it.
+        $assign->revert_to_draft($this->students[0]->id);
+
+        $this->setUser($this->students[0]);
+
+        // Check that the submission text was saved.
+        $output = $assign->view_student_summary($this->students[0], true);
+        $this->assertContains('Teacher edited submission text', $output, 'Contains student submission text');
+
+        // Check that the student can submit their work.
+        $data = new stdClass();
+        $assign->submit_for_grading($data, $notices);
+
+        $output = $assign->view_student_summary($this->students[0], true);
+        $this->assertNotContains(get_string('addsubmission', 'assign'), $output);
+
+        // Set to a default editing teacher who should not be able to edit this submission.
+        $this->setUser($this->editingteachers[1]);
+
+        // Revert to draft so the submission is editable.
+        $assign->revert_to_draft($this->students[0]->id);
+
+        $data = new stdClass();
+        $data->userid = $this->students[0]->id;
+        $data->onlinetext_editor = array('itemid'=>file_get_unused_draft_itemid(),
+                                         'text'=>'Teacher 2 edited submission text',
+                                         'format'=>FORMAT_MOODLE);
+
+        $notices = array();
+        $this->setExpectedException('moodle_exception');
+        $assign->save_submission($data, $notices);
+
+        $sink->close();
+    }
+
     public function test_marker_updated_event() {
         $this->editingteachers[0]->ignoresesskey = true;
         $this->setUser($this->editingteachers[0]);
