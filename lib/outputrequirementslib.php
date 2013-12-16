@@ -194,6 +194,7 @@ class page_requirements_manager {
         $this->YUI_config->base         = $this->yui3loader->base;
         $this->YUI_config->comboBase    = $this->yui3loader->comboBase;
         $this->YUI_config->combine      = $this->yui3loader->combine;
+        $this->YUI_config->ignore       = array('cssbutton');
 
         $configname = $this->YUI_config->set_config_source('lib/yui/config/yui2.js');
         $this->YUI_config->add_group('yui2', array(
@@ -545,13 +546,13 @@ class page_requirements_manager {
 
     /**
      * Return jQuery related markup for page start.
-     * @return string
+     * @return array($js, $css) Return the js and css required for jquery separately so they can be optimally ordered.
      */
     protected function get_jquery_headcode() {
         if (empty($this->jqueryplugins['jquery'])) {
             // If nobody requested jQuery then do not bother to load anything.
             // This may be useful for themes that want to override 'ui-css' only if requested by something else.
-            return '';
+            return array('', '');
         }
 
         $included = array();
@@ -598,18 +599,19 @@ class page_requirements_manager {
             $included[$name] = true;
         }
 
-        $output = '';
+        $js = '';
+        $css = '';
         $attributes = array('rel' => 'stylesheet', 'type' => 'text/css');
         foreach ($urls as $url) {
             if (preg_match('/\.js$/', $url)) {
-                $output .= html_writer::script('', $url);
+                $js .= html_writer::script('', $url);
             } else if (preg_match('/\.css$/', $url)) {
                 $attributes['href'] = $url;
-                $output .= html_writer::empty_tag('link', $attributes) . "\n";
+                $css .= html_writer::empty_tag('link', $attributes) . "\n";
             }
         }
 
-        return $output;
+        return array($js, $css);
     }
 
     /**
@@ -1245,12 +1247,13 @@ class page_requirements_manager {
      * caching, better browser cache utilisation, much fewer http requests.
      *
      * @param moodle_page $page
-     * @return string
+     * @return array($js, $css) Return the js and css separately so they can be optimally ordered.
      */
     protected function get_yui3lib_headcode($page) {
         global $CFG;
 
-        $code = '';
+        $js = '';
+        $css = '';
 
         $jsrev = $this->get_jsrev();
 
@@ -1275,30 +1278,30 @@ class page_requirements_manager {
                 foreach ($page->theme->yuicssmodules as $module) {
                     $modules[] = "$CFG->yui3version/$module/$module-min.css";
                 }
-                $code .= '<link rel="stylesheet" type="text/css" href="'.$this->yui3loader->comboBase.implode('&amp;', $modules).'" />';
+                $css .= '<link rel="stylesheet" type="text/css" href="'.$this->yui3loader->comboBase.implode('&amp;', $modules).'" />';
             }
-            $code .= '<link rel="stylesheet" type="text/css" href="'.$this->yui3loader->local_comboBase.'rollup/'.$CFG->yui3version.'/yui-moodlesimple' . $yuiformat . '.css" />';
-            $code .= '<script type="text/javascript" src="'.$this->yui3loader->local_comboBase
+            $css .= '<link rel="stylesheet" type="text/css" href="'.$this->yui3loader->local_comboBase.'rollup/'.$CFG->yui3version.'/yui-moodlesimple' . $yuiformat . '.css" />';
+            $js .= '<script type="text/javascript" src="'.$this->yui3loader->local_comboBase
                     . implode('&amp;', $baserollups) . '"></script>';
 
         } else {
             if (!empty($page->theme->yuicssmodules)) {
                 foreach ($page->theme->yuicssmodules as $module) {
-                    $code .= '<link rel="stylesheet" type="text/css" href="'.$this->yui3loader->base.$module.'/'.$module.'-min.css" />';
+                    $css .= '<link rel="stylesheet" type="text/css" href="'.$this->yui3loader->base.$module.'/'.$module.'-min.css" />';
                 }
             }
-            $code .= '<link rel="stylesheet" type="text/css" href="'.$this->yui3loader->local_comboBase.'rollup/'.$CFG->yui3version.'/yui-moodlesimple' . $yuiformat . '.css" />';
+            $css .= '<link rel="stylesheet" type="text/css" href="'.$this->yui3loader->local_comboBase.'rollup/'.$CFG->yui3version.'/yui-moodlesimple' . $yuiformat . '.css" />';
             foreach ($baserollups as $rollup) {
-                $code .= '<script type="text/javascript" src="'.$this->yui3loader->local_comboBase.$rollup.'"></script>';
+                $js .= '<script type="text/javascript" src="'.$this->yui3loader->local_comboBase.$rollup.'"></script>';
             }
         }
 
         if ($this->yui3loader->filter === 'RAW') {
-            $code = str_replace('-min.css', '.css', $code);
+            $css = str_replace('-min.css', '.css', $css);
         } else if ($this->yui3loader->filter === 'DEBUG') {
-            $code = str_replace('-min.css', '.css', $code);
+            $css = str_replace('-min.css', '.css', $css);
         }
-        return $code;
+        return array($js, $css);
     }
 
     /**
@@ -1318,7 +1321,8 @@ class page_requirements_manager {
         // As of IE8 + YUI3.1.1 the reference stylesheet (firstthemesheet) gets
         // ignored whenever another resource is added until such time as a redraw
         // is forced, usually by moving the mouse over the affected element.
-        $code = html_writer::tag('script', '/** Required in order to fix style inclusion problems in IE with YUI **/', array('id'=>'firstthemesheet', 'type'=>'text/css'));
+        //$code = html_writer::tag('link', '<!-- Required in order to fix style inclusion problems in IE with YUI -->', array('id'=>'firstthemesheet', 'rel'=>'stylesheet', 'type'=>'text/css'));
+        $code = '';
 
         $urls = $this->cssthemeurls + $this->cssurls;
         foreach ($urls as $url) {
@@ -1362,39 +1366,56 @@ class page_requirements_manager {
 
         $output = '';
 
+        // For maximum page performance, the JS + CSS should be ordered such that:
+        // inlinejs runs first,
+        // externalcss runs second
+        // externaljs runs last.
+        $inlinejs = '';
+        $externalcss = '';
+        $externaljs = '';
+
         // Set up the M namespace.
-        $js = "var M = {}; M.yui = {};\n";
+        $inlinejs = "var M = {}; M.yui = {};\n";
 
         // Capture the time now ASAP during page load. This minimises the lag when
         // we try to relate times on the server to times in the browser.
         // An example of where this is used is the quiz countdown timer.
-        $js .= "M.pageloadstarttime = new Date();\n";
+        $inlinejs .= "M.pageloadstarttime = new Date();\n";
 
         // Add a subset of Moodle configuration to the M namespace.
-        $js .= js_writer::set_variable('M.cfg', $this->M_cfg, false);
+        $inlinejs .= js_writer::set_variable('M.cfg', $this->M_cfg, false);
 
         // Set up global YUI3 loader object - this should contain all code needed by plugins.
         // Note: in JavaScript just use "YUI().use('overlay', function(Y) { .... });",
         //       this needs to be done before including any other script.
-        $js .= $this->YUI_config->get_config_functions();
-        $js .= js_writer::set_variable('YUI_config', $this->YUI_config, false) . "\n";
-        $js .= "M.yui.loader = {modules: {}};\n"; // Backwards compatibility only, not used any more.
-        $js = $this->YUI_config->update_header_js($js);
-
-        $output .= html_writer::script($js);
+        $inlinejs .= $this->YUI_config->get_config_functions();
+        $inlinejs .= js_writer::set_variable('YUI_config', $this->YUI_config, false) . "\n";
+        $inlinejs .= "M.yui.loader = {modules: {}};\n"; // Backwards compatibility only, not used any more.
+        $inlinejs = $this->YUI_config->update_header_js($inlinejs);
 
         // YUI3 JS and CSS need to be loaded in the header but after the YUI_config has been created.
         // They should be cached well by the browser.
-        $output .= $this->get_yui3lib_headcode($page);
+        list($js, $css) = $this->get_yui3lib_headcode($page);
+        $externaljs .= $js;
+        $externalcss .= $css;
 
         // Add hacked jQuery support, it is not intended for standard Moodle distribution!
-        $output .= $this->get_jquery_headcode();
+        list($js, $css) = $this->get_jquery_headcode();
+        $externaljs .= $js;
+        $externalcss .= $css;
 
         // Now theme CSS + custom CSS in this specific order.
-        $output .= $this->get_css_code();
+        $externalcss .= $this->get_css_code();
 
         // Link our main JS file, all core stuff should be there.
-        $output .= html_writer::script('', $this->js_fix_url('/lib/javascript-static.js'));
+        $externaljs .= html_writer::script('', $this->js_fix_url('/lib/javascript-static.js'));
+
+        // All the other linked things from HEAD - there should be as few as possible.
+        if ($this->jsincludes['head']) {
+            foreach ($this->jsincludes['head'] as $url) {
+                $externaljs .= html_writer::script('', $url);
+            }
+        }
 
         // Add variables.
         if ($this->jsinitvariables['head']) {
@@ -1403,15 +1424,14 @@ class page_requirements_manager {
                 list($var, $value) = $data;
                 $js .= js_writer::set_variable($var, $value, true);
             }
-            $output .= html_writer::script($js);
+            $externaljs .= "\n" . ($js);
         }
+        // This must be the last thing in the css list.
+        $externalcss .= html_writer::tag('link', '', array('id'=>'firstthemesheet'));
 
-        // All the other linked things from HEAD - there should be as few as possible.
-        if ($this->jsincludes['head']) {
-            foreach ($this->jsincludes['head'] as $url) {
-                $output .= html_writer::script('', $url);
-            }
-        }
+        $output .= html_writer::script($inlinejs);
+        $output .= $externalcss;
+        $output .= $externaljs;
 
         // Mark head sending done, it is not possible to anything there.
         $this->headdone = true;

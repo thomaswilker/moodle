@@ -177,6 +177,7 @@ while (count($parts)) {
                 'widget-autohide',
                 'button-core',
                 'button-plugin',
+                'cssbutton',
                 'widget-buttons',
                 'widget-modality',
                 'panel',
