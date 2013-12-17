@@ -470,6 +470,50 @@ $CFG->admin = 'admin';
 // will be sent to supportemail.
 //      $CFG->supportuserid = -20;
 //
+// Moodle 2.7 introduces a locking api for critical tasks (e.g. cron).
+// The default locking system to use is DB locking for MySQL and Postgres, and File
+// locking for Oracle and SQLServer. If $CFG->preventfilelocking is set, then the default
+// will always be DB locking. It can be manually set to one of the lock
+// factory classes listed below, or one of your own custom classes implementing the
+// \core\lock\lock_factory interface.
+//
+//      $CFG->lock_factory = "auto";
+//
+// The list of available lock factories is:
+//
+// "\\core\\lock\\file_lock_factory" - File locking
+//      Uses lock files stored by default in the dataroot. Whether this
+//      works on clusters depends on the file system used for the dataroot.
+//
+// "\\core\\lock\\db_row_lock_factory" - DB locking based on table rows.
+//
+// "\\core\\lock\\postgres_lock_factory" - DB locking based on postgres advisory locks.
+//
+// "\\core\\lock\\mysql_lock_factory" - DB locking based on mysql lock functions.
+//
+// "\\core\\lock\\memcache_lock_factory" - Memcache locking
+//      The memcache lock type depends on an external Memcache server to hold
+//      the locks. It is dangerous to use this lock type with a Memcache server
+//      that is also used for other purposes. If the memcache server deletes the
+//      locks to reclaim space - the locks will be released. Also if memcache
+//      is restarted, all cluster nodes also need to be restarted because their
+//      active locks will have been released.
+//
+// "\\core\\lock\\memcached_lock_factory" - Memcached locking
+//      The memcached lock type is identical to the memcache lock type except
+//      it uses the memcached extension rather than the memcache one.
+//
+// Settings used by the lock factories
+//
+// Location for lock files used by the File locking factory. This must exist
+// on a shared file system that supports locking.
+//      $CFG->lock_file_root = $CFG->dataroot . '/lock';
+//
+// Memcache server to use for locking. The memcache server url should consist of the
+// memcache server hostname and optionally the port. E.g. localhost:11211
+//      $CFG->lock_memcache_url = 'localhost:11211';
+//
+//
 //=========================================================================
 // 7. SETTINGS FOR DEVELOPMENT SERVERS - not intended for production use!!!
 //=========================================================================
