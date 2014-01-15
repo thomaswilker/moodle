@@ -1753,5 +1753,55 @@ Anchor link 2:<a title=\"bananas\" href=\"../logo-240x60.gif\">Link text</a>
         $plugin = $assign->get_feedback_plugin_by_type($gradebookplugintype);
         $this->assertEquals(0, $plugin->is_enabled('enabled'));
     }
+
+    /**
+     * Testing can_edit_submission
+     */
+    public function test_can_edit_submission() {
+        global $PAGE, $DB;
+        $this->create_extra_users();
+
+        $this->setAdminUser();
+        // Create assignment (onlinetext).
+        $assign = $this->create_instance(array('assignsubmission_onlinetext_enabled'=>1, 'submissiondrafts'=>1));
+        $PAGE->set_url(new moodle_url('/mod/assign/view.php', array('id' => $assign->get_course_module()->id)));
+
+        // Check student can edit their own submission.
+        $this->assertTrue($assign->can_edit_submission($this->students[0]->id, $this->students[0]->id));
+        // Check student cannot edit others submission.
+        $this->assertFalse($assign->can_edit_submission($this->students[0]->id, $this->students[1]->id));
+
+        // Check teacher cannot (by default) edit a students submission.
+        $this->assertFalse($assign->can_edit_submission($this->students[0]->id, $this->teachers[0]->id));
+
+        // Add the required capability to edit a student submission.
+        $roleid = create_role('Dummy role', 'dummyrole', 'dummy role description');
+        assign_capability('mod/assign:editothersubmission', CAP_ALLOW, $roleid, $assign->get_context()->id);
+        role_assign($roleid, $this->teachers[0]->id, $assign->get_context()->id);
+        accesslib_clear_all_caches_for_unit_testing();
+        // Retest - should now have access.
+        $this->assertTrue($assign->can_edit_submission($this->students[0]->id, $this->teachers[0]->id));
+
+        // Force create an assignment with SEPARATEGROUPS.
+        $data = new stdClass();
+        $data->courseid = $this->course->id;
+        $data->name = 'Grouping';
+        $groupingid = groups_create_grouping($data);
+        groups_assign_grouping($groupingid, $this->groups[0]->id);
+        groups_assign_grouping($groupingid, $this->groups[1]->id);
+        $assign = $this->create_instance(array('groupingid' => $groupingid, 'groupmode' => SEPARATEGROUPS));
+
+        // Add the capability to the new assignment for extra students 0 and 1.
+        assign_capability('mod/assign:editothersubmission', CAP_ALLOW, $roleid, $assign->get_context()->id);
+        role_assign($roleid, $this->extrastudents[0]->id, $assign->get_context()->id);
+        role_assign($roleid, $this->extrastudents[1]->id, $assign->get_context()->id);
+        accesslib_clear_all_caches_for_unit_testing();
+
+        // Verify the extra student does not have the capability to edit a submission not in their group.
+        $this->assertFalse($assign->can_edit_submission($this->students[0]->id, $this->extrastudents[1]->id));
+        // Verify the extra student does have the capability to edit a submission in their group.
+        $this->assertTrue($assign->can_edit_submission($this->students[0]->id, $this->extrastudents[0]->id));
+
+    }
 }
 

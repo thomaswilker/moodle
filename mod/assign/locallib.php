@@ -4329,13 +4329,22 @@ class assign {
             $graderid = $USER->id;
         }
 
-        if(!has_capability('mod/assign:editothersubmission', $this->context)) {
+        if ($userid == $graderid &&
+                $this->submissions_open($userid) &&
+                has_capability('mod/assign:submit', $this->context, $graderid)) {
+            // User can edit their own submission.
+            return true;
+        }
+
+        if (!has_capability('mod/assign:editothersubmission', $this->context, $graderid)) {
             return false;
         }
 
-        if (groups_get_activity_groupmode($this->get_course_module()) == SEPARATEGROUPS) {
-            $studentgroups = groups_get_activity_allowed_groups($cm, $userid);
-            $gradergroups = groups_get_activity_allowed_groups($cm, $graderid);
+        $cm = $this->get_course_module();
+        if (groups_get_activity_groupmode($cm) == SEPARATEGROUPS) {
+            // These arrays are indexed by groupid.
+            $studentgroups = array_keys(groups_get_activity_allowed_groups($cm, $userid));
+            $gradergroups = array_keys(groups_get_activity_allowed_groups($cm, $graderid));
 
             return count(array_intersect($studentgroups, $gradergroups)) > 0;
         }
