@@ -98,9 +98,10 @@ class lock {
      */
     public function __destruct() {
         if (!$this->released && defined('PHPUNIT_TEST')) {
-            trigger_error('\core\lock\lock(' . $this->key . ') has fallen out of scope without being released.' . "\n" .
-                      'Locks must ALWAYS be released by calling $mylock->release().', E_USER_WARNING);
             $this->release();
+            throw new \coding_exception('\core\lock\lock(' . $this->key . ') has fallen out of scope ' .
+                                        'without being released.' . "\n" .
+                                        'Locks must ALWAYS be released by calling $mylock->release().');
         }
     }
 

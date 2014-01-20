@@ -45,8 +45,14 @@ class lock_config {
      */
     public static function get_lock_factory($type) {
         global $CFG, $DB;
+        $lockfactory = null;
 
-        if (isset($CFG->lock_factory) && class_exists($CFG->lock_factory)) {
+        if (isset($CFG->lock_factory) && $CFG->lock_factory != 'auto') {
+            if (!class_exists($CFG->lock_factory)) {
+                // In this case I guess it is not safe to continue. Different cluster nodes could end up using different locking
+                // types because of an installation error.
+                throw new \coding_exception('Lock factory set in $CFG does not exist: ' . $CFG->lock_factory);
+            }
             $lockfactoryclass = $CFG->lock_factory;
             $lockfactory = new $lockfactoryclass($type);
         } else {
