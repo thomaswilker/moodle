@@ -107,41 +107,5 @@ class lock_testcase extends advanced_testcase {
 
     }
 
-    /**
-     * Tests the memcache lock factories.
-     * @return void
-     */
-    public function test_memcache_locks() {
-        global $CFG;
-        // Run the suite on the current configured default (may be non-core).
-        if (!defined('TEST_MEMCACHE_LOCK_SERVER_URL')) {
-            $this->markTestSkipped('Test Memcache lock server not configured.');
-        }
-        if (!class_exists('\Memcache')) {
-            $this->markTestSkipped('Memcache extension is not available.');
-        }
-        $CFG->lock_memcache_url = TEST_MEMCACHE_LOCK_SERVER_URL;
-        $factory = new \core\lock\memcache_lock_factory('test');
-        $this->run_on_lock_factory($factory);
-    }
-
-    /**
-     * Tests the memcached lock factory.
-     * @return void
-     */
-    public function test_memcached_locks() {
-        global $CFG;
-        // Run the suite on the current configured default (may be non-core).
-        if (!defined('TEST_MEMCACHED_LOCK_SERVER_URL')) {
-            $this->markTestSkipped('Test Memcached lock server not configured.');
-        }
-        if (!class_exists('\Memcached')) {
-            $this->markTestSkipped('Memcached extension is not available.');
-        }
-        $CFG->lock_memcache_url = TEST_MEMCACHED_LOCK_SERVER_URL;
-        $factory = new \core\lock\memcached_lock_factory('test');
-        $this->run_on_lock_factory($factory);
-    }
-
 }
 

@@ -491,28 +491,11 @@ $CFG->admin = 'admin';
 //
 // "\\core\\lock\\mysql_lock_factory" - DB locking based on mysql lock functions.
 //
-// "\\core\\lock\\memcache_lock_factory" - Memcache locking
-//      The memcache lock type depends on an external Memcache server to hold
-//      the locks. It is dangerous to use this lock type with a Memcache server
-//      that is also used for other purposes. If the memcache server deletes the
-//      locks to reclaim space - the locks will be released. Also if memcache
-//      is restarted, all cluster nodes also need to be restarted because their
-//      active locks will have been released.
-//
-// "\\core\\lock\\memcached_lock_factory" - Memcached locking
-//      The memcached lock type is identical to the memcache lock type except
-//      it uses the memcached extension rather than the memcache one.
-//
 // Settings used by the lock factories
 //
 // Location for lock files used by the File locking factory. This must exist
 // on a shared file system that supports locking.
 //      $CFG->lock_file_root = $CFG->dataroot . '/lock';
-//
-// Memcache server to use for locking. The memcache server url should consist of the
-// memcache server hostname and optionally the port. E.g. localhost:11211
-//      $CFG->lock_memcache_url = 'localhost:11211';
-//
 //
 //=========================================================================
 // 7. SETTINGS FOR DEVELOPMENT SERVERS - not intended for production use!!!
