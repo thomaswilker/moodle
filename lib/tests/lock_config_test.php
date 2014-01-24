@@ -60,10 +60,10 @@ class lock_config_testcase extends advanced_testcase {
         $this->assertTrue($factory instanceof \core\lock\file_lock_factory,
                           'Get a default factory with a set configuration');
 
-        $CFG->lock_factory = '\core\lock\db_row_lock_factory';
+        $CFG->lock_factory = '\core\lock\db_record_lock_factory';
 
         $factory = \core\lock\lock_config::get_lock_factory('cache');
-        $this->assertTrue($factory instanceof \core\lock\db_row_lock_factory,
+        $this->assertTrue($factory instanceof \core\lock\db_record_lock_factory,
                           'Get a default factory with a changed configuration');
 
         if ($original) {

@@ -99,7 +99,7 @@ class lock_testcase extends advanced_testcase {
         $this->run_on_lock_factory($defaultfactory);
 
         // Manually create the core no-configuration factories.
-        $dblockfactory = new \core\lock\db_row_lock_factory('test');
+        $dblockfactory = new \core\lock\db_record_lock_factory('test');
         $this->run_on_lock_factory($dblockfactory);
 
         $filelockfactory = new \core\lock\file_lock_factory('test');

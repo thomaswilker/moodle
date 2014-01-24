@@ -67,7 +67,7 @@ class lock_config {
                 } else {
                     // Final fallback - DB row locking. Does not support auto-release - so on failures
                     // we will have to wait for a timeout.
-                    $lockfactoryclass = '\core\lock\db_row_lock_factory';
+                    $lockfactoryclass = '\core\lock\db_record_lock_factory';
                 }
             }
             $lockfactory = new $lockfactoryclass($type);

@@ -35,7 +35,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright Damyon Wiese 2013
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class db_row_lock_factory implements lock_factory {
+class db_record_lock_factory implements lock_factory {
 
     /** @var moodle_database $db Hold a reference to the global $DB */
     protected $db;
