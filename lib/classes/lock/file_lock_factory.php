@@ -15,7 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines locking apis
+ * The file lock factory returns file locks locked with the flock function. Works OK, except on some
+ * NFS, exotic shared storage and exotic server OSes (like windows). On windows, a second attempt to get a
+ * lock will block indefinitely instead of timing out.
  *
  * @package    core
  * @category   lock
@@ -28,7 +30,9 @@ namespace core\lock;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * The file lock factory returns file locks locked with the flock function.
+ * The file lock factory returns file locks locked with the flock function. Works OK, except on some
+ * NFS, exotic shared storage and exotic server OSes (like windows). On windows, a second attempt to get a
+ * lock will block indefinitely instead of timing out.
  *
  * @package   core
  * @category  lock

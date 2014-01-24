@@ -28,7 +28,12 @@ namespace core\lock;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Defines api for locking (including separate cluster nodes)
+ * Postgres locking implementation using advisory locks. Some important points. Postgres has
+ * 2 different forms of lock functions, some accepting a single int, and some accepting 2 ints. This implementation
+ * uses the 2 int version so that it uses a separate namespace from the session locking. The second note,
+ * is because postgres uses integer keys for locks, we first need to map strings to a unique integer. This is
+ * done by storing the strings in the lock_db table and using the auto-id returned. There is a static cache for
+ * id's in this function.
  *
  * @package   core
  * @category  lock

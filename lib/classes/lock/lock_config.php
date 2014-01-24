@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines locking apis.
+ * Lock configuration class, used to get an instance of the currently configured lock factory.
  *
  * @package    core
  * @category   lock

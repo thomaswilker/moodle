@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines locking apis
+ * Defines abstract factory class for generating locks.
  *
  * @package    core
  * @copyright  Damyon Wiese 2013

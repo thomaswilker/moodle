@@ -15,7 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines locking apis
+ * Class representing a lock
+ * The methods available for a specific lock type are only known by it's factory.
  *
  * @package    core
  * @copyright  Damyon Wiese 2013

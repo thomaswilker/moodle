@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines locking apis
+ * Use MySQL GET_LOCK functions to support locking. Supports auto-release and timeouts and should be fairly quick.
  *
  * @package    core
  * @category   lock
@@ -28,7 +28,7 @@ namespace core\lock;
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Defines api for locking (including separate cluster nodes)
+ * Use MySQL GET_LOCK functions to support locking. Supports auto-release and timeouts and should be fairly quick.
  *
  * @package   core
  * @category  lock
