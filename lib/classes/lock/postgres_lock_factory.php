@@ -42,8 +42,8 @@ defined('MOODLE_INTERNAL') || die();
  */
 class postgres_lock_factory implements lock_factory {
 
-    /** @const int DB_LOCK - used as a namespace for these types of locks (separate from session locks) */
-    const DB_LOCK = 1;
+    /** @var int $dblockid - used as a namespace for these types of locks (separate from session locks) */
+    protected $dblockid = -1;
 
     /** @var array $lockidcache - static cache for string -> int conversions required for pg advisory locks. */
     protected static $lockidcache = array();
@@ -58,6 +58,25 @@ class postgres_lock_factory implements lock_factory {
     protected $openlocks = array();
 
     /**
+     * Calculate a unique instance id based on the database name and prefix.
+     * @return int.
+     */
+    protected function get_unique_db_instance_id() {
+        global $CFG;
+
+        $strkey = $CFG->dbname . ':' . $CFG->prefix;
+        $intkey = crc32($strkey);
+        // Normalize between 64 bit unsigned int and 32 bit signed ints. Php could return either from crc32.
+        if (PHP_INT_SIZE == 8) {
+            if ($intkey>0x7FFFFFFF) {
+                $intkey-=0x100000000;
+            }
+        }
+
+        return $intkey;
+    }
+
+    /**
      * Almighty constructor.
      * @param string $type - Used to prefix lock keys.
      */
@@ -65,6 +84,7 @@ class postgres_lock_factory implements lock_factory {
         global $DB;
 
         $this->type = $type;
+        $this->dblockid = $this->get_unique_db_instance_id();
         // Save a reference to the global $DB so it will not be released while we still have open locks.
         $this->db = $DB;
 
@@ -156,7 +176,7 @@ class postgres_lock_factory implements lock_factory {
 
         $token = $this->get_index_from_key($resource);
 
-        $params = array('locktype' => self::DB_LOCK,
+        $params = array('locktype' => $this->dblockid,
                         'token' => $token);
 
         $locked = false;
@@ -183,7 +203,7 @@ class postgres_lock_factory implements lock_factory {
      * @return boolean - true if the lock is no longer held (including if it was never held).
      */
     public function release_lock(lock $lock) {
-        $params = array('locktype' => self::DB_LOCK,
+        $params = array('locktype' => $this->dblockid,
                         'token' => $lock->get_key());
         $result = $this->db->get_record_sql('SELECT pg_advisory_unlock(:locktype, :token) AS unlocked', $params);
         $result = $result->unlocked === 't';
