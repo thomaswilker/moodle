@@ -184,7 +184,8 @@ class file_lock_factory implements lock_factory {
 
     /**
      * Extend a lock that was previously obtained with @lock.
-     * @param lock $lock - a lock obtained from this factory.
+     * @param lock $lock - not used
+     * @param int $maxlifetime - not used
      * @return boolean - true if the lock was extended.
      */
     public function extend_lock(lock $lock, $maxlifetime = 86400) {

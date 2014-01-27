@@ -52,6 +52,7 @@ class lock {
     /**
      * Construct a lock containing the unique key required to release it.
      * @param string $key - The lock key.
+     * @param lock_factory $factory - The factory that generated this lock.
      */
     public function __construct($key, $factory) {
         $this->factory = $factory;
