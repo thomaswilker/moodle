@@ -18,7 +18,7 @@
  * lock unit tests
  *
  * @package    core
- * @category   phpunit
+ * @category   test
  * @copyright  2013 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
  * Unit tests for our locking implementations.
  *
  * @package    core
- * @category   phpunit
+ * @category   test
  * @copyright  2013 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

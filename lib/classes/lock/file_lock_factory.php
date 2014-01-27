@@ -15,6 +15,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
+ * Flock based file locking factory.
+ *
  * The file lock factory returns file locks locked with the flock function. Works OK, except on some
  * NFS, exotic shared storage and exotic server OSes (like windows). On windows, a second attempt to get a
  * lock will block indefinitely instead of timing out.
@@ -30,6 +32,8 @@ namespace core\lock;
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ * Flock based file locking factory.
+ *
  * The file lock factory returns file locks locked with the flock function. Works OK, except on some
  * NFS, exotic shared storage and exotic server OSes (like windows). On windows, a second attempt to get a
  * lock will block indefinitely instead of timing out.
@@ -143,7 +147,7 @@ class file_lock_factory implements lock_factory {
         do {
             // Will block on windows. So sad.
             $wouldblock = false;
-            $locked = flock($filehandle, LOCK_EX|LOCK_NB, $wouldblock);
+            $locked = flock($filehandle, LOCK_EX | LOCK_NB, $wouldblock);
             if (!$locked && $wouldblock) {
                 usleep(rand(10000, 250000)); // Sleep between 10 and 250 milliseconds.
             }

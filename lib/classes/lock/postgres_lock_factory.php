@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Defines locking apis
+ * Postgres advisory locking factory.
  *
  * @package    core
  * @category   lock
@@ -28,6 +28,8 @@ namespace core\lock;
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ * Postgres advisory locking factory.
+ *
  * Postgres locking implementation using advisory locks. Some important points. Postgres has
  * 2 different forms of lock functions, some accepting a single int, and some accepting 2 ints. This implementation
  * uses the 2 int version so that it uses a separate namespace from the session locking. The second note,
@@ -68,8 +70,8 @@ class postgres_lock_factory implements lock_factory {
         $intkey = crc32($strkey);
         // Normalize between 64 bit unsigned int and 32 bit signed ints. Php could return either from crc32.
         if (PHP_INT_SIZE == 8) {
-            if ($intkey>0x7FFFFFFF) {
-                $intkey-=0x100000000;
+            if ($intkey > 0x7FFFFFFF) {
+                $intkey -= 0x100000000;
             }
         }
 
@@ -128,6 +130,9 @@ class postgres_lock_factory implements lock_factory {
      * This function generates the unique index for a specific lock key.
      * Once an index is assigned to a key, it never changes - so this is
      * statically cached.
+     *
+     * @param string $key
+     * @return int
      */
     protected function get_index_from_key($key) {
         global $DB;

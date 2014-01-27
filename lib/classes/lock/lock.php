@@ -16,6 +16,7 @@
 
 /**
  * Class representing a lock
+ *
  * The methods available for a specific lock type are only known by it's factory.
  *
  * @package    core
@@ -29,6 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Class representing a lock
+ *
  * The methods available for a specific lock type are only known by it's factory.
  *
  * @package   core

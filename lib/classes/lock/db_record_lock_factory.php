@@ -15,9 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * This lock factory uses record locks relying on sql of the form "SET XXX where YYY" and checking if the
- * value was set. It supports timeouts, autorelease and can work on any DB. The downside - is this
- * will always be slower than some shared memory type locking function.
+ * This is a db record locking factory.
  *
  * @package    core
  * @category   lock
@@ -30,6 +28,8 @@ namespace core\lock;
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ * This is a db record locking factory.
+ *
  * This lock factory uses record locks relying on sql of the form "SET XXX where YYY" and checking if the
  * value was set. It supports timeouts, autorelease and can work on any DB. The downside - is this
  * will always be slower than some shared memory type locking function.
@@ -113,7 +113,7 @@ class db_record_lock_factory implements lock_factory {
             uuid_export($context, UUID_FMT_STR, $uuid);
         } else {
             // Fallback uuid generation based on:
-            // http://www.php.net/manual/en/function.uniqid.php#94959
+            // "http://www.php.net/manual/en/function.uniqid.php#94959".
             $uuid = sprintf('%04x%04x-%04x-%04x-%04x-%04x%04x%04x',
 
                 // 32 bits for "time_low".

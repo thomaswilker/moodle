@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Use MySQL GET_LOCK functions to support locking. Supports auto-release and timeouts and should be fairly quick.
+ * MySQL GET_LOCK locking factory.
  *
  * @package    core
  * @category   lock
@@ -28,6 +28,8 @@ namespace core\lock;
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ * MySQL GET_LOCK locking factory.
+ *
  * Use MySQL GET_LOCK functions to support locking. Supports auto-release and timeouts and should be fairly quick.
  *
  * @package   core
@@ -101,7 +103,12 @@ class mysql_lock_factory implements lock_factory {
      * @return boolean - true if a lock was obtained.
      */
     public function get_lock($resource, $timeout, $maxlifetime = 86400) {
-        $result = $this->db->get_record_sql('SELECT GET_LOCK(:key, :timeout) AS locked', array('key' => $resource, 'timeout' => $timeout));
+        $params = array(
+            'key' => $resource,
+            'timeout' => $timeout
+        );
+        $result = $this->db->get_record_sql('SELECT GET_LOCK(:key, :timeout) AS locked',
+                                            $params);
         $locked = (bool)($result->locked);
 
         if ($locked) {

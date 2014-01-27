@@ -45,6 +45,7 @@ interface lock_factory {
 
     /**
      * Return information about the blocking behaviour of the locks on this platform.
+     *
      * @return boolean - False if attempting to get a lock will block indefinitely.
      */
     public function supports_timeout();
@@ -54,24 +55,28 @@ interface lock_factory {
      * This should never be relied upon in code - but is useful in the case of
      * fatal errors. If a lock type does not support this auto release,
      * the max lock time parameter must be obeyed to eventually clean up a lock.
+     *
      * @return boolean - True if this lock type will be automatically released when the current process ends.
      */
     public function supports_auto_release();
 
     /**
      * supports_recursion
+     *
      * @return boolean - True if attempting to get 2 locks on the same resource will "stack"
      */
     public function supports_recursion();
 
     /**
      * Is available.
+     *
      * @return boolean - True if this lock type is available in this environment.
      */
     public function is_available();
 
     /**
      * Get a lock within the specified timeout or return false.
+     *
      * @param string $resource - The identifier for the lock. Should use frankenstyle prefix.
      * @param int $timeout - The number of seconds to wait for a lock before giving up.
      *                       Not all lock types will support this.
@@ -84,13 +89,15 @@ interface lock_factory {
 
     /**
      * Release a lock that was previously obtained with @lock.
-     * @param lock - The lock to release.
+     *
+     * @param lock $lock - The lock to release.
      * @return boolean - True if the lock is no longer held (including if it was never held).
      */
     public function release_lock(lock $lock);
 
     /**
      * Extend the timeout on a held lock.
+     *
      * @param lock $lock - lock obtained from this factory
      * @param int $maxlifetime - new max time to hold the lock
      * @return boolean - True if the lock was extended.
