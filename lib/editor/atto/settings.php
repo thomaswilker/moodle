@@ -30,7 +30,8 @@ $settings = new admin_settingpage('editorsettingsatto', new lang_string('setting
 if ($ADMIN->fulltree) {
     $name = new lang_string('toolbarconfig', 'editor_atto');
     $desc = new lang_string('toolbarconfig_desc', 'editor_atto');
-    $default = 'style = bold, italic, underline, strike, clear, title' . "\n" .
+    $default = 'screenreader = accessibilityhelper' . "\n" .
+               'style = bold, italic, underline, strike, clear, title' . "\n" .
                'paragraph = indent, outdent, orderedlist, unorderedlist' . "\n" .
                'links = link, unlink' . "\n" .
                'insert = table, image, media, managefiles, charmap, emoticon' . "\n" .
