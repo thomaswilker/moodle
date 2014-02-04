@@ -35,7 +35,7 @@ if ($ADMIN->fulltree) {
                'paragraph = indent, outdent, orderedlist, unorderedlist' . "\n" .
                'links = link, unlink' . "\n" .
                'insert = table, image, media, managefiles, charmap, emoticon' . "\n" .
-               'other = html';
+               'other = html, accessibilitychecker';
     $setting = new admin_setting_configtextarea('editor_atto/toolbar',
                                                     $name,
                                                     $desc,
