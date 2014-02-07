@@ -33,7 +33,7 @@ if ($ADMIN->fulltree) {
     $default = 'style = bold, italic, underline, strike, clear, title' . "\n" .
                'paragraph = indent, outdent, orderedlist, unorderedlist' . "\n" .
                'links = link, unlink' . "\n" .
-               'insert = table, image, media, managefiles, charmap, emoticon' . "\n" .
+               'insert = table, image, media, managefiles, charmap, emoticon, equation' . "\n" .
                'other = html';
     $setting = new admin_setting_configtextarea('editor_atto/toolbar',
                                                     $name,
@@ -41,13 +41,15 @@ if ($ADMIN->fulltree) {
                                                     $default);
 
     $settings->add($setting);
-
 }
 $ADMIN->add('editoratto', $settings);
-unset($settings);
 
 foreach (core_plugin_manager::instance()->get_plugins_of_type('atto') as $plugin) {
+    /** @var \editor_atto\plugininfo\atto $plugin */
     $plugin->load_settings($ADMIN, 'editoratto', $hassiteconfig);
 }
 
+// Required or the editor plugininfo will add this section twice.
+unset($settings);
 $settings = null;
+
