@@ -26,6 +26,4 @@ $string['pluginname'] = 'Accessibility checker';
 $string['nowarnings'] = 'Congratulations, no accessibility problems found!';
 $string['report'] = 'Accessibility report:';
 $string['imagesmissingalt'] = 'Images require alternative text. To fix this warning, add an alt attribute to your img tags. An empty alt attribute may be used, but only when the image is purely decorative and carries no information.';
-$string['imagesaltnotmeaningful'] = 'The alt text for this image looks like a filename, which may not be meaningful. To fix this warning, set the alt attribute to a meaningful description of the image.';
-$string['linktextnotmeaningful'] = 'The text of this link looks like a filename, which may not be meaningful. To fix this warning, set the text of the link to a meaningful description of the destination url.';
 $string['needsmorecontrast'] = 'The colors of the foreground and background text do not have enough contrast. To fix this warning, change either foreground or background color of the text so that it is easier to read.';

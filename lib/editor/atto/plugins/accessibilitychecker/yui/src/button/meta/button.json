@@ -1,5 +1,5 @@
 {
   "moodle-atto_accessibilitychecker-button": {
-    "requires": ["node", "escape", "color-harmony"]
+    "requires": ["node", "escape", "color-base"]
   }
 }
