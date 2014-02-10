@@ -18,7 +18,7 @@
  * Atto text editor integration version file.
  *
  * @package    atto_accessibilitychecker
- * @copyright  2013 Damyon Wiese  <damyon@moodle.com>
+ * @copyright  2014 Damyon Wiese  <damyon@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 

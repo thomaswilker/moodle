@@ -18,7 +18,7 @@
  * Strings for component 'atto_accessibilityhelper', language 'en'.
  *
  * @package    atto_accessibilityhelper
- * @copyright  2013 Damyon Wiese  <damyon@moodle.com>
+ * @copyright  2014 Damyon Wiese  <damyon@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
