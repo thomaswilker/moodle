@@ -48,7 +48,7 @@ class send_failed_login_notifications_task extends scheduled_task {
             return;
         }
 
-        $recip = \get_users_from_config($CFG->notifyloginfailures, 'moodle/site:config');
+        $recip = get_users_from_config($CFG->notifyloginfailures, 'moodle/site:config');
 
         if (empty($CFG->lastnotifyfailure)) {
             $CFG->lastnotifyfailure = 0;
@@ -76,7 +76,7 @@ class send_failed_login_notifications_task extends scheduled_task {
         $rs = $DB->get_recordset_sql($sql, $params);
         foreach ($rs as $iprec) {
             if (!empty($iprec->ip)) {
-                \set_cache_flag('login_failure_by_ip', $iprec->ip, '1', 0);
+                set_cache_flag('login_failure_by_ip', $iprec->ip, '1', 0);
             }
         }
         $rs->close();
@@ -93,7 +93,7 @@ class send_failed_login_notifications_task extends scheduled_task {
         $rs = $DB->get_recordset_sql($sql, $params);
         foreach ($rs as $inforec) {
             if (!empty($inforec->info)) {
-                \set_cache_flag('login_failure_by_info', $inforec->info, '1', 0);
+                set_cache_flag('login_failure_by_info', $inforec->info, '1', 0);
             }
         }
         $rs->close();
@@ -125,32 +125,32 @@ class send_failed_login_notifications_task extends scheduled_task {
         // Iterate over the logs recordset.
         $rs = $DB->get_recordset_sql($sql, $params);
         foreach ($rs as $log) {
-            $log->time = \userdate($log->time);
-            $messages .= \get_string('notifyloginfailuresmessage', '', $log) . "\n";
+            $log->time = userdate($log->time);
+            $messages .= get_string('notifyloginfailuresmessage', '', $log) . "\n";
             $count++;
         }
         $rs->close();
 
         // If we have something useful to report.
         if ($count > 0) {
-            $site = \get_site();
-            $subject = \get_string('notifyloginfailuressubject', '', \format_string($site->fullname));
+            $site = get_site();
+            $subject = get_string('notifyloginfailuressubject', '', format_string($site->fullname));
             // Calculate the complete body of notification (start + messages + end).
-            $body = \get_string('notifyloginfailuresmessagestart', '', $CFG->wwwroot) .
-                    (($CFG->lastnotifyfailure != 0) ? '('.\userdate($CFG->lastnotifyfailure).')' : '')."\n\n" .
+            $body = get_string('notifyloginfailuresmessagestart', '', $CFG->wwwroot) .
+                    (($CFG->lastnotifyfailure != 0) ? '('.userdate($CFG->lastnotifyfailure).')' : '')."\n\n" .
                     $messages .
                     "\n\n" . get_string('notifyloginfailuresmessageend', '', $CFG->wwwroot) . "\n\n";
 
             // For each destination, send mail.
-            \mtrace('Emailing admins about '. $count .' failed login attempts');
+            mtrace('Emailing admins about '. $count .' failed login attempts');
             foreach ($recip as $admin) {
                 // Emailing the admins directly rather than putting these through the messaging system.
-                \email_to_user($admin, \core_user::get_support_user(), $subject, $body);
+                email_to_user($admin, \core_user::get_support_user(), $subject, $body);
             }
         }
 
         // Update lastnotifyfailure with current time.
-        \set_config('lastnotifyfailure', time());
+        set_config('lastnotifyfailure', time());
 
         // Finally, delete all the temp records we have created in cache_flags.
         $DB->delete_records_select('cache_flags', "flagtype IN ('login_failure_by_ip', 'login_failure_by_info')");

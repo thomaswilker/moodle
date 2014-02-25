@@ -46,7 +46,7 @@ class tag_cron_task extends scheduled_task {
 
         if (!empty($CFG->usetags)) {
             require_once($CFG->dirroot.'/tag/lib.php');
-            \tag_cron();
+            tag_cron();
         }
     }
 
