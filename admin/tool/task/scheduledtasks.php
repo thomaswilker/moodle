@@ -102,11 +102,11 @@ if ($mform && $mform->is_cancelled()) {
 
 } else {
     echo $OUTPUT->header();
-    $error = optional_param('error', '', PARAM_TEXT);
+    $error = optional_param('error', '', PARAM_RAW);
     if ($error) {
         echo $OUTPUT->notification($error, 'notifyerror');
     }
-    $success = optional_param('success', '', PARAM_TEXT);
+    $success = optional_param('success', '', PARAM_RAW);
     if ($success) {
         echo $OUTPUT->notification($success, 'notifysuccess');
     }
