@@ -87,7 +87,7 @@ class legacy_plugin_cron_task extends scheduled_task {
                     include_once($libfile);
                     $cronfunction = $mod->name."_cron";
                     if (function_exists($cronfunction)) {
-                        mtrace("Processing module function $cronfunction ...", '');
+                        mtrace("Processing module function $cronfunction ...\n", '');
                         $predbqueries = null;
                         $predbqueries = $DB->perf_get_queries();
                         $pretime      = microtime(1);

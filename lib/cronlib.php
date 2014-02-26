@@ -64,19 +64,29 @@ function cron_run() {
     // Run all scheduled tasks.
     while (!\core\task\manager::static_caches_cleared_since($timenow) &&
            $task = \core\task\manager::get_next_scheduled_task($timenow)) {
-        mtrace("Execute scheduled task: " . get_class($task));
+        mtrace("Execute scheduled task: " . $task->get_name());
+        cron_trace_time_and_memory();
+        $predbqueries = null;
+        $predbqueries = $DB->perf_get_queries();
+        $pretime      = microtime(1);
         try {
             $task->execute();
-            mtrace("Scheduled task complete: " . get_class($task));
-            cron_trace_time_and_memory();
+            if (isset($predbqueries)) {
+                mtrace("... used " . ($DB->perf_get_queries() - $predbqueries) . " dbqueries");
+                mtrace("... used " . (microtime(1) - $pretime) . " seconds");
+            }
+            mtrace("Scheduled task complete: " . $task->get_name());
             \core\task\manager::scheduled_task_complete($task);
         } catch (Exception $e) {
             if ($DB && $DB->is_transaction_started()) {
                 error_log('Database transaction aborted automatically in ' . get_class($task));
                 $DB->force_transaction_rollback();
             }
-            mtrace("Scheduled task failed: " . get_class($task) . "," . $e->getMessage());
-            cron_trace_time_and_memory();
+            if (isset($predbqueries)) {
+                mtrace("... used " . ($DB->perf_get_queries() - $predbqueries) . " dbqueries");
+                mtrace("... used " . (microtime(1) - $pretime) . " seconds");
+            }
+            mtrace("Scheduled task failed: " . $task->get_name() . "," . $e->getMessage());
             \core\task\manager::scheduled_task_failed($task);
         }
         unset($task);
@@ -86,18 +96,28 @@ function cron_run() {
     while (!\core\task\manager::static_caches_cleared_since($timenow) &&
            $task = \core\task\manager::get_next_adhoc_task($timenow)) {
         mtrace("Execute adhoc task: " . get_class($task));
+        cron_trace_time_and_memory();
+        $predbqueries = null;
+        $predbqueries = $DB->perf_get_queries();
+        $pretime      = microtime(1);
         try {
             $task->execute();
+            if (isset($predbqueries)) {
+                mtrace("... used " . ($DB->perf_get_queries() - $predbqueries) . " dbqueries");
+                mtrace("... used " . (microtime(1) - $pretime) . " seconds");
+            }
             mtrace("Adhoc task complete: " . get_class($task));
-            cron_trace_time_and_memory();
             \core\task\manager::adhoc_task_complete($task);
         } catch (Exception $e) {
             if ($DB && $DB->is_transaction_started()) {
                 error_log('Database transaction aborted automatically in ' . get_class($task));
                 $DB->force_transaction_rollback();
             }
+            if (isset($predbqueries)) {
+                mtrace("... used " . ($DB->perf_get_queries() - $predbqueries) . " dbqueries");
+                mtrace("... used " . (microtime(1) - $pretime) . " seconds");
+            }
             mtrace("Adhoc task failed: " . get_class($task) . "," . $e->getMessage());
-            cron_trace_time_and_memory();
             \core\task\manager::adhoc_task_failed($task);
         }
         unset($task);

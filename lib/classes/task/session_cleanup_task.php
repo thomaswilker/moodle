@@ -50,7 +50,6 @@ class session_cleanup_task extends scheduled_task {
 
         // Cleanup old session linked tokens.
         // Deletes the session linked tokens that are over a day old.
-        cron_trace_time_and_memory();
         $DB->delete_records_select('external_tokens', 'lastaccess < :onedayago AND tokentype = :tokentype',
                         array('onedayago' => $timenow - DAYSECS, 'tokentype' => EXTERNAL_TOKEN_EMBEDDED));
     }
