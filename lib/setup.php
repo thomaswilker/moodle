@@ -75,8 +75,42 @@ umask($CFG->umaskpermissions);
 
 if (defined('BEHAT_SITE_RUNNING')) {
     // We already switched to behat test site previously.
-
 } else if (!empty($CFG->behat_wwwroot) or !empty($CFG->behat_dataroot) or !empty($CFG->behat_prefix)) {
+    $suffix = '';
+    if (isset($_SERVER['REQUEST_URI'])) {
+        // Get just the path component from the url.
+        $basepath = parse_url($CFG->behat_wwwroot, PHP_URL_PATH);
+        // Remove it from the current request uri.
+        $requesturi = $_SERVER['REQUEST_URI'];
+        if (substr($requesturi, 0, strlen($basepath)) == $basepath) {
+            $requesturi = substr($requesturi, strlen($basepath));
+        }
+        $suffix = substr($requesturi, 0, strpos($requesturi, '/'));
+    } else {
+        if (isset($_SERVER['argv']) && strpos($_SERVER['argv'][0], 'behat') !== false && strpos($_SERVER['argv'][0], 'vendor') !== false) {
+            // Detect a suffix when launched from behat.
+            $behatconfig = '';
+            foreach ($_SERVER['argv'] as $index => $arg) {
+                if ($arg == "--config" && isset($_SERVER['argv'][$index+1])) {
+                    $behatconfig = $_SERVER['argv'][$index+1];
+                }
+            }
+
+            if ($behatconfig) {
+                $suffix = substr($behatconfig, strlen($CFG->behat_dataroot), - strlen('/behat/behat.yml'));
+            }
+        } else {
+            // --suffix arg passed to util.php.
+            foreach ($_SERVER['argv'] as $index => $arg) {
+                if (strpos($arg, '--suffix=') === 0) {
+                    $suffix = substr($arg, strlen('--suffix='));
+                }
+            }
+        }
+    }
+    $CFG->behat_wwwroot .= $suffix;
+    $CFG->behat_dataroot .= $suffix;
+    $CFG->behat_prefix .= $suffix;
     // The behat is configured on this server, we need to find out if this is the behat test
     // site based on the URL used for access.
     require_once(__DIR__ . '/../lib/behat/lib.php');

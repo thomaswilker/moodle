@@ -198,6 +198,25 @@ class behat_config_manager {
         // We require here when we are sure behat dependencies are available.
         require_once($CFG->dirroot . '/vendor/autoload.php');
 
+        $instance = 0;
+        $parallel = 1;
+        foreach ($_SERVER['argv'] as $arg) {
+            if (strpos($arg, '--suffix=') === 0) {
+                $instance = intval(substr($arg, strlen('--suffix=_')));
+            } else if (strpos($arg, '--parallel=') === 0) {
+                $parallel = intval(substr($arg, strlen('--parallel=')));
+            }
+        }
+
+        // Divide the list of feature files amongst the parallel runners.
+        $newfeatures = array();
+        foreach ($features as $index => $feature) {
+            if ($index % $parallel == $instance) {
+                array_push($newfeatures, $feature);
+            }
+        }
+        $features = $newfeatures;
+
         // It is possible that it has no value as we don't require a full behat setup to list the step definitions.
         if (empty($CFG->behat_wwwroot)) {
             $CFG->behat_wwwroot = 'http://itwillnotbeused.com';

@@ -38,15 +38,20 @@ require_once(__DIR__ . '/../../../../lib/behat/lib.php');
 // CLI options.
 list($options, $unrecognized) = cli_get_params(
     array(
-        'help'    => false,
+        'help' => false,
         'install' => false,
-        'drop'    => false,
-        'enable'  => false,
+        'parallel' => 1,
+        'suffix' => '',
+        'drop' => false,
+        'enable' => false,
         'disable' => false,
-        'diag'    => false
+        'diag' => false,
+        'run' => false,
+        'options' => ''
     ),
     array(
-        'h' => 'help'
+        'h' => 'help',
+        'j' => 'parallel'
     )
 );
 
@@ -63,6 +68,9 @@ Options:
 --drop     Drops the database tables and the dataroot contents
 --enable   Enables test environment and updates tests list
 --disable  Disables test environment
+--suffix   Append a suffix to the wwwroto, dataroot and db prefix
+--run      Run the behat tests
+--options  Additional options to pass to behat
 --diag     Get behat test environment status code
 
 -h, --help     Print out this help
@@ -133,6 +141,12 @@ if ($options['install']) {
 } else if ($options['disable']) {
     behat_util::stop_test_mode();
     mtrace("Acceptance tests environment disabled");
+} else if ($options['run']) {
+    chdir(__DIR__ . '/../../../../');
+    $runtestscommand = behat_command::get_behat_command() . ' --config '
+        . $CFG->behat_dataroot . DIRECTORY_SEPARATOR . 'behat' . DIRECTORY_SEPARATOR . 'behat.yml' . ' ' . $options['options'];
+    passthru($runtestscommand, $code);
+    exit($code);
 } else if ($options['diag']) {
     $code = behat_util::get_behat_status();
     exit($code);

@@ -40,62 +40,84 @@ define('CACHE_DISABLE_ALL', true);
 require_once(__DIR__ . '/../../../../lib/clilib.php');
 require_once(__DIR__ . '/../../../../lib/behat/lib.php');
 
-// Changing the cwd to admin/tool/behat/cli.
-chdir(__DIR__);
-$output = null;
-exec("php util.php --diag", $output, $code);
-if ($code == 0) {
-    echo "Behat test environment already installed\n";
+// CLI options.
+list($options, $unrecognized) = cli_get_params(
+    array(
+        'parallel'    => 1
+    ),
+    array(
+        'j' => 'parallel'
+    )
+);
 
-} else if ($code == BEHAT_EXITCODE_INSTALL) {
+// Missing Behat dependencies.
+testing_update_composer_dependencies();
 
-    testing_update_composer_dependencies();
+$suffix = '';
+$parallel = $options['parallel'];
+for ($i = 0; $i < $parallel; $i++) {
+    if ($parallel > 1) {
+        $suffix = '_' . $i;
+        echo "Behat site $i\n";
+    }
 
-    // Behat and dependencies are installed and we need to install the test site.
+    // Changing the cwd to admin/tool/behat/cli.
     chdir(__DIR__);
-    passthru("php util.php --install", $code);
-    if ($code != 0) {
+    $output = null;
+    exec("php util.php --diag --suffix=$suffix", $output, $code);
+    if ($code == 0) {
+        echo "Behat test environment already installed\n";
+
+    } else if ($code == BEHAT_EXITCODE_INSTALL) {
+
+        testing_update_composer_dependencies();
+
+        // Behat and dependencies are installed and we need to install the test site.
+        chdir(__DIR__);
+        passthru("php util.php --install --suffix=$suffix --parallel=$parallel", $code);
+        if ($code != 0) {
+            exit($code);
+        }
+
+    } else if ($code == BEHAT_EXITCODE_REINSTALL) {
+
+        testing_update_composer_dependencies();
+
+        // Test site data is outdated.
+        chdir(__DIR__);
+        passthru("php util.php --drop --suffix=$suffix --parallel=$parallel", $code);
+        if ($code != 0) {
+            exit($code);
+        }
+
+        passthru("php util.php --install --suffix=$suffix --parallel=$parallel", $code);
+        if ($code != 0) {
+            exit($code);
+        }
+
+    } else if ($code == BEHAT_EXITCODE_COMPOSER) {
+        // Missing Behat dependencies.
+
+        testing_update_composer_dependencies();
+
+        // Returning to admin/tool/behat/cli.
+        chdir(__DIR__);
+        passthru("php util.php --install --suffix=$suffix --parallel=$parallel", $code);
+        if ($code != 0) {
+            exit($code);
+        }
+
+    } else {
+        // Generic error, we just output it.
+        echo implode("\n", $output)."\n";
         exit($code);
     }
 
-} else if ($code == BEHAT_EXITCODE_REINSTALL) {
-
-    testing_update_composer_dependencies();
-
-    // Test site data is outdated.
-    chdir(__DIR__);
-    passthru("php util.php --drop", $code);
+    // Enable editing mode according to config.php vars.
+    passthru("php util.php --enable --suffix=$suffix --parallel=$parallel", $code);
     if ($code != 0) {
         exit($code);
     }
-
-    passthru("php util.php --install", $code);
-    if ($code != 0) {
-        exit($code);
-    }
-
-} else if ($code == BEHAT_EXITCODE_COMPOSER) {
-    // Missing Behat dependencies.
-
-    testing_update_composer_dependencies();
-
-    // Returning to admin/tool/behat/cli.
-    chdir(__DIR__);
-    passthru("php util.php --install", $code);
-    if ($code != 0) {
-        exit($code);
-    }
-
-} else {
-    // Generic error, we just output it.
-    echo implode("\n", $output)."\n";
-    exit($code);
-}
-
-// Enable editing mode according to config.php vars.
-passthru("php util.php --enable", $code);
-if ($code != 0) {
-    exit($code);
 }
 
 exit(0);
