@@ -1,0 +1,16 @@
+Accessibility:
+* Inform user they've entered an editor
+* Current state of buttons (highlighted)
+* Announce changes when making changes
+* Dropdowns need to announce that they have content
+* "Create link close" (dialogues read close button incorrectly)
+* Announce when at end of menu toolbar
+
+Language:
+* Show Less Buttons -> Show fewer buttons
+
+Other:
+* Sort out ID-reuse issues - done?
+** managefiles - doublecheck
+* clicking adds basic content - shouldn't until first keypress, or first change.
+* accessibility
