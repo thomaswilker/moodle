@@ -50,13 +50,25 @@ function atto_equation_strings_for_js() {
  * @param stdClass $fpoptions - unused.
  */
 function atto_equation_params_for_js($elementid, $options, $fpoptions) {
-    $texexample = '$$\pi$$';
+    $delimiters = array();
+    $texexample = '\\(\pi\\)';
 
     // Format a string with the active filter set.
     // If it is modified - we assume that some sort of text filter is working in this context.
     $result = format_text($texexample, true, $options);
 
     $texfilteractive = ($texexample !== $result);
+    if ($texfilteractive) {
+        $delimiters = array('start' => '\\(', 'end' => '\\)');
+    } else {
+        // Retry with "display" delimiters.
+        $texexample = '$$\pi$$';
+        $result = format_text($texexample, true, $options);
+        $texfilteractive = ($texexample !== $result);
+        if ($texfilteractive) {
+            $delimiters = array('start' => '$$', 'end' => '$$');
+        }
+    }
     $context = $options['context'];
     if (!$context) {
         $context = context_system::instance();
@@ -84,5 +96,6 @@ function atto_equation_params_for_js($elementid, $options, $fpoptions) {
     return array('texfilteractive' => $texfilteractive,
                  'contextid' => $context->id,
                  'library' => $library,
-                 'texdocsurl' => get_docs_url('Using_TeX_Notation'));
+                 'texdocsurl' => get_docs_url('Using_TeX_Notation'),
+                 'delimiters' => $delimiters);
 }
