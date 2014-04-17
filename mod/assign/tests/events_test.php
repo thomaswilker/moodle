@@ -62,6 +62,31 @@ class assign_events_testcase extends mod_assign_base_testcase {
     }
 
     /**
+     * Test that all events generated with blindmarking enabled are anonymous
+     */
+    public function test_anonymous_events() {
+        $this->setUser($this->editingteachers[0]);
+        $instance = $this->create_instance(array('course' => $this->course->id, 'blindmarking' => 1));
+        $sink = $this->redirectEvents();
+
+        $instance->lock_submission($this->students[0]->id);
+
+        $events = $sink->get_events();
+        $event = reset($events);
+
+        $this->assertTrue((bool)$event->anonymous);
+
+        $instance->reveal_identities();
+        $sink = $this->redirectEvents();
+        $instance->lock_submission($this->students[1]->id);
+
+        $events = $sink->get_events();
+        $event = reset($events);
+
+        $this->assertFalse((bool)$event->anonymous);
+    }
+
+    /**
      * Basic tests for the submission_created() abstract class.
      */
     public function test_submission_created() {
