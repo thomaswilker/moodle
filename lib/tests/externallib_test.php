@@ -140,16 +140,52 @@ class core_externallib_testcase extends advanced_testcase {
         $realcontext = context_course::instance($course->id);
 
         // Use context id.
-        $fetchedcontext = test_exernal_api::get_context_wrapper(array("contextid" => $realcontext->id));
+        $fetchedcontext = test_external_api::get_context_wrapper(array("contextid" => $realcontext->id));
         $this->assertEquals($realcontext, $fetchedcontext);
 
         // Use context level and instance id.
-        $fetchedcontext = test_exernal_api::get_context_wrapper(array("contextlevel" => "course", "instanceid" => $course->id));
+        $fetchedcontext = test_external_api::get_context_wrapper(array("contextlevel" => "course", "instanceid" => $course->id));
         $this->assertEquals($realcontext, $fetchedcontext);
 
         // Passing wrong level.
         $this->setExpectedException('invalid_parameter_exception');
-        $fetchedcontext = test_exernal_api::get_context_wrapper(array("contextlevel" => "random", "instanceid" => $course->id));
+        $fetchedcontext = test_external_api::get_context_wrapper(array("contextlevel" => "random", "instanceid" => $course->id));
+    }
+
+    /*
+     * Test external_api::validate_context() can be called multiple times from a webservice.
+     */
+    public function test_validate_context() {
+        global $DB;
+
+        $this->resetAfterTest(true);
+        $user = self::getDataGenerator()->create_user();
+        $course1 = $this->getDataGenerator()->create_course();
+        $course2 = $this->getDataGenerator()->create_course();
+
+        $page1 = $this->getDataGenerator()->create_module('page', array('course'=>$course1->id));
+        $page2 = $this->getDataGenerator()->create_module('page', array('course'=>$course2->id));
+
+        $studentrole = $DB->get_record('role', array('shortname'=>'student'));
+        $this->getDataGenerator()->enrol_user($user->id,
+                                              $course1->id,
+                                              $studentrole->id);
+        $this->getDataGenerator()->enrol_user($user->id,
+                                              $course2->id,
+                                              $studentrole->id);
+        $this->setUser($user);
+        $realcontext1 = context_course::instance($course1->id);
+        $realcontext2 = context_course::instance($course2->id);
+        $realcontext3 = context_system::instance();
+        $realcontext4 = context_module::instance($page1->id);
+        $realcontext5 = context_module::instance($page2->id);
+
+        // Test all the contexts.
+        test_external_api::validate_context($realcontext1);
+        test_external_api::validate_context($realcontext2);
+        test_external_api::validate_context($realcontext3);
+        test_external_api::validate_context($realcontext4);
+        test_external_api::validate_context($realcontext5);
     }
 
     /*
@@ -160,7 +196,7 @@ class core_externallib_testcase extends advanced_testcase {
 
         // Call without correct context details.
         $this->setExpectedException('invalid_parameter_exception');
-        test_exernal_api::get_context_wrapper(array('roleid' => 3, 'userid' => $USER->id));
+        test_external_api::get_context_wrapper(array('roleid' => 3, 'userid' => $USER->id));
     }
 
     /*
@@ -171,7 +207,7 @@ class core_externallib_testcase extends advanced_testcase {
 
         // Call without correct context details.
         $this->setExpectedException('invalid_parameter_exception');
-        test_exernal_api::get_context_wrapper(array('roleid' => 3, 'userid' => $USER->id, 'contextlevel' => "course"));
+        test_external_api::get_context_wrapper(array('roleid' => 3, 'userid' => $USER->id, 'contextlevel' => "course"));
     }
 
     /*
@@ -184,16 +220,20 @@ class core_externallib_testcase extends advanced_testcase {
         $this->resetAfterTest(true);
         $course = self::getDataGenerator()->create_course();
         $this->setExpectedException('invalid_parameter_exception');
-        test_exernal_api::get_context_wrapper(array('roleid' => 3, 'userid' => $USER->id, 'instanceid' => $course->id));
+        test_external_api::get_context_wrapper(array('roleid' => 3, 'userid' => $USER->id, 'instanceid' => $course->id));
     }
 }
 
 /*
  * Just a wrapper to access protected apis for testing
  */
-class test_exernal_api extends external_api {
+class test_external_api extends external_api {
 
     public static function get_context_wrapper($params) {
         return self::get_context_from_params($params);
+    }
+
+    public static function validate_context($context) {
+        return parent::validate_context($context);
     }
 }
