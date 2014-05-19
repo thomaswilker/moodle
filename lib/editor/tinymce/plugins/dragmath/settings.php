@@ -26,5 +26,5 @@ defined('MOODLE_INTERNAL') || die;
 
 if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configcheckbox('tinymce_dragmath/requiretex',
-        get_string('requiretex', 'tinymce_dragmath'), get_string('requiretex_desc', 'tinymce_dragmath'), 1));
+        get_string('requiretex', 'tinymce_dragmath'), get_string('requiretex_desc', 'tinymce_dragmath'), 0));
 }
