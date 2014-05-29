@@ -39,7 +39,8 @@ class cronlib_testcase extends basic_testcase {
         global $CFG;
 
         $tmpdir = realpath($CFG->tempdir);
-        $time = time();
+        // This is a relative time.
+        $time = 0;
 
         $weekstime = $time - strtotime('1 week');
         $beforeweekstime = $time - strtotime('1 week') - 1;
