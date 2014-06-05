@@ -575,6 +575,9 @@ $CFG->admin = 'admin';
 // Force developer level debug and add debug info to the output of cron
 // $CFG->showcrondebugging = true;
 //
+// Switch the language direction for the current language (for testing RTL/LTR support).
+// $CFG->switchlangdir = true; // NOT FOR PRODUCTION SERVERS
+//
 //=========================================================================
 // 8. FORCED SETTINGS
 //=========================================================================
