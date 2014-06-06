@@ -27,7 +27,17 @@ require_once($CFG->libdir.'/adminlib.php');
 
 $paramcategory = optional_param('category', 0, PARAM_INT);
 $paramcomponent = optional_param('component', '', PARAM_COMPONENT);
-$url = new moodle_url('/admin/tool/elementlibrary/index.php', array('category'=>$paramcategory, 'component'=>$paramcomponent));
+$paramswitchdir = optional_param('switchdir', false, PARAM_BOOL);
+
+if ($paramswitchdir) {
+    $CFG->switchlangdir = true;
+}
+$params = array(
+    'category' => $paramcategory,
+    'component' => $paramcomponent,
+    'switchdir' => $paramswitchdir
+);
+$url = new moodle_url('/admin/tool/elementlibrary/index.php', $params);
 $PAGE->set_url($url);
 $PAGE->set_context(context_system::instance());
 $PAGE->set_pagelayout('admin');
@@ -56,6 +66,25 @@ foreach ($generators as $component => $generator) {
         $components[$component] = $pluginmanager->plugin_name($component);
     }
 }
+// TODO - convert all output below this point to use a renderer (ironic).
+echo $OUTPUT->box_start('tool_elementlibrary_filters');
+
+$params = array(
+    'category' => $paramcategory,
+    'component' => $paramcomponent,
+    'switchdir' => !$paramswitchdir
+);
+$url = new moodle_url('/admin/tool/elementlibrary/index.php', $params);
+// TODO - Add a renderer for this "pull-right" thing (with RTL support).
+echo $OUTPUT->box_start('adminsettingsflags');
+echo $OUTPUT->single_button($url, get_string('switchlanguagedirection', 'tool_elementlibrary'));
+echo $OUTPUT->box_end();
+
+$params = array(
+    'category' => $paramcategory,
+    'switchdir' => $paramswitchdir
+);
+$url = new moodle_url('/admin/tool/elementlibrary/index.php', $params);
 echo $OUTPUT->single_select($url,
                             'component',
                             $components,
@@ -68,15 +97,21 @@ $categories = array(
     \core\output\renderer_test_base::CATEGORY_LAYOUT => get_string('categorylayout', 'tool_elementlibrary')
 );
 
-
+$params = array(
+    'component' => $paramcomponent,
+    'switchdir' => $paramswitchdir
+);
+$url = new moodle_url('/admin/tool/elementlibrary/index.php', $params);
 echo $OUTPUT->single_select($url,
                             'category',
                             $categories,
                             '',
                             array(0 => get_string('allcategories', 'tool_elementlibrary')));
 
-echo $OUTPUT->spacer(null, true);
-echo $OUTPUT->spacer(null, true);
+echo $OUTPUT->box_end();
+
+echo html_writer::tag('hr', '');
+
 if ($paramcomponent == '') {
     echo $OUTPUT->notification(get_string('selectcomponent', 'tool_elementlibrary'), 'notifyinfo');
 } else {
@@ -102,6 +137,7 @@ if ($paramcomponent == '') {
             foreach ($tests as $test) {
                 if (($test->get_category() == $paramcategory) || empty($paramcategory)) {
                     // This should be a 2 column list.
+                    echo html_writer::tag('hr', '');
                     echo $OUTPUT->heading(get_string('testname', 'tool_elementlibrary'), 4);
                     echo $OUTPUT->box($test->get_name());
                     echo $OUTPUT->heading(get_string('testdocs', 'tool_elementlibrary'), 4);

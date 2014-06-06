@@ -37,3 +37,4 @@ $string['testname'] = 'Name:';
 $string['testdocs'] = 'Docs:';
 $string['testoutput'] = 'Output:';
 $string['notestsfound'] = 'No tests found matching the current filter.';
+$string['switchlanguagedirection'] = 'Switch language direction';
