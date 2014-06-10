@@ -3575,8 +3575,7 @@ class assign {
         }
 
         if ($this->can_view_submission($user->id)) {
-            $showedit = has_capability('mod/assign:submit', $this->context) &&
-                        $this->submissions_open($user->id) &&
+            $showedit = $this->can_edit_submission($user->id) &&
                         ($this->is_any_submission_plugin_enabled()) &&
                         $showlinks;
 
