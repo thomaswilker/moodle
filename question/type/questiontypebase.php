@@ -339,7 +339,7 @@ class question_type {
         $question->length = $this->actual_number_of_questions($question);
         $question->penalty = isset($form->penalty) ? $form->penalty : 0;
 
-        if (empty($form->questiontext['text'])) {
+        if (!isset($form->questiontext['text'])) {
             $question->questiontext = '';
         } else {
             $question->questiontext = trim($form->questiontext['text']);
