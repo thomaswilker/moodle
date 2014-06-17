@@ -53,8 +53,8 @@ require_capability('moodle/site:config', context_system::instance());
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('pluginname', 'tool_elementlibrary'));
 
-$finder = new \core\output\renderer_test_generator_finder();
-$generators = $finder->find_all_generators();
+$loader = new \core\output\renderer_test_generator_loader();
+$generators = $loader->load_all_generators();
 
 $components = array();
 $pluginmanager = core_plugin_manager::instance();
