@@ -28,12 +28,12 @@
 namespace core\output;
 
 /**
- * Abstract class for a renderer_test.
+ * Abstract class for a renderer_sample.
  *
  * @copyright  2014 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class renderer_test_base {
+abstract class renderer_sample_base {
 
     const CATEGORY_ELEMENT = 1;
     const CATEGORY_COMPONENT = 2;
@@ -102,7 +102,7 @@ abstract class renderer_test_base {
     /**
      * Get the category for this test.
      *
-     * @return int - The test category, one of the renderer_test::CATEGORY_* constants.
+     * @return int - The test category, one of the renderer_sample::CATEGORY_* constants.
      */
     public function get_category() {
         return $this->category;

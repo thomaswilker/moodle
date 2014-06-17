@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Helper class that will find all the renderer_test_generated classes
+ * Helper class that will find all the renderer_sample_generated classes
  * listed by component.
  *
  * @package    core
@@ -26,44 +26,44 @@
 namespace core\output;
 
 /**
- * Implementation of renderer_test_generator_base for core renderers.
+ * Implementation of renderer_sample_generator_base for core renderers.
  *
  * @copyright  2014 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class renderer_test_generator_loader {
+class renderer_sample_generator_loader {
 
-    /** @var array $cache Cache of plugins -> renderer_test_generator mappings */
+    /** @var array $cache Cache of plugins -> renderer_sample_generator mappings */
     private $cache = array();
 
     /**
-     * Generate a list of renderer_test_generator classes for every plugin in Moodle and cache it.
+     * Generate a list of renderer_sample_generator classes for every plugin in Moodle and cache it.
      */
     private function fill_cache() {
         if (empty($this->cache)) {
             // Add the core one.
-            $this->cache['core'] = new \core\output\renderer_test_generator();
+            $this->cache['core'] = new \core\output\renderer_sample_generator();
 
             // Now all the plugins.
             $types = \core_component::get_plugin_types();
             foreach ($types as $type => $path) {
                 // Try namespaced version first.
-                $plugins = \core_component::get_plugin_list_with_class($type, 'output\\renderer_test_generator');
+                $plugins = \core_component::get_plugin_list_with_class($type, 'output\\renderer_sample_generator');
 
                 foreach ($plugins as $component => $classname) {
                     $generator = new $classname();
-                    if ($generator instanceof renderer_test_generator_base) {
+                    if ($generator instanceof renderer_sample_generator_base) {
                         $this->cache[$component] = $generator;
                     }
                 }
 
                 if (empty($plugins)) {
                     // Try non-namespaced version.
-                    $plugins = \core_component::get_plugin_list_with_class($type, 'output_renderer_test_generator');
+                    $plugins = \core_component::get_plugin_list_with_class($type, 'output_renderer_sample_generator');
 
                     foreach ($plugins as $component => $classname) {
                         $generator = new $classname();
-                        if ($generator instanceof renderer_test_generator_base) {
+                        if ($generator instanceof renderer_sample_generator_base) {
                             $this->cache[$component] = new $classname();
                         }
                     }
@@ -73,9 +73,9 @@ class renderer_test_generator_loader {
     }
 
     /**
-     * Generate a list of renderer_test_generator classes.
+     * Generate a list of renderer_sample_generator classes.
      *
-     * @return renderer_test_generator[] Array of renderer_test_generator classes indexed by component.
+     * @return renderer_sample_generator[] Array of renderer_sample_generator classes indexed by component.
      */
     public function load_all_generators() {
         $this->fill_cache();
@@ -84,9 +84,9 @@ class renderer_test_generator_loader {
     }
 
     /**
-     * Generate a list of renderer_test_generator classes.
+     * Generate a list of renderer_sample_generator classes.
      *
-     * @return renderer_test_generator|bool Renderer generator class for a given plugin (or false).
+     * @return renderer_sample_generator|bool Renderer generator class for a given plugin (or false).
      */
     public function find_generator($component = 'core') {
         $this->fill_cache();

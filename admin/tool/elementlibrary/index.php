@@ -53,7 +53,7 @@ require_capability('moodle/site:config', context_system::instance());
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('pluginname', 'tool_elementlibrary'));
 
-$loader = new \core\output\renderer_test_generator_loader();
+$loader = new \core\output\renderer_sample_generator_loader();
 $generators = $loader->load_all_generators();
 
 $components = array();
@@ -92,9 +92,9 @@ echo $OUTPUT->single_select($url,
                             array('' => get_string('choosecomponent', 'tool_elementlibrary')));
 
 $categories = array(
-    \core\output\renderer_test_base::CATEGORY_ELEMENT => get_string('categoryelement', 'tool_elementlibrary'),
-    \core\output\renderer_test_base::CATEGORY_COMPONENT => get_string('categorycomponent', 'tool_elementlibrary'),
-    \core\output\renderer_test_base::CATEGORY_LAYOUT => get_string('categorylayout', 'tool_elementlibrary')
+    \core\output\renderer_sample_base::CATEGORY_ELEMENT => get_string('categoryelement', 'tool_elementlibrary'),
+    \core\output\renderer_sample_base::CATEGORY_COMPONENT => get_string('categorycomponent', 'tool_elementlibrary'),
+    \core\output\renderer_sample_base::CATEGORY_LAYOUT => get_string('categorylayout', 'tool_elementlibrary')
 );
 
 $params = array(
@@ -132,7 +132,7 @@ if ($paramcomponent == '') {
 
     foreach ($generators as $component => $generator) {
         if ($component == $paramcomponent) {
-            $tests = $generator->create_tests();
+            $tests = $generator->create_samples();
 
             foreach ($tests as $test) {
                 if (($test->get_category() == $paramcategory) || empty($paramcategory)) {
