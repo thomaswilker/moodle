@@ -91,7 +91,7 @@ abstract class renderer_test_base {
     }
 
     /**
-     * Set the component for this test, set automatically by the finder.
+     * Set the component for this test, set automatically by the loader.
      *
      * @param string $component - The component defining this test.
      */

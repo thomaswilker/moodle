@@ -31,7 +31,7 @@ namespace core\output;
  * @copyright  2014 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class renderer_test_generator_finder {
+class renderer_test_generator_loader {
 
     /** @var array $cache Cache of plugins -> renderer_test_generator mappings */
     private $cache = array();
@@ -77,7 +77,7 @@ class renderer_test_generator_finder {
      *
      * @return renderer_test_generator[] Array of renderer_test_generator classes indexed by component.
      */
-    public function find_all_generators() {
+    public function load_all_generators() {
         $this->fill_cache();
 
         return $this->cache;
