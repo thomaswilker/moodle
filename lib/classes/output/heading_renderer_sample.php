@@ -33,7 +33,7 @@ namespace core\output;
  * @copyright  2014 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class heading_renderer_test extends renderer_test_base {
+class heading_renderer_sample extends renderer_sample_base {
 
     /** @var string $text The text of the heading */
     private $text = '';
@@ -50,7 +50,7 @@ class heading_renderer_test extends renderer_test_base {
         $this->docs = $docs;
         $this->text = $text;
         $this->level = $level;
-        $this->category = renderer_test_base::CATEGORY_ELEMENT;
+        $this->category = renderer_sample_base::CATEGORY_ELEMENT;
     }
 
     /**

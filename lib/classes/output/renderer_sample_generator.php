@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Abstract class that generates a list of renderer_test_base classes.
+ * Implementation of renderer_sample_generator_base for core renderers.
  *
  * @package    core
  * @category   output
@@ -25,20 +25,30 @@
 namespace core\output;
 
 /**
- * Abstract class for common properties of scheduled_task and adhoc_task
- * for display in the element library. Every plugin type is able to create their
- * own instance of a renderer_test_generator_base to display the renderables defined
- * in that plugin.
+ * Implementation of renderer_sample_generator_base for core renderers.
  *
  * @copyright  2014 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class renderer_test_generator_base {
+class renderer_sample_generator extends renderer_sample_generator_base {
 
     /**
-     * Generate a list of renderer_test_base instances.
+     * Generate a list of renderer_sample_base instances.
      *
-     * @return renderer_test_base[] Array of renderer_test classes.
+     * @return renderer_sample_base[] Array of renderer_sample_base classes.
      */
-    public abstract function create_tests();
+    public function create_samples() {
+        $tests = array();
+        $test = new heading_renderer_sample(
+            'Heading 1',
+            '# An example of a level 1 heading in a page.
+
+*There should only ever be 1 instance of level 1 heading on any page.*',
+            'Heading 1',
+            1
+        );
+
+        $tests[] = $test;
+        return $tests;
+    }
 }
