@@ -43,6 +43,8 @@ class sample_executor {
      *                          'renderables' - array of renderables in use (with sub key for classname)
      */
     public static function execute_sample(\core\output\renderer_sample_base $sample) {
+        global $CFG;
+
         $output = '';
         $warnings = array();
         $renderers = array();
@@ -105,6 +107,9 @@ class sample_executor {
                 }
                 $callable = $parts[4];
                 $location = $parts[5];
+
+                $location = str_replace($CFG->dirroot, '', $location);
+
                 $split = strpos($callable, '::');
                 if ($split === false) {
                     $split = strpos($callable, '->');
@@ -117,11 +122,11 @@ class sample_executor {
                 $methodname = substr($callable, $split + 2);
 
                 if (is_subclass_of($classname, 'renderer_base')) {
-                    $renderers[] = array('classname' => $classname, 'methodname' => $methodname);
+                    $renderers[] = array('classname' => $classname, 'methodname' => $methodname, 'location' => $location);
                 } else {
                     $implements = class_implements($classname);
                     if (array_search('renderable', $implements) !== false) {
-                        $renderables[] = array('classname' => $classname);
+                        $renderables[] = array('classname' => $classname, 'location' => $location);
                     }
                 }
             }
