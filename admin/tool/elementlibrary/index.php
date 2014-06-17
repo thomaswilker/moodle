@@ -132,18 +132,40 @@ if ($paramcomponent == '') {
 
     foreach ($generators as $component => $generator) {
         if ($component == $paramcomponent) {
-            $tests = $generator->create_samples();
+            $samples = $generator->create_samples();
 
-            foreach ($tests as $test) {
-                if (($test->get_category() == $paramcategory) || empty($paramcategory)) {
+            foreach ($samples as $sample) {
+                if (($sample->get_category() == $paramcategory) || empty($paramcategory)) {
                     // This should be a 2 column list.
                     echo html_writer::tag('hr', '');
                     echo $OUTPUT->heading(get_string('testname', 'tool_elementlibrary'), 4);
-                    echo $OUTPUT->box($test->get_name());
+                    echo $OUTPUT->box($sample->get_name());
                     echo $OUTPUT->heading(get_string('testdocs', 'tool_elementlibrary'), 4);
-                    echo $OUTPUT->box($test->get_docs());
+                    echo $OUTPUT->box($sample->get_docs());
                     echo $OUTPUT->heading(get_string('testoutput', 'tool_elementlibrary'), 4);
-                    echo $OUTPUT->box($test->execute());
+
+                    $result = \tool_elementlibrary\sample_executor::execute_sample($sample);
+                    echo $OUTPUT->box($result['output']);
+                    foreach ($result['warnings'] as $warning) {
+                        echo $OUTPUT->notification($warning);
+                    }
+
+                    if ($result['renderables']) {
+                        echo $OUTPUT->heading(get_string('renderablesused', 'tool_elementlibrary'), 4);
+                        echo '<ul>';
+                        foreach ($result->renderables as $renderable) {
+                            echo '<li>' . $renderable->classname . '</li>';
+                        }
+                        echo '</ul>';
+                    }
+                    if ($result['renderers']) {
+                        echo $OUTPUT->heading(get_string('renderersused', 'tool_elementlibrary'), 4);
+                        echo '<ul>';
+                        foreach ($result['renderers'] as $key => $renderer) {
+                            echo '<li>' . $renderer['classname'] . '::' . $renderer['methodname'] . '</li>';
+                        }
+                        echo '</ul>';
+                    }
 
                     $testsfound = true;
                 }
