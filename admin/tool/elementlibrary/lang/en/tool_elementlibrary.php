@@ -33,6 +33,7 @@ $string['core'] = 'Core';
 $string['filters'] = 'Active filters: {$a->component} - {$a->category}';
 $string['notestsfound'] = 'No tests found matching the current filter.';
 $string['noxdebug'] = 'XDebug is not enabled, so the list of used renderers cannot be determined.';
+$string['outputapidocumentation'] = 'Output API documentation';
 $string['pluginname'] = 'Element library';
 $string['renderersused'] = 'Renderers in use by this sample';
 $string['renderablesused'] = 'Renderables in use by this sample';
