@@ -154,7 +154,7 @@ if ($paramcomponent == '') {
                         echo $OUTPUT->heading(get_string('renderablesused', 'tool_elementlibrary'), 4);
                         echo '<ul>';
                         foreach ($result->renderables as $renderable) {
-                            echo '<li>' . $renderable->classname . '</li>';
+                            echo '<li>' . $renderable->classname . ' <small>' . $renderable['location'] . '</small></li>';
                         }
                         echo '</ul>';
                     }
@@ -162,7 +162,13 @@ if ($paramcomponent == '') {
                         echo $OUTPUT->heading(get_string('renderersused', 'tool_elementlibrary'), 4);
                         echo '<ul>';
                         foreach ($result['renderers'] as $key => $renderer) {
-                            echo '<li>' . $renderer['classname'] . '::' . $renderer['methodname'] . '</li>';
+                            echo '<li>' .
+                                 $renderer['classname'] .
+                                 '::' .
+                                 $renderer['methodname'] .
+                                 ' <small>' .
+                                 $renderer['location'] .
+                                 '</small></li>';
                         }
                         echo '</ul>';
                     }
