@@ -66,6 +66,10 @@ foreach ($generators as $component => $generator) {
         $components[$component] = $pluginmanager->plugin_name($component);
     }
 }
+
+$url = 'http://http://docs.moodle.org/dev/Output_API';
+echo html_writer::link($url, get_string('outputapidocumentation', 'tool_elementlibrary'));
+echo html_writer::tag('hr', '');
 // TODO - convert all output below this point to use a renderer (ironic).
 echo $OUTPUT->box_start('tool_elementlibrary_filters');
 
