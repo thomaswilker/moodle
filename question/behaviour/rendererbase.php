@@ -82,7 +82,7 @@ abstract class qbehaviour_renderer extends plugin_renderer_base {
 
         $commenttext = format_text($commenttext, $commentformat, array('para' => false));
 
-        $editor->use_editor($id, array('context' => $options->context));
+        $editor->use_editor($id, array('context' => $options->context, 'autosave'=>false));
 
         $commenteditor = html_writer::tag('div', html_writer::tag('textarea', s($commenttext),
                 array('id' => $id, 'name' => $inputname, 'rows' => 10, 'cols' => 60)));
