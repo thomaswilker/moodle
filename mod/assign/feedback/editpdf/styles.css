@@ -10,6 +10,7 @@
     min-width: 817px;
     min-height: 1169px;
     cursor: crosshair;
+    background-color: #ebebeb;
 }
 
 .assignfeedback_editpdf_widget {
@@ -19,17 +20,32 @@
     -o-user-select: none;
 }
 
-.moodle-dialogue-base .moodle-dialogue-wrap {
-    margin-top: 60px !important;
+.moodle-dialogue-base .assignfeedback_editpdf_widget .moodle-dialogue-wrap.moodle-dialogue-content {
+    margin-top: 89px;
+}
+
+.moodle-dialogue-base .assignfeedback_editpdf_widget .moodle-dialogue-wrap.moodle-dialogue-content .moodle-dialogue-hd {
+    position: fixed;
+    top: 0px;
+    width: 100%;
+    height: 30px;
+    padding: 0px;
+    padding-top: 5px;
+    border-radius: 0px;
+    z-index: 101;
+}
+
+.assignfeedback_editpdf_widget .commentbutton {
+    margin-left: 4em;
 }
 
 .assignfeedback_editpdf_widget .pageheader-container {
     background-color: #ebebeb;
     text-align: center;
-    height: 55px;
+    height: 54px;
     left: 0px;
     position: fixed;
-    top: 0px;
+    top: 35px;
     width: 100%;
     z-index: 100;
 }
@@ -38,10 +54,20 @@
     background-color: #ebebeb;
     display: inline-block;
     padding: 0px;
-    padding-left: 20px;
-    padding-right: 20px;
-    min-height: 50px;
-    width: 800px;
+    min-height: 54px;
+}
+
+/* Allow 2 rows of buttons in the toolbar for small screens. */
+@media screen and (max-width: 650px) {
+    .path-mod-assign .moodle-dialogue-base .assignfeedback_editpdf_widget .moodle-dialogue-wrap.moodle-dialogue-content {
+        margin-top: 139px;
+    }
+    .path-mod-assign .assignfeedback_editpdf_widget .pageheader-container {
+        height: 104px;
+    }
+    .path-mod-assign .assignfeedback_editpdf_widget .pageheader {
+        min-height: 104px;
+    }
 }
 
 .moodle-dialogue-base .moodle-dialogue.assignfeedback_editpdf_widget .moodle-dialogue-bd {
@@ -112,6 +138,9 @@
     height: 30px;
     line-height: 30px;
     padding: 0px;
+}
+.assignfeedback_editpdf_widget .pageheader .navigation-search {
+    margin-right: 4em;
 }
 
 .assignfeedback_editpdf_commentsearch ul {
@@ -292,6 +321,9 @@ ul.assignfeedback_editpdf_menu {
 .dir-rtl .assignfeedback_editpdf_widget .commentdrawable textarea {
     padding-left: 20px;
     padding-right: 4px;
+}
+.assignfeedback_editpdf_widget .drawingcanvas {
+    background-repeat: no-repeat;
 }
 .assignfeedback_editpdf_widget .drawingcanvas .loading .progressbarlabel {
     text-align: center;

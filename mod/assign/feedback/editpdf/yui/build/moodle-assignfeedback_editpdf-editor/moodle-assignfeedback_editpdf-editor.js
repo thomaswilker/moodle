@@ -3305,9 +3305,9 @@ EDITOR.prototype = {
                 bodyContent: this.get('body'),
                 footerContent: this.get('footer'),
                 modal: true,
-                width: '840px',
                 visible: false,
-                draggable: true
+                draggable: false,
+                responsiveWidth: 10000 // Always fullscreen.
             });
 
             // Add custom class for styling.
