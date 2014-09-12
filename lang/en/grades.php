@@ -693,7 +693,6 @@ $string['useweighted'] = 'Use weighted';
 $string['verbosescales'] = 'Verbose scales';
 $string['viewbygroup'] = 'Group';
 $string['viewgrades'] = 'View grades';
-$string['warningexcludedsum'] = 'Warning: excluding of grades is not compatible with sum aggregation.';
 $string['weight'] = 'weight';
 $string['weightcourse'] = 'Use weighted grades for course';
 $string['weightedascending'] = 'Sort by weighted percent ascending';
