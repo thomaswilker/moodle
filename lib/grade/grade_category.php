@@ -866,9 +866,12 @@ class grade_category extends grade_object {
      * @param array $excluded Excluded
      */
     private function sum_grades(&$grade, $oldfinalgrade, $items, $grade_values, $excluded) {
+        global $DB;
+
         if (empty($items)) {
             return null;
         }
+        $grademax = 0;
 
         // ungraded and excluded items are not used in aggregation
         foreach ($grade_values as $itemid=>$v) {
@@ -884,18 +887,36 @@ class grade_category extends grade_object {
         // use 0 if grade missing, droplow used and aggregating all items
         if (!$this->aggregateonlygraded and !empty($this->droplow)) {
 
-            foreach ($items as $itemid=>$value) {
-
+            foreach ($items as $itemid => $value) {
                 if (!isset($grade_values[$itemid]) and !in_array($itemid, $excluded)) {
                     $grade_values[$itemid] = 0;
                 }
             }
         }
+        // Get the rawgrademax from the grade_grades.
+        list($ggsql, $params) = $DB->get_in_or_equal(array_keys($items), SQL_PARAMS_NAMED, 'gg');
+        $sql = "SELECT gg.itemid, gg.rawgrademax
+                  FROM {grade_grades} AS gg
+                 WHERE itemid $ggsql AND userid = :userid";
+        $params['userid'] = $grade->userid;
+        $rawgrademax = $DB->get_records_sql($sql, $params);
 
         $this->apply_limit_rules($grade_values, $items);
+        foreach ($items as $itemid => $v) {
+            if ($itemid != $grade->itemid) {
+                if (!$this->aggregateonlygraded || isset($grade_values[$itemid])) {
+                    if (isset($rawgrademax[$itemid])) {
+                        $grademax += $rawgrademax[$itemid]->rawgrademax;
+                    } else {
+                        $grademax += $items[$itemid]->grademax;
+                    }
+                }
+            }
+        }
 
         $sum = array_sum($grade_values);
         $grade->finalgrade = $this->grade_item->bounded_grade($sum);
+        $grade->rawgrademax = $grademax;
 
         // update in db if changed
         if (grade_floats_different($grade->finalgrade, $oldfinalgrade)) {

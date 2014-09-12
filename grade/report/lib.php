@@ -426,8 +426,13 @@ abstract class grade_report {
         // If we're dealing with multiple courses we need to know when we've moved on to a new course.
         static $previous_courseid = null;
 
+        $coursegrade = grade_grade::fetch(array('userid'=>$this->user->id, 'itemid'=>$course_item->id));
         $grademin = $course_item->grademin;
         $grademax = $course_item->grademax;
+        if ($coursegrade) {
+            $grademin = $coursegrade->rawgrademin;
+            $grademax = $coursegrade->rawgrademax;
+        }
 
         if (!is_array($this->showtotalsifcontainhidden)) {
             debugging('showtotalsifcontainhidden should be an array', DEBUG_DEVELOPER);
