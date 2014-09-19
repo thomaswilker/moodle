@@ -682,6 +682,8 @@ class grade_grade extends grade_object {
         $altered = array();  // altered grades
         $alteredgrademax = array();  // Altered grade max values.
         $alteredgrademin = array();  // Altered grade min values.
+        $alteredaggregationstatus = array();  // Altered aggregation status.
+        $alteredaggregationweight = array();  // Altered aggregation weight.
         $dependencydepth = array();
 
         $hiddenfound = false;
@@ -711,7 +713,9 @@ class grade_grade extends grade_object {
             return array('unknown' => array(),
                          'altered' => array(),
                          'alteredgrademax' => array(),
-                         'alteredgrademin' => array());
+                         'alteredgrademin' => array(),
+                         'alteredaggregationstatus' => array(),
+                         'alteredaggregationweight' => array());
         }
         // This line ensures that $dependencydepth has the same number of items as $todo.
         $dependencydepth = array_intersect_key($dependencydepth, array_flip($todo));
@@ -774,6 +778,8 @@ class grade_grade extends grade_object {
                             foreach ($values as $itemid=>$value) {
                                 if ($grade_grades[$itemid]->is_excluded()) {
                                     unset($values[$itemid]);
+                                    $alteredaggregationstatus[$itemid] = 'excluded';
+                                    $alteredaggregationweight[$itemid] = 0;
                                     continue;
                                 }
                                 // The grade min/max may have been altered by hiding.
@@ -792,6 +798,8 @@ class grade_grade extends grade_object {
                                 foreach ($values as $itemid=>$value) {
                                     if (is_null($value)) {
                                         unset($values[$itemid]);
+                                        $alteredaggregationstatus[$itemid] = 'novalue';
+                                        $alteredaggregationweight[$itemid] = 0;
                                     }
                                 }
                             } else {
@@ -803,7 +811,21 @@ class grade_grade extends grade_object {
                             }
 
                             // limit and sort
+                            $allvalues = $values;
                             $grade_category->apply_limit_rules($values, $grade_items);
+
+                            $moredropped = array_diff($allvalues, $values);
+                            foreach ($moredropped as $drop => $unused) {
+                                $alteredaggregationstatus[$drop] = 'dropped';
+                                $alteredaggregationweight[$drop] = 0;
+                            }
+
+                            foreach ($values as $itemid => $val) {
+                                if ($grade_category->is_extracredit_used() && ($grade_items[$itemid]->aggregationcoef > 0)) {
+                                    $alteredaggregationstatus[$itemid] = 'extra';
+                                }
+                            }
+
                             asort($values, SORT_NUMERIC);
 
                             // let's see we have still enough grades to do any statistics
@@ -815,7 +837,8 @@ class grade_grade extends grade_object {
                                 continue;
                             }
 
-                            $adjustedgrade = $grade_category->aggregate_values_and_adjust_bounds($values, $grade_items);
+                            $usedweights = array();
+                            $adjustedgrade = $grade_category->aggregate_values_and_adjust_bounds($values, $grade_items, $usedweights);
 
                             // recalculate the rawgrade back to requested range
                             $finalgrade = grade_grade::standardise_score($adjustedgrade['grade'],
@@ -823,6 +846,13 @@ class grade_grade extends grade_object {
                                                                          1,
                                                                          $adjustedgrade['grademin'],
                                                                          $adjustedgrade['grademax']);
+
+                            foreach ($usedweights as $itemid => $weight) {
+                                if (!isset($alteredaggregationstatus[$itemid])) {
+                                    $alteredaggregationstatus[$itemid] = 'used';
+                                }
+                                $alteredaggregationweight[$itemid] = $weight;
+                            }
 
                             $finalgrade = $grade_items[$do]->bounded_grade($finalgrade);
                             $alteredgrademin[$do] = $adjustedgrade['grademin'];
@@ -848,7 +878,9 @@ class grade_grade extends grade_object {
         return array('unknown' => $unknown,
                      'altered' => $altered,
                      'alteredgrademax' => $alteredgrademax,
-                     'alteredgrademin' => $alteredgrademin);
+                     'alteredgrademin' => $alteredgrademin,
+                     'alteredaggregationstatus' => $alteredaggregationstatus,
+                     'alteredaggregationweight' => $alteredaggregationweight);
     }
 
     /**
@@ -981,49 +1013,11 @@ class grade_grade extends grade_object {
      * dropped because it's in the X lowest or highest.
      *
      * @param grade_item $gradeitem An optional grade_item, saves having to load the grade_grade's grade_item
-     * @return string - A list of keywords that hint at how this grade_grade is reflected in the aggregation.
+     * @return array(status, weight) - A keyword and a numerical weight that represents how this grade was included in the aggregation.
      */
     function get_aggregation_hint($gradeitem = null) {
-        $hint = '';
 
-        if ($this->is_excluded()) {
-            $hint = get_string('excluded', 'grades');
-        } else {
-            if (empty($grade_item)) {
-                if (!isset($this->grade_item)) {
-                    $this->load_grade_item();
-                }
-            } else {
-                $this->grade_item = $grade_item;
-                $this->itemid = $grade_item->id;
-            }
-            $item = $this->grade_item;
-
-            if (!$item->is_course_item()) {
-                $parentcategory = $item->get_parent_category();
-                // This is needed because get_parent_category() does not do the "parent" bit very well.
-                if ($item->is_category_item()) {
-                    $parentcategory = $parentcategory->load_parent_category();
-                }
-                if ($parentcategory->is_extracredit_used() && ($item->aggregationcoef > 0)) {
-                    $hint = get_string('aggregationcoefextra', 'grades');
-                }
-            }
-
-        }
-
-        // Is it dropped?
-        if ($hint == '') {
-            $aggr = $this->get_aggregationstatus();
-            if ($aggr == 'dropped') {
-                $hint = get_string('dropped', 'grades');
-            } else if ($aggr == 'used') {
-                $hint = $this->get_aggregationweight();
-            } else if ($aggr != 'unknown') {
-                $hint = '-';
-            }
-        }
-
-        return $hint;
+        return array('status' => $this->get_aggregationstatus(),
+                     'weight' => $this->aggregationweight);
     }
 }
