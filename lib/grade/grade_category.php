@@ -749,64 +749,84 @@ class grade_category extends grade_object {
     private function set_usedinaggregation($userid, $usedweights, $novalue, $dropped, $extracredit) {
         global $DB;
 
+        // Select all the grade_grades for these grade items at once.
+        $allitems = array();
+        if (!empty($usedweights)) {
+            $allitems = array_merge($allitems, array_keys($usedweights));
+        }
+        if (!empty($novalue)) {
+            $allitems = array_merge($allitems, array_keys($novalue));
+        }
+        if (!empty($dropped)) {
+            $allitems = array_merge($allitems, array_keys($dropped));
+        }
+        if (!empty($extracredit)) {
+            $allitems = array_merge($allitems, array_keys($extracredit));
+        }
+        list($itemsql, $params) = $DB->get_in_or_equal($allitems);
+        $sql = "SELECT itemid, *
+                  FROM {grade_grades}
+                 WHERE itemid $itemsql AND userid = ?";
+        $params[] = $userid;
+        $usergrades = $DB->get_records_sql($sql, $params);
+
         // Included.
         if (!empty($usedweights)) {
             // The usedweights items are updated individually to record the weights.
             foreach ($usedweights as $gradeitemid => $contribution) {
-                $DB->set_field_select('grade_grades',
-                                      'aggregationweight',
-                                      $contribution,
-                                      "itemid = :itemid AND userid = :userid",
-                                      array('itemid'=>$gradeitemid, 'userid'=>$userid));
+                $usergrade = $usergrades[$gradeitemid];
+                $gradegrade = new grade_grade($usergrade, false);
+                if ($gradegrade->aggregationweight != $contribution ||
+                        $gradegrade->aggregationstatus != 'used') {
+                    $gradegrade->aggregationweight = $contribution;
+                    $gradegrade->aggregationstatus = 'used';
+                    $gradegrade->update('aggregation');
+                }
             }
-
-            // Now set the status flag for all these weights.
-            list($itemsql, $itemlist) = $DB->get_in_or_equal(array_keys($usedweights), SQL_PARAMS_NAMED, 'g');
-            $itemlist['userid'] = $userid;
-
-            $DB->set_field_select('grade_grades',
-                                  'aggregationstatus',
-                                  'used',
-                                  "itemid $itemsql AND userid = :userid",
-                                  $itemlist);
         }
 
         // No value.
         if (!empty($novalue)) {
-            list($itemsql, $itemlist) = $DB->get_in_or_equal(array_keys($novalue), SQL_PARAMS_NAMED, 'g');
-
-            $itemlist['userid'] = $userid;
-
-            $DB->set_field_select('grade_grades',
-                                  'aggregationstatus',
-                                  'novalue',
-                                  "itemid $itemsql AND userid = :userid",
-                                  $itemlist);
+            // The novalue items are updated individually to record the status.
+            foreach ($novalue as $gradeitemid => $contribution) {
+                $usergrade = $usergrades[$gradeitemid];
+                $gradegrade = new grade_grade($usergrade, false);
+                if ($gradegrade->aggregationweight != null ||
+                        $gradegrade->aggregationstatus != 'novalue') {
+                    $gradegrade->aggregationweight = null;
+                    $gradegrade->aggregationstatus = 'novalue';
+                    $gradegrade->update('aggregation');
+                }
+            }
         }
 
         // Dropped.
         if (!empty($dropped)) {
-            list($itemsql, $itemlist) = $DB->get_in_or_equal(array_keys($dropped), SQL_PARAMS_NAMED, 'g');
-
-            $itemlist['userid'] = $userid;
-
-            $DB->set_field_select('grade_grades',
-                                  'aggregationstatus',
-                                  'dropped',
-                                  "itemid $itemsql AND userid = :userid",
-                                  $itemlist);
+            // The dropped items are updated individually to record the status.
+            foreach ($dropped as $gradeitemid => $contribution) {
+                $usergrade = $usergrades[$gradeitemid];
+                $gradegrade = new grade_grade($usergrade, false);
+                if ($gradegrade->aggregationweight != null ||
+                        $gradegrade->aggregationstatus != 'dropped') {
+                    $gradegrade->aggregationweight = null;
+                    $gradegrade->aggregationstatus = 'dropped';
+                    $gradegrade->update('aggregation');
+                }
+            }
         }
         // Extra credit.
         if (!empty($extracredit)) {
-            list($itemsql, $itemlist) = $DB->get_in_or_equal(array_keys($extracredit), SQL_PARAMS_NAMED, 'g');
-
-            $itemlist['userid'] = $userid;
-
-            $DB->set_field_select('grade_grades',
-                                  'aggregationstatus',
-                                  'extra',
-                                  "itemid $itemsql AND userid = :userid",
-                                  $itemlist);
+            // The extra credit items are updated individually to record the status.
+            foreach ($extracredit as $gradeitemid => $contribution) {
+                $usergrade = $usergrades[$gradeitemid];
+                $gradegrade = new grade_grade($usergrade, false);
+                if ($gradegrade->aggregationweight != $contribution ||
+                        $gradegrade->aggregationstatus != 'extra') {
+                    $gradegrade->aggregationweight = $contribution;
+                    $gradegrade->aggregationstatus = 'extra';
+                    $gradegrade->update('aggregation');
+                }
+            }
         }
     }
 

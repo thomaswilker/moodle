@@ -159,7 +159,8 @@ class tablelog extends \table_sql implements \renderable {
             'overridden' => get_string('overridden', 'grades'),
             'locked' => get_string('locked', 'grades'),
             'excluded' => get_string('excluded', 'gradereport_history'),
-            'feedback' => get_string('feedbacktext', 'gradereport_history')
+            'feedback' => get_string('feedbacktext', 'gradereport_history'),
+            'aggregationweight' => get_string('calculatedweight', 'grades')
             )
         );
 
@@ -272,6 +273,24 @@ class tablelog extends \table_sql implements \renderable {
     }
 
     /**
+     * Method to display column calculated weight - this matches how it is shown in the user report.
+     *
+     * @param \stdClass $history an entry of history record.
+     *
+     * @return string HTML to display
+     */
+    public function col_aggregationweight(\stdClass $history) {
+        $value = '';
+        if (is_numeric($history->aggregationweight)) {
+            $value = format_float($history->aggregationweight * 100.0, 2) . ' %';
+        }
+        if ($history->aggregationstatus != 'used' && $history->aggregationstatus != 'unknown') {
+            $value .= '<br>' . get_string('aggregationhint' . $history->aggregationstatus, 'grades');
+        }
+        return $value;
+    }
+
+    /**
      * Builds the sql and param list needed, based on the user selected filters.
      *
      * @return array containing sql to use and an array of params.
@@ -321,6 +340,7 @@ class tablelog extends \table_sql implements \renderable {
     protected function get_sql_and_params($count = false) {
         $fields = 'ggh.id, ggh.timemodified, ggh.itemid, ggh.userid, ggh.finalgrade, ggh.usermodified,
                    ggh.source, ggh.overridden, ggh.locked, ggh.excluded, ggh.feedback, ggh.feedbackformat,
+                   ggh.aggregationstatus, ggh.aggregationweight,
                    gi.itemtype, gi.itemmodule, gi.iteminstance, gi.itemnumber, ';
 
         // Add extra user fields that we need for the graded user.

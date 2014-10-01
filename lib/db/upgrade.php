@@ -3857,6 +3857,28 @@ function xmldb_main_upgrade($oldversion) {
         // Main savepoint reached.
         upgrade_main_savepoint(true, 2014092200.01);
     }
+    if ($oldversion < 2014100100.00) {
+         // Define field aggregationstatus to be added to grade_grades_history.
+        $table = new xmldb_table('grade_grades_history');
+        $field = new xmldb_field('aggregationstatus', XMLDB_TYPE_CHAR, '10', null, XMLDB_NOTNULL, null, 'unknown', 'informationformat');
+
+        // Conditionally launch add field aggregationstatus.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Define field aggregationweight to be added to grade_grades_history.
+        $table = new xmldb_table('grade_grades_history');
+        $field = new xmldb_field('aggregationweight', XMLDB_TYPE_NUMBER, '10, 5', null, null, null, null, 'aggregationstatus');
+
+        // Conditionally launch add field aggregationweight.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // Main savepoint reached.
+        upgrade_main_savepoint(true, 2014100100.00);
+    }
 
     return true;
 }

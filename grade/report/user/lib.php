@@ -306,7 +306,7 @@ class grade_report_user extends grade_report {
 
         if ($this->showweight) {
             $this->tablecolumns[] = 'weight';
-            $this->tableheaders[] = $this->get_lang_string('weightuc', 'grades');
+            $this->tableheaders[] = $this->get_lang_string('calculatedweight', 'grades');
         }
 
         if ($this->showgrade) {
