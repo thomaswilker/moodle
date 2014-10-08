@@ -19,6 +19,8 @@ information provided here is intended especially for developers.
 * Several classes grade_edit_tree_column_xxx were removed since grades setup page
   has been significantly changed. These classes should not be used outside of
   gradebook or developers can copy them into their plugins from 2.7 branch.
+* Added an extra parameter to the function get_formatted_help_string() (default null) which is used to specify
+  additional string parameters.
 
 DEPRECATIONS:
 * completion_info->get_incomplete_criteria() is deprecated and will be removed in Moodle 3.0.
