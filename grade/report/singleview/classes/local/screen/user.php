@@ -51,6 +51,9 @@ class user extends tablelike implements selectable_items {
     /** @var int $requirespaging Do we have more items than the paging limit? */
     private $requirespaging = true;
 
+    /** @var array $hasgradephp Cached list of modules with/without grades.php */
+    private $hasgradephp = array();
+
     /**
      * Get the description for the screen.
      *
@@ -158,7 +161,7 @@ class user extends tablelike implements selectable_items {
      * @return string
      */
     public function format_line($item) {
-        global $OUTPUT;
+        global $OUTPUT, $CFG;
 
         $grade = $this->fetch_grade_or_default($item, $this->item->id);
         $lockicon = '';
@@ -185,7 +188,16 @@ class user extends tablelike implements selectable_items {
 
         $itemlabel = $item->get_name();
         if (!empty($realmodid)) {
-            $url = new moodle_url('/mod/' . $item->itemmodule . '/view.php', array('id' => $realmodid));
+            // This hasgradephp logic is copied from grade_structure::get_activity_link().
+            if (!isset($this->hasgradephp[$item->itemmodule])) {
+                $this->hasgradephp[$item->itemmodule] = file_exists($CFG->dirroot . '/mod/' . $item->itemmodule . '/grade.php');
+            }
+
+            if ($this->hasgradephp[$item->itemmodule]) {
+                $url = new moodle_url('/mod/' . $item->itemmodule . '/grade.php', array('id' => $realmodid, 'userid'=>$item->id));
+            } else {
+                $url = new moodle_url('/mod/' . $item->itemmodule . '/view.php', array('id' => $realmodid));
+            }
             $itemlabel = html_writer::link($url, $item->get_name());
         }
 
