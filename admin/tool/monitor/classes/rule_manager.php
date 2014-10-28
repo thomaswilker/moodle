@@ -222,7 +222,7 @@ class rule_manager {
     public static function get_rules_by_courseid($courseid, $limitfrom = 0, $limitto = 0) {
         global $DB;
         $select = "courseid = ? OR courseid = ?";
-        return self::get_instances($DB->get_records_select('tool_monitor_rules', $select, array(0, $courseid), null, '*',
+        return self::get_instances($DB->get_records_select('tool_monitor_rules', $select, array(0, $courseid), 'name, timecreated', '*',
                 $limitfrom, $limitto));
     }
 
@@ -248,7 +248,7 @@ class rule_manager {
      */
     public static function get_rules_by_plugin($plugin) {
         global $DB;
-        return self::get_instances($DB->get_records('tool_monitor_rules', array('plugin' => $plugin)));
+        return self::get_instances($DB->get_records('tool_monitor_rules', array('plugin' => $plugin), 'name, timecreated'));
     }
 
     /**
@@ -260,7 +260,7 @@ class rule_manager {
      */
     public static function get_rules_by_event($eventname) {
         global $DB;
-        return self::get_instances($DB->get_records('tool_monitor_rules', array('eventname' => $eventname)));
+        return self::get_instances($DB->get_records('tool_monitor_rules', array('eventname' => $eventname), 'name, timecreated'));
     }
 
     /**
