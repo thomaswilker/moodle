@@ -48,11 +48,9 @@ class select extends screen {
 
         $roleids = explode(',', get_config('moodle', 'gradebookroles'));
 
-        $this->items = get_role_users(
-            $roleids, $this->context, false, '',
-            'u.id, u.lastname, u.firstname', null, $this->groupid,
-            $this->perpage * $this->page, $this->perpage
-        );
+        $this->items = $this->load_users();
+        $this->totalitemcount = count($this->items);
+
         $this->item = $DB->get_record('course', array('id' => $this->courseid));
     }
 
