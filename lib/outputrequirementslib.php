@@ -79,6 +79,11 @@ class page_requirements_manager {
     protected $jsincludes = array('head'=>array(), 'footer'=>array());
 
     /**
+     * @var array Inline scripts using RequireJS module loading.
+     */
+    protected $requirejscode = array();
+
+    /**
      * @var array List of needed function calls
      */
     protected $jscalls = array('normal'=>array(), 'ondomready'=>array());
@@ -943,6 +948,10 @@ class page_requirements_manager {
         $this->jscalls[$where][] = array($function, $arguments, $delay);
     }
 
+    public function requirejs_inlinecode($code) {
+        $this->requirejscode[] = $code;
+    }
+
     /**
      * Creates a JavaScript function call that requires one or more modules to be loaded.
      *
@@ -1206,6 +1215,83 @@ class page_requirements_manager {
     }
 
     /**
+     * Returns js code to load requirejs module loader, then insert inline script tags
+     * that contain require() calls using RequireJS.
+     * @return string
+     */
+    protected function get_requirejs_footercode() {
+        global $CFG;
+        $output = '';
+        $jsrev = $this->get_jsrev();
+
+        $jsloader = new moodle_url($CFG->httpswwwroot.'/lib/javascript.php');
+        $jsloader->set_slashargument('/' . $jsrev . '/');
+        $requirejsloader = new moodle_url($CFG->httpswwwroot.'/lib/requirejs.php');
+        $requirejsloader->set_slashargument('/' . $jsrev . '/');
+
+        $requirejsconfig = file_get_contents($CFG->dirroot . '/lib/requirejs/moodle-config.js');
+
+        $componentpaths = $this->build_requirejs_component_paths();
+
+        $requirejsconfig = str_replace('[COMPONENTPATHS]', $componentpaths, $requirejsconfig);
+        $requirejsconfig = str_replace('[BASEURL]', $requirejsloader, $requirejsconfig);
+        $requirejsconfig = str_replace('[JSURL]', $jsloader, $requirejsconfig);
+
+        $output .= html_writer::script($requirejsconfig);
+        if ($CFG->debugdeveloper) {
+            $output .= html_writer::script('', $this->js_fix_url('/lib/requirejs/require.js'));
+        } else {
+            $output .= html_writer::script('', $this->js_fix_url('/lib/requirejs/require.min.js'));
+        }
+
+        $output .= html_writer::script(implode(';\n', $this->requirejscode));
+        return $output;
+    }
+
+    /**
+     * For every possible location we can build a js module,
+     * return a mapping from component_name to the components /js/ folder.
+     * This is used by requirejs so you can include modules with a
+     * shorter module name.
+     *
+     * @return String - javascript array components inserted in the requirejs config.
+     */
+    private function build_requirejs_component_paths() {
+        global $CFG;
+
+        $result = '';
+        $allpaths = array('core' => core_component::get_component_directory('core'));
+        $jspaths = array();
+
+        // Handle other core subsystems.
+        $subsystems = core_component::get_core_subsystems();
+        foreach ($subsystems as $subsystem => $path) {
+            if (is_null($path)) {
+                unset($subsystems[$subsystem]);
+            }
+        }
+        foreach ($subsystems as $system => $dir) {
+            $allpaths['core_' . $system] = $dir;
+        }
+
+        // And finally the plugins.
+        $plugintypes = core_component::get_plugin_types();
+        foreach ($plugintypes as $plugintype => $pathroot) {
+            $pluginlist = core_component::get_plugin_list($plugintype);
+            foreach ($pluginlist as $plugin => $dir) {
+                $allpaths[$plugintype . '_' . $plugin] = $dir;
+            }
+        }
+
+        foreach ($allpaths as $modulename => $modulepath) {
+            $shortpath = str_replace($CFG->dirroot . '/', '[BASEURL]', $modulepath) . '/js';
+            $jspaths[] = "'$modulename': '$shortpath'";
+        }
+        return implode(",\n", $jspaths);
+    }
+
+
+    /**
      * Returns basic YUI3 JS loading code.
      * YUI3 is using autoloading of both CSS and JS code.
      *
@@ -1366,6 +1452,10 @@ class page_requirements_manager {
         // Now theme CSS + custom CSS in this specific order.
         $output .= $this->get_css_code();
 
+        // 2 new imports for dynamic module loading.
+        $output .= html_writer::script('', $this->js_fix_url('/lib/javascript-static.js'));
+        $output .= html_writer::script('', $this->js_fix_url('/lib/javascript-static.js'));
+
         // Link our main JS file, all core stuff should be there.
         $output .= html_writer::script('', $this->js_fix_url('/lib/javascript-static.js'));
 
@@ -1426,9 +1516,13 @@ class page_requirements_manager {
      */
     public function get_end_code() {
         global $CFG;
+        $output = '';
+
+        // This is the future.
+        $output .= $this->get_requirejs_footercode();
 
         // Add other requested modules.
-        $output = $this->get_extra_modules_code();
+        $output .= $this->get_extra_modules_code();
 
         $this->js_init_code('M.util.js_complete("init");', true);
 
