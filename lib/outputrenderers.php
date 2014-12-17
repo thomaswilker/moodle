@@ -67,6 +67,144 @@ class renderer_base {
     protected $target;
 
     /**
+     * @var Mustache_Engine $mustache The mustache template compiler
+     */
+    private $mustache;
+
+    /**
+     * @var string $component The component used when requesting this renderer.
+     */
+    private $component;
+
+    /**
+     * @var string $subtype The subtype used when requesting this renderer.
+     */
+    private $subtype;
+
+    /**
+     * This is not done in the constructor because that would be a
+     * compatibility breaking change, and we can just pass this always in the
+     * renderer factory, immediately after creating the renderer.
+     * @param string $subtype
+     */
+    public function set_subtype($subtype) {
+        $this->subtype = $subtype;
+    }
+
+    /**
+     * This is not done in the constructor because that would be a
+     * compatibility breaking change, and we can just pass this always in the
+     * renderer factory, immediately after creating the renderer.
+     * @param string $component
+     */
+    public function set_component($component) {
+        $this->component = $component;
+    }
+
+    /**
+     * Return an instance of the mustache class.
+     *
+     * @return Mustache_Engine
+     */
+    protected function get_mustache() {
+        global $CFG, $USER, $SITE, $COURSE, $PAGE;
+
+        if ($this->mustache === null) {
+            require_once($CFG->dirroot . '/lib/mustache/src/Mustache/Autoloader.php');
+            Mustache_Autoloader::register();
+
+            $themename = $this->page->theme->name;
+            $themerev = theme_get_revision();
+            $target = $this->target;
+
+            $cachedir = make_localcache_directory("mustache/$themerev/$themename/$target");
+            $loaderoptions = array('extension' => 'html');
+
+            // Where are all the places we should look for templates?
+
+            $suffix = $this->component;
+            if ($this->subtype !== null) {
+                $suffix .= '_' . $this->subtype;
+            }
+
+            // Start with an empty list.
+            $loader = new Mustache_Loader_CascadingLoader(array());
+            $loaderdir = $CFG->dirroot . '/theme/' . $themename . '/templates/' . $suffix;
+            if (file_exists($loaderdir)) {
+                $loader->addLoader(new Mustache_Loader_FilesystemLoader($loaderdir, $loaderoptions));
+            }
+
+            // Search each of the parent themes second.
+            foreach ($this->page->theme->parents as $parent) {
+                $loaderdir = $CFG->dirroot . '/theme/' . $parent . '/templates/' . $suffix;
+                if (file_exists($loaderdir)) {
+                    $loader->addLoader(new Mustache_Loader_FilesystemLoader($loaderdir, $loaderoptions));
+                }
+            }
+
+            // Finally look in a components templates dir for a base implementation.
+            $compdirectory = core_component::get_component_directory($suffix);
+            if ($compdirectory) {
+                $loaderdir = $compdirectory . '/templates';
+                if (file_exists($loaderdir)) {
+                    $loader->addLoader(new Mustache_Loader_FilesystemLoader($loaderdir, $loaderoptions));
+                }
+            }
+
+            $stringhelper = new mustache_string_helper();
+            $this->mustache = new Mustache_Engine(array(
+                'cache' => $cachedir,
+                'escape' => array($this, 'resolve_mustache_variable'),
+                'loader' => $loader,
+                'helpers' => array('user'=>$USER,
+                                   'course'=>$COURSE,
+                                   'site'=>$SITE,
+                                   'config'=>$CFG,
+                                   'str'=>$stringhelper)
+            ));
+
+        }
+
+        return $this->mustache;
+    }
+
+    /**
+     * Resolve / escape a mustache variable.
+     *
+     * @param string|renderable $var Variable to be escaped or rendered.
+     * @return string
+     */
+    public function resolve_mustache_variable($thevariable) {
+        if ($thevariable instanceof renderable) {
+            return $this->render($thevariable);
+        } else {
+            return s($thevariable);
+        }
+    }
+
+    /**
+     * Returns rendered widget.
+     *
+     * The provided widget needs to be an object that extends the renderable
+     * interface.
+     * If will then be rendered by a template based upon the classname for the widget.
+     * For instance a widget of class `crazywidget` will be rendered by a crazywidget mustache template in the theme.
+     *
+     * @param renderable $widget instance with renderable interface
+     * @return string
+     */
+    protected function render_from_template(renderable $widget) {
+        $mustache = $this->get_mustache();
+        try {
+            $templatename = get_class($widget);
+            $template = $mustache->loadTemplate($templatename);
+            return $template->render($widget);
+        } catch (Mustache_Exception_UnknownTemplateException $notfound) {
+            return false;
+        }
+    }
+
+    /**
      * Constructor
      *
      * The constructor takes two arguments. The first is the page that the renderer
@@ -96,6 +234,14 @@ class renderer_base {
      * @return string
      */
     public function render(renderable $widget) {
+        // First try and render from a template.
+        $fromtemplate = $this->render_from_template($widget);
+        if ($fromtemplate !== false) {
+            return $fromtemplate;
+        }
+
+        // Fall back to a render() method.
+
         $classname = get_class($widget);
         // Strip namespaces.
         $classname = preg_replace('/^.*\\\/', '', $classname);
@@ -179,6 +325,42 @@ class renderer_base {
     }
 }
 
+class mustache_component_string_helper {
+    private $component;
+
+    public function __construct($component) {
+        $this->component = $component;
+    }
+
+    public function __isset($key) {
+        return get_string_manager()->string_exists($key, $this->component);
+    }
+
+    public function __get($key) {
+        return get_string_manager()->get_string($key, $this->component);
+    }
+}
+
+class mustache_string_helper {
+
+    private $cache = array();
+
+    private function create_string_helper($key) {
+        if (!isset($this->cache[$key])) {
+            $this->cache[$key] = new mustache_component_string_helper($key);
+        }
+    }
+
+    public function __isset($key) {
+        $this->create_string_helper($key);
+        return true;
+    }
+
+    public function __get($key) {
+        $this->create_string_helper($key);
+        return $this->cache[$key];
+    }
+}
 
 /**
  * Basis for all plugin renderers.
@@ -222,6 +404,13 @@ class plugin_renderer_base extends renderer_base {
      * @return string
      */
     public function render(renderable $widget) {
+
+        // First try and render from a template.
+        $fromtemplate = $this->render_from_template($widget);
+        if ($fromtemplate !== false) {
+            return $fromtemplate;
+        }
+
         $classname = get_class($widget);
         // Strip namespaces.
         $classname = preg_replace('/^.*\\\/', '', $classname);
