@@ -1,0 +1,81 @@
+<div class="gradingsummary">
+    <h3>{{str.mod_assign.gradingsummary}}</h3>
+    <div class="boxaligncenter gradingsummarytable">
+        <table class="generaltable">
+            <tbody>
+                <tr>
+                    <td class="cell c0">
+                        {{#teamsubmission}}
+                            {{str.mod_assign.numberofteams}}
+                        {{/teamsubmission}}
+                        {{^teamsubmission}}
+                            {{str.mod_assign.numberofparticipants}}
+                        {{/teamsubmission}}
+                    </td>
+                    <td class="cell c1 lastcol">{{participantcount}}</td>
+                </tr>
+                {{#submissionsenabled}}
+                    {{#submissiondraftsenabled}}
+                        <tr>
+                            <td class="cell c0">
+                                {{str.mod_assign.numberofdraftsubmissions}}
+                            </td>
+                            <td class="cell c1 lastcol">{{submissiondraftscount}}</td>
+                        </tr>
+                    {{/submissiondraftsenabled}}
+                    <tr>
+                        <td class="cell c0">
+                            {{str.mod_assign.numberofsubmittedassignments}}
+                        </td>
+                        <td class="cell c1 lastcol">{{submissionssubmittedcount}}</td>
+                    </tr>
+                    {{^teamsubmission}}
+                        <tr>
+                            <td class="cell c0">
+                                {{str.mod_assign.numberofsubmissionsneedgrading}}
+                            </td>
+                            <td class="cell c1 lastcol">{{submissionsneedgradingcount}}</td>
+                        </tr>
+                    {{/teamsubmission}}
+                {{/submissionsenabled}}
+                {{#duedate}}
+                <tr>
+                    <td class="cell c0">
+                        {{str.mod_assign.duedate}}
+                    </td>
+                    <td class="cell c1 lastcol">{{duedate}}</td>
+                </tr>
+                <tr>
+                    <td class="cell c0">
+                        {{str.mod_assign.timeremaining}}
+                    </td>
+                    {{#late}}
+                        <td class="cell c1 lastcol">{{str.mod_assign.assignmentisdue}}</td>
+                    {{/late}}
+                    {{^late}}
+                        <td class="cell c1 lastcol">{{timeremaining}}</td>
+                    {{/late}}
+                </tr>
+                {{#late}}
+                    <tr>
+                        <td class="cell c0">
+                            {{str.mod_assign.latesubmissions}}
+                        </td>
+                        {{#latesubmissionaccepted}}
+                            <td class="cell c1 lastcol">{{str.mod_assign.latesubmissionsaccepted}}</td>
+                        {{/latesubmissionaccepted}}
+                        {{^latesubmissionaccepted}}
+                            <td class="cell c1 lastcol">{{str.mod_assign.nomoresubmissionsaccepted}}</td>
+                        {{/latesubmissionaccepted}}
+                    </tr>
+                {{/late}}
+            {{/duedate}}
+        </tbody>
+    </table>
+    </div>
+    <div class="submissionlinks">
+        {{#links}}
+            {{.}}
+        {{/links}}
+    </div>
+</div>

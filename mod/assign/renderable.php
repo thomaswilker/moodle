@@ -630,12 +630,18 @@ class assign_grading_summary implements renderable {
     public $submissionsneedgradingcount = 0;
     /** @var int duedate - The assignment due date (if one is set) */
     public $duedate = 0;
+    /** @var bool late - The assignment is late */
+    public $late = false;
     /** @var int cutoffdate - The assignment cut off date (if one is set) */
     public $cutoffdate = 0;
+    /** @var string timeremaining - How much time is remaining */
+    public $timeremaining = '';
     /** @var int coursemoduleid - The assignment course module id */
     public $coursemoduleid = 0;
     /** @var boolean teamsubmission - Are team submissions enabled for this assignment */
     public $teamsubmission = false;
+    /** @var array links - List of action links to display under the summary */
+    public $links = array();
 
     /**
      * constructor
@@ -666,11 +672,24 @@ class assign_grading_summary implements renderable {
         $this->submissiondraftscount = $submissiondraftscount;
         $this->submissionsenabled = $submissionsenabled;
         $this->submissionssubmittedcount = $submissionssubmittedcount;
-        $this->duedate = $duedate;
+        if ($duedate) {
+            $this->duedate = userdate($duedate);
+        }
+        $now = time();
+        if ($now > $duedate) {
+            $this->late = true;
+        }
+        $this->timeremaining = format_time($duedate - $now);
         $this->cutoffdate = $cutoffdate;
         $this->coursemoduleid = $coursemoduleid;
         $this->submissionsneedgradingcount = $submissionsneedgradingcount;
         $this->teamsubmission = $teamsubmission;
+
+        $urlparams = array('id' => $coursemoduleid, 'action'=>'grading');
+        $url = new moodle_url('/mod/assign/view.php', $urlparams);
+
+        $link = new action_link($url, get_string('viewgrading', 'assign'));
+        $this->links[] = $link;
     }
 }
 
