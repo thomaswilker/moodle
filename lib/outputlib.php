@@ -167,6 +167,11 @@ class theme_config {
     public $javascripts = array();
 
     /**
+     * @var array Template helpers - additional objects or function that can return variables to mustache templates.
+     */
+    public $template_helpers = array();
+
+    /**
      * @var array The names of all the javascript files this theme that you would
      * like included from footer, in order. Give the names of the files without .js.
      */
@@ -467,7 +472,8 @@ class theme_config {
             'layouts', 'enable_dock', 'enablecourseajax', 'supportscssoptimisation',
             'rendererfactory', 'csspostprocess', 'editor_sheets', 'rarrow', 'larrow', 'uarrow',
             'hidefromselector', 'doctype', 'yuicssmodules', 'blockrtlmanipulations',
-            'lessfile', 'extralesscallback', 'lessvariablescallback', 'blockrendermethod');
+            'lessfile', 'extralesscallback', 'lessvariablescallback', 'blockrendermethod',
+            'template_helpers');
 
         foreach ($config as $key=>$value) {
             if (in_array($key, $configurable)) {

@@ -152,16 +152,23 @@ class renderer_base {
             }
 
             $stringhelper = new mustache_string_helper();
+            $themehelpers = array();
+            if (!empty($this->page->theme->template_helpers)) {
+                $themehelpers = $this->page->theme->template_helpers;
+            }
+            $basehelpers = array('user' => $USER,
+                                 'course' => $COURSE,
+                                 'site' => $SITE,
+                                 'config' => $CFG,
+                                 'str' => $stringhelper);
+
+            $helpers = array_merge($themehelpers, $basehelpers);
+
             $this->mustache = new Mustache_Engine(array(
                 'cache' => $cachedir,
                 'escape' => array($this, 'resolve_mustache_variable'),
                 'loader' => $loader,
-                'helpers' => array('user'=>$USER,
-                                   'course'=>$COURSE,
-                                   'site'=>$SITE,
-                                   'config'=>$CFG,
-                                   'str'=>$stringhelper)
-            ));
+                'helpers' => $helpers));
 
         }
 
