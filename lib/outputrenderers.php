@@ -156,11 +156,11 @@ class renderer_base {
             if (!empty($this->page->theme->template_helpers)) {
                 $themehelpers = $this->page->theme->template_helpers;
             }
-            $basehelpers = array('user' => $USER,
-                                 'course' => $COURSE,
-                                 'site' => $SITE,
-                                 'config' => $CFG,
-                                 'str' => $stringhelper);
+            $globals = array('user' => $USER,
+                             'course' => $COURSE,
+                             'site' => $SITE,
+                             'config' => $CFG);
+            $basehelpers = array('globals' => $globals, 'str' => $stringhelper);
 
             $helpers = array_merge($themehelpers, $basehelpers);
 
