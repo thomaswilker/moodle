@@ -140,6 +140,10 @@ class mod_quiz_renderer extends plugin_renderer_base {
             return '';
         }
 
+        $summaryrenderable = new mod_quiz_review_summary_data($summarydata);
+        return $this->render($summaryrenderable);
+        /*
+
         $output = '';
         $output .= html_writer::start_tag('table', array(
                 'class' => 'generaltable generalbox quizreviewsummary'));
@@ -166,6 +170,7 @@ class mod_quiz_renderer extends plugin_renderer_base {
         $output .= html_writer::end_tag('tbody');
         $output .= html_writer::end_tag('table');
         return $output;
+        */
     }
 
     /**
@@ -1177,6 +1182,14 @@ class mod_quiz_renderer extends plugin_renderer_base {
         return html_writer::tag('div', $warning,
                     array('id' => 'connection-error', 'style' => 'display: none;', 'role' => 'alert')) .
                     html_writer::tag('div', $ok, array('id' => 'connection-ok', 'style' => 'display: none;', 'role' => 'alert'));
+    }
+}
+
+class mod_quiz_review_summary_data implements renderable {
+    public $data = array();
+
+    public function __construct($data) {
+        $this->data = $data;
     }
 }
 

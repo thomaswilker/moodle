@@ -1,0 +1,48 @@
+<table class="generaltable generalbox quizreviewsummary">
+    <tbody>
+        {{#data}}
+        {{#user}}
+        <tr>
+            <th class="cell" scope="row">{{title}}</th>
+            <td class="cell">{{content}}</td>
+        </tr>
+        {{/user}}
+        {{#startedon}}
+        <tr>
+            <th class="cell" scope="row">{{title}}</th>
+            <td class="cell">{{content}}</td>
+        </tr>
+        {{/startedon}}
+        {{#state}}
+        <tr>
+            <th class="cell" scope="row">{{title}}</th>
+            <td class="cell">{{content}}</td>
+        </tr>
+        {{/state}}
+        {{#completedon}}
+        <tr>
+            <th class="cell" scope="row">{{title}}</th>
+            <td class="cell">{{content}}</td>
+        </tr>
+        {{/completedon}}
+        {{#timetaken}}
+        <tr>
+            <th class="cell" scope="row">{{title}}</th>
+            <td class="cell">{{content}}</td>
+        </tr>
+        {{/timetaken}}
+        {{#marks}}
+        <tr>
+            <th class="cell" scope="row">{{title}}</th>
+            <td class="cell">{{content}}</td>
+        </tr>
+        {{/marks}}
+        {{#grade}}
+        <tr>
+            <th class="cell" scope="row">{{title}}</th>
+            <td class="cell">{{{content}}}</td>
+        </tr>
+        {{/grade}}
+        {{/data}}
+    </tbody>
+</table>
