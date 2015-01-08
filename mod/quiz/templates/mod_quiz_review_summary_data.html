@@ -1,48 +1,48 @@
 <table class="generaltable generalbox quizreviewsummary">
     <tbody>
-        {{#data}}
-        {{#user}}
+        {{#with data}}
+        {{#with user}}
+        <tr>
+            <th class="cell" scope="row">{{render title}}</th>
+            <td class="cell">{{render content}}</td>
+        </tr>
+        {{/with}}
+        {{#with startedon}}
         <tr>
             <th class="cell" scope="row">{{title}}</th>
             <td class="cell">{{content}}</td>
         </tr>
-        {{/user}}
-        {{#startedon}}
+        {{/with}}
+        {{#with state}}
         <tr>
             <th class="cell" scope="row">{{title}}</th>
             <td class="cell">{{content}}</td>
         </tr>
-        {{/startedon}}
-        {{#state}}
+        {{/with}}
+        {{#with completedon}}
         <tr>
             <th class="cell" scope="row">{{title}}</th>
             <td class="cell">{{content}}</td>
         </tr>
-        {{/state}}
-        {{#completedon}}
+        {{/with}}
+        {{#with timetaken}}
         <tr>
             <th class="cell" scope="row">{{title}}</th>
             <td class="cell">{{content}}</td>
         </tr>
-        {{/completedon}}
-        {{#timetaken}}
+        {{/with}}
+        {{#with marks}}
         <tr>
             <th class="cell" scope="row">{{title}}</th>
             <td class="cell">{{content}}</td>
         </tr>
-        {{/timetaken}}
-        {{#marks}}
-        <tr>
-            <th class="cell" scope="row">{{title}}</th>
-            <td class="cell">{{content}}</td>
-        </tr>
-        {{/marks}}
-        {{#grade}}
+        {{/with}}
+        {{#with grade}}
         <tr>
             <th class="cell" scope="row">{{title}}</th>
             <td class="cell">{{{content}}}</td>
         </tr>
-        {{/grade}}
-        {{/data}}
+        {{/with}}
+        {{/with}}
     </tbody>
 </table>

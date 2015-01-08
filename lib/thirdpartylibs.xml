@@ -260,9 +260,9 @@
     <licenseversion></licenseversion>
   </library>
   <library>
-    <location>mustache</location>
-    <name>Mustache</name>
+    <location>handlebars</location>
+    <name>Handlebars</name>
     <license>MIT</license>
-    <version>2.7.0</version>
+    <version>0.10.0</version>
   </library>
 </libraries>

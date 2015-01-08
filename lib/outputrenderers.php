@@ -37,6 +37,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+require_once($CFG->dirroot . '/lib/handlebars/src/Handlebars/Autoloader.php');
+Handlebars\Autoloader::register();
+
 /**
  * Simple base class for Moodle renderers.
  *
@@ -67,9 +70,9 @@ class renderer_base {
     protected $target;
 
     /**
-     * @var Mustache_Engine $mustache The mustache template compiler
+     * @var Handlebars $handlebars The handlebars template compiler
      */
-    private $mustache;
+    private $handlebars;
 
     /**
      * @var string $component The component used when requesting this renderer.
@@ -102,22 +105,19 @@ class renderer_base {
     }
 
     /**
-     * Return an instance of the mustache class.
+     * Return an instance of the Handlebars class.
      *
-     * @return Mustache_Engine
+     * @return Handlebars
      */
-    protected function get_mustache() {
+    protected function get_handlebars() {
         global $CFG, $USER, $SITE, $COURSE, $PAGE;
 
-        if ($this->mustache === null) {
-            require_once($CFG->dirroot . '/lib/mustache/src/Mustache/Autoloader.php');
-            Mustache_Autoloader::register();
-
+        if ($this->handlebars === null) {
             $themename = $this->page->theme->name;
             $themerev = theme_get_revision();
             $target = $this->target;
 
-            $cachedir = make_localcache_directory("mustache/$themerev/$themename/$target");
+            $cachedir = make_localcache_directory("handlebars/$themerev/$themename/$target");
             $loaderoptions = array('extension' => 'html');
 
             // Where are all the places we should look for templates?
@@ -128,17 +128,17 @@ class renderer_base {
             }
 
             // Start with an empty list.
-            $loader = new Mustache_Loader_CascadingLoader(array());
+            $loaderdirs = array();
             $loaderdir = $CFG->dirroot . '/theme/' . $themename . '/templates/' . $suffix;
             if (file_exists($loaderdir)) {
-                $loader->addLoader(new Mustache_Loader_FilesystemLoader($loaderdir, $loaderoptions));
+                $loaderdirs[] = $loaderdir;
             }
 
             // Search each of the parent themes second.
             foreach ($this->page->theme->parents as $parent) {
                 $loaderdir = $CFG->dirroot . '/theme/' . $parent . '/templates/' . $suffix;
                 if (file_exists($loaderdir)) {
-                    $loader->addLoader(new Mustache_Loader_FilesystemLoader($loaderdir, $loaderoptions));
+                    $loaderdirs[] = $loaderdir;
                 }
             }
 
@@ -147,41 +147,62 @@ class renderer_base {
             if ($compdirectory) {
                 $loaderdir = $compdirectory . '/templates';
                 if (file_exists($loaderdir)) {
-                    $loader->addLoader(new Mustache_Loader_FilesystemLoader($loaderdir, $loaderoptions));
+                    $loaderdirs[] = $loaderdir;
                 }
             }
 
-            $stringhelper = new mustache_string_helper();
+            $loader = new Handlebars\Loader\FilesystemLoader($loaderdirs, $loaderoptions);
+
+            $stringhelper = new handlebars_string_helper();
             $themehelpers = array();
             if (!empty($this->page->theme->template_helpers)) {
                 $themehelpers = $this->page->theme->template_helpers;
             }
-            $basehelpers = array('user' => $USER,
-                                 'course' => $COURSE,
-                                 'site' => $SITE,
-                                 'config' => $CFG,
-                                 'str' => $stringhelper);
+            $renderhelper = array($this, 'render_handlebars_variable');
+            $basehelpers = array('user' => new Handlebars\Helper\BindAttrHelper($USER),
+                                 'course' => new Handlebars\Helper\BindAttrHelper($COURSE),
+                                 'site' => new Handlebars\Helper\BindAttrHelper($SITE),
+                                 'config' => new Handlebars\Helper\BindAttrHelper($CFG),
+                                 'str' => $stringhelper,
+                                 'render' => $renderhelper);
 
-            $helpers = array_merge($themehelpers, $basehelpers);
+            $callablehelpers = array_merge($themehelpers, $basehelpers);
 
-            $this->mustache = new Mustache_Engine(array(
-                'cache' => $cachedir,
-                'escape' => array($this, 'resolve_mustache_variable'),
+            $helpers = new Handlebars\Helpers($callablehelpers);
+
+            $cache = new Handlebars\Cache\Disk($cachedir);
+
+            $this->handlebars = new Handlebars\Handlebars(array(
+                'cache' => $cache,
+                'escape' => array($this, 'resolve_handlebars_variable'),
                 'loader' => $loader,
                 'helpers' => $helpers));
 
         }
 
-        return $this->mustache;
+        return $this->handlebars;
     }
 
     /**
-     * Resolve / escape a mustache variable.
+     * Resolve / escape a handlebars variable (version 2).
+     *
+     * @param Handlerbars\Template $template Unused
+     * @param Handlerbars\Context $context Unused
+     * @param renderable|string $arg
+     * @return string
+     */
+    public function render_handlebars_variable($template, $context, $varname) {
+        $value = $context->get($varname);
+        return $this->resolve_handlebars_variable($value);
+    }
+
+    /**
+     * Resolve / escape a handlebars variable.
      *
      * @param string|renderable $var Variable to be escaped or rendered.
      * @return string
      */
-    public function resolve_mustache_variable($thevariable) {
+    public function resolve_handlebars_variable($thevariable) {
         if ($thevariable instanceof renderable) {
             return $this->render($thevariable);
         } else {
@@ -201,12 +222,12 @@ class renderer_base {
      * @return string
      */
     protected function render_from_template(renderable $widget) {
-        $mustache = $this->get_mustache();
+        $engine = $this->get_handlebars();
         try {
             $templatename = get_class($widget);
-            $template = $mustache->loadTemplate($templatename);
+            $template = $engine->loadTemplate($templatename);
             return $template->render($widget);
-        } catch (Mustache_Exception_UnknownTemplateException $notfound) {
+        } catch (InvalidArgumentException $notfound) {
             return false;
         }
     }
@@ -332,40 +353,12 @@ class renderer_base {
     }
 }
 
-class mustache_component_string_helper {
-    private $component;
+class handlebars_string_helper implements Handlebars\Helper {
 
-    public function __construct($component) {
-        $this->component = $component;
-    }
-
-    public function __isset($key) {
-        return get_string_manager()->string_exists($key, $this->component);
-    }
-
-    public function __get($key) {
-        return get_string_manager()->get_string($key, $this->component);
-    }
-}
-
-class mustache_string_helper {
-
-    private $cache = array();
-
-    private function create_string_helper($key) {
-        if (!isset($this->cache[$key])) {
-            $this->cache[$key] = new mustache_component_string_helper($key);
-        }
-    }
-
-    public function __isset($key) {
-        $this->create_string_helper($key);
-        return true;
-    }
-
-    public function __get($key) {
-        $this->create_string_helper($key);
-        return $this->cache[$key];
+    public function execute(Handlebars\Template $template, Handlebars\Context $context, $args, $source) {
+        list($component, $arg) = explode('.', $args);
+        // This uses it's own caches etc.
+        return get_string($arg, $component);
     }
 }
 

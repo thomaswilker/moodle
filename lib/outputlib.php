@@ -167,7 +167,7 @@ class theme_config {
     public $javascripts = array();
 
     /**
-     * @var array Template helpers - additional objects or function that can return variables to mustache templates.
+     * @var array Template helpers - additional objects or function that can return variables to handlebars templates.
      */
     public $template_helpers = array();
 

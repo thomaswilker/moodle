@@ -1,15 +1,15 @@
 <div class="gradingsummary">
-    <h3>{{str.mod_assign.gradingsummary}}</h3>
+    <h3>{{str mod_assign.gradingsummary}}</h3>
     <div class="boxaligncenter gradingsummarytable">
         <table class="generaltable">
             <tbody>
                 <tr>
                     <td class="cell c0">
                         {{#teamsubmission}}
-                            {{str.mod_assign.numberofteams}}
+                            {{str mod_assign.numberofteams}}
                         {{/teamsubmission}}
                         {{^teamsubmission}}
-                            {{str.mod_assign.numberofparticipants}}
+                            {{str mod_assign.numberofparticipants}}
                         {{/teamsubmission}}
                     </td>
                     <td class="cell c1 lastcol">{{participantcount}}</td>
@@ -18,21 +18,21 @@
                     {{#submissiondraftsenabled}}
                         <tr>
                             <td class="cell c0">
-                                {{str.mod_assign.numberofdraftsubmissions}}
+                                {{str mod_assign.numberofdraftsubmissions}}
                             </td>
                             <td class="cell c1 lastcol">{{submissiondraftscount}}</td>
                         </tr>
                     {{/submissiondraftsenabled}}
                     <tr>
                         <td class="cell c0">
-                            {{str.mod_assign.numberofsubmittedassignments}}
+                            {{str mod_assign.numberofsubmittedassignments}}
                         </td>
                         <td class="cell c1 lastcol">{{submissionssubmittedcount}}</td>
                     </tr>
                     {{^teamsubmission}}
                         <tr>
                             <td class="cell c0">
-                                {{str.mod_assign.numberofsubmissionsneedgrading}}
+                                {{str mod_assign.numberofsubmissionsneedgrading}}
                             </td>
                             <td class="cell c1 lastcol">{{submissionsneedgradingcount}}</td>
                         </tr>
@@ -41,16 +41,16 @@
                 {{#duedate}}
                 <tr>
                     <td class="cell c0">
-                        {{str.mod_assign.duedate}}
+                        {{str mod_assign.duedate}}
                     </td>
                     <td class="cell c1 lastcol">{{duedate}}</td>
                 </tr>
                 <tr>
                     <td class="cell c0">
-                        {{str.mod_assign.timeremaining}}
+                        {{str mod_assign.timeremaining}}
                     </td>
                     {{#late}}
-                        <td class="cell c1 lastcol">{{str.mod_assign.assignmentisdue}}</td>
+                        <td class="cell c1 lastcol">{{str mod_assign.assignmentisdue}}</td>
                     {{/late}}
                     {{^late}}
                         <td class="cell c1 lastcol">{{timeremaining}}</td>
@@ -59,17 +59,17 @@
                 {{#late}}
                     <tr>
                         <td class="cell c0">
-                            {{str.mod_assign.latesubmissions}}
+                            {{str mod_assign.latesubmissions}}
                         </td>
                         {{#latesubmissionaccepted}}
-                            <td class="cell c1 lastcol">{{str.mod_assign.latesubmissionsaccepted}}</td>
+                            <td class="cell c1 lastcol">{{str mod_assign.latesubmissionsaccepted}}</td>
                         {{/latesubmissionaccepted}}
                         {{^latesubmissionaccepted}}
-                            <td class="cell c1 lastcol">{{str.mod_assign.nomoresubmissionsaccepted}}</td>
+                            <td class="cell c1 lastcol">{{str mod_assign.nomoresubmissionsaccepted}}</td>
                         {{/latesubmissionaccepted}}
                     </tr>
                 {{/late}}
-            {{/duedate}}
+                {{/duedate}}
         </tbody>
     </table>
     </div>

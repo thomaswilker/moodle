@@ -634,6 +634,8 @@ class assign_grading_summary implements renderable {
     public $late = false;
     /** @var int cutoffdate - The assignment cut off date (if one is set) */
     public $cutoffdate = 0;
+    /** @var bool latesubmissionaccepted - Allow submissions after due date */
+    public $latesubmissionaccepted = false;
     /** @var string timeremaining - How much time is remaining */
     public $timeremaining = '';
     /** @var int coursemoduleid - The assignment course module id */
@@ -681,6 +683,7 @@ class assign_grading_summary implements renderable {
         }
         $this->timeremaining = format_time($duedate - $now);
         $this->cutoffdate = $cutoffdate;
+        $this->latesubmissionaccepted = $now < $cutoffdate;
         $this->coursemoduleid = $coursemoduleid;
         $this->submissionsneedgradingcount = $submissionsneedgradingcount;
         $this->teamsubmission = $teamsubmission;
