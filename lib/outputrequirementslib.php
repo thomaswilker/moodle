@@ -1231,9 +1231,6 @@ class page_requirements_manager {
 
         $requirejsconfig = file_get_contents($CFG->dirroot . '/lib/requirejs/moodle-config.js');
 
-        $componentpaths = $this->build_requirejs_component_paths();
-
-        $requirejsconfig = str_replace('[COMPONENTPATHS]', $componentpaths, $requirejsconfig);
         $requirejsconfig = str_replace('[BASEURL]', $requirejsloader, $requirejsconfig);
         $requirejsconfig = str_replace('[JSURL]', $jsloader, $requirejsconfig);
 
@@ -1247,49 +1244,6 @@ class page_requirements_manager {
         $output .= html_writer::script(implode(';\n', $this->requirejscode));
         return $output;
     }
-
-    /**
-     * For every possible location we can build a js module,
-     * return a mapping from component_name to the components /js/ folder.
-     * This is used by requirejs so you can include modules with a
-     * shorter module name.
-     *
-     * @return String - javascript array components inserted in the requirejs config.
-     */
-    private function build_requirejs_component_paths() {
-        global $CFG;
-
-        $result = '';
-        $allpaths = array('core' => core_component::get_component_directory('core'));
-        $jspaths = array();
-
-        // Handle other core subsystems.
-        $subsystems = core_component::get_core_subsystems();
-        foreach ($subsystems as $subsystem => $path) {
-            if (is_null($path)) {
-                unset($subsystems[$subsystem]);
-            }
-        }
-        foreach ($subsystems as $system => $dir) {
-            $allpaths['core_' . $system] = $dir;
-        }
-
-        // And finally the plugins.
-        $plugintypes = core_component::get_plugin_types();
-        foreach ($plugintypes as $plugintype => $pathroot) {
-            $pluginlist = core_component::get_plugin_list($plugintype);
-            foreach ($pluginlist as $plugin => $dir) {
-                $allpaths[$plugintype . '_' . $plugin] = $dir;
-            }
-        }
-
-        foreach ($allpaths as $modulename => $modulepath) {
-            $shortpath = str_replace($CFG->dirroot . '/', '[BASEURL]', $modulepath) . '/js';
-            $jspaths[] = "'$modulename': '$shortpath'";
-        }
-        return implode(",\n", $jspaths);
-    }
-
 
     /**
      * Returns basic YUI3 JS loading code.
