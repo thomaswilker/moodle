@@ -118,7 +118,7 @@ class renderer_base {
             $target = $this->target;
 
             $cachedir = make_localcache_directory("mustache/$themerev/$themename/$target");
-            $loaderoptions = array('extension' => 'html');
+            $loaderoptions = array();
 
             // Where are all the places we should look for templates?
 
