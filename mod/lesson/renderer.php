@@ -605,4 +605,10 @@ class mod_lesson_renderer extends plugin_renderer_base {
         $output .= $this->output->box_end();
         return $output;
     }
+
+    public function display_edit_js(lesson $lesson, $pageid) {
+        global $DB, $CFG;
+
+        
+    }
 }
