@@ -95,3 +95,29 @@
 .path-mod-lesson .essaysent {
     background-color: #cfefcf;
 }
+
+.mod_lesson_main {
+    position: relative;
+}
+
+.mod_lesson_main .mod_lesson_page_element {
+
+    position: absolute; /* specify abs position! */
+
+    border: 1px solid #000;
+    border-radius: 6px 6px 2px 2px;
+    margin: 0.5em 0;
+    width: 240px;
+    height: 100px;
+}
+.mod_lesson_main .mod_lesson_page_element > * {
+    padding: 0.25em 0.5em;
+}
+.mod_lesson_main .mod_lesson_page_element header {
+    border-bottom: 1px solid #000;
+    font-weight: bold;
+    text-align: center;
+}
+.mod_lesson_main .mod_lesson_page_element_body {
+    font-size: 0.8em;
+}

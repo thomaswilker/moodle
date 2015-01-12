@@ -1,0 +1,1 @@
+YUI.add("moodle-mod_lesson-pagemmove",function(e,t){function n(){n.superclass.constructor.apply(this,arguments)}e.namespace("M.mod_lesson").PagemMove=e.extend(n,e.Base,{initializer:function(){console.log("This works?")}},{NAME:"pagemMove",ATTRS:{}}),e.namespace("M.mod_lesson.PagemMove").init=function(e){return new n(e)}},"@VERSION@");

@@ -607,8 +607,35 @@ class mod_lesson_renderer extends plugin_renderer_base {
     }
 
     public function display_edit_js(lesson $lesson, $pageid) {
-        global $DB, $CFG;
+        global $PAGE;
 
+        $manager = lesson_page_type_manager::get($lesson);
+        $qtypes = $manager->get_page_type_strings();
+        $thing = $lesson->load_all_pages($lesson);
+
+        $output = html_writer::start_div('mod_lesson_main');
+
+        while ($pageid != 0) {
+            $page = $lesson->load_page($pageid);
+            $output .= html_writer::start_div('mod_lesson_page_element', array('id' => 'mod_lesson_page_element_' . $pageid));
+
+            $output .= html_writer::start_tag('header', array('id' => 'mod_lesson_page_element_' . $pageid . '_header'));
+            $output .= $qtypes[$page->qtype];
+            $output .= html_writer::end_tag('header');
+
+            $output .= html_writer::start_div('mod_lesson_page_element_body', array('id' => 'mod_lesson_page_element_' . $pageid . '_body'));
+            $output .= $page->title;
+            $output .= html_writer::end_div();
+
+            $output .= html_writer::end_div();
+
+            $pageid = $page->nextpageid;
+        }
+
+        $output .= html_writer::end_div();
+
+        $PAGE->requires->yui_module('moodle-mod_lesson-pagemmove', 'Y.M.mod_lesson.PagemMove.init');
+        return $output;
         
     }
 }
