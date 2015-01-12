@@ -614,28 +614,83 @@ class mod_lesson_renderer extends plugin_renderer_base {
         $thing = $lesson->load_all_pages($lesson);
 
         $output = html_writer::start_div('mod_lesson_main');
+        $output .= html_writer::start_div('mod_lesson_pages');
 
-        while ($pageid != 0) {
-            $page = $lesson->load_page($pageid);
-            $output .= html_writer::start_div('mod_lesson_page_element', array('id' => 'mod_lesson_page_element_' . $pageid));
-
-            $output .= html_writer::start_tag('header', array('id' => 'mod_lesson_page_element_' . $pageid . '_header'));
-            $output .= $qtypes[$page->qtype];
-            $output .= html_writer::end_tag('header');
-
-            $output .= html_writer::start_div('mod_lesson_page_element_body', array('id' => 'mod_lesson_page_element_' . $pageid . '_body'));
-            $output .= $page->title;
-            $output .= html_writer::end_div();
-
-            $output .= html_writer::end_div();
-
-            $pageid = $page->nextpageid;
-        }
+        $output .= $this->lesson_page_loop($lesson, $pageid);
 
         $output .= html_writer::end_div();
+        $output .= html_writer::end_div();
+        $lessonpagedata = $this->get_lesson_data();
 
         $PAGE->requires->yui_module('moodle-mod_lesson-pagemmove', 'Y.M.mod_lesson.PagemMove.init');
         return $output;
         
+    }
+
+    private function get_lesson_data() {
+        return 'some lesson data';
+    }
+
+    private function lesson_page_loop(lesson $lesson, &$pageid, $clusterflag = false) {
+        $output = '';
+
+        // I think that clusterflag should actually be cluster count and a number added for clusters in clusters.
+
+        $manager = lesson_page_type_manager::get($lesson);
+        $qtypes = $manager->get_page_type_strings();
+        while ($pageid != 0) {
+            // print_object($pageid);
+            $page = $lesson->load_page($pageid);
+            if ($qtypes[$page->qtype] == 'End of cluster') {
+                $pageid = $page->nextpageid;
+                break;
+            }
+            if ($qtypes[$page->qtype] == 'End of branch' && $clusterflag) {
+                $pageid = $page->nextpageid;
+                break;
+            }
+
+
+            if ($qtypes[$page->qtype] == 'Cluster') {
+                $output .= html_writer::start_div('mod_lesson_page_element cluster', array('id' => 'mod_lesson_page_element_' . $pageid));
+                $output .= html_writer::start_tag('header', array('id' => 'mod_lesson_page_element_' . $pageid . '_header'));
+                $output .= $qtypes[$page->qtype];
+                $output .= html_writer::end_tag('header');
+                $output .= html_writer::start_div('mod_lesson_page_element_body', array('id' => 'mod_lesson_page_element_' . $pageid . '_body'));
+                $output .= $page->title . '<br />';
+                $output .= $pageid;
+                $output .= html_writer::end_div();
+                $pageid = $page->nextpageid;
+                $output .= $this->lesson_page_loop($lesson, $pageid, true);
+                $output .= html_writer::end_div();
+                $clusterflag = false;
+            } else if ($qtypes[$page->qtype] == 'Content' && $clusterflag) {
+                $output .= html_writer::start_div('mod_lesson_page_element sub-cluster', array('id' => 'mod_lesson_page_element_' . $pageid));
+                $output .= html_writer::start_tag('header', array('id' => 'mod_lesson_page_element_' . $pageid . '_header'));
+                $output .= $qtypes[$page->qtype];
+                $output .= html_writer::end_tag('header');
+                $output .= html_writer::start_div('mod_lesson_page_element_body', array('id' => 'mod_lesson_page_element_' . $pageid . '_body'));
+                $output .= $page->title . '<br />';
+                $output .= $pageid . '<br />';
+                $output .= $clusterflag;
+                $output .= html_writer::end_div();
+                $pageid = $page->nextpageid;
+                $output .= $this->lesson_page_loop($lesson, $pageid, $clusterflag);
+                $output .= html_writer::end_div();
+            } else {
+                $output .= html_writer::start_div('mod_lesson_page_element', array('id' => 'mod_lesson_page_element_' . $pageid));
+                $output .= html_writer::start_tag('header', array('id' => 'mod_lesson_page_element_' . $pageid . '_header'));
+                $output .= $qtypes[$page->qtype];
+                $output .= html_writer::end_tag('header');
+                $output .= html_writer::start_div('mod_lesson_page_element_body', array('id' => 'mod_lesson_page_element_' . $pageid . '_body'));
+                $output .= $page->title . '<br />';
+                $output .= $pageid . '<br />';
+                $output .= $clusterflag;
+                $output .= html_writer::end_div();
+                $output .= html_writer::end_div();
+                $pageid = $page->nextpageid;
+            }
+        }
+        return $output;
     }
 }

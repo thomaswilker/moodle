@@ -98,11 +98,14 @@
 
 .mod_lesson_main {
     position: relative;
+    overflow: scroll;
+    border: 1px solid #aaa;
+    height: 1000px;
 }
 
 .mod_lesson_main .mod_lesson_page_element {
 
-    position: absolute; /* specify abs position! */
+    /*position: absolute;  specify abs position! */
 
     border: 1px solid #000;
     border-radius: 6px 6px 2px 2px;
