@@ -156,11 +156,17 @@ class renderer_base {
             if (!empty($this->page->theme->template_helpers)) {
                 $themehelpers = $this->page->theme->template_helpers;
             }
+
+            $jshelper = function($text, Mustache_LambdaHelper $helper) {
+                $this->page->requires->requirejs_inlinecode($helper->render($text));
+            };
             $globals = array('user' => $USER,
                              'course' => $COURSE,
                              'site' => $SITE,
                              'config' => $CFG);
-            $basehelpers = array('globals' => $globals, 'str' => $stringhelper);
+            $basehelpers = array('globals' => $globals,
+                                 'str' => $stringhelper,
+                                 'js' => $jshelper);
 
             $helpers = array_merge($themehelpers, $basehelpers);
 
@@ -204,6 +210,13 @@ class renderer_base {
         $mustache = $this->get_mustache();
         try {
             $templatename = get_class($widget);
+
+            $namespaceprefix = $this->component . '\\output\\';
+
+            if (strpos($templatename, $namespaceprefix) === 0) {
+                $templatename = substr($templatename, strlen($namespaceprefix));
+            }
+
             $template = $mustache->loadTemplate($templatename);
             return $template->render($widget);
         } catch (Mustache_Exception_UnknownTemplateException $notfound) {
