@@ -26,6 +26,8 @@ Y.namespace('M.mod_lesson').PagemMove = Y.extend(PagemMove, Y.Base, {
 
     initializer: function() {
         var allLessonPages = Y.all(SELECTORS.PAGEMODULES);
+        var lessonpagedata = Y.JSON.parse(this.get('lessondata'));
+        console.log(lessonpagedata);
 
         YUI().use('dd-delegate', 'dd-drop-plugin', function(Y) {
 
@@ -71,9 +73,9 @@ Y.namespace('M.mod_lesson').PagemMove = Y.extend(PagemMove, Y.Base, {
          * @type Array
          * @writeOnce
          */
-        // lessondata: {
-        //     value: null
-        // }
+        lessondata: {
+            value: null
+        }
     }
 });
 
