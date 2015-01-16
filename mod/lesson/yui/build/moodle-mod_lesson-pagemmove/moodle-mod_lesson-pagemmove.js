@@ -21,12 +21,174 @@ var SELECTORS = {
     MAINCONTAINER: '.mod_lesson_main',
     LESSONPAGES: '.mod_lesson_pages',
     PAGEMODULES: '.mod_lesson_page_element'
-
+    },
+    DEFAULTS = {
+        PAGEWIDTH: 300,
+        PAGEHEIGHT: 100,
+        PATHFILL: {
+            color: "#ff0000"
+        },
+        PAGEFILL: {
+            color: "#ddddff"
+        },
+        PATHSTROKE: {
+            weight: 2,
+            color: "#ff0000"
+        },
+        PAGESTROKE: {
+            weight: 2,
+            color: "#000000"
+        }
     };
 
 Y.namespace('M.mod_lesson').PagemMove = Y.extend(PagemMove, Y.Base, {
 
+    // The Y.Graphic instance.
+    graphic : null,
+
+    drawJump: function(pagefrom, pageto) {
+        var jumpShape = this.graphic.addShape({
+            type: "path",
+            stroke: DEFAULTS.PATHSTROKE,
+            fill: DEFAULTS.PATHFILL
+        });
+        jumpShape.moveTo(pagefrom.x + pagefrom.width, pagefrom.y + (pagefrom.height / 2));
+        jumpShape.lineTo(pageto.x, pageto.y + (pageto.height / 2));
+        jumpShape.end();
+        pagefrom.jumpShapes[pagefrom.jumpShapes.length] = jumpShape;
+    },
+
+    drawJumps: function(page, allpages) {
+        var i = 0, j = 0;
+
+        console.log(page);
+        var jumpname = "jumpto[" + j + "]";
+        while (page.hasOwnProperty(jumpname)) {
+            nextpageid = page[jumpname];
+            if (nextpageid === "-1") {
+                nextpageid = page.nextpageid;
+            }
+
+            for (i = 0; i < allpages.length; i++) {
+                if (allpages[i].id === nextpageid) {
+                    this.drawJump(page, allpages[i]);
+                }
+            }
+
+            j += 1;
+            jumpname = "jumpto[" + j + "]";
+        }
+    },
+
+    redrawPage: function(page) {
+        var canvas = Y.one(SELECTORS.LESSONPAGES);
+        var jumpShape;
+        // Move the title.
+        page.titleNode.setXY([page.x + canvas.getX() + 10, page.y + canvas.getY() + 10]);
+
+        // Move the shape.
+        page.shapeNode.setXY([page.x + canvas.getX(), page.y + canvas.getY()]);
+
+        jumpShape = page.jumpShapes.pop();
+        while (typeof jumpShape !== "undefined") {
+            this.graphic.removeShape(jumpShape);
+            jumpShape = page.jumpShapes.pop();
+        }
+        var allpages = this.get('pages');
+        this.drawJumps(page, allpages);
+    },
+
+    redrawAllPages: function() {
+        var allpages = this.get('pages');
+        var i = 0;
+        var page;
+
+        // First draw all the page containers
+        for (i = 0; i < allpages.length; i++) {
+            page = allpages[i];
+
+            this.redrawPage(page);
+        }
+    },
+
+    drawPage: function(page, position) {
+        var canvas = Y.one(SELECTORS.LESSONPAGES);
+        page.x = position.x;
+        page.y = position.y;
+        page.width = DEFAULTS.PAGEWIDTH;
+        page.height = DEFAULTS.PAGEHEIGHT;
+        page.jumpShapes = [];
+
+        var shapeNode = this.graphic.addShape({
+            type: Y.Rect,
+            width: page.width,
+            height: page.height,
+            x: position.x,
+            y: position.y,
+            fill: DEFAULTS.PAGEFILL,
+            stroke: DEFAULTS.PAGESTROKE
+        });
+
+        page.shapeNode = shapeNode;
+
+        // Add some text to the shape
+        var titleNode = Y.Node.create('<div style="cursor: pointer; width: 200px;">' + Y.Escape.html(page.qtypestr) + ': ' + Y.Escape.html(page.title) + '</div>');
+        canvas.append(titleNode);
+        // Keep track of it so we can move it.
+        page.titleNode = titleNode;
+        titleNode.setXY([position.x + canvas.getX() + 10, position.y + canvas.getY() + 10]);
+
+        // Make the shape draggable.
+        var dd = new Y.DD.Drag({
+            node: titleNode
+        }).plug(Y.Plugin.DDConstrained, {
+            constrain2node: SELECTORS.MAINCONTAINER
+        });
+
+        dd.on('drag:drag', function(e) {
+
+            // Redraw the page and jumps.
+            page.x = e.pageX - canvas.getX() - 10;
+            page.y = e.pageY - canvas.getY() - 10;
+            this.redrawAllPages();
+            console.log(e);
+            console.log(page);
+
+        }, this);
+
+    },
+
     initializer: function() {
+        // Lets get a graphics context to draw stuff.
+        // Instantiate a graphic instance
+        this.graphic = new Y.Graphic({
+            render: SELECTORS.LESSONPAGES
+        });
+
+        var allpages = this.get('pages');
+        var i = 0;
+        var page;
+        var position = {
+            x: 0,
+            y: 0
+        };
+        // First draw all the page containers
+        for (i = 0; i < allpages.length; i++) {
+            page = allpages[i];
+
+            this.drawPage(page, position);
+
+            position.y += 150;
+        }
+
+        // Now draw jumps.
+        for (i = 0; i < allpages.length; i++) {
+            page = allpages[i];
+
+            this.drawJumps(page, allpages);
+        }
+
+        /**
         var allLessonPages = Y.all(SELECTORS.PAGEMODULES);
         var lessonpagedata = Y.JSON.parse(this.get('lessondata'));
         console.log(lessonpagedata);
@@ -61,7 +223,7 @@ Y.namespace('M.mod_lesson').PagemMove = Y.extend(PagemMove, Y.Base, {
 
             });
         });
-
+        **/
     }
 
 
@@ -75,16 +237,32 @@ Y.namespace('M.mod_lesson').PagemMove = Y.extend(PagemMove, Y.Base, {
          * @type Array
          * @writeOnce
          */
-        lessondata: {
-            value: null
+        pages: {
+             value: null
         }
     }
 });
 
 
 // Y.namespace('M.mod_lesson-pagemmove') = function() {};
-Y.namespace('M.mod_lesson.PagemMove').init = function(config) {
-    return new PagemMove(config);
+Y.namespace('M.mod_lesson.PagemMove').init = function(pages) {
+    return new PagemMove({ pages: pages});
 };
 
-}, '@VERSION@');
+
+}, '@VERSION@', {
+    "requires": [
+        "base",
+        "event",
+        "node",
+        "io",
+        "graphics",
+        "json",
+        "event-move",
+        "event-resize",
+        "dd-delegate",
+        "dd-plugin",
+        "dd-constrain",
+        "dd-drop-plugin"
+    ]
+});

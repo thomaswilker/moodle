@@ -615,32 +615,27 @@ class mod_lesson_renderer extends plugin_renderer_base {
         $output = html_writer::start_div('mod_lesson_main');
         $output .= html_writer::start_div('mod_lesson_pages');
 
-        $output .= $this->lesson_page_loop($lesson, $pageid);
+        //$output .= $this->lesson_page_loop($lesson, $pageid);
 
         $output .= html_writer::end_div();
         $output .= html_writer::end_div();
 
         $PAGE->requires->yui_module('moodle-mod_lesson-pagemmove', 'Y.M.mod_lesson.PagemMove.init',
-                array(array('lessondata' => $lessonpagedata)));
+                array($lessonpagedata));
         return $output;
         
     }
 
-    private function get_lesson_data(lesson $lesson, $pageid) {
-        $manager = lesson_page_type_manager::get($lesson);
-        $qtypes = $manager->get_page_type_strings();
-        $data = array();
+    private function get_lesson_data($lesson, $pageid) {
+        $pages = array();
         while ($pageid != 0) {
             $page = $lesson->load_page($pageid);
-            // print_object($page->properties());
-            $data[] = $page->properties();
-            // $data[$pageid]['id'] = $pageid;
-            // $data[$pageid]['title'] = $page->title;
-            // $data[$pageid]['pagetype'] = $qtypes[$page->qtype];
-            // $data[$pageid]['jumps'] = $page->jumps;
+            $pageproperties = $page->properties();
+            $pageproperties->qtypestr = $page->get_typestring();
+            $pages[] = $pageproperties;
             $pageid = $page->nextpageid;
         }
-        return json_encode($data);
+        return $pages;
     }
 
     private function lesson_page_loop(lesson $lesson, &$pageid, $clusterflag = false) {
