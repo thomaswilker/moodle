@@ -149,12 +149,52 @@ class assign_grading_table extends table_sql implements renderable {
         $fields .= 'uf.workflowstate as workflowstate, ';
         $fields .= 'uf.allocatedmarker as allocatedmarker ';
 
-        $from = '{user} u
-                         LEFT JOIN {assign_submission} s ON
-                            u.id = s.userid AND
-                            s.assignment = :assignmentid1 AND
-                            s.latest = 1
-                         LEFT JOIN {assign_grades} g ON
+        $from = '{user} u';
+        if (!$assignment->get_instance()->teamsubmission) {
+            $from .= '        LEFT JOIN {assign_submission} s ON
+                                u.id = s.userid AND
+                                s.assignment = :assignmentid1 AND
+                                s.latest = 1';
+        } else {
+            // Complex case where we need to join on the static list of groupids.
+            $groupparams = array();
+            $grouplist = array();
+            $idx = 0;
+
+            foreach ($users as $userid) {
+                $group = false;
+                $submission = false;
+                // This is not too expensive - the data will be cached and reused later anyway.
+                $this->get_group_and_submission($userid, $group, $submission, -1);
+                if ($group) {
+                    $groupparams['attu' . $idx] = intval($userid);
+                    $groupparams['attg' . $idx] = intval($group->id);
+                } else {
+                    // Default group.
+                    $groupparams['attu' . $idx] = intval($userid);
+                    $groupparams['attg' . $idx] = -1;
+                }
+                $grouplist[] = '(:attu' . $idx . ', :attg' . $idx . ')';
+                $idx = $idx + 1;
+                $params = array_merge($params, $groupparams);
+            }
+
+            $groupidsql = implode(', ', $grouplist);
+
+            $valuessql = 'SELECT CAST(userid AS integer),
+                                 CAST(groupid AS integer)
+                          FROM (VALUES' . $groupidsql . ')
+                          AS qq(userid, groupid)';
+
+            $from .= ' LEFT JOIN (' . $valuessql . ') sg ON
+                          u.id = sg.userid
+                       LEFT JOIN {assign_submission} s ON
+                          s.userid = 0 AND
+                          s.groupid = sg.groupid AND
+                          s.assignment = :assignmentid1 AND
+                          s.latest = 1';
+        }
+        $from .= '       LEFT JOIN {assign_grades} g ON
                             u.id = g.userid AND
                             g.assignment = :assignmentid2 AND
                             g.attemptnumber = s.attemptnumber
