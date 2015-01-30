@@ -38,7 +38,7 @@ Feature: Add and configure blocks throughout the site
       | username | firstname | lastname | email |
       | manager1 | Manager | 1 | manager1@asd.com |
     And I log in as "manager1"
-    And I click on "My home" "link" in the "Navigation" "block"
+    And I click on "Dashboard" "link" in the "Navigation" "block"
     When I press "Customise this page"
     Then I should not see "Assign roles in Navigation block"
 
