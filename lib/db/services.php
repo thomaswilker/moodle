@@ -1003,7 +1003,10 @@ $services = array(
    'Moodle ajax web service'  => array(
         'functions' => array (
             'core_output_load_template',
-            'core_get_string'
+            'core_get_string',
+            'tool_learningplan_reorder_competency_framework',
+            'tool_learningplan_data_for_competency_frameworks_manage_page',
+            'tool_learningplan_delete_competency_framework'
         ),
         'enabled' => 1,
         'restrictedusers' => 0,
