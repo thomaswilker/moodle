@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<XMLDB PATH="admin/tool/learningplan/db" VERSION="20150216" COMMENT="XMLDB file for Moodle admin/tool/learningplan"
+<XMLDB PATH="admin/tool/learningplan/db" VERSION="20150224" COMMENT="XMLDB file for Moodle admin/tool/learningplan"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="../../../../lib/xmldb/xmldb.xsd"
 >
@@ -11,7 +11,11 @@
         <FIELD NAME="description" TYPE="text" NOTNULL="false" SEQUENCE="false" COMMENT="Description of a single competency"/>
         <FIELD NAME="descriptionformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="The format of the description field"/>
         <FIELD NAME="idnumber" TYPE="char" LENGTH="100" NOTNULL="false" SEQUENCE="false"/>
-        <FIELD NAME="competency_framework" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The framework this competency relates to."/>
+        <FIELD NAME="competencyframeworkid" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="The framework this competency relates to."/>
+        <FIELD NAME="parentid" TYPE="int" LENGTH="10" NOTNULL="false" SEQUENCE="false" COMMENT="The parent competency."/>
+        <FIELD NAME="visible" TYPE="int" LENGTH="2" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="Used to hide the competency."/>
+        <FIELD NAME="path" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" COMMENT="Used to speed up queries that use an entire branch of the tree. Looks like /5/34/54."/>
+        <FIELD NAME="sortorder" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="false" COMMENT="Relative sort order within the branch"/>
       </FIELDS>
       <KEYS>
         <KEY NAME="primary" TYPE="primary" FIELDS="id"/>

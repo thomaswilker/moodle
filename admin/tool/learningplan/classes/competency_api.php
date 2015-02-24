@@ -35,6 +35,60 @@ use context_system;
 class competency_api {
 
     /**
+     * Create a competency from a record containing all the data for the class.
+     *
+     * Requires tool/learningplan:competencymanage capability at the system context.
+     *
+     * @param stdClass $record Record containing all the data for an instance of the class.
+     * @return competency
+     */
+    public static function create_competency(stdClass $record) {
+        // First we do a permissions check.
+        require_capability('tool/learningplan:competencymanage', context_system::instance());
+
+        // OK - all set.
+        $competency = new competency(0, $record);
+        $id = $competency->create();
+        return $framework;
+    }
+
+    /**
+     * Delete a competency by id.
+     *
+     * Requires tool/learningplan:competencymanage capability at the system context.
+     *
+     * @param int $id The record to delete. This will delete alot of related data - you better be sure.
+     * @return boolean
+     */
+    public static function delete_competency($id) {
+        // First we do a permissions check.
+        require_capability('tool/learningplan:competencymanage', context_system::instance());
+
+        // OK - all set.
+        $competency = new competency();
+        $competency->set_id($id);
+        return $competency->delete();
+    }
+
+    /**
+     * Update the details for a competency.
+     *
+     * Requires tool/learningplan:competencymanage capability at the system context.
+     *
+     * @param stdClass $record The new details for the competency. Note - must contain an id that points to the competency to update.
+     * @return boolean
+     */
+    public static function update_competency($record) {
+        // First we do a permissions check.
+        require_capability('tool/learningplan:competencymanage', context_system::instance());
+
+        // OK - all set.
+        $competency = new competency_competency(0, $record);
+        return $competency->update();
+    }
+
+
+    /**
      * Create a competency framework from a record containing all the data for the class.
      *
      * Requires tool/learningplan:competencymanage capability at the system context.

@@ -46,7 +46,7 @@
     <tbody class="drag-parentnode">
         {{#competencyframeworks}}
         <tr class="drag-samenode" data-frameworkid="{{id}}">
-            <td><span class="drag-handlecontainer"></span><span>{{shortname}} {{idnumber}}</span> {{^visible}}{{#str}}hiddenhint, tool_learningplan{{/str}}{{/visible}}</td>
+            <td><span class="drag-handlecontainer"></span><span><a href="{{pluginbaseurl}}/competencies.php?frameworkid={{id}}">{{shortname}} {{idnumber}}</a></span> {{^visible}}{{#str}}hiddenhint, tool_learningplan{{/str}}{{/visible}}</td>
             <td>{{competencycount}}</td>
             <td>
             {{#canmanage}}
