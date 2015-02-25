@@ -28,6 +28,7 @@ require_once("$CFG->libdir/externallib.php");
 use external_api;
 use external_function_parameters;
 use external_value;
+use external_format_value;
 use external_single_structure;
 use external_multiple_structure;
 use invalid_parameter_exception;
@@ -41,64 +42,69 @@ use invalid_parameter_exception;
 class external extends external_api {
 
     /**
-     * Returns description of load_frameworks() parameters.
+     * Returns description of a generic list() parameters.
      *
      * @return external_function_parameters
      */
-    public static function create_competency_framework_parameters() {
-        $shortname = new external_value(
-            PARAM_TEXT,
-            'Short name for the competency framework.',
-            VALUE_REQUIRED
-        );
-        $idnumber = new external_value(
-            PARAM_TEXT,
-            'If provided, must be a unique string to identify this competency framework.',
+    protected static function list_parameters_structure() {
+        $filters = new external_multiple_structure(new external_single_structure(
+            array(
+                'column' => new external_value(PARAM_ALPHANUMEXT, 'Column name to filter by'),
+                'value' => new external_value(PARAM_TEXT, 'Value to filter by. Must be exact match')
+            )
+        ));
+        $sort = new external_value(
+            PARAM_ALPHANUMEXT,
+            'Column to sort by.',
             VALUE_DEFAULT,
             ''
         );
-        $description = new external_value(
-            PARAM_TEXT,
-            'Optional description for the framework',
+        $order = new external_value(
+            PARAM_ALPHA,
+            'Sort direction. Should be either ASC or DESC',
             VALUE_DEFAULT,
             ''
         );
-        $visible = new external_value(
-            PARAM_BOOL,
-            'Is this framework visible?',
+        $skip = new external_value(
+            PARAM_INT,
+            'Skip this number of records before returning results',
             VALUE_DEFAULT,
-            true
+            0
+        );
+        $limit = new external_value(
+            PARAM_INT,
+            'Return this number of records at most.',
+            VALUE_DEFAULT,
+            0
         );
 
         $params = array(
-            'shortname' => $shortname,
-            'idnumber' => $idnumber,
-            'description' => $description,
-            'visible' => $visible,
+            'filters' => $filters,
+            'sort' => $sort,
+            'order' => $order,
+            'skip' => $skip,
+            'limit' => $limit
         );
         return new external_function_parameters($params);
     }
 
     /**
-     * Create a new competency framework
+     * Returns description of a generic count_x() parameters.
      *
-     * @param string $component The component that holds the template.
-     * @param string $templatename The name of the template.
-     * @return string the template
+     * @return external_function_parameters
      */
-    public static function create_competency_framework($shortname, $idnumber, $description, $visible) {
-        $params = self::validate_parameters(self::create_competency_framework_parameters(),
-                                            array(
-                                                'shortname' => $shortname,
-                                                'idnumber' => $idnumber,
-                                                'description' => $description,
-                                                'visible' => $visible,
-                                            ));
+    public static function count_parameters_structure() {
+        $filters = new external_multiple_structure(new external_single_structure(
+            array(
+                'column' => new external_value(PARAM_ALPHANUMEXT, 'Column name to filter by'),
+                'value' => new external_value(PARAM_TEXT, 'Value to filter by. Must be exact match')
+            )
+        ));
 
-        $params = (object) $params;
-
-        $result = competency_api::create_framework($params);
-        return $result->to_record();
+        $params = array(
+            'filters' => $filters,
+        );
+        return new external_function_parameters($params);
     }
 
     /**
@@ -120,8 +126,11 @@ class external extends external_api {
             'If provided, must be a unique string to identify this competency framework'
         );
         $description = new external_value(
-            PARAM_TEXT,
-            'Optional description for the framework'
+            PARAM_RAW,
+            'Description for the framework'
+        );
+        $descriptionformat = new external_format_value(
+            'Description format for the framework'
         );
         $visible = new external_value(
             PARAM_BOOL,
@@ -149,6 +158,7 @@ class external extends external_api {
             'shortname' => $shortname,
             'idnumber' => $idnumber,
             'description' => $description,
+            'descriptionformat' => $descriptionformat,
             'visible' => $visible,
             'sortorder' => $sortorder,
             'timecreated' => $timecreated,
@@ -156,6 +166,74 @@ class external extends external_api {
             'usermodified' => $usermodified,
         );
         return new external_single_structure($returns);
+    }
+
+    /**
+     * Returns description of create_competency_framework() parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function create_competency_framework_parameters() {
+        $shortname = new external_value(
+            PARAM_TEXT,
+            'Short name for the competency framework.',
+            VALUE_REQUIRED
+        );
+        $idnumber = new external_value(
+            PARAM_TEXT,
+            'If provided, must be a unique string to identify this competency framework.',
+            VALUE_DEFAULT,
+            ''
+        );
+        $description = new external_value(
+            PARAM_RAW,
+            'Optional description for the framework',
+            VALUE_DEFAULT,
+            ''
+        );
+        $descriptionformat = new external_format_value(
+            'Optional description format for the framework',
+            VALUE_DEFAULT,
+            FORMAT_HTML
+        );
+        $visible = new external_value(
+            PARAM_BOOL,
+            'Is this framework visible?',
+            VALUE_DEFAULT,
+            true
+        );
+
+        $params = array(
+            'shortname' => $shortname,
+            'idnumber' => $idnumber,
+            'description' => $description,
+            'descriptionformat' => $descriptionformat,
+            'visible' => $visible,
+        );
+        return new external_function_parameters($params);
+    }
+
+    /**
+     * Create a new competency framework
+     *
+     * @param string $component The component that holds the template.
+     * @param string $templatename The name of the template.
+     * @return string the template
+     */
+    public static function create_competency_framework($shortname, $idnumber, $description, $descriptionformat, $visible) {
+        $params = self::validate_parameters(self::create_competency_framework_parameters(),
+                                            array(
+                                                'shortname' => $shortname,
+                                                'idnumber' => $idnumber,
+                                                'description' => $description,
+                                                'descriptionformat' => $descriptionformat,
+                                                'visible' => $visible,
+                                            ));
+
+        $params = (object) $params;
+
+        $result = competency_api::create_framework($params);
+        return $result->to_record();
     }
 
     /**
@@ -168,7 +246,7 @@ class external extends external_api {
     }
 
     /**
-     * Returns description of load_frameworks() parameters.
+     * Returns description of read_competency_framework() parameters.
      *
      * @return external_function_parameters
      */
@@ -186,11 +264,10 @@ class external extends external_api {
     }
 
     /**
-     * Create a new competency framework
+     * Read a competency framework by id.
      *
-     * @param string $component The component that holds the template.
-     * @param string $templatename The name of the template.
-     * @return string the template
+     * @param int $id The id of the framework.
+     * @return stdClass
      */
     public static function read_competency_framework($id) {
         $params = self::validate_parameters(self::read_competency_framework_parameters(),
@@ -230,7 +307,7 @@ class external extends external_api {
     }
 
     /**
-     * Create a new competency framework
+     * Delete a competency framework
      *
      * @param int $id The competency framework id
      * @return boolean
@@ -275,8 +352,12 @@ class external extends external_api {
             VALUE_REQUIRED
         );
         $description = new external_value(
-            PARAM_TEXT,
-            'Optional description for the framework',
+            PARAM_RAW,
+            'Description for the framework',
+            VALUE_REQUIRED
+        );
+        $descriptionformat = new external_format_value(
+            'Description format for the framework',
             VALUE_REQUIRED
         );
         $visible = new external_value(
@@ -290,24 +371,37 @@ class external extends external_api {
             'shortname' => $shortname,
             'idnumber' => $idnumber,
             'description' => $description,
+            'descriptionformat' => $descriptionformat,
             'visible' => $visible,
         );
         return new external_function_parameters($params);
     }
 
     /**
-     * Create a new competency framework
+     * Update an existing competency framework
      *
      * @param int $id The competency framework id
+     * @param string $shortname
+     * @param string $idnumber
+     * @param string $description
+     * @param int $descriptionformat
+     * @param boolean $visible
      * @return boolean
      */
-    public static function update_competency_framework($id, $shortname, $idnumber, $description, $visible) {
+    public static function update_competency_framework($id,
+                                                       $shortname,
+                                                       $idnumber,
+                                                       $description,
+                                                       $descriptionformat,
+                                                       $visible) {
+
         $params = self::validate_parameters(self::update_competency_framework_parameters(),
                                             array(
                                                 'id' => $id,
                                                 'shortname' => $shortname,
                                                 'idnumber' => $idnumber,
                                                 'description' => $description,
+                                                'descriptionformat' => $descriptionformat,
                                                 'visible' => $visible
                                             ));
         $params = (object) $params;
@@ -330,45 +424,7 @@ class external extends external_api {
      * @return external_function_parameters
      */
     public static function list_competency_frameworks_parameters() {
-        $filters = new external_multiple_structure(new external_single_structure(
-            array(
-                'column' => new external_value(PARAM_ALPHANUMEXT, 'Column name to filter by'),
-                'value' => new external_value(PARAM_TEXT, 'Value to filter by. Must be exact match')
-            )
-        ));
-        $sort = new external_value(
-            PARAM_ALPHANUMEXT,
-            'Column to sort by.',
-            VALUE_DEFAULT,
-            ''
-        );
-        $order = new external_value(
-            PARAM_ALPHA,
-            'Sort direction. Should be either ASC or DESC',
-            VALUE_DEFAULT,
-            ''
-        );
-        $skip = new external_value(
-            PARAM_INT,
-            'Skip this number of records before returning results',
-            VALUE_DEFAULT,
-            0
-        );
-        $limit = new external_value(
-            PARAM_INT,
-            'Return this number of records at most.',
-            VALUE_DEFAULT,
-            0
-        );
-
-        $params = array(
-            'filters' => $filters,
-            'sort' => $sort,
-            'order' => $order,
-            'skip' => $skip,
-            'limit' => $limit
-        );
-        return new external_function_parameters($params);
+        return self::list_parameters_structure();
     }
 
     /**
@@ -554,7 +610,7 @@ class external extends external_api {
                                                 'from' => $from,
                                                 'to' => $to
                                             ));
-        competency_api::reorder_framework($params['from'], $params['to']);
+        return competency_api::reorder_framework($params['from'], $params['to']);
     }
 
     /**
@@ -563,7 +619,464 @@ class external extends external_api {
      * @return external_description
      */
     public static function reorder_competency_framework_returns() {
-        // This function does not return anything.
-        return null;
+        return new external_value(PARAM_BOOL, 'True if this framework was moved.');
     }
+
+    /**
+     * Returns the external structure of a full competency record.
+     *
+     * @return external_single_structure
+     */
+    protected static function get_competency_external_structure() {
+        $id = new external_value(
+            PARAM_INT,
+            'Database record id'
+        );
+        $shortname = new external_value(
+            PARAM_TEXT,
+            'Short name for the competency'
+        );
+        $idnumber = new external_value(
+            PARAM_TEXT,
+            'If provided, must be a unique string to identify this competency'
+        );
+        $description = new external_value(
+            PARAM_RAW,
+            'Description for the competency'
+        );
+        $descriptionformat = new external_format_value(
+            'Description format for the competency'
+        );
+        $visible = new external_value(
+            PARAM_BOOL,
+            'Is this competency visible?'
+        );
+        $sortorder = new external_value(
+            PARAM_INT,
+            'Relative sort order of this competency'
+        );
+        $competencyframeworkid = new external_value(
+            PARAM_INT,
+            'Competency framework id that this competency belongs to'
+        );
+        $parentid = new external_value(
+            PARAM_INT,
+            'Parent competency id. 0 means top level node.'
+        );
+        $timecreated = new external_value(
+            PARAM_INT,
+            'Timestamp this record was created'
+        );
+        $timemodified = new external_value(
+            PARAM_INT,
+            'Timestamp this record was modified'
+        );
+        $usermodified = new external_value(
+            PARAM_INT,
+            'User who modified this record last'
+        );
+        $competencyframeworkid = new external_value(
+            PARAM_INT,
+            'Competency framework this competency belongs to.'
+        );
+        $parentid = new external_value(
+            PARAM_INT,
+            'The id of the parent competency.'
+        );
+        $path = new external_value(
+            PARAM_RAW,
+            'The path of parents all the way to the root of the tree.'
+        );
+
+        $returns = array(
+            'id' => $id,
+            'shortname' => $shortname,
+            'idnumber' => $idnumber,
+            'description' => $description,
+            'descriptionformat' => $descriptionformat,
+            'visible' => $visible,
+            'sortorder' => $sortorder,
+            'timecreated' => $timecreated,
+            'timemodified' => $timemodified,
+            'usermodified' => $usermodified,
+            'parentid' => $parentid,
+            'competencyframeworkid' => $competencyframeworkid,
+            'path' => $path,
+        );
+        return new external_single_structure($returns);
+    }
+
+    /**
+     * Returns description of create_competency() parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function create_competency_parameters() {
+        $shortname = new external_value(
+            PARAM_TEXT,
+            'Short name for the competency framework.',
+            VALUE_REQUIRED
+        );
+        $idnumber = new external_value(
+            PARAM_TEXT,
+            'If provided, must be a unique string to identify this competency framework.',
+            VALUE_DEFAULT,
+            ''
+        );
+        $description = new external_value(
+            PARAM_RAW,
+            'Optional description for the framework',
+            VALUE_DEFAULT,
+            ''
+        );
+        $descriptionformat = new external_format_value(
+            'Optional description format for the framework',
+            VALUE_DEFAULT,
+            FORMAT_HTML
+        );
+        $visible = new external_value(
+            PARAM_BOOL,
+            'Is this competency visible?',
+            VALUE_DEFAULT,
+            true
+        );
+        $competencyframeworkid = new external_value(
+            PARAM_INT,
+            'Which competency framework does this competency belong to?'
+        );
+        $parentid = new external_value(
+            PARAM_INT,
+            'The parent competency. 0 means this is a top level competency.'
+        );
+
+        $params = array(
+            'shortname' => $shortname,
+            'idnumber' => $idnumber,
+            'description' => $description,
+            'descriptionformat' => $descriptionformat,
+            'visible' => $visible,
+            'competencyframeworkid' => $competencyframeworkid,
+            'parentid' => $parentid,
+        );
+        return new external_function_parameters($params);
+    }
+
+    /**
+     * Create a new competency framework
+     *
+     * @param string $shortname
+     * @param string $idnumber
+     * @param string $description
+     * @param int $descriptionformat
+     * @param bool $visible
+     * @param int $competencyframeworkid
+     * @param int $parentid
+     * @return string the template
+     */
+    public static function create_competency($shortname,
+                                             $idnumber,
+                                             $description,
+                                             $descriptionformat,
+                                             $visible,
+                                             $competencyframeworkid,
+                                             $parentid) {
+        $params = self::validate_parameters(self::create_competency_parameters(),
+                                            array(
+                                                'shortname' => $shortname,
+                                                'idnumber' => $idnumber,
+                                                'description' => $description,
+                                                'descriptionformat' => $descriptionformat,
+                                                'visible' => $visible,
+                                                'competencyframeworkid' => $competencyframeworkid,
+                                                'parentid' => $parentid,
+                                            ));
+
+        $params = (object) $params;
+
+        $result = competency_api::create_competency($params);
+        return $result->to_record();
+    }
+
+    /**
+     * Returns description of create_competency() result value.
+     *
+     * @return external_description
+     */
+    public static function create_competency_returns() {
+        return self::get_competency_external_structure();
+    }
+
+    /**
+     * Returns description of read_competency() parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function read_competency_parameters() {
+        $id = new external_value(
+            PARAM_INT,
+            'Data base record id for the competency',
+            VALUE_REQUIRED
+        );
+
+        $params = array(
+            'id' => $id,
+        );
+        return new external_function_parameters($params);
+    }
+
+    /**
+     * Read a competency by id.
+     *
+     * @param int $id The id of the competency
+     * @return stdClass
+     */
+    public static function read_competency($id) {
+        $params = self::validate_parameters(self::read_competency_parameters(),
+                                            array(
+                                                'id' => $id,
+                                            ));
+
+        $result = competency_api::read_competency($params['id']);
+        return $result->to_record();
+    }
+
+    /**
+     * Returns description of read_competency() result value.
+     *
+     * @return external_description
+     */
+    public static function read_competency_returns() {
+        return self::get_competency_external_structure();
+    }
+
+    /**
+     * Returns description of delete_competency() parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function delete_competency_parameters() {
+        $id = new external_value(
+            PARAM_INT,
+            'Data base record id for the competency',
+            VALUE_REQUIRED
+        );
+
+        $params = array(
+            'id' => $id,
+        );
+        return new external_function_parameters($params);
+    }
+
+    /**
+     * Delete a competency
+     *
+     * @param int $id The competency id
+     * @return boolean
+     */
+    public static function delete_competency($id) {
+        $params = self::validate_parameters(self::delete_competency_parameters(),
+                                            array(
+                                                'id' => $id,
+                                            ));
+
+        return competency_api::delete_competency($params['id']);
+    }
+
+    /**
+     * Returns description of delete_competency() result value.
+     *
+     * @return external_description
+     */
+    public static function delete_competency_returns() {
+        return new external_value(PARAM_BOOL, 'True if the delete was successful');
+    }
+
+    /**
+     * Returns description of update_competency() parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function update_competency_parameters() {
+        $id = new external_value(
+            PARAM_INT,
+            'Data base record id for the competency',
+            VALUE_REQUIRED
+        );
+        $shortname = new external_value(
+            PARAM_TEXT,
+            'Short name for the competency.',
+            VALUE_REQUIRED
+        );
+        $idnumber = new external_value(
+            PARAM_TEXT,
+            'If provided, must be a unique string to identify this competency.',
+            VALUE_REQUIRED
+        );
+        $description = new external_value(
+            PARAM_RAW,
+            'Description for the framework',
+            VALUE_REQUIRED
+        );
+        $descriptionformat = new external_format_value(
+            'Description format for the framework',
+            VALUE_REQUIRED
+        );
+        $visible = new external_value(
+            PARAM_BOOL,
+            'Is this framework visible?',
+            VALUE_REQUIRED
+        );
+
+        $params = array(
+            'id' => $id,
+            'shortname' => $shortname,
+            'idnumber' => $idnumber,
+            'description' => $description,
+            'descriptionformat' => $descriptionformat,
+            'visible' => $visible,
+        );
+        return new external_function_parameters($params);
+    }
+
+    /**
+     * Update an existing competency
+     *
+     * @param int $id The competency id
+     * @param string $shortname
+     * @param string $idnumber
+     * @param string $description
+     * @param int $descriptionformat
+     * @param boolean $visible
+     * @return boolean
+     */
+    public static function update_competency($id,
+                                             $shortname,
+                                             $idnumber,
+                                             $description,
+                                             $descriptionformat,
+                                             $visible) {
+
+        $params = self::validate_parameters(self::update_competency_parameters(),
+                                            array(
+                                                'id' => $id,
+                                                'shortname' => $shortname,
+                                                'idnumber' => $idnumber,
+                                                'description' => $description,
+                                                'descriptionformat' => $descriptionformat,
+                                                'visible' => $visible
+                                            ));
+        $params = (object) $params;
+
+        return competency_api::update_competency($params);
+    }
+
+    /**
+     * Returns description of update_competency_framework() result value.
+     *
+     * @return external_description
+     */
+    public static function update_competency_returns() {
+        return new external_value(PARAM_BOOL, 'True if the update was successful');
+    }
+
+    /**
+     * Returns description of list_competencies() parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function list_competencies_parameters() {
+        return self::list_parameters_structure();
+    }
+
+    /**
+     * List the existing competency frameworks
+     *
+     * @return boolean
+     */
+    public static function list_competencies($filters, $sort, $order, $skip, $limit) {
+        $params = self::validate_parameters(self::list_competencies_parameters(),
+                                            array(
+                                                'filters' => $filters,
+                                                'sort' => $sort,
+                                                'order' => $order,
+                                                'skip' => $skip,
+                                                'limit' => $limit
+                                            ));
+
+        if ($params['order'] !== '' && $params['order'] !== 'ASC' && $params['order'] !== 'DESC') {
+            throw new invalid_parameter_exception('Invalid order param. Must be ASC, DESC or empty.');
+        }
+
+        $safefilters = array();
+        $validcolumns = array('id', 'shortname', 'description', 'sortorder', 'idnumber', 'visible', 'parentid', 'competencyframeworkid');
+        foreach ($params['filters'] as $filter) {
+            if (!in_array($filter->column, $validcolumns)) {
+                throw new invalid_parameter_exception('Filter column was invalid');
+            }
+            $safefilters[$filter->column] = $filter->value;
+        }
+
+        $results = competency_api::list_competencies($safefilters,
+                                                     $params['sort'],
+                                                     $params['order'],
+                                                     $params['skip'],
+                                                     $params['limit']);
+        $records = array();
+        foreach ($results as $result) {
+            $record = $result->to_record();
+            array_push($records, $record);
+        }
+        return $records;
+    }
+
+    /**
+     * Returns description of list_competencies() result value.
+     *
+     * @return external_description
+     */
+    public static function list_competencies_returns() {
+        return new external_multiple_structure(self::get_competency_external_structure());
+    }
+
+    /**
+     * Returns description of count_competencies() parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function count_competencies_parameters() {
+        return self::count_parameters_structure();
+    }
+
+    /**
+     * Count the existing competency frameworks
+     *
+     * @return boolean
+     */
+    public static function count_competencies($filters) {
+        $params = self::validate_parameters(self::count_competencies_parameters(),
+                                            array(
+                                                'filters' => $filters
+                                            ));
+
+        $safefilters = array();
+        $validcolumns = array('id', 'shortname', 'description', 'sortorder', 'idnumber', 'visible', 'parentid', 'competencyframeworkid');
+        foreach ($params['filters'] as $filter) {
+            if (!in_array($filter->column, $validcolumns)) {
+                throw new invalid_parameter_exception('Filter column was invalid');
+            }
+            $safefilters[$filter->column] = $filter->value;
+        }
+
+        return competency_api::count_competencies($safefilters);
+    }
+
+    /**
+     * Returns description of count_competencies() result value.
+     *
+     * @return external_description
+     */
+    public static function count_competencies_returns() {
+        return new external_value(PARAM_INT, 'The number of competencies found.');
+    }
+
 }

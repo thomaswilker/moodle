@@ -26,7 +26,7 @@
 
 $functions = array(
 
-    // Cohort related functions.
+    // Learning plan related functions.
 
     'tool_learningplan_create_competency_framework' => array(
         'classname'   => 'tool_learningplan\external',
@@ -91,6 +91,54 @@ $functions = array(
         'description' => 'Move a competency framework to a new relative sort order.',
         'type'        => 'write',
         'capabilities'=> 'tool/learningplan:competencymanage',
+    ),
+    'tool_learningplan_create_competency' => array(
+        'classname'   => 'tool_learningplan\external',
+        'methodname'  => 'create_competency',
+        'classpath'   => '',
+        'description' => 'Creates new competencies.',
+        'type'        => 'write',
+        'capabilities'=> 'tool/learningplan:competencymanage',
+    ),
+    'tool_learningplan_read_competency' => array(
+        'classname'   => 'tool_learningplan\external',
+        'methodname'  => 'read_competency',
+        'classpath'   => '',
+        'description' => 'Load a summary of a competency.',
+        'type'        => 'read',
+        'capabilities'=> 'tool/learningplan:competencyview',
+    ),
+    'tool_learningplan_delete_competency' => array(
+        'classname'   => 'tool_learningplan\external',
+        'methodname'  => 'delete_competency',
+        'classpath'   => '',
+        'description' => 'Delete a competency.',
+        'type'        => 'write',
+        'capabilities'=> 'tool/learningplan:competencymanage',
+    ),
+    'tool_learningplan_update_competency' => array(
+        'classname'   => 'tool_learningplan\external',
+        'methodname'  => 'update_competency',
+        'classpath'   => '',
+        'description' => 'Update a competency.',
+        'type'        => 'write',
+        'capabilities'=> 'tool/learningplan:competencymanage',
+    ),
+    'tool_learningplan_list_competencies' => array(
+        'classname'   => 'tool_learningplan\external',
+        'methodname'  => 'list_competencies',
+        'classpath'   => '',
+        'description' => 'Load a list of a competencies.',
+        'type'        => 'read',
+        'capabilities'=> 'tool/learningplan:competencyview',
+    ),
+    'tool_learningplan_count_competencies' => array(
+        'classname'   => 'tool_learningplan\external',
+        'methodname'  => 'count_competencies',
+        'classpath'   => '',
+        'description' => 'Count a list of a competencies.',
+        'type'        => 'read',
+        'capabilities'=> 'tool/learningplan:competencyview',
     ),
 
 );

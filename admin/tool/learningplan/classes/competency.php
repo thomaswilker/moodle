@@ -269,6 +269,12 @@ class competency extends persistent {
         if (isset($record->usermodified)) {
             $this->set_usermodified($record->usermodified);
         }
+        if (isset($record->competencyframeworkid)) {
+            $this->set_competencyframeworkid($record->competencyframeworkid);
+        }
+        if (isset($record->parentid)) {
+            $this->set_parentid($record->parentid);
+        }
         return $this;
     }
 
@@ -289,6 +295,9 @@ class competency extends persistent {
         $record->timecreated = $this->get_timecreated();
         $record->timemodified = $this->get_timemodified();
         $record->usermodified = $this->get_usermodified();
+        $record->competencyframeworkid = $this->get_competencyframeworkid();
+        $record->parentid = $this->get_parentid();
+        $record->path = $this->get_path();
 
         return $record;
     }
@@ -309,7 +318,7 @@ class competency extends persistent {
     }
 
     /**
-     * Add a default for the sortorder field to the default create logic.
+     * Fix all paths when moving to a new parent.
      *
      * @return persistent
      */
@@ -317,18 +326,19 @@ class competency extends persistent {
         global $DB;
 
         // See if the parentid changed, if so we have work to do.
-        $before = new competency($this->id);
+        $before = new competency($this->get_id());
         if ($before->parentid != $this->parentid) {
             $parent = new competency($this->parentid);
 
-            // Update our own path.
+            // Update our own path, competencyframework and sortorder.
+            $this->competencyframeworkid = $parent->competencyframeworkid;
             $this->path = $parent->path . '/' . $this->parentid;
+            $this->sortorder = $this->count(array('parentid'=>$this->parentid));
 
             // We need to fix all the paths of the children.
             $like = $DB->sql_like('path', $before->path . '/' . $before->id);
             $sql = 'UPDATE {tool_learningplan_comp} SET path = REPLACE(path, ?, ?) WHERE ' . $like;
             $DB->execute($sql, array($before->path . '/' . $this->id, $this->path . '/' . $this->id));
-
         }
         // Do the default update.
         return parent::update();
@@ -342,11 +352,11 @@ class competency extends persistent {
     public function delete() {
         global $DB;
 
-        $deletepath = $this->path . '/' . $this->id;
+        $deletepath = $this->path . '/' . $this->get_id();
 
         // We need to delete all the children.
-        $like = $DB->sql_like('path', $deletepath);
-        $DB->delete_records_select('tool_learningplan_comp', $like);
+        $like = $DB->sql_like('path', ':deletepath');
+        $DB->delete_records_select('tool_learningplan_comp', $like, array('deletepath'=>$deletepath));
         // Do the default delete.
         return parent::delete();
     }

@@ -49,7 +49,7 @@ class competency_api {
         // OK - all set.
         $competency = new competency(0, $record);
         $id = $competency->create();
-        return $framework;
+        return $competency;
     }
 
     /**
@@ -82,11 +82,79 @@ class competency_api {
         // First we do a permissions check.
         require_capability('tool/learningplan:competencymanage', context_system::instance());
 
+        // Some things should not be changed in an update - they should use a more specific method.
+        $current = new competency($record->id);
+        $record->sortorder = $current->get_sortorder();
+        $record->parentid = $current->get_parentid();
+        $record->competencyframeworkid = $current->get_competencyframeworkid();
+
         // OK - all set.
-        $competency = new competency_competency(0, $record);
+        $competency = new competency(0, $record);
         return $competency->update();
     }
 
+    /**
+     * Read a the details for a single competency and return a record.
+     *
+     * Requires tool/learningplan:competencyread capability at the system context.
+     *
+     * @param int $id The id of the competency to read.
+     * @return stdClass
+     */
+    public static function read_competency($id) {
+        // First we do a permissions check.
+        $context = context_system::instance();
+        if (!has_any_capability(array('tool/learningplan:competencyread', 'tool/learningplan:competencymanage'), $context)) {
+             throw new required_capability_exception($context, 'tool/learningplan:competencyread', 'nopermission', '');
+        }
+
+        // OK - all set.
+        return new competency($id);
+    }
+
+    /**
+     * Perform a search based on the provided filters and return a paginated list of records.
+     *
+     * Requires tool/learningplan:competencyread capability at the system context.
+     *
+     * @param array $filters A list of filters to apply to the list.
+     * @param string $sort The column to sort on
+     * @param string $order ('ASC' or 'DESC')
+     * @param int $skip Number of records to skip (pagination)
+     * @param int $limit Max of records to return (pagination)
+     * @return array of competencies
+     */
+    public static function list_competencies($filters, $sort, $order, $skip, $limit) {
+        // First we do a permissions check.
+        $context = context_system::instance();
+        if (!has_any_capability(array('tool/learningplan:competencyread', 'tool/learningplan:competencymanage'), $context)) {
+             throw new required_capability_exception($context, 'tool/learningplan:competencyread', 'nopermission', '');
+        }
+
+        // OK - all set.
+        $competency = new competency();
+        return $competency->search($filters, $sort, $order, $skip, $limit);
+    }
+
+    /**
+     * Perform a search based on the provided filters and return a paginated list of records.
+     *
+     * Requires tool/learningplan:competencyread capability at the system context.
+     *
+     * @param array $filters A list of filters to apply to the list.
+     * @return int
+     */
+    public static function count_competencies($filters) {
+        // First we do a permissions check.
+        $context = context_system::instance();
+        if (!has_any_capability(array('tool/learningplan:competencyread', 'tool/learningplan:competencymanage'), $context)) {
+             throw new required_capability_exception($context, 'tool/learningplan:competencyread', 'nopermission', '');
+        }
+
+        // OK - all set.
+        $competency = new competency();
+        return $competency->count($filters);
+    }
 
     /**
      * Create a competency framework from a record containing all the data for the class.
@@ -161,36 +229,14 @@ class competency_api {
     }
 
     /**
-     * Perform a search based on the provided filters and return a paginated list of records.
+     * Move the competency framework up or down in the display list.
      *
-     * Requires tool/learningplan:competencyread capability at the system context.
+     * Requires tool/learningplan:competencymanage capability at the system context.
      *
-     * @param array $filters A list of filters to apply to the list.
-     * @param string $sort The column to sort on
-     * @param string $order ('ASC' or 'DESC')
-     * @param int $skip Number of records to skip (pagination)
-     * @param int $limit Max of records to return (pagination)
-     * @return array of competency_framework
-     */
-    public static function list_frameworks($filters, $sort, $order, $skip, $limit) {
-        // First we do a permissions check.
-        $context = context_system::instance();
-        if (!has_any_capability(array('tool/learningplan:competencyread', 'tool/learningplan:competencymanage'), $context)) {
-             throw new required_capability_exception($context, 'tool/learningplan:competencyread', 'nopermission', '');
-        }
-
-        // OK - all set.
-        $framework = new competency_framework();
-        return $framework->search($filters, $sort, $order, $skip, $limit);
-    }
-
-    /**
-     * Perform a search based on the provided filters and return a paginated list of records.
-     *
-     * Requires tool/learningplan:competencyread capability at the system context.
-     *
-     * @param array $filters A list of filters to apply to the list.
-     * @return int
+     * @param int $frameworkidfrom The framework we are moving.
+     * @param int $frameworkidto Where we are moving to. If moving down, it will go after this framework,
+     *                           If moving up, it will go before this framework.
+     * @return boolean
      */
     public static function reorder_framework($frameworkidfrom, $frameworkidto) {
         require_capability('tool/learningplan:competencymanage', context_system::instance());
@@ -216,7 +262,31 @@ class competency_api {
             }
         }
         $frameworkfrom->set_sortorder($frameworkto->get_sortorder());
-        $frameworkfrom->update();
+        return $frameworkfrom->update();
+    }
+
+    /**
+     * Perform a search based on the provided filters and return a paginated list of records.
+     *
+     * Requires tool/learningplan:competencyread capability at the system context.
+     *
+     * @param array $filters A list of filters to apply to the list.
+     * @param string $sort The column to sort on
+     * @param string $order ('ASC' or 'DESC')
+     * @param int $skip Number of records to skip (pagination)
+     * @param int $limit Max of records to return (pagination)
+     * @return array of competency_framework
+     */
+    public static function list_frameworks($filters, $sort, $order, $skip, $limit) {
+        // First we do a permissions check.
+        $context = context_system::instance();
+        if (!has_any_capability(array('tool/learningplan:competencyread', 'tool/learningplan:competencymanage'), $context)) {
+             throw new required_capability_exception($context, 'tool/learningplan:competencyread', 'nopermission', '');
+        }
+
+        // OK - all set.
+        $framework = new competency_framework();
+        return $framework->search($filters, $sort, $order, $skip, $limit);
     }
 
     /**
