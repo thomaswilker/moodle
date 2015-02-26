@@ -26,13 +26,16 @@ $string['pluginname'] = 'Learning Plans';
 $string['learningplan:competencymanage'] = 'Manage competency frameworks';
 $string['learningplan:competencyread'] = 'View competency frameworks';
 $string['competencies'] = 'Competencies';
+$string['competenciesforframework'] = 'Competencies for {$a}';
 $string['competencyframeworks'] = 'Competency Frameworks';
 $string['addnewcompetencyframework'] = 'Add new competency framework';
+$string['addnewcompetency'] = 'Add new competency';
 $string['editcompetencyframework'] = 'Edit competency framework';
 $string['listcompetencyframeworkscaption'] = 'List of competency frameworks';
 $string['competencyframeworkname'] = 'Name';
 $string['actions'] = 'Actions';
 $string['nocompetencyframeworks'] = 'No competency frameworks have been created yet.';
+$string['nocompetencies'] = 'No competencies have been created in this framework.';
 
 $string['shortname'] = 'Name';
 $string['savechanges'] = 'Save changes';
@@ -48,4 +51,5 @@ $string['deletethiscompetencyframework'] = 'Delete';
 $string['hiddenhint'] = '(hidden)';
 $string['movecompetencyframework'] = 'Move competency framework';
 $string['moveframeworkafter'] = 'Move competency framework after {$a}';
+$string['withselectedcompetency'] = 'With selected competency:';
 

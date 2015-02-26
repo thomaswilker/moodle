@@ -28,7 +28,7 @@ defined('MOODLE_INTERNAL') || die;
 // Manage competency frameworks page.
 $temp = new admin_externalpage(
     'toollearningplancompetencies',
-    get_string('competencies', 'tool_learningplan'),
+    get_string('competencyframeworks', 'tool_learningplan'),
     new moodle_url('/admin/tool/learningplan/competencyframeworks.php'),
     'tool/learningplan:competencymanage'
 );

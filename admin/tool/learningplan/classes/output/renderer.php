@@ -48,4 +48,16 @@ class renderer extends plugin_renderer_base {
         $data = $page->export_for_template($this);
         return parent::render_from_template('tool_learningplan/manage_competency_frameworks_page', $data);
     }
+
+    /**
+     * Defer to template.
+     *
+     * @param manage_competencies_page $page
+     *
+     * @return string html for the page
+     */
+    public function render_manage_competencies_page($page) {
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('tool_learningplan/manage_competencies_page', $data);
+    }
 }

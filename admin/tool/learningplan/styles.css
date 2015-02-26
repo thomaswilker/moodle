@@ -1,0 +1,18 @@
+[data-region=managecompetencies] ul li {
+    list-style-type: none;
+}
+[data-region=managecompetencies] ul li img {
+    margin-left: -20px;
+    margin-right: 4px;
+}
+.dir-rtl [data-region=managecompetencies] ul li img {
+    margin-right: -20px;
+    margin-left: 4px;
+}
+
+[data-region=managecompetencies] ul [aria-selected=true] {
+    background-color: #dfdfdf;
+    outline-style: solid;
+    outline-color: #999;
+    outline-width: 1px;
+}
