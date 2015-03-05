@@ -140,6 +140,14 @@ $functions = array(
         'type'        => 'read',
         'capabilities'=> 'tool/learningplan:competencyview',
     ),
+    'tool_learningplan_search_competencies' => array(
+        'classname'   => 'tool_learningplan\external',
+        'methodname'  => 'search_competencies',
+        'classpath'   => '',
+        'description' => 'Search a list of a competencies.',
+        'type'        => 'read',
+        'capabilities'=> 'tool/learningplan:competencyview',
+    ),
 
 );
 

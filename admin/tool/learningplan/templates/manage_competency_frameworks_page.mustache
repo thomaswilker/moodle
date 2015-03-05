@@ -46,7 +46,7 @@
     <tbody class="drag-parentnode">
         {{#competencyframeworks}}
         <tr class="drag-samenode" data-frameworkid="{{id}}">
-            <td><span class="drag-handlecontainer"></span><span><a href="{{pluginbaseurl}}/competencies.php?frameworkid={{id}}">{{shortname}} {{idnumber}}</a></span> {{^visible}}{{#str}}hiddenhint, tool_learningplan{{/str}}{{/visible}}</td>
+            <td><span class="drag-handlecontainer"></span><span><a href="{{pluginbaseurl}}/competencies.php?competencyframeworkid={{id}}">{{shortname}} {{idnumber}}</a></span> {{^visible}}{{#str}}hiddenhint, tool_learningplan{{/str}}{{/visible}}</td>
             <td>{{competencycount}}</td>
             <td>
             {{#canmanage}}
@@ -94,6 +94,14 @@ require(['tool_learningplan/frameworkdelete',
 
     menu.menu('{{#str}}edit{{/str}}', '.competencyframeworkactions');
 });
+require(['core/log'], function(log) {
+    log.trace('foo', 'bar');
+    log.debug('foo', 'bar');
+    log.info('foo', 'bar');
+    log.warn('foo', 'bar');
+    log.error('foo', 'bar');
+});
+
 {{/js}}
 
 </div>

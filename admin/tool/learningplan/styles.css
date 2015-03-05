@@ -10,9 +10,16 @@
     margin-left: 4px;
 }
 
+[data-region=managecompetencies] ul {
+    cursor: pointer;
+}
 [data-region=managecompetencies] ul [aria-selected=true] {
     background-color: #dfdfdf;
-    outline-style: solid;
-    outline-color: #999;
-    outline-width: 1px;
+}
+[data-region="filtercompetencies"] input {
+    margin-left: 10px;
+}
+
+.dir-rtl [data-region="filtercompetencies"] input {
+    margin-right: 10px;
 }

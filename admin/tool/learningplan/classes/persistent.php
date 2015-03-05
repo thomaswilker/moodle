@@ -228,7 +228,7 @@ abstract class persistent {
      *
      * @return array of persistent instances.
      */
-    public function search($filters = array(), $sort = '', $order = '', $skip = 0, $limit = 0) {
+    public function get_records($filters = array(), $sort = '', $order = '', $skip = 0, $limit = 0) {
         global $DB;
 
         $records = $DB->get_records($this->get_table_name(), $filters, $sort . ' ' . $order, '*', $skip, $limit);
@@ -246,7 +246,7 @@ abstract class persistent {
      *
      * @return int
      */
-    public function count($filters = array()) {
+    public function count_records($filters = array()) {
         global $DB;
 
         $count = $DB->count_records($this->get_table_name(), $filters);

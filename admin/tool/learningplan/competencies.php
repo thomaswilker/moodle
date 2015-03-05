@@ -27,14 +27,14 @@ require_once($CFG->libdir.'/adminlib.php');
 
 admin_externalpage_setup('toollearningplancompetencies');
 
-$id = required_param('frameworkid', PARAM_INT);
+$id = required_param('competencyframeworkid', PARAM_INT);
 
 $framework = \tool_learningplan\competency_api::read_framework($id);
 
 $title = get_string('competencies', 'tool_learningplan');
 $pagetitle = get_string('competenciesforframework', 'tool_learningplan', $framework->get_shortname());
 // Set up the page.
-$url = new moodle_url("/admin/tool/learningplan/competencies.php", array('frameworkid' => $framework->get_id()));
+$url = new moodle_url("/admin/tool/learningplan/competencies.php", array('competencyframeworkid' => $framework->get_id()));
 $PAGE->set_url($url);
 $PAGE->navbar->add($framework->get_shortname(), $url);
 $PAGE->set_title($title);

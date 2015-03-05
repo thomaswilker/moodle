@@ -1,0 +1,9 @@
+<li data-id="{{id}}">{{idnumber}} {{shortname}}
+    {{#haschildren}}
+    <ul>
+    {{#children}}
+    {{> tool_learningplan/competencies_tree }}
+    {{/children}}
+    </ul>
+    {{/haschildren}}
+</li>

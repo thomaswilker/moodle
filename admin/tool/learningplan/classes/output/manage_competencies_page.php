@@ -40,9 +40,6 @@ use tool_learningplan\competency_api;
  */
 class manage_competencies_page implements renderable, templatable {
 
-    /** @var array $navigation List of links to display on the page. Each link contains a url and a title. */
-    var $navigation = array();
-
     /** @var \tool_learningplan\competency_framework $framework This competency framework. */
     var $framework = null;
 
@@ -74,6 +71,25 @@ class manage_competencies_page implements renderable, templatable {
     }
 
     /**
+     * Recursively build up the tree of nodes.
+     *
+     * @param stdClass $parent - the exported parent node
+     * @param array $all - List of all competency classes.
+     */
+    private function add_competency_children($parent, $all) {
+        foreach ($all as $one) {
+            if ($one->get_parentid() == $parent->id) {
+                $parent->haschildren = true;
+                $record = $one->to_record();
+                $record->children = array();
+                $record->haschildren = false;
+                $parent->children[] = $record;
+                $this->add_competency_children($record, $all);
+            }
+        }
+    }
+
+    /**
      * Export this data so it can be used as the context for a mustache template.
      *
      * @return stdClass
@@ -83,14 +99,16 @@ class manage_competencies_page implements renderable, templatable {
         $data->framework = $this->framework->to_record();
         $data->canmanage = $this->canmanage;
         $data->competencies = array();
+
         foreach ($this->competencies as $competency) {
-            $data->competencies[] = $competency->to_record();
+            if ($competency->get_parentid() == 0) {
+                $record = $competency->to_record();
+                $record->children = array();
+                $record->haschildren = false;
+                $data->competencies[] = $record;
+                $this->add_competency_children($record, $this->competencies);
+            }
         }
-        $data->navigation = array();
-        foreach ($this->navigation as $button) {
-            $data->navigation[] = $output->render($button);
-        }
-        $data->pluginbaseurl = (new moodle_url('/admin/tool/learningplan'))->out(true);
 
         return $data;
     }

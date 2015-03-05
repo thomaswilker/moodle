@@ -313,7 +313,7 @@ class competency extends persistent {
             $parent = new competency($this->parentid);
             $this->path = $parent->path . '/' . $this->parentid;
         }
-        $this->sortorder = $this->count(array('parentid'=>$this->parentid));
+        $this->sortorder = $this->count_records(array('parentid'=>$this->parentid));
         return parent::create();
     }
 
@@ -333,7 +333,7 @@ class competency extends persistent {
             // Update our own path, competencyframework and sortorder.
             $this->competencyframeworkid = $parent->competencyframeworkid;
             $this->path = $parent->path . '/' . $this->parentid;
-            $this->sortorder = $this->count(array('parentid'=>$this->parentid));
+            $this->sortorder = $this->count_records(array('parentid'=>$this->parentid));
 
             // We need to fix all the paths of the children.
             $like = $DB->sql_like('path', $before->path . '/' . $before->id);
@@ -342,6 +342,60 @@ class competency extends persistent {
         }
         // Do the default update.
         return parent::update();
+    }
+
+    /**
+     * This does a specialised search that finds all nodes in the tree with matching text on any text like field,
+     * and returns this node and all its parents in a displayable sort order.
+     *
+     * @param string $searchText The text to search for.
+     * @param int $competencyframeworkid The competency framework to limit the search.
+     * @return persistent
+     */
+    public function search($searchText, $competencyframeworkid) {
+        global $DB;
+
+        $like1 = $DB->sql_like('shortname', ':like1', false);
+        $like2 = $DB->sql_like('idnumber', ':like2', false);
+        $like3 = $DB->sql_like('description', ':like3', false);
+
+        $params = array(
+            'like1' => '%' . $DB->sql_like_escape($searchText) . '%',
+            'like2' => '%' . $DB->sql_like_escape($searchText) . '%',
+            'like3' => '%' . $DB->sql_like_escape($searchText) . '%',
+            'frameworkid' => $competencyframeworkid
+        );
+
+        $sql = 'competencyframeworkid = :frameworkid AND ((' . $like1 . ') OR (' . $like2 . ') OR (' . $like3 . '))';
+        $records = $DB->get_records_select($this->get_table_name(), $sql, $params, 'path, sortorder ASC', '*');
+
+        // Now get all the parents.
+        $parents = array();
+        foreach ($records as $record) {
+            $parents = explode('/', $record->path);
+            foreach ($parents as $parent) {
+                $parents[intval($parent)] = true;
+            }
+        }
+        $parents = array_keys($parents);
+
+        if (count($parents)) {
+            list($parentsql, $parentparams) = $DB->get_in_or_equal($parents, SQL_PARAMS_NAMED);
+
+            $parentrecords = $DB->get_records_select($this->get_table_name(), 'id ' . $parentsql, $parentparams, 'path, sortorder ASC', '*');
+
+            foreach ($parentrecords as $id => $record) {
+                $records[$id] = $record;
+            }
+        }
+
+        $instances = array();
+        // Convert to instances of this class.
+        foreach ($records as $record) {
+            $newrecord = new static(0, $record);
+            array_push($instances, $newrecord);
+        }
+        return $instances;
     }
 
     /**

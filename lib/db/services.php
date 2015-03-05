@@ -1006,7 +1006,8 @@ $services = array(
             'core_get_string',
             'tool_learningplan_reorder_competency_framework',
             'tool_learningplan_data_for_competency_frameworks_manage_page',
-            'tool_learningplan_delete_competency_framework'
+            'tool_learningplan_delete_competency_framework',
+            'tool_learningplan_search_competencies'
         ),
         'enabled' => 1,
         'restrictedusers' => 0,

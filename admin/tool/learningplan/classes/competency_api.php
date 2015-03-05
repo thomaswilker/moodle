@@ -113,6 +113,27 @@ class competency_api {
     }
 
     /**
+     * Perform a text search based and return all results and their parents.
+     *
+     * Requires tool/learningplan:competencyread capability at the system context.
+     *
+     * @param string $textsearch A string to search for.
+     * @param int $competencyframeworkid The id of the framework to limit the search.
+     * @return array of competencies
+     */
+    public static function search_competencies($textsearch, $competencyframeworkid) {
+        // First we do a permissions check.
+        $context = context_system::instance();
+        if (!has_any_capability(array('tool/learningplan:competencyread', 'tool/learningplan:competencymanage'), $context)) {
+             throw new required_capability_exception($context, 'tool/learningplan:competencyread', 'nopermission', '');
+        }
+
+        // OK - all set.
+        $competency = new competency();
+        return $competency->search($textsearch, $competencyframeworkid);
+    }
+
+    /**
      * Perform a search based on the provided filters and return a paginated list of records.
      *
      * Requires tool/learningplan:competencyread capability at the system context.
@@ -133,7 +154,7 @@ class competency_api {
 
         // OK - all set.
         $competency = new competency();
-        return $competency->search($filters, $sort, $order, $skip, $limit);
+        return $competency->get_records($filters, $sort, $order, $skip, $limit);
     }
 
     /**
@@ -153,7 +174,7 @@ class competency_api {
 
         // OK - all set.
         $competency = new competency();
-        return $competency->count($filters);
+        return $competency->count_records($filters);
     }
 
     /**
@@ -286,7 +307,7 @@ class competency_api {
 
         // OK - all set.
         $framework = new competency_framework();
-        return $framework->search($filters, $sort, $order, $skip, $limit);
+        return $framework->get_records($filters, $sort, $order, $skip, $limit);
     }
 
     /**
@@ -306,6 +327,6 @@ class competency_api {
 
         // OK - all set.
         $framework = new competency_framework();
-        return $framework->count($filters);
+        return $framework->count_records($filters);
     }
 }

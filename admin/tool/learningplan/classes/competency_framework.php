@@ -235,7 +235,7 @@ class competency_framework extends persistent {
      * @return persistent
      */
     public function create() {
-        $this->sortorder = $this->count();
+        $this->sortorder = $this->count_records();
         return parent::create();
     }
 

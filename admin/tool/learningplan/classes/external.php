@@ -675,10 +675,6 @@ class external extends external_api {
             PARAM_INT,
             'User who modified this record last'
         );
-        $competencyframeworkid = new external_value(
-            PARAM_INT,
-            'Competency framework this competency belongs to.'
-        );
         $parentid = new external_value(
             PARAM_INT,
             'The id of the parent competency.'
@@ -1037,6 +1033,61 @@ class external extends external_api {
     public static function list_competencies_returns() {
         return new external_multiple_structure(self::get_competency_external_structure());
     }
+
+    /**
+     * Returns description of search_competencies() parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function search_competencies_parameters() {
+        $searchtext = new external_value(
+            PARAM_RAW,
+            'Text to search for',
+            VALUE_REQUIRED
+        );
+        $frameworkid = new external_value(
+            PARAM_INT,
+            'Competency framework id',
+            VALUE_REQUIRED
+        );
+
+        $params = array(
+            'searchtext' => $searchtext,
+            'competencyframeworkid' => $frameworkid
+        );
+        return new external_function_parameters($params);
+    }
+
+    /**
+     * List the existing competency frameworks
+     *
+     * @return boolean
+     */
+    public static function search_competencies($searchtext, $competencyframeworkid) {
+        $params = self::validate_parameters(self::search_competencies_parameters(),
+                                            array(
+                                                'searchtext' => $searchtext,
+                                                'competencyframeworkid' => $competencyframeworkid
+                                            ));
+
+        $results = competency_api::search_competencies($searchtext, $competencyframeworkid);
+        $records = array();
+        foreach ($results as $result) {
+            $record = $result->to_record();
+            array_push($records, $record);
+        }
+        return $records;
+    }
+
+    /**
+     * Returns description of search_competencies() result value.
+     *
+     * @return external_description
+     */
+    public static function search_competencies_returns() {
+        return new external_multiple_structure(self::get_competency_external_structure());
+    }
+
 
     /**
      * Returns description of count_competencies() parameters.

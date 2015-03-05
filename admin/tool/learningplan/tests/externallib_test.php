@@ -547,4 +547,32 @@ class tool_learningplan_external_testcase extends externallib_advanced_testcase 
         $this->assertEquals(true, $result->visible);
     }
 
+    /**
+     * Test we can search for competencies.
+     */
+    public function test_search_competencies_with_read_permissions() {
+        $this->setUser($this->creator);
+        $framework = external::create_competency_framework('shortname', 'idnumber', 'description', FORMAT_HTML, true);
+        $framework = (object) external_api::clean_returnvalue(external::create_competency_framework_returns(), $framework);
+        $result = external::create_competency('shortname', 'idnumber', 'description', FORMAT_HTML, true, $framework->id, 0);
+        $result = external::create_competency('shortname2', 'idnumber2', 'description2', FORMAT_HTML, true, $framework->id, 0);
+        $result = external::create_competency('shortname3', 'idnumber3', 'description3', FORMAT_HTML, true, $framework->id, 0);
+
+        $this->setUser($this->user);
+
+        $result = external::search_competencies('short', $framework->id);
+        $result = external_api::clean_returnvalue(external::search_competencies_returns(), $result);
+
+        $this->assertEquals(count($result), 3);
+        $result = (object) $result[0];
+
+        $this->assertGreaterThan(0, $result->timecreated);
+        $this->assertGreaterThan(0, $result->timemodified);
+        $this->assertEquals($this->creator->id, $result->usermodified);
+        $this->assertEquals('shortname', $result->shortname);
+        $this->assertEquals('idnumber', $result->idnumber);
+        $this->assertEquals('description', $result->description);
+        $this->assertEquals(true, $result->visible);
+    }
+
 }

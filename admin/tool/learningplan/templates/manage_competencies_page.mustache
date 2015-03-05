@@ -27,46 +27,53 @@
     * competencies - array of objects containing id, shortname, idnumber, sortorder, visible, parentid, competencyframeworkid, path
     * canmanage - true if this user has permission to manage the competencies
 }}
-<div data-region="managecompetencies">
+<div data-region="managecompetencies" >
 
+<div class="row">
+<div class="span6">
+<p>
+<form data-region="filtercompetencies">
+    <label class="accesshide" for="filter{{uniqid}}">{{#str}}search, tool_learningplan{{/str}}</label>
+    <input type="text" id="filter{{uniqid}}" placeholder="{{#str}}search, tool_learningplan{{/str}}">
+</form>
+</p>
 <ul data-enhance="tree">
     <li>{{framework.shortname}}
         <ul>
-            <li>Competency 1
-                <ul>
-                    <li>Competency 1.1
-                        <ul>
-                            <li>Competency 1.1.1</li>
-                        </ul>
-                    </li>
-                    <li>Competency 1.2</li>
-                </ul>
-            </li>
-            <li>Competency 2</li>
+            {{#competencies}}
+                {{> tool_learningplan/competencies_tree }}
+            {{/competencies}}
         </ul>
     </li>
 </ul>
+</div>
 
-<div class="pull-right">
-<p>{{#str}}withselectedcompetency, tool_learningplan{{/str}}</p>
-<div class="btn-group">
-<button class="btn">{{#str}}add{{/str}}</button>
-<button class="btn">{{#str}}edit{{/str}}</button>
-<button class="btn">{{#str}}move{{/str}}</button>
-<button class="btn">{{#str}}delete{{/str}}</button>
+<div class="span6 well">
+<h4>{{#str}}selectedcompetency, tool_learningplan{{/str}}</h4>
+<p data-region="competencyinfo">
+{{#str}}nocompetencyselected, tool_learningplan{{/str}}
+</p>
+{{#canmanage}}
+<div class="btn-group" data-region="competencyactions">
+<button class="btn" data-action="add" disabled="disabled">{{#str}}add{{/str}}</button>
+<button class="btn" data-action="edit" disabled="true">{{#str}}edit{{/str}}</button>
+<button class="btn" data-action="move" disabled="true">{{#str}}move{{/str}}</button>
+<button class="btn" data-action="delete" disabled="true">{{#str}}delete{{/str}}</button>
+</div>
+{{/canmanage}}
 </div>
 </div>
 
 {{#js}}
 // Initialise the JS.
-require(['core/tree' ],
-        function(tree) {
+require(['core/tree', 'tool_learningplan/competencytree', 'tool_learningplan/competencyactions' ], function(ariatree, treeModel, actions) {
 
-    var competencytree = new tree('[data-enhance=tree]');
-    // deleteMod.init();
-    // moveMod.init();
+    treeModel.init({{framework.id}});
 
-    // menu.menu('{{#str}}edit{{/str}}', '.competencyframeworkactions');
+    actions.init(treeModel);
+
+    var competencytree = new ariatree('[data-enhance=tree]', actions.selectionChanged);
+
 });
 {{/js}}
 
