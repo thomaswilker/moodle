@@ -275,6 +275,9 @@ class competency extends persistent {
         if (isset($record->parentid)) {
             $this->set_parentid($record->parentid);
         }
+        if (isset($record->path)) {
+            $this->set_path($record->path);
+        }
         return $this;
     }
 
@@ -290,6 +293,7 @@ class competency extends persistent {
         $record->idnumber = $this->get_idnumber();
         $record->description = $this->get_description();
         $record->descriptionformat = $this->get_descriptionformat();
+        $record->descriptionformatted = format_text($this->get_description(), $this->get_descriptionformat());
         $record->sortorder = $this->get_sortorder();
         $record->visible = $this->get_visible();
         $record->timecreated = $this->get_timecreated();
@@ -311,7 +315,11 @@ class competency extends persistent {
         if ($this->parentid) {
             // Load the parent so we can set the path.
             $parent = new competency($this->parentid);
-            $this->path = $parent->path . '/' . $this->parentid;
+            if ($parent->path == '/') {
+                $this->path = '/' . $this->parentid;
+            } else {
+                $this->path = $parent->path . '/' . $this->parentid;
+            }
         }
         $this->sortorder = $this->count_records(array('parentid'=>$this->parentid));
         return parent::create();
@@ -332,7 +340,11 @@ class competency extends persistent {
 
             // Update our own path, competencyframework and sortorder.
             $this->competencyframeworkid = $parent->competencyframeworkid;
-            $this->path = $parent->path . '/' . $this->parentid;
+            if ($parent->path == '/') {
+                $this->path = '/' . $this->parentid;
+            } else {
+                $this->path = $parent->path . '/' . $this->parentid;
+            }
             $this->sortorder = $this->count_records(array('parentid'=>$this->parentid));
 
             // We need to fix all the paths of the children.
@@ -378,6 +390,13 @@ class competency extends persistent {
             }
         }
         $parents = array_keys($parents);
+
+        // Skip ones we already fetched.
+        foreach ($parents as $idx => $parent) {
+            if ($parent == 0 || isset($records[$parent])) {
+                unset($parents[$idx]);
+            }
+        }
 
         if (count($parents)) {
             list($parentsql, $parentparams) = $DB->get_in_or_equal($parents, SQL_PARAMS_NAMED);

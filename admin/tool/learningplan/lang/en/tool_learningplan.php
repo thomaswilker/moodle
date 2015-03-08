@@ -58,4 +58,13 @@ $string['nocompetencyselected'] = 'No competency selected';
 $string['search'] = 'Search...';
 $string['competencycreated'] = 'Competency created';
 $string['competencyupdated'] = 'Competency updated';
+$string['hidden'] = 'Hidden';
+$string['editcompetency'] = 'Edit competency';
+$string['confirm'] = 'Confirm';
+$string['delete'] = 'Delete';
+$string['deletecompetency'] = 'Delete competency? {$a}';
+$string['deletecompetencyframework'] = 'Delete competency framework? {$a}';
+$string['cancel'] = 'Cancel';
+$string['move'] = 'Move';
+$string['movecompetency'] = 'Move competency: {$a}';
 

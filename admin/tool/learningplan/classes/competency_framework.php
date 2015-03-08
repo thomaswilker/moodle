@@ -220,6 +220,7 @@ class competency_framework extends persistent {
         $record->idnumber = $this->get_idnumber();
         $record->description = $this->get_description();
         $record->descriptionformat = $this->get_descriptionformat();
+        $record->descriptionformatted = format_text($this->get_description(), $this->get_descriptionformat());
         $record->sortorder = $this->get_sortorder();
         $record->visible = $this->get_visible();
         $record->timecreated = $this->get_timecreated();

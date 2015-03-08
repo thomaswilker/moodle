@@ -148,6 +148,14 @@ $functions = array(
         'type'        => 'read',
         'capabilities'=> 'tool/learningplan:competencyview',
     ),
+    'tool_learningplan_data_for_competencies_manage_page' => array(
+        'classname'   => 'tool_learningplan\external',
+        'methodname'  => 'data_for_competencies_manage_page',
+        'classpath'   => '',
+        'description' => 'Load the data for the competencies manage page template',
+        'type'        => 'read',
+        'capabilities'=> 'tool/learningplan:competencyview',
+    ),
 
 );
 

@@ -1,4 +1,7 @@
-<li data-id="{{id}}">{{idnumber}} {{shortname}}
+<li data-id="{{id}}">
+    {{^visible}}<span class="disabled">{{/visible}}
+        {{shortname}} <em>{{idnumber}}</em>
+    {{^visible}}</span>{{/visible}}
     {{#haschildren}}
     <ul>
     {{#children}}

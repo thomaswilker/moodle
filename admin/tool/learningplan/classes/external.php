@@ -132,6 +132,10 @@ class external extends external_api {
         $descriptionformat = new external_format_value(
             'Description format for the framework'
         );
+        $descriptionformatted = new external_value(
+            PARAM_RAW,
+            'Description that has been formatted for display'
+        );
         $visible = new external_value(
             PARAM_BOOL,
             'Is this framework visible?'
@@ -159,6 +163,7 @@ class external extends external_api {
             'idnumber' => $idnumber,
             'description' => $description,
             'descriptionformat' => $descriptionformat,
+            'descriptionformatted' => $descriptionformatted,
             'visible' => $visible,
             'sortorder' => $sortorder,
             'timecreated' => $timecreated,
@@ -647,6 +652,10 @@ class external extends external_api {
         $descriptionformat = new external_format_value(
             'Description format for the competency'
         );
+        $descriptionformatted = new external_value(
+            PARAM_RAW,
+            'Description formatted for display'
+        );
         $visible = new external_value(
             PARAM_BOOL,
             'Is this competency visible?'
@@ -690,6 +699,7 @@ class external extends external_api {
             'idnumber' => $idnumber,
             'description' => $description,
             'descriptionformat' => $descriptionformat,
+            'descriptionformatted' => $descriptionformatted,
             'visible' => $visible,
             'sortorder' => $sortorder,
             'timecreated' => $timecreated,
@@ -1128,6 +1138,61 @@ class external extends external_api {
      */
     public static function count_competencies_returns() {
         return new external_value(PARAM_INT, 'The number of competencies found.');
+    }
+
+    /**
+     * Returns description of data_for_competencies_manage_page() parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function data_for_competencies_manage_page_parameters() {
+        $competencyframeworkid = new external_value(
+            PARAM_INT,
+            'The competency framework id',
+            VALUE_REQUIRED
+        );
+        $params = array(
+            'competencyframeworkid' => $competencyframeworkid
+        );
+        return new external_function_parameters($params);
+    }
+
+    /**
+     * Loads the data required to render the competencies_manage_page template.
+     *
+     * @return boolean
+     */
+    public static function data_for_competencies_manage_page($competencyframeworkid) {
+        global $PAGE;
+        $params = self::validate_parameters(self::data_for_competencies_manage_page_parameters(),
+                                            array(
+                                                'competencyframeworkid' => $competencyframeworkid
+                                            ));
+
+        $framework = new \tool_learningplan\competency_framework($params['competencyframeworkid']);
+
+        $renderable = new \tool_learningplan\output\manage_competencies_page($framework);
+        $renderer = $PAGE->get_renderer('tool_learningplan');
+
+        $data = $renderable->export_for_template($renderer);
+
+        return $data;
+    }
+
+    /**
+     * Returns description of data_for_competencies_manage_page() result value.
+     *
+     * @return external_description
+     */
+    public static function data_for_competencies_manage_page_returns() {
+        return new external_single_structure(array (
+            'framework' => self::get_competency_framework_external_structure(),
+            'canmanage' => new external_value(PARAM_BOOL, 'True if this user has permission to manage competency frameworks'),
+            'competencies' => new external_multiple_structure(
+                self::get_competency_external_structure()
+            )
+        ));
+
     }
 
 }

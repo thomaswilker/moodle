@@ -29,7 +29,7 @@
 
      var loadCompetencies = function(searchtext) {
          var deferred = $.Deferred();
-         searchtext = 'a';
+         searchtext = '';
          var promises = ajax.call([{
              methodname: 'tool_learningplan_search_competencies',
              args: {

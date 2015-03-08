@@ -95,8 +95,8 @@ class competency extends moodleform {
 
         if (!empty($id)) {
             if (!$this->is_submitted()) {
-                $framework = competency_api::read_framework($id);
-                $record = $framework->to_record();
+                $competency = competency_api::read_competency($id);
+                $record = $competency->to_record();
                 // Massage for editor API.
                 $record->description = array('text'=>$record->description, 'format'=>$record->descriptionformat);
                 $this->set_data($record);

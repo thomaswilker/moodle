@@ -1007,7 +1007,10 @@ $services = array(
             'tool_learningplan_reorder_competency_framework',
             'tool_learningplan_data_for_competency_frameworks_manage_page',
             'tool_learningplan_delete_competency_framework',
-            'tool_learningplan_search_competencies'
+            'tool_learningplan_search_competencies',
+            'tool_learningplan_read_competency_framework',
+            'tool_learningplan_delete_competency',
+            'tool_learningplan_data_for_competencies_manage_page',
         ),
         'enabled' => 1,
         'restrictedusers' => 0,

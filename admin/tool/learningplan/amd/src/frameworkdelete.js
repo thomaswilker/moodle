@@ -21,7 +21,7 @@
  * @copyright  2015 Damyon Wiese <damyon@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-define(['jquery', 'core/templates', 'core/ajax', 'core/notification'], function($, templates, ajax, notification) {
+define(['jquery', 'core/templates', 'core/ajax', 'core/notification', 'core/str'], function($, templates, ajax, notification, str) {
     // Private variables and functions.
 
     /** @var {Number} frameworkid The id of the framework */
@@ -75,13 +75,27 @@ define(['jquery', 'core/templates', 'core/ajax', 'core/notification'], function(
         var id = $(this).attr('data-frameworkid');
         frameworkid = id;
 
-        notification.confirm(
-            'Confirm',
-            'Delete competency framework "blah"?',
-            'Delete',
-            'Cancel',
-            doDelete
-        );
+        var requests = ajax.call([{
+            methodname: 'tool_learningplan_read_competency_framework',
+            args: { id: frameworkid }
+        }]);
+
+        requests[0].done(function(framework) {
+            var strings = str.get_strings([
+                { key: 'confirm', component: 'tool_learningplan' },
+                { key: 'deletecompetencyframework', component: 'tool_learningplan', param: framework.shortname },
+                { key: 'delete', component: 'tool_learningplan' },
+                { key: 'cancel', component: 'tool_learningplan' }
+            ]).done(function (strings) {
+                notification.confirm(
+                    strings[0], // Confirm.
+                    strings[1], // Delete competency framework X?
+                    strings[2], // Delete.
+                    strings[3], // Cancel.
+                    doDelete
+                );
+            }).fail(notification.exception);
+        }).fail(notification.exception);
 
     };
 
