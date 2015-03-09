@@ -30,6 +30,8 @@ use \external_function_parameters;
 use \external_value;
 use \core_component;
 use \moodle_exception;
+use \context_system;
+use \theme_config;
 
 /**
  * This class contains a list of webservice functions related to output.
@@ -46,7 +48,9 @@ class external extends external_api {
     public static function load_template_parameters() {
         return new external_function_parameters(
                 array('component' => new external_value(PARAM_COMPONENT, 'component containing the template'),
-                      'template' => new external_value(PARAM_ALPHANUMEXT, 'name of the template'))
+                      'template' => new external_value(PARAM_ALPHANUMEXT, 'name of the template'),
+                      'themename' => new external_value(PARAM_ALPHANUMEXT, 'The current theme.'),
+                         )
             );
     }
 
@@ -55,14 +59,20 @@ class external extends external_api {
      *
      * @param string $component The component that holds the template.
      * @param string $templatename The name of the template.
+     * @param string $themename The name of the current theme.
      * @return string the template
      */
-    public static function load_template($component, $template) {
-        global $DB, $CFG;
+    public static function load_template($component, $template, $themename) {
+        global $DB, $CFG, $PAGE;
 
         $params = self::validate_parameters(self::load_template_parameters(),
-                                            array('component' => $instanceid, 'template' => $template));
+                                            array('component' => $component,
+                                                  'template' => $template,
+                                                  'themename' => $themename));
 
+        $component = $params['component'];
+        $template = $params['template'];
+        $themename = $params['themename'];
 
         // Check if this is a valid component.
         $componentdir = core_component::get_component_directory($component);
@@ -73,11 +83,13 @@ class external extends external_api {
         $candidates = array();
         // Theme dir.
         $root = $CFG->dirroot;
-        $theme = $PAGE->theme->name;
-        $candidate = "${root}/theme/${theme}/templates/${component}/${template}.mustache";
+
+        $themeconfig = theme_config::load($themename);
+
+        $candidate = "${root}/theme/${themename}/templates/${component}/${template}.mustache";
         $candidates[] = $candidate;
         // Theme parents dir.
-        foreach ($PAGE->theme->parents as $theme) {
+        foreach ($themeconfig->parents as $theme) {
             $candidate = "${root}/theme/${theme}/templates/${component}/${template}.mustache";
             $candidates[] = $candidate;
         }
