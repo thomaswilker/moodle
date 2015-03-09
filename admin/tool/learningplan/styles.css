@@ -1,25 +1,33 @@
-[data-region=managecompetencies] ul li {
+.path-admin-tool-learningplan [data-region="managecompetencies"] ul li,
+.path-admin-tool-learningplan [data-region="competencymovetree"] ul li {
     list-style-type: none;
 }
-[data-region=managecompetencies] ul li img {
+
+.path-admin-tool-learningplan [data-region="managecompetencies"] ul li img {
     margin-left: -20px;
     margin-right: 4px;
 }
-.dir-rtl [data-region=managecompetencies] ul li img {
+.dir-rtl.path-admin-tool-learningplan [data-region="managecompetencies"] ul li img {
     margin-right: -20px;
     margin-left: 4px;
 }
 
-[data-region=managecompetencies] ul {
+.path-admin-tool-learningplan [data-region="managecompetencies"] ul,
+.path-admin-tool-learningplan [data-region="competencymovetree"] ul {
     cursor: pointer;
 }
-[data-region=managecompetencies] ul [aria-selected=true] {
+.path-admin-tool-learningplan [data-region="competencymovetree"] ul [aria-selected="true"],
+.path-admin-tool-learningplan [data-region="managecompetencies"] ul [aria-selected="true"] {
     background-color: #dfdfdf;
 }
-[data-region="filtercompetencies"] input {
+.path-admin-tool-learningplan [data-region="filtercompetencies"] input {
     margin-left: 10px;
 }
 
-.dir-rtl [data-region="filtercompetencies"] input {
+.path-admin-tool-learningplan [data-region="move-buttons"] {
+    text-align: center;
+}
+
+.dir-rtl.path-admin-tool-learningplan [data-region="filtercompetencies"] input {
     margin-right: 10px;
 }

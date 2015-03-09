@@ -67,4 +67,5 @@ $string['deletecompetencyframework'] = 'Delete competency framework? {$a}';
 $string['cancel'] = 'Cancel';
 $string['move'] = 'Move';
 $string['movecompetency'] = 'Move competency: {$a}';
+$string['selectcompetencymovetarget'] = 'Select a location to move this competency to:';
 

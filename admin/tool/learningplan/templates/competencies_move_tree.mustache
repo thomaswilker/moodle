@@ -27,6 +27,7 @@
     * competencies - array of objects containing id, shortname, idnumber, sortorder, visible, parentid, competencyframeworkid, path
 }}
 <div data-region="competencymovetree" >
+<label>{{#str}}selectcompetencymovetarget, tool_learningplan{{/str}}</label>
 
 <ul data-enhance="movetree">
     <li>{{framework.shortname}}
@@ -39,3 +40,7 @@
 </ul>
 </div>
 
+<div data-region="move-buttons">
+    <input type="button" data-action="move" value="{{#str}}move{{/str}}"/>
+    <input type="button" data-action="cancel" value="{{#str}}cancel{{/str}}"/>
+</div>
