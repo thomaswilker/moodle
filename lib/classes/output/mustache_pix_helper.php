@@ -71,7 +71,7 @@ class mustache_pix_helper {
         // Allow mustache tags in the last argument.
         $text = $helper->render($text);
 
-        return trim($this->renderer->pix_icon($key, $component, $text));
+        return trim($this->renderer->pix_icon($key, $text, $component));
     }
 }
 
