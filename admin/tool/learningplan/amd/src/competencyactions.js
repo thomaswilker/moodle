@@ -50,22 +50,29 @@ define(['jquery', 'core/url', 'core/templates', 'core/notification', 'core/str',
     };
 
     var doMove = function() {
-        debugger;
-    };
-
-    var moveSetTarget = function(target) {
-        moveTarget = $(target).data('id');
-        console.log(moveTarget);
+        if (typeof (moveTarget) === "undefined") {
+            // This is a top level node.
+            moveTarget = 0;
+        }
+        var competency = $('[data-region="competencyactions"]').data('competency');
+        var requests = ajax.call([{
+            methodname: 'tool_learningplan_set_parent_competency',
+            args: { competencyid: moveSource, parentid: moveTarget }
+        }, {
+            methodname: 'tool_learningplan_data_for_competencies_manage_page',
+            args: { competencyframeworkid: competency.competencyframeworkid }
+        }]);
+        requests[1].done(reloadPage).fail(notification.exception);
     };
 
     var initMovePopup = function(popup) {
-        var movetree = new ariatree('[data-enhance=movetree]', moveSetTarget);
+        var movetree = new ariatree('[data-enhance=movetree]', function(target) {
+            moveTarget = $(target).data('id');
+        });
 
         var body = $(popup.getContent());
-        body.on('click', '[data-action="move"]', doMove);
-        body.on('click', '[data-action="cancel"]', function(e) {
-            popup.close();
-        });
+        body.on('click', '[data-action="move"]', function(e) { popup.close(); doMove() });
+        body.on('click', '[data-action="cancel"]', function(e) { popup.close(); });
     };
 
     var addCompetencyChildren = function(parent, competencies) {
@@ -111,15 +118,14 @@ define(['jquery', 'core/url', 'core/templates', 'core/notification', 'core/str',
             // Expand the list of competencies into a tree.
             var i, competenciestree = [];
             for (i = 0; i < competencies.length; i++) {
-                var competency = competencies[i];
-                if (competency.parentid == 0) {
-                    competency.children = [];
-                    competency.haschildren = 0;
-                    competenciestree[competenciestree.length] = competency;
-                    addCompetencyChildren(competency, competencies);
+                var onecompetency = competencies[i];
+                if (onecompetency.parentid == 0) {
+                    onecompetency.children = [];
+                    onecompetency.haschildren = 0;
+                    competenciestree[competenciestree.length] = onecompetency;
+                    addCompetencyChildren(onecompetency, competencies);
                 }
             }
-
 
             var strings = str.get_strings([
                 { key: 'movecompetency', component: 'tool_learningplan', param: competency.shortname },
@@ -139,8 +145,6 @@ define(['jquery', 'core/url', 'core/templates', 'core/notification', 'core/str',
                            tree, // The move tree.
                            initMovePopup
                        );
-
-                       var competencytree = new ariatree('[data-enhance=movetree]', moveSetTarget);
 
                    }).fail(notification.exception);
 
@@ -172,6 +176,32 @@ define(['jquery', 'core/url', 'core/templates', 'core/notification', 'core/str',
                 templates.runTemplateJS(newjs);
             })
            .fail(notification.exception);
+    };
+
+    var moveUpHandler = function() {
+        // We are chaining ajax requests here.
+        var competency = $('[data-region="competencyactions"]').data('competency');
+        var requests = ajax.call([{
+            methodname: 'tool_learningplan_move_up_competency',
+            args: { id: competency.id }
+        }, {
+            methodname: 'tool_learningplan_data_for_competencies_manage_page',
+            args: { competencyframeworkid: competency.competencyframeworkid }
+        }]);
+        requests[1].done(reloadPage).fail(notification.exception);
+    };
+
+    var moveDownHandler = function() {
+        // We are chaining ajax requests here.
+        var competency = $('[data-region="competencyactions"]').data('competency');
+        var requests = ajax.call([{
+            methodname: 'tool_learningplan_move_down_competency',
+            args: { id: competency.id }
+        }, {
+            methodname: 'tool_learningplan_data_for_competencies_manage_page',
+            args: { competencyframeworkid: competency.competencyframeworkid }
+        }]);
+        requests[1].done(reloadPage).fail(notification.exception);
     };
 
     var doDelete = function() {
@@ -219,6 +249,8 @@ define(['jquery', 'core/url', 'core/templates', 'core/notification', 'core/str',
             $('[data-region="competencyactions"] [data-action="edit"]').on('click', editHandler);
             $('[data-region="competencyactions"] [data-action="delete"]').on('click', deleteHandler);
             $('[data-region="competencyactions"] [data-action="move"]').on('click', moveHandler);
+            $('[data-region="competencyactions"] [data-action="moveup"]').on('click', moveUpHandler);
+            $('[data-region="competencyactions"] [data-action="movedown"]').on('click', moveDownHandler);
         },
         // Public variables and functions.
         selectionChanged: function(node) {
@@ -233,6 +265,8 @@ define(['jquery', 'core/url', 'core/templates', 'core/notification', 'core/str',
                 $('[data-region="competencyactions"] [data-action="edit"]').attr('disabled', 'disabled');
                 $('[data-region="competencyactions"] [data-action="move"]').attr('disabled', 'disabled');
                 $('[data-region="competencyactions"] [data-action="delete"]').attr('disabled', 'disabled');
+                $('[data-region="competencyactions"] [data-action="moveup"]').attr('disabled', 'disabled');
+                $('[data-region="competencyactions"] [data-action="movedown"]').attr('disabled', 'disabled');
             } else {
                 var competency = treeModel.getCompetency(id);
 
@@ -246,6 +280,8 @@ define(['jquery', 'core/url', 'core/templates', 'core/notification', 'core/str',
                 $('[data-region="competencyactions"] [data-action="edit"]').removeAttr('disabled');
                 $('[data-region="competencyactions"] [data-action="move"]').removeAttr('disabled');
                 $('[data-region="competencyactions"] [data-action="delete"]').removeAttr('disabled');
+                $('[data-region="competencyactions"] [data-action="moveup"]').removeAttr('disabled');
+                $('[data-region="competencyactions"] [data-action="movedown"]').removeAttr('disabled');
 
             }
         }

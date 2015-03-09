@@ -24,7 +24,6 @@
 namespace tool_learningplan;
 
 use stdClass;
-use renderable;
 
 /**
  * Class for loading/storing competency frameworks from the DB.

@@ -24,7 +24,7 @@
 namespace tool_learningplan;
 
 use stdClass;
-use renderable;
+use context_system;
 
 /**
  * Class for loading/storing competencies from the DB.
@@ -293,7 +293,8 @@ class competency extends persistent {
         $record->idnumber = $this->get_idnumber();
         $record->description = $this->get_description();
         $record->descriptionformat = $this->get_descriptionformat();
-        $record->descriptionformatted = format_text($this->get_description(), $this->get_descriptionformat());
+        $options = array('context' => context_system::instance());
+        $record->descriptionformatted = format_text($this->get_description(), $this->get_descriptionformat(), $options);
         $record->sortorder = $this->get_sortorder();
         $record->visible = $this->get_visible();
         $record->timecreated = $this->get_timecreated();
@@ -348,9 +349,10 @@ class competency extends persistent {
             $this->sortorder = $this->count_records(array('parentid'=>$this->parentid));
 
             // We need to fix all the paths of the children.
-            $like = $DB->sql_like('path', $before->path . '/' . $before->id);
+            $like = $DB->sql_like('path', '?');
+            $likesearch = $DB->sql_like_escape($before->path . '/' . $before->id) . '%';
             $sql = 'UPDATE {tool_learningplan_comp} SET path = REPLACE(path, ?, ?) WHERE ' . $like;
-            $DB->execute($sql, array($before->path . '/' . $this->id, $this->path . '/' . $this->id));
+            $DB->execute($sql, array($before->path . '/' . $this->id, $this->path . '/' . $this->id, $likesearch));
         }
         // Do the default update.
         return parent::update();
@@ -425,7 +427,7 @@ class competency extends persistent {
     public function delete() {
         global $DB;
 
-        $deletepath = $this->path . '/' . $this->get_id();
+        $deletepath = $DB->sql_like_escape($this->path . '/' . $this->get_id()) . '%';
 
         // We need to delete all the children.
         $like = $DB->sql_like('path', ':deletepath');

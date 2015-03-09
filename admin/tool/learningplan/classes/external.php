@@ -1195,4 +1195,133 @@ class external extends external_api {
 
     }
 
+    /**
+     * Returns description of set_parent_competency() parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function set_parent_competency_parameters() {
+        $competencyid = new external_value(
+            PARAM_INT,
+            'The competency id',
+            VALUE_REQUIRED
+        );
+        $parentid = new external_value(
+            PARAM_INT,
+            'The new competency parent id',
+            VALUE_REQUIRED
+        );
+        $params = array(
+            'competencyid' => $competencyid,
+            'parentid' => $parentid
+        );
+        return new external_function_parameters($params);
+    }
+
+    /**
+     * Move the competency to a new parent.
+     *
+     * @return boolean
+     */
+    public static function set_parent_competency($competencyid, $parentid) {
+        global $PAGE;
+        $params = self::validate_parameters(self::set_parent_competency_parameters(),
+                                            array(
+                                                'competencyid' => $competencyid,
+                                                'parentid' => $parentid
+                                            ));
+
+        return competency_api::set_parent_competency($competencyid, $parentid);
+    }
+
+    /**
+     * Returns description of set_parent_competency() result value.
+     *
+     * @return external_description
+     */
+    public static function set_parent_competency_returns() {
+        return new external_value(PARAM_BOOL, 'True if the update was successful');
+    }
+
+    /**
+     * Returns description of move_up_competency() parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function move_up_competency_parameters() {
+        $competencyid = new external_value(
+            PARAM_INT,
+            'The competency id',
+            VALUE_REQUIRED
+        );
+        $params = array(
+            'id' => $competencyid,
+        );
+        return new external_function_parameters($params);
+    }
+
+    /**
+     * Change the sort order of a competency.
+     *
+     * @return boolean
+     */
+    public static function move_up_competency($competencyid) {
+        global $PAGE;
+        $params = self::validate_parameters(self::move_up_competency_parameters(),
+                                            array(
+                                                'id' => $competencyid,
+                                            ));
+
+        return competency_api::move_up_competency($params['id']);
+    }
+
+    /**
+     * Returns description of move_up_competency() result value.
+     *
+     * @return external_description
+     */
+    public static function move_up_competency_returns() {
+        return new external_value(PARAM_BOOL, 'True if the update was successful');
+    }
+
+    /**
+     * Returns description of move_down_competency() parameters.
+     *
+     * @return external_function_parameters
+     */
+    public static function move_down_competency_parameters() {
+        $competencyid = new external_value(
+            PARAM_INT,
+            'The competency id',
+            VALUE_REQUIRED
+        );
+        $params = array(
+            'id' => $competencyid,
+        );
+        return new external_function_parameters($params);
+    }
+
+    /**
+     * Change the sort order of a competency.
+     *
+     * @return boolean
+     */
+    public static function move_down_competency($competencyid) {
+        global $PAGE;
+        $params = self::validate_parameters(self::move_down_competency_parameters(),
+                                            array(
+                                                'id' => $competencyid,
+                                            ));
+
+        return competency_api::move_down_competency($params['id']);
+    }
+
+    /**
+     * Returns description of move_down_competency() result value.
+     *
+     * @return external_description
+     */
+    public static function move_down_competency_returns() {
+        return new external_value(PARAM_BOOL, 'True if the update was successful');
+    }
 }

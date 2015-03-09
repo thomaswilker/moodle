@@ -156,6 +156,30 @@ $functions = array(
         'type'        => 'read',
         'capabilities'=> 'tool/learningplan:competencyview',
     ),
+    'tool_learningplan_set_parent_competency' => array(
+        'classname'   => 'tool_learningplan\external',
+        'methodname'  => 'set_parent_competency',
+        'classpath'   => '',
+        'description' => 'Set a new parent for a competency.',
+        'type'        => 'write',
+        'capabilities'=> 'tool/learningplan:competencymanage',
+    ),
+    'tool_learningplan_move_up_competency' => array(
+        'classname'   => 'tool_learningplan\external',
+        'methodname'  => 'move_up_competency',
+        'classpath'   => '',
+        'description' => 'Re-order a competency.',
+        'type'        => 'write',
+        'capabilities'=> 'tool/learningplan:competencymanage',
+    ),
+    'tool_learningplan_move_down_competency' => array(
+        'classname'   => 'tool_learningplan\external',
+        'methodname'  => 'move_down_competency',
+        'classpath'   => '',
+        'description' => 'Re-order a competency.',
+        'type'        => 'write',
+        'capabilities'=> 'tool/learningplan:competencymanage',
+    ),
 
 );
 

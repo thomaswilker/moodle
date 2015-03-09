@@ -71,6 +71,104 @@ class competency_api {
     }
 
     /**
+     * Reorder this competency.
+     *
+     * Requires tool/learningplan:competencymanage capability at the system context.
+     *
+     * @param int $id The id of the competency to move.
+     * @return boolean
+     */
+    public static function move_down_competency($id) {
+        // First we do a permissions check.
+        require_capability('tool/learningplan:competencymanage', context_system::instance());
+
+        // Check the current one too.
+        $current = new competency($id);
+
+        $max = self::count_competencies(array('parentid' => $current->get_id(),
+                                             'competencyframeworkid' => $current->get_competencyframeworkid()));
+        if ($max > 0) {
+            $max--;
+        }
+
+        $sortorder = $current->get_sortorder();
+        if ($sortorder < $max) {
+            $current->set_sortorder($sortorder + 1);
+        }
+
+        // OK - all set.
+        return $current->update();
+    }
+
+    /**
+     * Reorder this competency.
+     *
+     * Requires tool/learningplan:competencymanage capability at the system context.
+     *
+     * @param int $id The id of the competency to move.
+     * @return boolean
+     */
+    public static function move_up_competency($id) {
+        // First we do a permissions check.
+        require_capability('tool/learningplan:competencymanage', context_system::instance());
+
+        // Check the current one too.
+        $current = new competency($id);
+
+        $sortorder = $current->get_sortorder();
+        if ($sortorder > 0) {
+            $current->set_sortorder($sortorder - 1);
+        }
+
+        // OK - all set.
+        return $current->update();
+    }
+
+    /**
+     * Move this competency so it sits in a new parent.
+     *
+     * Requires tool/learningplan:competencymanage capability at the system context.
+     *
+     * @param int $id The id of the competency to move.
+     * @param int $newparentid The new parent id for the competency.
+     * @return boolean
+     */
+    public static function set_parent_competency($id, $newparentid) {
+        // First we do a permissions check.
+        require_capability('tool/learningplan:competencymanage', context_system::instance());
+
+        // This will throw an exception if the parent does not exist.
+        $parent = new competency($newparentid);
+
+        // Check the current one too.
+        $current = new competency($id);
+
+        if ($parent->get_competencyframeworkid() != $current->get_competencyframeworkid()) {
+            // Only allow moving within the same framework.
+            throw new coding_exception('Moving competencies is only supported within the same framework.');
+        }
+
+        // If we are moving a node to a child of itself, promote all the child nodes by one level.
+
+        $newparents = explode('/', $parent->get_path());
+        if (in_array($current->get_id(), $newparents)) {
+            $filters = array('parentid' => $current->get_id(), 'competencyframeworkid' => $current->get_competencyframeworkid());
+            $children = self::list_competencies($filters, 'id');
+
+            foreach ($children as $child) {
+                $child->set_parentid($current->get_parentid());
+                $child->update();
+            }
+        }
+
+        // Some things should not be changed in an update - they should use a more specific method.
+        $current->set_parentid($newparentid);
+
+        // OK - all set.
+        return $current->update();
+    }
+
+    /**
      * Update the details for a competency.
      *
      * Requires tool/learningplan:competencymanage capability at the system context.
