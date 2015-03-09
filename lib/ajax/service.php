@@ -34,7 +34,8 @@ require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->libdir . '/externallib.php');
 require_once($CFG->dirroot . '/webservice/lib.php');
 /** Not for login page etc. */
-require_login();
+
+require_login(null, true, null, true, true);
 
 $rawjson = file_get_contents('php://input');
 
