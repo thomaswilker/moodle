@@ -1143,7 +1143,7 @@ class core_plugin_manager {
                 'assignmentupgrade', 'availabilityconditions', 'behat', 'capability', 'customlang',
                 'dbtransfer', 'filetypes', 'generator', 'health', 'innodb', 'installaddon',
                 'langimport', 'log', 'messageinbound', 'multilangupgrade', 'monitor', 'phpunit', 'profiling',
-                'replace', 'spamcleaner', 'task', 'timezoneimport',
+                'replace', 'spamcleaner', 'task', 'templatelibrary', 'timezoneimport',
                 'unittest', 'uploadcourse', 'uploaduser', 'unsuproles', 'xmldb'
             ),
 
