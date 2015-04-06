@@ -22,16 +22,16 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Template library';
-$string['searchtemplates'] = 'Search templates';
-$string['templates'] = 'Templates';
-$string['core_component'] = 'Moodle core';
-$string['component'] = 'Component';
 $string['all'] = 'All components';
-$string['search'] = 'Search';
-$string['noresults'] = 'No results';
-$string['source'] = 'Source';
+$string['component'] = 'Component';
+$string['core_component'] = 'Moodle core';
+$string['documentation'] = 'Documentation';
 $string['example'] = 'Example';
+$string['noresults'] = 'No results';
 $string['notemplateselected'] = 'No template selected';
-$string['templateselected'] = 'Template: {$a}';
+$string['pluginname'] = 'Template library';
+$string['search'] = 'Search';
+$string['searchtemplates'] = 'Search templates';
 $string['templatehasnoexample'] = 'This template has no example context, so it cannot be rendered here. To add an example context to this template, insert in a Mustache comment "Example context (json):", followed by the json encoded sample context for the template.';
+$string['templates'] = 'Templates';
+$string['templateselected'] = 'Template: {$a}';

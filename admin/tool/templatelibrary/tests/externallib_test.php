@@ -48,6 +48,10 @@ class tool_templatelibrary_external_testcase extends externallib_advanced_testca
         $result = external::list_templates('tool_templatelibrary', '');
         $count = count($result);
         $this->assertEquals(3, $count);
+
+        $this->assertContains("tool_templatelibrary/display_template", $result);
+        $this->assertContains("tool_templatelibrary/search_results", $result);
+        $this->assertContains("tool_templatelibrary/list_templates_page", $result);
     }
 
     /**
@@ -58,6 +62,7 @@ class tool_templatelibrary_external_testcase extends externallib_advanced_testca
         $count = count($result);
         // Should be only one matching template.
         $this->assertEquals(1, $count);
+        $this->assertEquals($result[0], "tool_templatelibrary/list_templates_page");
     }
 
 

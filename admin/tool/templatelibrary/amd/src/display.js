@@ -33,20 +33,35 @@ define(['jquery', 'core/ajax', 'core/log', 'core/notification', 'core/templates'
     var templateLoaded = function(templateName, source) {
         str.get_string('templateselected', 'tool_templatelibrary', templateName).done(function(s) {
             $('[data-region="displaytemplateheader"]').text(s);
-            $('html, body').animate({
-                scrollTop: $('[data-region="displaytemplateheader"]').offset().top - 80
-            }, 200);
         }).fail(notification.exception);
+
+        // Remove the GPL from the start of the template.
+
+        var sections = source.match(/{{!([\s\S]*?)}}/g);
+        var i = 0;
+
+        // Find the first non-empty comment that is not the GPL.
+        // If no sections match - show the entire file.
+        if (sections !== null) {
+            for (i = 0; i < sections.length; i++) {
+                var section = sections[i];
+                if ((section.trim() !== '') && (section.indexOf('GNU General Public License') === -1)) {
+                    // Remove {{! and }} from start and end.
+                    section = section.substr(3, section.length - 5);
+                    source = section;
+                    break;
+                }
+            }
+        }
+
         $('[data-region="displaytemplatesource"]').text(source);
 
         // Now search the text for a json example.
 
-        var example = source.match(/Example context \(json\):([\s\S]*?)(}}|\n\n)/);
-        log.debug(example);
+        var example = source.match(/Example context \(json\):([\s\S]*)/);
         var context = false;
         if (example) {
             var rawJSON = example[1].trim();
-            log.debug(rawJSON);
             try {
                 context = $.parseJSON(rawJSON);
             } catch (e) {
@@ -55,8 +70,6 @@ define(['jquery', 'core/ajax', 'core/log', 'core/notification', 'core/templates'
             }
         }
         if (context) {
-            log.debug('Render template' + templateName);
-            log.debug(context);
             templates.render(templateName, context).done(function(html, js) {
                 $('[data-region="displaytemplateexample"]').empty();
                 $('[data-region="displaytemplateexample"]').append(html);
