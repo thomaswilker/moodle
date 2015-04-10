@@ -58,7 +58,7 @@ Feature: Submit assignment without group
     And I should see "Nothing has been submitted for this assignment"
     And I should not see "Add submission"
 
-    And I follow "Home"
+    And I am on homepage
     And I follow "Course 2"
     And I follow "Require group membership"
     Then I should not see "You're not a member of any group, please contact your teacher."
@@ -77,7 +77,7 @@ Feature: Submit assignment without group
     And I follow "Allow default group"
     Then I should see "Submitted for grading"
 
-    And I follow "Home"
+    And I am on homepage
     And I follow "Course 2"
     And I follow "Require group membership"
     Then I should see "Submitted for grading"
@@ -104,7 +104,7 @@ Feature: Submit assignment without group
     And I should not see "Submitted for grading" in the "Student 1" "table_row"
     And I should not see "Submitted for grading" in the "Student 2" "table_row"
 
-    And I follow "Home"
+    And I am on homepage
     And I follow "Course 2"
 
     And I follow "Require group membership"
