@@ -126,9 +126,6 @@ class renderer_base {
             // Where are all the places we should look for templates?
 
             $suffix = $this->component;
-            if ($this->subtype !== null) {
-                $suffix .= '_' . $this->subtype;
-            }
 
             // Start with an empty list.
             $loader = new Mustache_Loader_CascadingLoader(array());
