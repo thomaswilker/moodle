@@ -253,3 +253,13 @@ define('GRADE_NAVMETHOD_TABS', 1);
  * GRADE_NAVMETHOD_TABS - Display both a drop down and tabs to allow navigation within the gradebook
  */
 define('GRADE_NAVMETHOD_COMBO', 2);
+
+/**
+ * GRADE_REPROCESS_DO_NOT_MODIFY - Make no changes to existing grades
+ */
+define('GRADE_REPROCESS_DO_NOT_MODIFY', 'donotmodify');
+
+/**
+ * GRADE_REPROCESS_KEEP_PERCENTAGE - Rescale existing grade_grades to the new maxgrade value, keeping the points value the same.
+ */
+define('GRADE_REPROCESS_KEEP_POINTS', 'keeppoints');

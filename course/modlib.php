@@ -28,6 +28,7 @@
 defined('MOODLE_INTERNAL') || die;
 
 require_once($CFG->dirroot.'/course/lib.php');
+require_once($CFG->libdir.'/grade/constants.php');
 
 /**
  * Add course module.
@@ -466,6 +467,8 @@ function can_update_moduleinfo($cm) {
 function update_moduleinfo($cm, $moduleinfo, $course, $mform = null) {
     global $DB, $CFG;
 
+    $data = $mform->get_data();
+
     // Attempt to include module library before we make any changes to DB.
     include_modulelib($moduleinfo->modulename);
 
@@ -539,6 +542,25 @@ function update_moduleinfo($cm, $moduleinfo, $course, $mform = null) {
     $updateinstancefunction = $moduleinfo->modulename."_update_instance";
     if (!$updateinstancefunction($moduleinfo, $mform)) {
         print_error('cannotupdatemod', '', course_get_url($course, $cw->section), $moduleinfo->modulename);
+    }
+
+    // This needs to happen AFTER the grademin/grademax have already been updated.
+    if (!empty($data->grade_processexisting)) {
+        // Get the grade_item and make it re-process.
+        $gradeitem = grade_item::fetch(array('itemtype'=>'mod',
+                                             'itemmodule'=>$moduleinfo->modulename,
+                                             'iteminstance'=>$moduleinfo->instance,
+                                             'itemnumber'=>0,
+                                             'courseid'=>$moduleinfo->course));
+        if ($gradeitem) {
+            if ($data->grade_processexisting === GRADE_REPROCESS_DO_NOT_MODIFY) {
+                // Do nothing.
+            } else if ($data->grade_processexisting === GRADE_REPROCESS_KEEP_POINTS) {
+                if (!$gradeitem->reprocess_grades_keep_points('system')) {
+                    print_error('cannotreprocessgrades', '', course_get_url($course, $cw->section), $moduleinfo->modulename);
+                }
+            }
+        }
     }
 
     // Make sure visibility is set correctly (in particular in calendar).

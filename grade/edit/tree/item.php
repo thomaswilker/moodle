@@ -167,6 +167,12 @@ if ($mform->is_cancelled()) {
 
     } else {
         $grade_item->update();
+
+        if ($data->processexisting === GRADE_REPROCESS_DO_NOT_MODIFY) {
+            // Do nothing.
+        } else if ($data->processexisting === GRADE_REPROCESS_KEEP_POINTS) {
+            $grade_item->reprocess_grades_keep_points('gradebook');
+        }
     }
 
     // update hiding flag

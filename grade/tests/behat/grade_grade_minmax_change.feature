@@ -48,10 +48,27 @@ Feature: We can change the maximum and minimum number of points for manual items
     And I click on "Edit settings" "link" in the "Manual item 1" "table_row"
     And I set the following fields to these values:
       | Maximum grade | 10 |
+      | Rescale existing grades | Rescale existing grades so that the points value is unchanged |
     And I press "Save changes"
     And I follow "User report"
     And I set the field "Select all or one user" to "Student 1"
     Then the following should exist in the "user-grade" table:
+      | Grade item    | Calculated weight | Grade  | Contribution to course total |
+      | Manual item 1 | 100.00 %          | 10.00  | 100.00 %                     |
+    And I set the field "Select all or one user" to "Student 2"
+    And the following should exist in the "user-grade" table:
+      | Grade item    | Calculated weight | Grade  | Contribution to course total |
+      | Manual item 1 | 100.00 %          | 8.00   | 80.00 %                      |
+    And I navigate to "Categories and items" node in "Grade administration > Setup"
+    And I click on "Edit" "link" in the "Manual item 1" "table_row"
+    And I click on "Edit settings" "link" in the "Manual item 1" "table_row"
+    And I set the following fields to these values:
+      | Maximum grade | 20 |
+      | Rescale existing grades | Do not modify existing grades |
+    And I press "Save changes"
+    And I follow "User report"
+    And I set the field "Select all or one user" to "Student 1"
+    And the following should exist in the "user-grade" table:
       | Grade item    | Calculated weight | Grade  | Contribution to course total |
       | Manual item 1 | 100.00 %          | 10.00  | 100.00 %                     |
     And I set the field "Select all or one user" to "Student 2"

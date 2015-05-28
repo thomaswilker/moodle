@@ -34,7 +34,6 @@ class core_grade_item_testcase extends grade_base_testcase {
         $this->sub_test_grade_item_load_scale();
         $this->sub_test_grade_item_load_outcome();
         $this->sub_test_grade_item_qualifies_for_regrading();
-        $this->sub_test_grade_item_min_max_changed();
         $this->sub_test_grade_item_force_regrading();
         $this->sub_test_grade_item_fetch();
         $this->sub_test_grade_item_fetch_all();
@@ -51,7 +50,7 @@ class core_grade_item_testcase extends grade_base_testcase {
         $this->sub_test_grade_item_load_item_category();
         $this->sub_test_grade_item_regrade_final_grades();
         $this->sub_test_grade_item_adjust_raw_grade();
-        $this->sub_test_grade_item_update_all_grade_grade_min_max();
+        $this->sub_test_grade_item_reprocess_grades_keep_points();
         $this->sub_test_grade_item_set_locked();
         $this->sub_test_grade_item_is_locked();
         $this->sub_test_grade_item_set_hidden();
@@ -166,26 +165,6 @@ class core_grade_item_testcase extends grade_base_testcase {
         $grade_item->grademin = 14;
 
         $this->assertTrue($grade_item->qualifies_for_regrading());
-    }
-
-    protected function sub_test_grade_item_min_max_changed() {
-        $gradeitem = new grade_item($this->grade_items[3], false);
-        $this->assertTrue(method_exists($gradeitem, 'min_max_changed'));
-
-        // Make sure we start at false.
-        $this->assertFalse($gradeitem->min_max_changed());
-
-        // Change the min and test.
-        $gradeitem->grademin = 14;
-        $this->assertTrue($gradeitem->min_max_changed());
-
-        // Reset the min and make sure we have returned to false.
-        $gradeitem->grademin = $this->grade_items[3]->grademin;
-        $this->assertFalse($gradeitem->min_max_changed());
-
-        // Change the max and test.
-        $gradeitem->grademax = 20;
-        $this->assertTrue($gradeitem->min_max_changed());
     }
 
     protected function sub_test_grade_item_force_regrading() {
@@ -393,7 +372,7 @@ class core_grade_item_testcase extends grade_base_testcase {
         $this->assertEquals(round(1.6), round($grade_item->adjust_raw_grade($grade_raw->rawgrade, $grade_raw->grademin, $grade_raw->grademax)));
     }
 
-    protected function sub_test_grade_item_update_all_grade_grade_min_max() {
+    protected function sub_test_grade_item_reprocess_grades_keep_points() {
         global $DB;
         $gradeitem = new grade_item($this->grade_items[10], false); // 10 is the manual grade item.
 
@@ -415,7 +394,7 @@ class core_grade_item_testcase extends grade_base_testcase {
         $gradeids[] = $DB->insert_record('grade_grades', $grade);
 
         // Run the function.
-        $gradeitem->update_all_grade_grade_min_max();
+        $gradeitem->reprocess_grades_keep_points('test');
 
         // Check that the grades were updated to match the grade item.
         foreach ($gradeids as $gradeid) {
@@ -427,7 +406,7 @@ class core_grade_item_testcase extends grade_base_testcase {
         // Do a grade item change, run the function, and test.
         $gradeitem->grademax = 30;
         $gradeitem->grademin = 3;
-        $gradeitem->update_all_grade_grade_min_max();
+        $gradeitem->reprocess_grades_keep_points('test');
         foreach ($gradeids as $gradeid) {
             $grade = $DB->get_record('grade_grades', array('id' => $gradeid));
             $this->assertEquals($gradeitem->grademax, $grade->rawgrademax, 'Max grade mismatch', 0.0001);

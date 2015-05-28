@@ -97,6 +97,12 @@ class edit_item_form extends moodleform {
             $mform->setType('grademin', PARAM_RAW);
         }
 
+        $processexisting = array('' => get_string('choosedots'),
+                                GRADE_REPROCESS_DO_NOT_MODIFY => get_string('modgradedonotmodify', 'grades'),
+                                GRADE_REPROCESS_KEEP_POINTS => get_string('modgradekeeppoints', 'grades'));
+        $mform->addElement('select', 'processexisting', get_string('modgradeprocessexisting', 'grades'), $processexisting);
+        $mform->addHelpButton('processexisting', 'modgradeprocessexisting', 'grades');
+
         $mform->addElement('text', 'gradepass', get_string('gradepass', 'grades'));
         $mform->addHelpButton('gradepass', 'gradepass', 'grades');
         $mform->disabledIf('gradepass', 'gradetype', 'eq', GRADE_TYPE_NONE);
@@ -353,12 +359,15 @@ class edit_item_form extends moodleform {
 /// perform extra validation before submission
     function validation($data, $files) {
         global $COURSE;
+        $grade_item = false;
+        if ($data['id']) {
+            $grade_item = new grade_item(array('id'=>$data['id'], 'courseid'=>$data['courseid']));
+        }
 
         $errors = parent::validation($data, $files);
 
         if (array_key_exists('idnumber', $data)) {
-            if ($data['id']) {
-                $grade_item = new grade_item(array('id'=>$data['id'], 'courseid'=>$data['courseid']));
+            if ($grade_item) {
                 if ($grade_item->itemtype == 'mod') {
                     $cm = get_coursemodule_from_instance($grade_item->itemmodule, $grade_item->iteminstance, $grade_item->courseid);
                 } else {
@@ -383,6 +392,15 @@ class edit_item_form extends moodleform {
             if ($data['grademax'] == $data['grademin'] or $data['grademax'] < $data['grademin']) {
                 $errors['grademin'] = get_string('incorrectminmax', 'grades');
                 $errors['grademax'] = get_string('incorrectminmax', 'grades');
+            }
+        }
+
+        if ($grade_item) {
+            if (grade_floats_different($data['grademin'], $grade_item->grademin) ||
+                    grade_floats_different($data['grademax'], $grade_item->grademax)) {
+                if ($grade_item->has_grades() && empty($data['processexisting'])) {
+                    $errors['processexisting'] = get_string('mustchooserescalemethod', 'grades');
+                }
             }
         }
 

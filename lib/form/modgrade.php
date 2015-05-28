@@ -31,6 +31,7 @@ require_once "$CFG->libdir/form/select.php";
 require_once("HTML/QuickForm/element.php");
 require_once($CFG->dirroot.'/lib/form/group.php');
 require_once($CFG->dirroot.'/lib/grade/grade_scale.php');
+require_once($CFG->dirroot.'/lib/grade/constants.php');
 
 /**
  * Drop down form element to select the grade
@@ -45,12 +46,24 @@ require_once($CFG->dirroot.'/lib/grade/grade_scale.php');
  */
 class MoodleQuickForm_modgrade extends MoodleQuickForm_group{
 
+    /** @var boolean $isupdate Is this an add or an update ? */
+    var $isupdate = false;
+
+    /** @var float $currentgrade The current grademax for the grade_item */
+    var $currentgrade = false;
+
+    /** @var boolean $hasgrades Has this grade_item got any real grades (with values) */
+    var $hasgrades = false;
+
     /**
      * Constructor
      *
      * @param string $elementname Element's name
      * @param mixed $elementlabel Label(s) for an element
-     * @param array $options Options to control the element's display. Not used.
+     * @param array $options Options to control the element's display. Required - must contain the following options:
+     *              'isupdate' - is this a new module or are we editing an existing one?
+     *              'currentgrade' - the current grademax in the database for this gradeitem
+     *              'hasgrades' - whether or not the grade_item has existing grade_grades
      * @param mixed $attributes Either a typical HTML attribute string or an associative array
      */
     public function MoodleQuickForm_modgrade($elementname = null, $elementlabel = null, $options = array(), $attributes = null) {
@@ -58,13 +71,19 @@ class MoodleQuickForm_modgrade extends MoodleQuickForm_group{
         $this->_persistantFreeze = true;
         $this->_appendName = true;
         $this->_type = 'modgrade';
+        $this->isupdate = !empty($options['isupdate']);
+        $this->currentgrade = false;
+        if (isset($options['currentgrade'])) {
+            $this->currentgrade = $options['currentgrade'];
+        }
+        $this->hasgrades = !empty($options['hasgrades']);
     }
 
     /**
      * Create elements for this group.
      */
     public function _createElements() {
-        global $COURSE, $CFG;
+        global $COURSE, $CFG, $OUTPUT;
         $attributes = $this->getAttributes();
         if (is_null($attributes)) {
             $attributes = array();
@@ -101,6 +120,19 @@ class MoodleQuickForm_modgrade extends MoodleQuickForm_group{
         $typeselect->setHiddenLabel = false;
         $typeselect->_generateId();
 
+        // Select box for options for processing existing grades.
+        $langprocessexisting = get_string('modgradeprocessexisting', 'grades');
+        $processexisting = array('' => get_string('choosedots'),
+                                GRADE_REPROCESS_DO_NOT_MODIFY => get_string('modgradedonotmodify', 'grades'),
+                                GRADE_REPROCESS_KEEP_POINTS => get_string('modgradekeeppoints', 'grades'));
+        $processexistingselect = @MoodleQuickForm::createElement('select',
+                                                                'modgrade_processexisting',
+                                                                $langprocessexisting,
+                                                                $processexisting,
+                                                                $attributes);
+        $processexistingselect->_generateId();
+        $processexistingid = $processexistingselect->getAttribute('id');
+
         // Add elements.
 
         // Grade type select box.
@@ -120,6 +152,15 @@ class MoodleQuickForm_modgrade extends MoodleQuickForm_group{
         $this->_elements[] = @MoodleQuickForm::createElement('static', 'pointlabel', '', $label);
         $this->_elements[] = $maxgrade;
         $this->_elements[] = @MoodleQuickForm::createElement('static', 'pointspacer', '', '<br />');
+
+        if ($this->isupdate && $this->hasgrades) {
+            // We need to know how to apply any changes to maxgrade - ie to either update, or don't touch exising grades.
+            $label = html_writer::tag('label', $processexistingselect->getLabel(), array('for' => $processexistingid));
+            $labelhelp = new help_icon('modgradeprocessexisting', 'grades');
+            $this->_elements[] = @MoodleQuickForm::createElement('static', 'scalelabel', '', $label . $OUTPUT->render($labelhelp));
+            $this->_elements[] = $processexistingselect;
+            $this->_elements[] = @MoodleQuickForm::createElement('static', 'scalespacer', '', '<br />');
+        }
     }
 
     /**
@@ -144,8 +185,9 @@ class MoodleQuickForm_modgrade extends MoodleQuickForm_group{
         $type = (isset($vals['modgrade_type'])) ? $vals['modgrade_type'] : 'none';
         $point = (isset($vals['modgrade_point'])) ? $vals['modgrade_point'] : null;
         $scale = (isset($vals['modgrade_scale'])) ? $vals['modgrade_scale'] : null;
+        $processexisting = (isset($vals['modgrade_processexisting'])) ? $vals['modgrade_processexisting'] : null;
         $return = $this->process_value($type, $scale, $point);
-        return array($this->getName() => $return);
+        return array($this->getName() => $return, $this->getName() . '_processexisting' => $processexisting);
     }
 
     /**
@@ -244,14 +286,33 @@ class MoodleQuickForm_modgrade extends MoodleQuickForm_group{
                     }
                     return true;
                 };
+                $checkrescale = function($val) {
+                    // Nothing is affected by changes to grademax if there are no grades yet.
+                    if (!$this->isupdate || !$this->hasgrades) {
+                        return true;
+                    }
+                    // Closure to validate a scale value. See the note above about scope if this confuses you.
+                    if (isset($val['modgrade_type']) && $val['modgrade_type'] === 'point') {
+                        // Work out if the value was actually changed in the form.
+                        if (grade_floats_different($this->currentgrade, $val['modgrade_point'])) {
+                            if (empty($val['modgrade_processexisting'])) {
+                                // This was an "edit", the grademax was changed and the process existing setting was not set.
+                                return false;
+                            }
+                        }
+                    }
+                    return true;
+                };
 
                 $maxgradeexceeded = get_string('modgradeerrorbadpoint', 'grades', get_config('core', 'gradepointmax'));
                 $invalidscale = get_string('modgradeerrorbadscale', 'grades');
+                $mustchooserescalemethod = get_string('mustchooserescalemethod', 'grades');
                 // When creating the rules the sixth arg is $force, we set it to true because otherwise the form
                 // will attempt to validate the existence of the element, we don't want this because the element
                 // is being created right now and doesn't actually exist as a registered element yet.
                 $caller->addRule($name, $maxgradeexceeded, 'callback', $checkmaxgrade, 'server', false, true);
                 $caller->addRule($name, $invalidscale, 'callback', $checkvalidscale, 'server', false, true);
+                $caller->addRule($name, $mustchooserescalemethod, 'callback', $checkrescale, 'server', false, true);
 
                 break;
 

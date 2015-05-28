@@ -438,11 +438,27 @@ $string['minimum_show'] = 'Show minimum grade';
 $string['minimum_show_help'] = 'Minimum grade is used in calculating grades and weights. If not shown, minimum grade will default to zero and cannot be edited.';
 $string['missingscale'] = 'Scale must be selected';
 $string['mode'] = 'Mode';
-$string['modgradeerrorbadpoint'] = 'Invalid Grade Value. This must be an integer between 0 and {$a}';
-$string['modgradeerrorbadscale'] = 'Invalid scale selected. Please make sure you select a scale from the selections below.';
 $string['modgrade'] = 'Grade';
 $string['modgrade_help'] = 'Select the type of grading used for this activity. If "scale" is chosen, you can then choose the scale from the "scale" dropdown. If using "point" grading, you can then enter the maximum grade available for this activity.';
+$string['modgradedonotmodify'] = 'Do not modify existing grades';
+$string['modgradeerrorbadpoint'] = 'Invalid Grade Value. This must be an integer between 0 and {$a}';
+$string['modgradeerrorbadscale'] = 'Invalid scale selected. Please make sure you select a scale from the selections below.';
+$string['modgradekeeppoints'] = 'Rescale existing grades so that the points value is unchanged';
 $string['modgrademaxgrade'] = 'Maximum points';
+$string['modgradeprocessexisting'] = 'Rescale existing grades';
+$string['modgradeprocessexisting_help'] = 'Changing the maximum points value for an activity has an effect on any grades that have already been given for that activity. This option allows you to specify how existing grades should be scaled to the new maximum points value.
+
+There are 3 options:
+
+**Do not modify existing grades**
+
+A student grade of "6 / 10 ( 60 % )" stay as "6 / 10 ( 60 % )" when the maximum points is changed to 20 until that student is manually re-graded.
+
+**Rescale existing grades so that the points value is unchanged**
+
+A student grade of "6 / 10 ( 60 % )" would be rescaled to "6 / 20 ( 30 % )" when the maximum points is changed to 20.
+';
+$string['modgradeprocessexisting_link'] = 'Scaling_Activity_Grades';
 $string['modgradetype'] = 'Type';
 $string['modgradetypenone'] = 'None';
 $string['modgradetypepoint'] = 'Point';
@@ -453,6 +469,7 @@ $string['movingelement'] = 'Moving {$a}';
 $string['multfactor'] = 'Multiplicator';
 $string['multfactorvalue'] = 'Multiplicator value for {$a}';
 $string['multfactor_help'] = 'The multiplicator is the factor by which all grades for this grade item will be multiplied, with a maximum value of the maximum grade. For example, if the multiplicator is 2 and the maximum grade is 100, then all grades less than 50 are multiplied by 2, and all grades 50 and above are changed to 100.';
+$string['mustchooserescalemethod'] = 'When modifying the maximum, or minimum points value for a grade item that has already been graded, you must specify how to rescale existing grades';
 $string['mypreferences'] = 'My preferences';
 $string['myreportpreferences'] = 'My report preferences';
 $string['navmethod'] = 'Navigation method';

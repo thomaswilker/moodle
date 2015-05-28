@@ -590,6 +590,10 @@ abstract class moodleform_mod extends moodleform {
     public function standard_grading_coursemodule_elements() {
         global $COURSE, $CFG;
         $mform =& $this->_form;
+        $isupdate = !empty($this->_cm);
+        $gradeoptions = array('isupdate' => $isupdate,
+                              'currentgrade' => false,
+                              'hasgrades' => false);
 
         if ($this->_features->hasgrades) {
 
@@ -599,7 +603,18 @@ abstract class moodleform_mod extends moodleform {
 
             //if supports grades and grades arent being handled via ratings
             if (!$this->_features->rating) {
-                $mform->addElement('modgrade', 'grade', get_string('grade'));
+
+                if ($isupdate) {
+                    $gradeitem = grade_item::fetch(array('itemtype' => 'mod',
+                                                         'itemmodule' => $this->_cm->modname,
+                                                         'iteminstance' => $this->_cm->instance,
+                                                         'itemnumber' => 0,
+                                                         'courseid' => $COURSE->id));
+
+                    $gradeoptions['currentgrade'] = $gradeitem->grademax;
+                    $gradeoptions['hasgrades'] = $gradeitem->has_grades();
+                }
+                $mform->addElement('modgrade', 'grade', get_string('grade'), $gradeoptions);
                 $mform->addHelpButton('grade', 'modgrade', 'grades');
                 $mform->setDefault('grade', $CFG->gradepointdefault);
             }
