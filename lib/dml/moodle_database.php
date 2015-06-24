@@ -2083,6 +2083,44 @@ abstract class moodle_database {
     }
 
     /**
+     * Does this driver support RAND() or RANDOM() or equivalent
+     */
+    public function sql_random_supported() {
+        return false;
+    }
+
+    /**
+     * Does this driver support passing a seed to the native random function
+     * Implementing this because some DB (SQLite) do not support passing seed values
+     */
+    public function sql_random_seed_supported() {
+        return false;
+    }
+
+    /**
+     * Returns the supported random fragment as part of a query.
+     * 
+     * Note that not all DB Platforms support seed values in their random function
+     * Also, if random is supported but not seed, do not enable the use of random at this point in time
+     *
+     * @param int $seed integer value to use as the seed, so the DB will maintain the rows returned in the same order when RAND() is invoked
+     * @param string $default_column default column to sort by should RANDOM(seed) is not supported
+     * @return string SQL code fragment
+     */
+    public function sql_order_by_random($seed, $default_column) {
+        if ($this->sql_random_supported() && $this->sql_random_seed_supported() && $seed) {
+            return $this->sql_random($seed);
+        }
+//      Disabled. Randomly orders and doesn't persist order. May enable later if required
+//      elseif ($this->sql_random_supported()) {
+//          return $this->sql_random();
+//      }
+        else {
+            return $default_column;
+        }
+    }
+
+    /**
      * Returns the SQL text to be used to calculate the length in characters of one expression.
      * @param string $fieldname The fieldname/expression to calculate its length in characters.
      * @return string the piece of SQL code to be used in the statement.

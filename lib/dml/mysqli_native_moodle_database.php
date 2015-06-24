@@ -1529,6 +1529,32 @@ class mysqli_native_moodle_database extends moodle_database {
     }
 
     /**
+     * Does this driver support RAND() or RANDOM() or equivalent
+     */
+    public function sql_random_supported() {
+        return true;
+    }
+
+    /**
+     * Does this driver support passing a seed to the native random function
+     */
+    public function sql_random_seed_supported() {
+        return true;
+    }
+
+    /**
+     * Returns the supported random fragment as part of a query.
+     *
+     * @param int $seed integer value to use as the seed, so the DB will maintain the rows returned in the same order when RAND() is invoked
+     * @return string SQL code fragment
+     */
+    public function sql_random ($seed) {
+        return ($seed)
+            ? "RAND($seed)"
+            : "RAND()";
+    }
+
+    /**
      * Returns the proper SQL to do CONCAT between the elements passed
      * Can take many parameters
      *

@@ -428,6 +428,14 @@ class assign_grading_table extends table_sql implements renderable {
             }
         }
 
+        // If blind marking, assign randomly with seed
+        if ($this->assignment->is_blind_marking()) {
+            $this->randomsort = true;
+            // Currently using course id as the seed value. However, recommend generating a different seed value
+            // which can persist over the session
+            $this->randomsortseed = $this->assignment->get_course()->id;
+        }
+
         // When there is no data we still want the column headers printed in the csv file.
         if ($this->is_downloading()) {
             $this->start_output();

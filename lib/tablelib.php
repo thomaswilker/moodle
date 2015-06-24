@@ -591,6 +591,14 @@ class flexible_table {
     }
 
     /**
+     * @return SQL fragment for RANDOM with seed that can be used in an ORDER BY clause.
+     */
+    public function get_sql_random() {
+        global $DB;
+        return $DB->sql_order_by_random($this->randomsortseed, $this->sort_default_column);
+    }
+
+    /**
      * Get the columns to sort by, in the form required by {@link construct_order_by()}.
      * @return array column name => SORT_... constant.
      */
@@ -1479,6 +1487,7 @@ class table_sql extends flexible_table {
      */
     function query_db($pagesize, $useinitialsbar=true) {
         global $DB;
+
         if (!$this->is_downloading()) {
             if ($this->countsql === NULL) {
                 $this->countsql = 'SELECT COUNT(1) FROM '.$this->sql->from.' WHERE '.$this->sql->where;
@@ -1506,7 +1515,11 @@ class table_sql extends flexible_table {
         }
 
         // Fetch the attempts
-        $sort = $this->get_sql_sort();
+        // Random sort trumps ordinary sort, because if you declare you wanted a random sort, you wouldn't really
+        // care about sorting by specific columns, yay/nay?
+        $sort = ($random_sort)
+            ? $this->get_sql_sort()
+            : $this->get_sql_random();
         if ($sort) {
             $sort = "ORDER BY $sort";
         }
