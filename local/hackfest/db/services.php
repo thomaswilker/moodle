@@ -13,14 +13,24 @@
 //
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
 /**
- * Plugin version info
+ * Local hackfest external services.
  *
  * @package    local_hackfest
  * @copyright  2015 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-defined('MOODLE_INTERNAL') || die();
-$plugin->version   = 2015060501; // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2015050500; // Requires this Moodle version.
-$plugin->component = 'local_hackfest'; // Full name of the plugin (used for diagnostics).
+
+$functions = array(
+
+    'local_hackfest_get_site_info' => array(
+        'classname'   => 'local_hackfest\external',
+        'methodname'  => 'get_site_info',
+        'classpath'   => '',
+        'description' => 'Return some site info.',
+        'type'        => 'read',
+        'capabilities'=> '',
+    )
+);
+
