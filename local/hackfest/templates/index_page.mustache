@@ -21,5 +21,14 @@
 
 }}
 <div data-region="index-page">
+    <h3>{{sitename}}</h3>
+    <h4>You are: {{fullname}}</h4>
+    <h4>Time is: {{currenttime}}</h4>
     Build the awesome here!
+    <button id="refresh">{{#str}}refresh{{/str}}</button>
 </div>
+{{#js}}
+    require(['local_hackfest/refresh'], function(refresh) {
+        refresh.refresh();
+    });
+{{/js}}
