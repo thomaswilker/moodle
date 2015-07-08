@@ -23,6 +23,8 @@
  */
 namespace local_hackfest\output;
 
+require_once("$CFG->dirroot/webservice/externallib.php");
+
 use renderable;
 use templatable;
 use renderer_base;
@@ -42,9 +44,8 @@ class index_page implements renderable, templatable {
      * @return stdClass
      */
     public function export_for_template(renderer_base $output) {
-        $data = new stdClass();
-
-        // TODO export some stuff.
+        $data = \core_webservice_external::get_site_info();
+        $data['currenttime'] = userdate(time()) . ' ' . rand();
 
         return $data;
     }

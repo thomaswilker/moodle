@@ -48,7 +48,7 @@ class external extends external_api {
      * @return external_function_parameters
      */
     public static function get_site_info_parameters() {
-        return core_webservice_external::get_site_info_parameters();
+        return \core_webservice_external::get_site_info_parameters();
     }
 
     /**
@@ -63,7 +63,10 @@ class external extends external_api {
      * Wrap the core function get_site_info.
      */
     public static function get_site_info($serviceshortnames = array()) {
-        return core_webservice_external::get_site_info($serviceshortnames);
+        global $PAGE;
+        $renderer = $PAGE->get_renderer('local_hackfest');
+        $page = new \local_hackfest\output\index_page();
+        return $page->export_for_template($renderer);
     }
 
     /**
@@ -71,7 +74,9 @@ class external extends external_api {
      *
      * @return external_description
      */
-    public static function list_templates_returns() {
-        return core_webservice_external::get_site_info_returns();
+    public static function get_site_info_returns() {
+        $result = \core_webservice_external::get_site_info_returns();
+        $result->keys['currenttime'] = new external_value(PARAM_RAW, 'the current time');
+        return $result;
     }
 }
