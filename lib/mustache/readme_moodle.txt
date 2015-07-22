@@ -9,3 +9,7 @@ Delete phpunit.xml.dist
 Delete hidden files ".*"
 
 Delete folder "bin"
+
+Delete folder "vendor"
+
+Delete composer.json
