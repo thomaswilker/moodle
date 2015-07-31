@@ -107,7 +107,7 @@ class renderer_base {
                 'escape' => 's',
                 'loader' => $loader,
                 'helpers' => $helpers,
-                'pragmas' => [Mustache_Engine::PRAGMA_BLOCKS]));
+                'pragmas' => [Mustache_Engine::PRAGMA_BLOCKS, Mustache_Engine::PRAGMA_LAMBDA_ARGS]));
 
         }
 

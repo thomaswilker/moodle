@@ -20,6 +20,7 @@ class Mustache_LambdaHelper
 {
     private $mustache;
     private $context;
+    private $arguments;
 
     /**
      * Mustache Lambda Helper constructor.
@@ -45,5 +46,23 @@ class Mustache_LambdaHelper
         return $this->mustache
             ->loadLambda((string) $string)
             ->renderInternal($this->context);
+    }
+
+    /**
+     * Return the list of arguments for the current lambda.
+     *
+     * @return array Array of arguments.
+     */
+    public function getArguments() {
+        return $this->arguments;
+    }
+
+    /**
+     * Set the arguments in the lambda helper.
+     *
+     * @param array Array of arguments.
+     */
+    public function setArguments(array $arguments) {
+        $this->arguments = $arguments;
     }
 }

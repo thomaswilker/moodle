@@ -165,14 +165,15 @@ abstract class Mustache_Template
      * @param mixed            $value
      * @param Mustache_Context $context
      * @param string           $indent
+     * @param LambdaHelper     $lambdahelper
      *
      * @return string
      */
-    protected function resolveValue($value, Mustache_Context $context, $indent = '')
+    protected function resolveValue($value, Mustache_Context $context, $indent = '', $lambdahelper)
     {
         if (($this->strictCallables ? is_object($value) : !is_string($value)) && is_callable($value)) {
             return $this->mustache
-                ->loadLambda((string) call_user_func($value))
+                ->loadLambda((string) call_user_func($value, '', $lambdahelper))
                 ->renderInternal($context, $indent);
         }
 

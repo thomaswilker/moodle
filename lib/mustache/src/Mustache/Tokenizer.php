@@ -65,6 +65,7 @@ class Mustache_Tokenizer
     const NODES   = 'nodes';
     const VALUE   = 'value';
     const FILTERS = 'filters';
+    const LAMBDA_ARGS = 'lambdaargs';
 
     private $state;
     private $tagType;
