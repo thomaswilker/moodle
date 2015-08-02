@@ -44,4 +44,6 @@ echo $output->heading($pagetitle);
 $page = new \tool_templatelibrary\output\list_templates_page($component, $search);
 echo $output->render($page);
 
+echo $output->render_from_template('core/conditional', array('istrue' => true, 'isfalse' => false));
+
 echo $output->footer();

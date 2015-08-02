@@ -1,0 +1,69 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template core/conditional
+
+    Moodle test template for conditional helpers.
+
+    The purpose of this template is to test the conditional helpers.
+
+    Classes required for JS:
+    * none
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * istrue - variable that evaluates to true
+    * isfalse - variable that evaluates to false
+
+    Example context (json):
+    { "istrue": true,
+      "isfalse": false }
+}}
+<pre>
+{{#eq true istrue}}WIN{{/eq}}
+{{#eq true false}}LOSE{{/eq}}WIN
+{{#eq isfalse false}}WIN{{/eq}}
+{{#neq true istrue}}LOSE{{/neq}}WIN
+{{#neq true false}}WIN{{/neq}}
+{{#neq isfalse false}}LOSE{{/neq}}WIN
+{{#gt 3 4}}LOSE{{/gt}}WIN
+{{#gt 3 3}}LOSE{{/gt}}WIN
+{{#gt 4 3}}WIN{{/gt}}
+{{#gt "a string" 3}}LOSE{{/gt}}WIN
+{{#gte 3 4}}LOSE{{/gte}}WIN
+{{#gte 3 3}}WIN{{/gte}}
+{{#gte 4 3}}WIN{{/gte}}
+{{#gte "a string" 3}}LOSE{{/gte}}WIN
+{{#lt 3 4}}WIN{{/lt}}
+{{#lt 3 3}}LOSE{{/lt}}WIN
+{{#lt 4 3}}LOSE{{/lt}}WIN
+{{#lt "a string" 3}}LOSE{{/lt}}WIN
+{{#lte 3 4}}WIN{{/lte}}
+{{#lte 3 3}}WIN{{/lte}}
+{{#lte 4 3}}LOSE{{/lte}}WIN
+{{#lte "a string" 5}}LOSE{{/lte}}WIN
+{{#and true 3}}WIN{{/and}}
+{{#and true istrue}}WIN{{/and}}
+{{#and false istrue}}LOSE{{/and}}WIN
+{{#and false isfalse}}LOSE{{/and}}WIN
+{{#or true 3}}WIN{{/or}}
+{{#or true istrue}}WIN{{/or}}
+{{#or false istrue}}WIN{{/or}}
+{{#or false isfalse}}LOSE{{/or}}WIN
+</pre>
