@@ -91,6 +91,7 @@ class renderer_base {
 
             $loader = new \core\output\mustache_filesystem_loader();
             $stringhelper = new \core\output\mustache_string_helper();
+            $conditionalhelper = new \core\output\mustache_conditional_helper();
             $jshelper = new \core\output\mustache_javascript_helper($this->page->requires);
             $pixhelper = new \core\output\mustache_pix_helper($this);
 
@@ -100,7 +101,15 @@ class renderer_base {
             $helpers = array('config' => $safeconfig,
                              'str' => array($stringhelper, 'str'),
                              'js' => array($jshelper, 'help'),
-                             'pix' => array($pixhelper, 'pix'));
+                             'pix' => array($pixhelper, 'pix'),
+                             'eq' => array($conditionalhelper, 'eq'),
+                             'neq' => array($conditionalhelper, 'neq'),
+                             'gt' => array($conditionalhelper, 'gt'),
+                             'lt' => array($conditionalhelper, 'lt'),
+                             'gte' => array($conditionalhelper, 'gte'),
+                             'lte' => array($conditionalhelper, 'lte'),
+                             'and' => array($conditionalhelper, 'andLogic'),
+                             'or' => array($conditionalhelper, 'orLogic'));
 
             $this->mustache = new Mustache_Engine(array(
                 'cache' => $cachedir,
