@@ -270,4 +270,10 @@
     <license>MIT</license>
     <version>2.1.3</version>
   </library>
+  <library>
+    <location>amd/src/select2.js</location>
+    <name>Select 2</name>
+    <license>MIT</license>
+    <version>4.0.0</version>
+  </library>
 </libraries>

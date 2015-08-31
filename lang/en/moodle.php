@@ -1038,6 +1038,7 @@ $string['listfiles'] = 'List of files in {$a}';
 $string['listofallpeople'] = 'List of all people';
 $string['listofcourses'] = 'List of courses';
 $string['loadinghelp'] = 'Loading...';
+$string['loading'] = 'Loading...';
 $string['local'] = 'Local';
 $string['localplugins'] = 'Local plugins';
 $string['localpluginsmanage'] = 'Manage local plugins';
