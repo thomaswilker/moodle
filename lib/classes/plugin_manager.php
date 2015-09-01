@@ -1814,7 +1814,7 @@ class core_plugin_manager {
             ),
 
             'message' => array(
-                'airnotifier', 'email', 'jabber', 'popup'
+                'airnotifier', 'email', 'jabber', 'popup', 'html5'
             ),
 
             'mnetservice' => array(
