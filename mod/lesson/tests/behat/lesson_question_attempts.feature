@@ -159,7 +159,6 @@ Feature: In a lesson activity, students can not re-attempt a question more than 
     When I press "Next page"
     Then I should see "Number of questions answered: 1 (You should answer at least 3)"
 
-  @javascript
   Scenario: Check that we can not click back on the browser and re-attempt a question
     Given I log in as "student1"
     And I follow "Course 1"

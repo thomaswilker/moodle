@@ -139,6 +139,9 @@ XPATH
         , 'text' => <<<XPATH
 .//*[contains(., %locator%) and not(.//*[contains(., %locator%)])]
 XPATH
+        , 'option' => <<<XPATH
+.//option[(./@value = %locator% or normalize-space(string(.)) = %locator%)]
+XPATH
     );
 
     /**
