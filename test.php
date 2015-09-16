@@ -110,6 +110,8 @@ class test_form extends moodleform {
 
         $mform->addElement('autocomplete', 'link5', 'Ajaxify', array(), array('ajax'=>'core/test'));
 
+        $mform->addElement('select', 'link6', 'Select', $options, array('multiple'=>'multiple', 'tags'=>true));
+
         $this->add_action_buttons();
     }
 

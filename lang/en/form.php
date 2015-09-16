@@ -25,6 +25,7 @@
 
 $string['addfields'] = 'Add {$a} field(s) to form';
 $string['advancedelement'] = 'Advanced element';
+$string['autocompleteitemselected'] = 'Selected item {$a->index} of {$a->length}. {$a->text}';
 $string['close'] = 'Close';
 $string['day'] = 'Day';
 $string['display'] = 'Display';
