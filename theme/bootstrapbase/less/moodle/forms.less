@@ -681,9 +681,13 @@ input[size] {
     background-color: lighten(@dropdownLinkBackgroundActive, 15%);
     color: @dropdownLinkColorActive;
 }
-.form-autocomplete-suggestions li[aria-selected=true] {
+.form-autocomplete-suggestions li[data-active=true] {
     background-color: @dropdownLinkBackgroundActive;
     color: @dropdownLinkColorActive;
+}
+.form-autocomplete-suggestions li[aria-selected=true] {
+    background-color: darken(@navbarBackground, 5%);
+    color: @gray;
 }
 
 .form-autocomplete-downarrow {

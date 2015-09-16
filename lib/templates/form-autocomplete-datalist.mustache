@@ -1,4 +1,4 @@
-<ul class="form-autocomplete-suggestions" id="{{datalistId}}" role="listbox" aria-hidden="true">
+<ul class="form-autocomplete-suggestions" id="{{datalistId}}" role="listbox" aria-hidden="true" {{#multiple}}aria-multiselectable="true"{{/multiple}}>
     {{#options}}
         <li role="option" data-value="{{value}}">{{{label}}}</li>
     {{/options}}
