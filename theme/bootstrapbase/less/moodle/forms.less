@@ -657,6 +657,13 @@ textarea[cols],
 input[size] {
     width: auto;
 }
+.form-autocomplete-selection {
+    margin: 0.2em;
+    min-height: 21px;
+}
+.form-autocomplete-selection [role=listitem] {
+    cursor: pointer;
+}
 
 .form-autocomplete-suggestions {
     position: absolute;
@@ -679,10 +686,6 @@ input[size] {
 }
 .form-autocomplete-suggestions li:hover {
     background-color: lighten(@dropdownLinkBackgroundActive, 15%);
-    color: @dropdownLinkColorActive;
-}
-.form-autocomplete-suggestions li[data-active=true] {
-    background-color: @dropdownLinkBackgroundActive;
     color: @dropdownLinkColorActive;
 }
 .form-autocomplete-suggestions li[aria-selected=true] {

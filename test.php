@@ -111,6 +111,7 @@ class test_form extends moodleform {
         $mform->addElement('autocomplete', 'link5', 'Ajaxify', array(), array('ajax'=>'core/test'));
 
         $mform->addElement('select', 'link6', 'Select', $options, array('multiple'=>'multiple', 'tags'=>true));
+        $mform->addRule('link6', get_string('required'), 'required', null, 'client');
 
         $this->add_action_buttons();
     }
@@ -123,7 +124,7 @@ class test_form extends moodleform {
         var_dump($data);
         var_dump($errors);
 
-        $errors['autotest'] = 'Some error - does it display?';
+        $errors['link3'] = 'Some error - does it display?';
 
         return $errors;
     }
