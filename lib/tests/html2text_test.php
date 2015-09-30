@@ -167,16 +167,18 @@ have been fixed <strong><a href="http://third.url/view.php">last week</a></stron
         $strconv = 'Consider the following function:
 
 void FillMeUp(char* in_string) {
- int i = 0;
- while (in_string[i] != \'\0\') {
- in_string[i] = \'X\';
- i++;
- }
+  int i = 0;
+  while (in_string[i] != \'\0\') {
+    in_string[i] = \'X\';
+    i++;
+  }
 }
 What would happen if a non-terminated string were input to this function?
 
 ';
 
+        var_dump(html_to_text($strorig));
+        var_dump($strconv);
         $this->assertSame($strconv, html_to_text($strorig));
     }
 }

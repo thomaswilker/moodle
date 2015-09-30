@@ -1853,9 +1853,13 @@ function html_to_text($html, $width = 75, $dolinks = true) {
 
     global $CFG;
 
-    require_once($CFG->libdir .'/html2text.php');
+    require_once($CFG->libdir .'/html2text/lib.php');
 
-    $h2t = new html2text($html, false, $dolinks, $width);
+    $options = array(
+        'do_links' => $dolinks,
+        'width' => $width
+    );
+    $h2t = new core_html2text($html, $options);
     $result = $h2t->get_text();
 
     return $result;
