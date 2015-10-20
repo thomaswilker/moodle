@@ -24,13 +24,17 @@
  */
 namespace core\form;
 
+use templatable;
+use renderer_base;
+
 /**
- * Class for common properties of scheduled_task and adhoc_task.
+ * A row for form elements. All elements must be in a row, even if there is only one
+ * element in the row.
  *
  * @copyright  2015 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-public class element_row {
+class element_row implements templatable {
 
     /** @var string $id All element_rows should have a unique id. */
     protected $id = null;
@@ -82,4 +86,14 @@ public class element_row {
         $this->set_id($id);
     }
 
+    public function export_for_template(renderer_base $output) {
+        $exportedelements = array();
+        foreach ($this->elements as $element) {
+            array_push($exportedelements, $element->export_for_template($output));
+        }
+        return array(
+            'id' => $this->id,
+            'elements' => $exportedelements
+        );
+    }
 }

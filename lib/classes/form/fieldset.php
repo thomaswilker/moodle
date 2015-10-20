@@ -24,13 +24,16 @@
  */
 namespace core\form;
 
+use templatable;
+use renderer_base;
+
 /**
  * Class for common properties of scheduled_task and adhoc_task.
  *
  * @copyright  2015 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-public class fieldset {
+class fieldset implements templatable {
 
     /** @var string $id All fieldsets should have a unique id. */
     protected $id = null;
@@ -57,13 +60,16 @@ public class fieldset {
         $this->name = $name;
     }
 
-    public function add_element_row($id) {
-        $row = new element_row($id, $name);
+    public function add_row($id = '') {
+        if (empty($id)) {
+            $id = uniqid(true);
+        }
+        $row = new element_row($id);
         array_push($this->elementrows, $row);
         return $row;
     }
 
-    public function get_element_row($id) {
+    public function get_row($id) {
         foreach ($this->elementrows as $index => $elementrow) {
             if ($elementrow->get_id() == $id) {
                 return $this->elementrows[$index];
@@ -72,7 +78,7 @@ public class fieldset {
         throw new \coding_exception('Row with id ' . $id . ' not found');
     }
 
-    public function remove_element_row($id) {
+    public function remove_row($id) {
         $row = false;
         foreach ($this->elementrows as $index => $elementrow) {
             if ($elementrow->get_id() == $id) {
@@ -95,4 +101,15 @@ public class fieldset {
         $this->set_name($name);
     }
 
+    public function export_for_template(renderer_base $output) {
+        $exportedrows = array();
+        foreach ($this->elementrows as $row) {
+            array_push($exportedrows, $row->export_for_template($output));
+        }
+        return array(
+            'id' => $this->id,
+            'name' => $this->name,
+            'elementRows' => $exportedrows
+        );
+    }
 }

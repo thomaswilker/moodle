@@ -24,13 +24,16 @@
  */
 namespace core\form;
 
+use templatable;
+use renderer_base;
+
 /**
- * Abstract class defining a form.
+ * Public class defining a form.
  *
  * @copyright  2015 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class form {
+class form implements templatable {
 
     /** @var string $id All forms should have a unique id - will be generated if not supplied. */
     protected $id = null;
@@ -47,15 +50,28 @@ abstract class form {
     }
 
     public function add_fieldset($id, $name) {
-        array_push($this->fieldsets, new fieldset($id, $name));
+        $fieldset = new fieldset($id, $name);
+        array_push($this->fieldsets, $fieldset);
+        return $fieldset;
+    }
+
+    public function get_fieldset($id) {
+        foreach ($this->fieldsets as $index => $fieldset) {
+            if ($fieldset->get_id() == $id) {
+                return ($this->fieldsets[$index]);
+            }
+        }
+        throw new coding_exception('fieldset with id ' . $id . ' not found');
     }
 
     public function remove_fieldset($id) {
         foreach ($this->fieldsets as $index => $fieldset) {
             if ($fieldset->get_id() == $id) {
                 unset($this->fieldsets[$index]);
+                return $fieldset;
             }
         }
+        throw new coding_exception('fieldset with id ' . $id . ' not found');
     }
 
     public function __construct($id = '') {
@@ -65,4 +81,14 @@ abstract class form {
         $this->set_id($id);
     }
 
+    public function export_for_template(renderer_base $output) {
+        $exportedfieldsets = array();
+        foreach ($this->fieldsets as $fieldset) {
+            array_push($exportedfieldsets, $fieldset->export_for_template($output));
+        }
+        return array(
+            'id' => $this->id,
+            'fieldsets' => $exportedfieldsets
+        );
+    }
 }
