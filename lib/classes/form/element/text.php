@@ -55,6 +55,10 @@ class text extends element {
         return 'text';
     }
 
+    public function get_template() {
+        return 'core/form-field-text';
+    }
+
     public function set_autocomplete($autocomplete) {
         $this->autocomplete = $autocomplete;
     }
@@ -95,6 +99,10 @@ class text extends element {
         return $this->size;
     }
 
+    public function __construct($id = '') {
+        parent::__construct($id);
+    }
+
     /**
      * Function to export the renderer data in a format that is suitable for a
      * mustache template. This means:
@@ -113,4 +121,5 @@ class text extends element {
         $result['autocomplete'] = $this->is_autocomplete();
         return $result;
     }
+
 }

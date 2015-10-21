@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Form.
+ * Base class for all types of form elements.
  *
  * @package    core
  * @category   form
@@ -24,31 +24,26 @@
  */
 namespace core\form;
 
+use renderable;
+use renderer_base;
+
 /**
- * Abstract class for common properties of scheduled_task and adhoc_task.
+ * Hack to get around broken renderer logic.
  *
  * @copyright  2015 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class rule {
+class element_renderer implements renderable {
 
-    /** @var int Fail the validation for this field if the rule triggers */
-    const TRIGGER_INVALID = 'invalid';
-    /** @var int Disable this field if the rule triggers */
-    const TRIGGER_DISABLED = 'disabled';
-    /** @var int Change the value of this field if the rule triggers */
-    const TRIGGER_CHANGE = 'change';
+    /** @var element $element This class only contains an element. */
+    protected $element = null;
 
-    /** @var int $trigger - The type of action to trigger when the conditions of this rule are met. */
-    var $trigger = self::TRIGGER_INVALID;
-
-    public function get_trigger() {
-        return $this->trigger;
+    public function __construct($element) {
+        $this->element = $element;
     }
 
-    public function set_trigger($trigger) {
-        $this->trigger = $trigger;
+    public function render(renderer_base $output) {
+        return $this->element->render($output);
     }
-
 
 }

@@ -37,8 +37,12 @@ echo $OUTPUT->header();
 $form = new form();
 $fieldset = $form->add_fieldset('general', 'General');
 $row = $fieldset->add_row();
-$row->add_element(new text());
+$text = $row->add_element(new text());
+$text->set_name('nameoffield');
+$text->set_label('Label for field');
+$text->set_placeholder('Placeholder text...');
 echo json_encode($form->export_for_template($OUTPUT));
 
+echo $OUTPUT->render($form);
 
 echo $OUTPUT->footer();

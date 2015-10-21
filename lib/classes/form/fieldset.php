@@ -24,8 +24,10 @@
  */
 namespace core\form;
 
+use renderable;
 use templatable;
 use renderer_base;
+use stdClass;
 
 /**
  * Class for common properties of scheduled_task and adhoc_task.
@@ -33,7 +35,7 @@ use renderer_base;
  * @copyright  2015 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class fieldset implements templatable {
+class fieldset implements templatable, renderable {
 
     /** @var string $id All fieldsets should have a unique id. */
     protected $id = null;
@@ -111,5 +113,30 @@ class fieldset implements templatable {
             'name' => $this->name,
             'elementRows' => $exportedrows
         );
+    }
+
+    public function render(renderer_base $output) {
+        $rows = array();
+        $hasvisiblefield = false;
+
+        foreach ($this->elementrows as $row) {
+            $html = $output->render($row);
+            if (strpos($html, '<label') !== false) {
+                $hasvisiblefield = true;
+            }
+
+            array_push($rows, $html);
+        }
+
+        $context = new stdClass();
+        $context->id = $this->id;
+        $context->name = $this->name;
+        $context->rows = $rows;
+        var_dump($hasvisiblefield);
+        if ($hasvisiblefield) {
+            return $output->render_from_template('core/form-fieldset', $context);
+        } else {
+            return implode('\n', $rows);
+        }
     }
 }

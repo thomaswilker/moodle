@@ -25,6 +25,7 @@
 namespace core\form;
 
 use templatable;
+use renderable;
 use renderer_base;
 
 /**
@@ -33,7 +34,10 @@ use renderer_base;
  * @copyright  2015 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-abstract class element implements templatable {
+abstract class element implements templatable, renderable {
+
+    /** @var string $id All elements should have a unique id. */
+    protected $id = null;
 
     /** @var string $name All form elements should have a unique name. */
     protected $name = '';
@@ -44,11 +48,25 @@ abstract class element implements templatable {
     /** @var string $label All elements should have a label. */
     protected $label = '';
 
+    /** @var string $labelvisible Sometimes it is better to only show the label to screen readers */
+    protected $labelvisible = true;
+
     /** @var string $help Elements can have help. */
     protected $help = '';
 
     /** @var string $disabled All elements are enabled by default, but can be disabled. */
     protected $disabled = false;
+
+    /** @var array $rules List of validation rules to apply to this field. */
+    protected $rules = array();
+
+    public function get_id() {
+        return $this->id;
+    }
+
+    public function set_id($id) {
+        $this->id = $id;
+    }
 
     public function get_name() {
         return $this->name;
@@ -90,7 +108,57 @@ abstract class element implements templatable {
         $this->label = $label;
     }
 
+    public function set_label_visible($visible) {
+        $this->labelvisible = $visible;
+    }
+
+    public function is_label_visible() {
+        return $this->labelvisible;
+    }
+
+    public function add_rule($rule) {
+        array_push($this->rules, $rule);
+        return $rule;
+    }
+
+    public function get_rule($id) {
+        foreach ($this->rules as $index => $rule) {
+            if ($rule->get_id() == $id) {
+                return $this->rules[$index];
+            }
+        }
+        throw new \coding_exception('Rule with id ' . $id . ' not found');
+    }
+
+    public function remove_rule($id) {
+        $rule = false;
+        foreach ($this->rules as $index => $rule) {
+            if ($rule->get_id() == $id) {
+                $rule = $this->rules[$index];
+                unset($this->rules[$index]);
+                return $rule;
+            }
+        }
+        if (!$rule) {
+            throw new \coding_exception('Rule with id ' . $id . ' not found');
+        }
+    }
+
+    public function __construct($id = '') {
+        if (empty($id)) {
+            $id = uniqid(true);
+        }
+        $this->set_id($id);
+    }
+
     public abstract function get_type();
+
+    public abstract function get_template();
+
+    public function render(renderer_base $output) {
+        $context = $this->export_for_template($output);
+        return $output->render_from_template($this->get_template(), $context);
+    }
 
     /**
      * Function to export the renderer data in a format that is suitable for a
@@ -102,13 +170,21 @@ abstract class element implements templatable {
      * @return stdClass|array
      */
     public function export_for_template(renderer_base $output) {
+        $exportedrules = array();
+        foreach ($this->rules as $rule) {
+            $exportedrules = $rule->export_for_template();
+        }
         return array(
+            'id' => $this->get_id(),
             'name' => $this->get_name(),
             'value' => $this->get_value(),
             'label' => $this->get_label(),
+            'labelVisible' => $this->is_label_visible(),
             'help' => $this->get_help(),
             'disabled' => $this->is_disabled(),
             'type' => $this->get_type(),
+            'template' => $this->get_template(),
+            'rules' => $exportedrules
         );
     }
 

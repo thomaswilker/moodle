@@ -25,7 +25,9 @@
 namespace core\form;
 
 use templatable;
+use renderable;
 use renderer_base;
+use stdClass;
 
 /**
  * A row for form elements. All elements must be in a row, even if there is only one
@@ -34,7 +36,7 @@ use renderer_base;
  * @copyright  2015 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class element_row implements templatable {
+class element_row implements templatable, renderable {
 
     /** @var string $id All element_rows should have a unique id. */
     protected $id = null;
@@ -70,14 +72,13 @@ class element_row implements templatable {
             if ($element->get_id() == $id) {
                 $element = $this->elements[$index];
                 unset($this->elements[$index]);
+                return $element;
             }
         }
         if (!$element) {
             throw new \coding_exception('Element with id ' . $id . ' not found');
         }
-        return $element;
     }
-
 
     public function __construct($id = '') {
         if (empty($id)) {
@@ -96,4 +97,28 @@ class element_row implements templatable {
             'elements' => $exportedelements
         );
     }
+
+    public function render(renderer_base $output) {
+        $elements = array();
+        $hasvisiblefield = false;
+
+        foreach ($this->elements as $element) {
+            $html = $output->render(new element_renderer($element));
+            if (strpos($html, '<label') !== false) {
+                $hasvisiblefield = true;
+            }
+
+            array_push($elements, $html);
+        }
+
+        $context = new stdClass();
+        $context->id = $this->id;
+        $context->elements = $elements;
+        if ($hasvisiblefield) {
+            return $output->render_from_template('core/form-element-row', $context);
+        } else {
+            return implode('\n', $elements);
+        }
+    }
+
 }

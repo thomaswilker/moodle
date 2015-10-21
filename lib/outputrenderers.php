@@ -4069,6 +4069,46 @@ EOD;
         $html .= html_writer::end_tag('header');
         return $html;
     }
+
+    /**
+     * Render a form.
+     *
+     * @param \core\form\form $form The form to render
+     * @return string HTML to display.
+     */
+    public function render_form($form) {
+        return $form->render($this);
+    }
+
+    /**
+     * Render a fieldset.
+     *
+     * @param \core\form\fieldset $fieldset The fieldset to render
+     * @return string HTML to display.
+     */
+    public function render_fieldset($fieldset) {
+        return $fieldset->render($this);
+    }
+
+    /**
+     * Render a element_row.
+     *
+     * @param \core\form\element_row $elementrow The element row to render
+     * @return string HTML to display.
+     */
+    public function render_element_row($elementrow) {
+        return $elementrow->render($this);
+    }
+
+    /**
+     * Render a element_renderer.
+     *
+     * @param \core\form\element_renderer $elementrenderer The element renderer to render
+     * @return string HTML to display.
+     */
+    public function render_element_renderer($elementrenderer) {
+        return $elementrenderer->render($this);
+    }
 }
 
 /**
