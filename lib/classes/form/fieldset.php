@@ -52,6 +52,7 @@ class fieldset implements templatable, renderable {
 
     public function set_id($id) {
         $this->id = $id;
+        return $this;
     }
 
     public function get_name() {
@@ -60,6 +61,7 @@ class fieldset implements templatable, renderable {
 
     public function set_name($name) {
         $this->name = $name;
+        return $this;
     }
 
     public function add_row($id = '') {
@@ -121,8 +123,10 @@ class fieldset implements templatable, renderable {
 
         foreach ($this->elementrows as $row) {
             $html = $output->render($row);
-            if (strpos($html, '<label') !== false) {
-                $hasvisiblefield = true;
+            foreach ($row->get_elements() as $element) {
+                if ($element->is_visible()) {
+                    $hasvisiblefield = true;
+                }
             }
 
             array_push($rows, $html);
@@ -132,7 +136,6 @@ class fieldset implements templatable, renderable {
         $context->id = $this->id;
         $context->name = $this->name;
         $context->rows = $rows;
-        var_dump($hasvisiblefield);
         if ($hasvisiblefield) {
             return $output->render_from_template('core/form-fieldset', $context);
         } else {

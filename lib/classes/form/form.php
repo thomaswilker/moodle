@@ -59,6 +59,7 @@ class form implements templatable, renderable {
 
     public function set_id($id) {
         $this->id = $id;
+        return $this;
     }
 
     public function get_method() {
@@ -67,6 +68,7 @@ class form implements templatable, renderable {
 
     public function set_method($method) {
         $this->method = $method;
+        return $this;
     }
 
     public function get_action() {
@@ -75,6 +77,7 @@ class form implements templatable, renderable {
 
     public function set_action($action) {
         $this->action = $action;
+        return $this;
     }
 
     public function get_enctype() {
@@ -83,6 +86,7 @@ class form implements templatable, renderable {
 
     public function set_enctype($enctype) {
         $this->enctype = $enctype;
+        return $this;
     }
 
     public function add_fieldset($id = '', $name = '') {

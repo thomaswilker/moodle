@@ -61,6 +61,7 @@ class text extends element {
 
     public function set_autocomplete($autocomplete) {
         $this->autocomplete = $autocomplete;
+        return $this;
     }
 
     public function is_autocomplete() {
@@ -69,6 +70,7 @@ class text extends element {
 
     public function set_autofocus($autofocus) {
         $this->autofocus = $autofocus;
+        return $this;
     }
 
     public function is_autofocus() {
@@ -77,6 +79,7 @@ class text extends element {
 
     public function set_maxlength($maxlength) {
         $this->maxlength = $maxlength;
+        return $this;
     }
 
     public function get_maxlength() {
@@ -85,6 +88,7 @@ class text extends element {
 
     public function set_placeholder($placeholder) {
         $this->placeholder = $placeholder;
+        return $this;
     }
 
     public function get_placeholder() {
@@ -93,6 +97,7 @@ class text extends element {
 
     public function set_size($size) {
         $this->size = $size;
+        return $this;
     }
 
     public function get_size() {

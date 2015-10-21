@@ -50,11 +50,16 @@ class element_row implements templatable, renderable {
 
     public function set_id($id) {
         $this->id = $id;
+        return $this;
     }
 
     public function add_element($element) {
         array_push($this->elements, $element);
         return $element;
+    }
+
+    public function get_elements() {
+        return $this->elements;
     }
 
     public function get_element($id) {
@@ -101,10 +106,14 @@ class element_row implements templatable, renderable {
     public function render(renderer_base $output) {
         $elements = array();
         $hasvisiblefield = false;
+        $haserror = false;
 
         foreach ($this->elements as $element) {
             $html = $output->render(new element_renderer($element));
-            if (strpos($html, '<label') !== false) {
+            if ($element->is_visible()) {
+                if (!empty($element->get_error())) {
+                    $haserror = true;
+                }
                 $hasvisiblefield = true;
             }
 
@@ -114,6 +123,7 @@ class element_row implements templatable, renderable {
         $context = new stdClass();
         $context->id = $this->id;
         $context->elements = $elements;
+        $context->haserror = $haserror;
         if ($hasvisiblefield) {
             return $output->render_from_template('core/form-element-row', $context);
         } else {

@@ -22,6 +22,9 @@ require('config.php');
 
 use core\form\form;
 use core\form\element\text;
+use core\form\condition\notempty;
+use core\form\trigger\disable;
+use core\form\rule;
 
 $PAGE->set_url('/test.php');
 $PAGE->set_pagelayout('admin');
@@ -35,12 +38,21 @@ $PAGE->set_title('Form hacks');
 echo $OUTPUT->header();
 
 $form = new form();
-$fieldset = $form->add_fieldset('general', 'General');
-$row = $fieldset->add_row();
-$text = $row->add_element(new text());
-$text->set_name('nameoffield');
-$text->set_label('Label for field');
-$text->set_placeholder('Placeholder text...');
+$element = $form->add_fieldset('general', 'General')
+                ->add_row()
+                    ->add_element(new text())
+                        ->set_name('nameoffield')
+                        ->set_error('You stuffed it up!')
+                        ->set_label('Label for field')
+                        ->set_placeholder('Placeholder text...');
+
+$condition = new notempty($element);
+$trigger = new disable();
+$rule = new rule();
+$rule->add_condition($condition);
+$rule->set_trigger($trigger);
+$element->add_rule($rule);
+
 echo json_encode($form->export_for_template($OUTPUT));
 
 echo $OUTPUT->render($form);

@@ -9,5 +9,10 @@
     value="{{value}}"
     size="{{size}}"
     maxlength="{{maxlength}}"
+    {{#disabled}}disabled{{/disabled}}
+    {{#error}}aria-invalid="true" aria-describedby="{{id}}-error" autofocus{{/error}}
     {{#autofocus}}autofocus{{/autofocus}}
     autocomplete="{{#autocomplete}}on{{/autocomplete}}{{^autocomplete}}off{{/autocomplete}}">
+{{#error}}
+<div class="alert alert-danger" id="{{id}}-error">{{error}}</div>
+{{/error}}

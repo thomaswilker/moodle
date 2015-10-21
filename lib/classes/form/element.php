@@ -51,8 +51,14 @@ abstract class element implements templatable, renderable {
     /** @var string $labelvisible Sometimes it is better to only show the label to screen readers */
     protected $labelvisible = true;
 
+    /** @var string $fieldvisible Some fields are not visible at all (hidden fields) */
+    protected $visible = true;
+
     /** @var string $help Elements can have help. */
     protected $help = '';
+
+    /** @var string $error Elements can have errors. */
+    protected $error = '';
 
     /** @var string $disabled All elements are enabled by default, but can be disabled. */
     protected $disabled = false;
@@ -66,6 +72,7 @@ abstract class element implements templatable, renderable {
 
     public function set_id($id) {
         $this->id = $id;
+        return $this;
     }
 
     public function get_name() {
@@ -74,6 +81,16 @@ abstract class element implements templatable, renderable {
 
     public function set_name($name) {
         $this->name = $name;
+        return $this;
+    }
+
+    public function get_error() {
+        return $this->error;
+    }
+
+    public function set_error($error) {
+        $this->error = $error;
+        return $this;
     }
 
     public function get_help() {
@@ -82,10 +99,21 @@ abstract class element implements templatable, renderable {
 
     public function set_help($help) {
         $this->help = $help;
+        return $this;
+    }
+
+    public function set_visible($visible) {
+        $this->visible = $visible;
+        return $this;
+    }
+
+    public function is_visible() {
+        return $this->visible;
     }
 
     public function set_disabled($disabled) {
-        return $this->disabled;
+        $this->disabled = $disabled;
+        return $this;
     }
 
     public function is_disabled() {
@@ -98,6 +126,7 @@ abstract class element implements templatable, renderable {
 
     public function set_value($value) {
         $this->value = $value;
+        return $this;
     }
 
     public function get_label() {
@@ -106,10 +135,12 @@ abstract class element implements templatable, renderable {
 
     public function set_label($label) {
         $this->label = $label;
+        return $this;
     }
 
     public function set_label_visible($visible) {
         $this->labelvisible = $visible;
+        return $this;
     }
 
     public function is_label_visible() {
@@ -172,12 +203,14 @@ abstract class element implements templatable, renderable {
     public function export_for_template(renderer_base $output) {
         $exportedrules = array();
         foreach ($this->rules as $rule) {
-            $exportedrules = $rule->export_for_template();
+            array_push($exportedrules, $rule->export_for_template($output));
         }
         return array(
             'id' => $this->get_id(),
             'name' => $this->get_name(),
             'value' => $this->get_value(),
+            'error' => $this->get_error(),
+            'visible' => $this->is_visible(),
             'label' => $this->get_label(),
             'labelVisible' => $this->is_label_visible(),
             'help' => $this->get_help(),
