@@ -48,6 +48,7 @@ class hidden extends element {
         parent::__construct($id);
         $this->set_name($name);
         $this->set_value($value);
+        $this->set_visible($false);
     }
 
     /**

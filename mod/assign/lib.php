@@ -1428,3 +1428,36 @@ function assign_pluginfile($course,
     }
     send_stored_file($file, 0, 0, $forcedownload, $options);
 }
+
+function assign_build_test_form() {
+    $form = new form();
+    $element = $form->add_fieldset('general', 'General')
+                    ->add_row()
+                        ->add_element(new text())
+                            ->set_name('nameoffield')
+                            ->set_label('Label for field')
+                            ->set_placeholder('Placeholder text...');
+
+    $condition = new isnotempty($element);
+    $trigger = new disable();
+    $rule = new rule();
+    $rule->add_condition($condition);
+    $rule->set_trigger($trigger);
+    $element->add_rule($rule);
+
+    $condition = new isempty($element);
+    $trigger = new invalidate('You need a value dummy!');
+    $rule = new rule();
+    $rule->add_condition($condition);
+    $rule->set_trigger($trigger);
+    $element->add_rule($rule);
+
+    return $form;
+}
+
+function assign_register_forms($formlibrary) {
+
+    return array(
+        'form1' => '\mod\assign\form\test1'
+    );
+}
