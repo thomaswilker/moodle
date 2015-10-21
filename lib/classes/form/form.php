@@ -126,7 +126,15 @@ class form implements templatable, renderable {
         $field = $this->add_fieldset()->add_row()->add_element($sesskey);
     }
 
+    public function evaluate_rules() {
+        foreach ($this->fieldsets as $fieldset) {
+            $fieldset->evaluate_rules();
+        }
+    }
+
     public function export_for_template(renderer_base $output) {
+        $this->evaluate_rules();
+
         $exportedfieldsets = array();
         foreach ($this->fieldsets as $fieldset) {
             array_push($exportedfieldsets, $fieldset->export_for_template($output));
@@ -141,6 +149,7 @@ class form implements templatable, renderable {
     }
 
     public function render(renderer_base $output) {
+        $this->evaluate_rules();
         $fieldsets = array();
 
         foreach ($this->fieldsets as $fieldset) {

@@ -41,10 +41,10 @@ class disable extends trigger {
     }
 
     public function pass(element $element) {
-        $element->set_disabled(false);
+        $element->set_disabled(true);
     }
 
     public function fail(element $element) {
-        $element->set_disabled(true);
+        $element->set_disabled(false);
     }
 }

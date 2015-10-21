@@ -105,6 +105,12 @@ class fieldset implements templatable, renderable {
         $this->set_name($name);
     }
 
+    public function evaluate_rules() {
+        foreach ($this->elementrows as $row) {
+            $row->evaluate_rules();
+        }
+    }
+
     public function export_for_template(renderer_base $output) {
         $exportedrows = array();
         foreach ($this->elementrows as $row) {

@@ -22,8 +22,10 @@ require('config.php');
 
 use core\form\form;
 use core\form\element\text;
-use core\form\condition\notempty;
+use core\form\condition\isnotempty;
+use core\form\condition\isempty;
 use core\form\trigger\disable;
+use core\form\trigger\invalidate;
 use core\form\rule;
 
 $PAGE->set_url('/test.php');
@@ -42,12 +44,18 @@ $element = $form->add_fieldset('general', 'General')
                 ->add_row()
                     ->add_element(new text())
                         ->set_name('nameoffield')
-                        ->set_error('You stuffed it up!')
                         ->set_label('Label for field')
                         ->set_placeholder('Placeholder text...');
 
-$condition = new notempty($element);
+$condition = new isnotempty($element);
 $trigger = new disable();
+$rule = new rule();
+$rule->add_condition($condition);
+$rule->set_trigger($trigger);
+$element->add_rule($rule);
+
+$condition = new isempty($element);
+$trigger = new invalidate('You need a value dummy!');
 $rule = new rule();
 $rule->add_condition($condition);
 $rule->set_trigger($trigger);

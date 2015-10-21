@@ -191,6 +191,20 @@ abstract class element implements templatable, renderable {
         return $output->render_from_template($this->get_template(), $context);
     }
 
+    public function evaluate_rule($rule) {
+        if ($rule->evaluate()) {
+            $rule->get_trigger()->pass($this);
+        } else {
+            $rule->get_trigger()->fail($this);
+        }
+    }
+
+    public function evaluate_rules() {
+        foreach ($this->rules as $rule) {
+            $this->evaluate_rule($rule);
+        }
+    }
+
     /**
      * Function to export the renderer data in a format that is suitable for a
      * mustache template. This means:

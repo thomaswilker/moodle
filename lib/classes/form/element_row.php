@@ -92,6 +92,12 @@ class element_row implements templatable, renderable {
         $this->set_id($id);
     }
 
+    public function evaluate_rules() {
+        foreach ($this->elements as $element) {
+            $element->evaluate_rules();
+        }
+    }
+
     public function export_for_template(renderer_base $output) {
         $exportedelements = array();
         foreach ($this->elements as $element) {

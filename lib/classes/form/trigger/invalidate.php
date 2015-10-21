@@ -26,6 +26,7 @@ namespace core\form\trigger;
 
 use core\form\trigger;
 use core\form\element;
+use renderer_base;
 
 /**
  * Abstract base class for all types of form elements.
@@ -52,7 +53,7 @@ class invalidate extends trigger {
     }
 
     public function pass(element $element) {
-        $element->set_error($message);
+        $element->set_error($this->message);
     }
 
     public function fail(element $element) {

@@ -80,6 +80,21 @@ class rule implements templatable {
         return $this->conditions;
     }
 
+    public function evaluate() {
+        foreach ($this->conditions as $condition) {
+            if ($condition->evaluate()) {
+                if ($this->logictype == self::ANY) {
+                    return true;
+                }
+            } else {
+                if ($this->logictype == self::ALL) {
+                    return false;
+                }
+            }
+        }
+        return ($this->logictype == self::ALL);
+    }
+
     public function remove_condition($index) {
         if (!isset($this->conditions[$index])) {
             throw new \coding_exception('Condition not found');
