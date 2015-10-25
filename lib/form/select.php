@@ -26,6 +26,8 @@
  */
 
 require_once('HTML/QuickForm/select.php');
+global $CFG;
+require_once($CFG->libdir . '/outputrenderers.php');
 
 /**
  * select type form element
@@ -37,7 +39,7 @@ require_once('HTML/QuickForm/select.php');
  * @copyright 2006 Jamie Pratt <me@jamiep.org>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class MoodleQuickForm_select extends HTML_QuickForm_select{
+class MoodleQuickForm_select extends HTML_QuickForm_select implements renderable, templatable {
     /** @var string html for help button, if empty then no help */
     var $_helpbutton='';
 
@@ -84,6 +86,46 @@ class MoodleQuickForm_select extends HTML_QuickForm_select{
         }
         $html .= parent::toHtml();
         return $html;
+    }
+
+    /**
+     * Get the name of the template to use for this form element.
+     *
+     * @return string
+     */
+    public function get_template_name() {
+        return 'core/form-select';
+    }
+
+    /**
+     * Function to export the renderer data in a format that is suitable for a
+     * mustache template. This means:
+     * 1. No complex types - only stdClass, array, int, string, float, bool
+     * 2. Any additional info that is required for the template is pre-calculated (e.g. capability checks).
+     *
+     * @param renderer_base $output Used to do a final render of any components that need to be rendered for export.
+     * @return stdClass|array
+     */
+    public function export_for_template(renderer_base $output) {
+        $context = new stdClass();
+        $context->helpButton = $this->getHelpButton();
+        $context->options = array();
+        foreach ($this->_options as $option) {
+            $exportedoption = array(
+                'value' => $option['attr']['value'],
+                'text' => $option['text'],
+                'selected' => in_array($option['attr']['value'], $this->_values)
+            );
+            array_push($context->options, $exportedoption);
+        }
+        $context->id = $this->getAttribute('id');
+        $context->name = $this->getName();
+        $context->label = $this->getLabel();
+        $context->multiple = $this->getMultiple();
+        $context->hiddenLabel = $this->_hiddenLabel;
+        $context->size = $this->getSize();
+        $context->frozen = $this->_flagFrozen;
+        return $context;
     }
 
     /**
