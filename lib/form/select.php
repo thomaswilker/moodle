@@ -26,8 +26,6 @@
  */
 
 require_once('HTML/QuickForm/select.php');
-global $CFG;
-require_once($CFG->libdir . '/outputrenderers.php');
 
 /**
  * select type form element
@@ -68,33 +66,12 @@ class MoodleQuickForm_select extends HTML_QuickForm_select implements renderable
     }
 
     /**
-     * Returns HTML for select form element.
-     *
-     * @return string
-     */
-    function toHtml(){
-        $html = '';
-        if ($this->getMultiple()) {
-            // Adding an hidden field forces the browser to send an empty data even though the user did not
-            // select any element. This value will be cleaned up in self::exportValue() as it will not be part
-            // of the select options.
-            $html .= '<input type="hidden" name="'.$this->getName().'" value="_qf__force_multiselect_submission">';
-        }
-        if ($this->_hiddenLabel){
-            $this->_generateId();
-            $html .= '<label class="accesshide" for="'.$this->getAttribute('id').'" >'.$this->getLabel().'</label>';
-        }
-        $html .= parent::toHtml();
-        return $html;
-    }
-
-    /**
      * Get the name of the template to use for this form element.
      *
      * @return string
      */
     public function get_template_name() {
-        return 'core/form-select';
+        return 'core/form-element-select';
     }
 
     /**
@@ -110,14 +87,23 @@ class MoodleQuickForm_select extends HTML_QuickForm_select implements renderable
         $context = new stdClass();
         $context->helpButton = $this->getHelpButton();
         $context->options = array();
+        $text = array();
+        $value = array();
         foreach ($this->_options as $option) {
+            $selected = !empty($this->_values) && in_array($option['attr']['value'], $this->_values);
             $exportedoption = array(
                 'value' => $option['attr']['value'],
                 'text' => $option['text'],
-                'selected' => in_array($option['attr']['value'], $this->_values)
+                'selected' => $selected
             );
+            if ($selected) {
+                array_push($text, $option['text']);
+                array_push($value, $option['attr']['value']);
+            }
             array_push($context->options, $exportedoption);
         }
+        $context->text = implode(', ', $text);
+        $context->value = implode(', ', $value);
         $context->id = $this->getAttribute('id');
         $context->name = $this->getName();
         $context->label = $this->getLabel();
@@ -125,6 +111,10 @@ class MoodleQuickForm_select extends HTML_QuickForm_select implements renderable
         $context->hiddenLabel = $this->_hiddenLabel;
         $context->size = $this->getSize();
         $context->frozen = $this->_flagFrozen;
+        $context->required = $this->getAttribute('required');
+        $context->advanced = $this->getAttribute('advanced');
+        $context->error = $this->getAttribute('error');
+
         return $context;
     }
 
@@ -168,28 +158,13 @@ class MoodleQuickForm_select extends HTML_QuickForm_select implements renderable
     }
 
     /**
-     * Slightly different container template when frozen. Don't want to use a label tag
-     * with a for attribute in that case for the element label but instead use a div.
-     * Templates are defined in renderer constructor.
+     * We check the options and return only the values that _could_ have been
+     * selected. We also return a scalar value if select is not "multiple"
      *
-     * @return string
+     * @param array $submitValues submitted values
+     * @param bool $assoc if true the retured value is associated array
+     * @return mixed
      */
-    function getElementTemplateType(){
-        if ($this->_flagFrozen){
-            return 'static';
-        } else {
-            return 'default';
-        }
-    }
-
-   /**
-    * We check the options and return only the values that _could_ have been
-    * selected. We also return a scalar value if select is not "multiple"
-    *
-    * @param array $submitValues submitted values
-    * @param bool $assoc if true the retured value is associated array
-    * @return mixed
-    */
     function exportValue(&$submitValues, $assoc = false)
     {
         if (empty($this->_options)) {

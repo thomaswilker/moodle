@@ -1,0 +1,21 @@
+<div id="fitem_{{id}}" class="fitem fitem_select {{#required}}required{{/required}} {{#advanced}}advanced{{/advanced}}">
+<div class="fitemtitle">
+<label {{#hiddenLabel}}class="accesshide"{{/hiddenLabel}} for="{{id}}">
+    {{label}}
+    {{#required}}{{>core/form-required}}{{/required}}
+    {{#advanced}}{{>core/form-advanced}}{{/advanced}}
+</label>
+{{{helpButton}}}
+</div>
+<div class="felement fselect {{#error}}error{{/error}}">
+    {{#error}}
+    <span class="error" tabindex="0">{{{error}}}</span>
+    <br/>
+    {{/error}}
+    <select name="{{name}}" id="{{id}}" {{#required}}required{{/required}} {{#size}}size="{{size}}"{{/size}}>
+        {{#options}}
+            <option value="{{value}}" {{#selected}}selected{{/selected}}>{{text}}</option>
+        {{/options}}
+    </select>
+</div>
+</div>

@@ -1454,8 +1454,8 @@ class MoodleQuickForm extends HTML_QuickForm_DHTMLRulesTableless {
         }else {
             $this->updateAttributes(array('class'=>'mform'));
         }
-        $this->_reqHTML = '<img class="req" title="'.get_string('requiredelement', 'form').'" alt="'.get_string('requiredelement', 'form').'" src="'.$OUTPUT->pix_url('req') .'" />';
-        $this->_advancedHTML = '<img class="adv" title="'.get_string('advancedelement', 'form').'" alt="'.get_string('advancedelement', 'form').'" src="'.$OUTPUT->pix_url('adv') .'" />';
+        $this->_reqHTML = $OUTPUT->render_from_template('core/form-required', array());
+        $this->_advancedHTML = $OUTPUT->render_from_template('core/form-advanced', array());
         $this->setRequiredNote(get_string('somefieldsrequired', 'form', '<img alt="'.get_string('requiredelement', 'form').'" src="'.$OUTPUT->pix_url('req') .'" />'));
     }
 
@@ -2739,48 +2739,50 @@ class MoodleQuickForm_Renderer extends HTML_QuickForm_Renderer_Tableless{
         $output = $PAGE->get_renderer('core', 'form');
         // Make sure the element has an id.
         $element->_generateId();
+        $isadvanced = isset($this->_advancedElements[$element->getName()]);
 
         if ($element instanceof renderable) {
-            $html = $output->render($element);
+            $element->updateAttributes(array('required' => $required, 'error' => $error, 'advanced' => $isadvanced));
+            $this->_html .= $output->render($element);
+            return;
+        }
+
+        //adding stuff to place holders in template
+        //check if this is a group element first
+        if (($this->_inGroup) and !empty($this->_groupElementTemplate)) {
+            // so it gets substitutions for *each* element
+            $html = $this->_groupElementTemplate;
+        }
+        elseif (method_exists($element, 'getElementTemplateType')){
+            $html = $this->_elementTemplates[$element->getElementTemplateType()];
+        }else{
+            $html = $this->_elementTemplates['default'];
+        }
+        if ($isadvanced) {
+            $html = str_replace(' {advanced}', ' advanced', $html);
+            $html = str_replace(' {aria-live}', ' aria-live="polite"', $html);
         } else {
+            $html = str_replace(' {advanced}', '', $html);
+            $html = str_replace(' {aria-live}', '', $html);
+        }
+        if (isset($this->_advancedElements[$element->getName()])||$element->getName() == 'mform_showadvanced'){
+            $html =str_replace('{advancedimg}', $this->_advancedHTML, $html);
+        } else {
+            $html =str_replace('{advancedimg}', '', $html);
+        }
+        $html =str_replace('{id}', 'fitem_' . $element->getAttribute('id'), $html);
+        $html =str_replace('{type}', 'f'.$element->getType(), $html);
+        $html =str_replace('{name}', $element->getName(), $html);
+        $emptylabel = '';
+        if ($element->getLabel() == '') {
+            $emptylabel = 'femptylabel';
+        }
+        $html = str_replace('{emptylabel}', $emptylabel, $html);
+        if (method_exists($element, 'getHelpButton')){
+            $html = str_replace('{help}', $element->getHelpButton(), $html);
+        }else{
+            $html = str_replace('{help}', '', $html);
 
-            //adding stuff to place holders in template
-            //check if this is a group element first
-            if (($this->_inGroup) and !empty($this->_groupElementTemplate)) {
-                // so it gets substitutions for *each* element
-                $html = $this->_groupElementTemplate;
-            }
-            elseif (method_exists($element, 'getElementTemplateType')){
-                $html = $this->_elementTemplates[$element->getElementTemplateType()];
-            }else{
-                $html = $this->_elementTemplates['default'];
-            }
-            if (isset($this->_advancedElements[$element->getName()])){
-                $html = str_replace(' {advanced}', ' advanced', $html);
-                $html = str_replace(' {aria-live}', ' aria-live="polite"', $html);
-            } else {
-                $html = str_replace(' {advanced}', '', $html);
-                $html = str_replace(' {aria-live}', '', $html);
-            }
-            if (isset($this->_advancedElements[$element->getName()])||$element->getName() == 'mform_showadvanced'){
-                $html =str_replace('{advancedimg}', $this->_advancedHTML, $html);
-            } else {
-                $html =str_replace('{advancedimg}', '', $html);
-            }
-            $html =str_replace('{id}', 'fitem_' . $element->getAttribute('id'), $html);
-            $html =str_replace('{type}', 'f'.$element->getType(), $html);
-            $html =str_replace('{name}', $element->getName(), $html);
-            $emptylabel = '';
-            if ($element->getLabel() == '') {
-                $emptylabel = 'femptylabel';
-            }
-            $html = str_replace('{emptylabel}', $emptylabel, $html);
-            if (method_exists($element, 'getHelpButton')){
-                $html = str_replace('{help}', $element->getHelpButton(), $html);
-            }else{
-                $html = str_replace('{help}', '', $html);
-
-            }
         }
         if (($this->_inGroup) and !empty($this->_groupElementTemplate)) {
             $this->_groupElementTemplate = $html;

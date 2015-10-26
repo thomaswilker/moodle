@@ -57,6 +57,7 @@ class course_reset_form extends moodleform {
         $roles = array_reverse($roles, true);
 
         $mform->addElement('select', 'unenrol_users', get_string('unenrolroleusers', 'enrol'), $roles, array('multiple' => 'multiple'));
+        $mform->setAdvanced('unenrol_users');
         $mform->addElement('checkbox', 'reset_roles_overrides', get_string('deletecourseoverrides', 'role'));
         $mform->setAdvanced('reset_roles_overrides');
         $mform->addElement('checkbox', 'reset_roles_local', get_string('deletelocalroles', 'role'));

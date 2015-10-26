@@ -48,7 +48,11 @@ class form_renderer extends core_renderer {
         $classname = get_class($widget);
         if ($widget instanceof templatable && method_exists($widget, 'get_template_name')) {
             $context = $widget->export_for_template($this);
-            return $this->render_from_template($widget->get_template_name(), $context);
+            if ($context->frozen) {
+                return $this->render_from_template('core/form-element-static', $context);
+            } else {
+                return $this->render_from_template($widget->get_template_name(), $context);
+            }
         } else {
             return parent::render($widget);
         }
