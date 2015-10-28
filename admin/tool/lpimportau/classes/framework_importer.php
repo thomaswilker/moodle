@@ -72,6 +72,7 @@ class framework_importer {
             }
             $parts = explode('/', $attr->nodeValue);
             $record->idnumber = array_pop($parts);
+            $record->parents = array();
 
             // Get the shortname and description.
             foreach ($element->childNodes as $child) {
@@ -85,7 +86,7 @@ class framework_importer {
                     $attr = $child->attributes->getNamedItem('resource');
                     if ($attr) {
                         $parts = explode('/', $attr->nodeValue);
-                        $record->parentid = array_pop($parts);
+                        array_push($record->parents, array_pop($parts));
                     }
                 }
             }
@@ -97,23 +98,48 @@ class framework_importer {
                 $record->shortname = $record->description;
             }
             $record->children = array();
+            $record->childcount = 0;
             array_push($records, $record);
         }
 
         // Now rebuild into a tree.
         foreach ($records as $key => $record) {
-            if (!empty($record->parentid)) {
-                $foundparent = false;
+            $record->foundparents = array();
+            if (count($record->parents) > 0) {
+                $foundparents = array();
                 foreach ($records as $parentkey => $parentrecord) {
-                    if ($parentrecord->idnumber == $record->parentid) {
-                        array_push($parentrecord->children, $record);
-                        $foundparent = true;
-                        break;
+                    foreach ($record->parents as $parentid) {
+                        if ($parentrecord->idnumber == $parentid) {
+                            $parentrecord->childcount++;
+                            array_push($foundparents, $parentrecord);
+                        }
                     }
                 }
-                if (!$foundparent) {
-                    $record->parentid = '';
+                $record->foundparents = $foundparents;
+            }
+        }
+        foreach ($records as $key => $record) {
+            $record->related = array();
+            if (count($record->foundparents) == 0) {
+                $record->parentid = '';
+            } else if (count($record->foundparents) == 1) {
+                array_push($record->foundparents[0]->children, $record);
+                $record->parentid = $record->foundparents[0]->idnumber;
+            } else {
+                // Multiple parents - choose the one with the least children.
+                $chosen = null;
+                foreach ($record->foundparents as $parent) {
+                    if ($chosen == null || $parent->childcount < $chosen->childcount) {
+                        $chosen = $parent;
+                    }
                 }
+                foreach ($record->foundparents as $parent) {
+                    if ($chosen !== $parent) {
+                        array_push($record->related, $parent);
+                    }
+                }
+                array_push($chosen->children, $record);
+                $record->parentid = $chosen->idnumber;
             }
         }
 
@@ -154,10 +180,23 @@ class framework_importer {
 
         if (!empty($competency->idnumber) && !empty($competency->shortname)) {
             $parent = api::create_competency($competency);
+            $record->id = $parent->get_id();
 
             foreach ($record->children as $child) {
                 $this->create_competency($parent, $child, $framework);
             }
+        }
+    }
+
+    public function set_related_competencies($record) {
+        if (!empty($record->related)) {
+            foreach ($record->related as $related) {
+                api::add_related_competency($record->id, $related->id);
+            }
+        }
+
+        foreach ($record->children as $child) {
+            $this->set_related_competencies($child);
         }
     }
 
@@ -168,6 +207,9 @@ class framework_importer {
     public function import_to_framework($framework) {
         foreach ($this->tree as $record) {
             $this->create_competency(null, $record, $framework);
+        }
+        foreach ($this->tree as $record) {
+            $this->set_related_competencies($record);
         }
         return true;
     }
