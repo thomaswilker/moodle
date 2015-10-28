@@ -79,6 +79,8 @@ class framework_importer {
                     $record->description = $child->nodeValue;
                 } else if ($child->localName == 'title') {
                     $record->shortname = $child->nodeValue;
+                } else if ($child->localName == 'statementNotation') {
+                    $record->code = $child->nodeValue;
                 } else if ($child->localName == 'isChildOf') {
                     $attr = $child->attributes->getNamedItem('resource');
                     if ($attr) {
@@ -88,6 +90,9 @@ class framework_importer {
                 }
             }
 
+            if (empty($record->shortname) && !empty($record->code)) {
+                $record->shortname = $record->code;
+            }
             if (empty($record->shortname) && !empty($record->description)) {
                 $record->shortname = $record->description;
             }
@@ -137,7 +142,11 @@ class framework_importer {
         } else {
             $competency->parentid = 0;
         }
-        $competency->idnumber = trim(clean_param($record->idnumber, PARAM_TEXT));
+        if (!empty($record->code)) {
+            $competency->idnumber = trim(clean_param($record->code, PARAM_TEXT));
+        } else {
+            $competency->idnumber = trim(clean_param($record->idnumber, PARAM_TEXT));
+        }
         $competency->shortname = trim(clean_param(shorten_text($record->shortname, 50), PARAM_TEXT));
         if (!empty($record->description)) {
             $competency->description = trim(clean_param($record->description, PARAM_TEXT));
