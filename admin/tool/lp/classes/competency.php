@@ -367,7 +367,11 @@ class competency extends persistent {
         } else if (!preg_match('@/([0-9]+/)+@', $value)) {
 
             return new lang_string('invaliddata', 'error');
+        // Validate the depth of the path.
+        } else if ((substr_count($value, '/') - 1) > competency_framework::get_taxonomies_max_level()) {
+            return new lang_string('invaliddata', 'error');
         }
+
 
         return true;
     }
