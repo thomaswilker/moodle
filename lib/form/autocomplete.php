@@ -42,6 +42,8 @@ class MoodleQuickForm_autocomplete extends MoodleQuickForm_select {
 
     /** @var boolean $tags Should we allow typing new entries to the field? */
     protected $tags = false;
+    /** @var boolean $casesensitive Should we use case-sensitive searching? */
+    protected $casesensitive = false;
     /** @var string $ajax Name of an AMD module to send/process ajax requests. */
     protected $ajax = '';
     /** @var string $placeholder Placeholder text for an empty list. */
@@ -65,6 +67,10 @@ class MoodleQuickForm_autocomplete extends MoodleQuickForm_select {
         if (isset($attributes['tags'])) {
             $this->tags = $attributes['tags'];
             unset($attributes['tags']);
+        }
+        if (isset($attributes['casesensitive'])) {
+            $this->casesensitive = $attributes['casesensitive'];
+            unset($attributes['casesensitive']);
         }
         $this->placeholder = get_string('search');
         if (isset($attributes['placeholder'])) {
@@ -91,7 +97,8 @@ class MoodleQuickForm_autocomplete extends MoodleQuickForm_select {
         // Enhance the select with javascript.
         $this->_generateId();
         $id = $this->getAttribute('id');
-        $PAGE->requires->js_call_amd('core/form-autocomplete', 'enhance', $params = array('#' . $id, $this->tags, $this->ajax, $this->placeholder));
+        $params = array('#' . $id, $this->tags, $this->ajax, $this->placeholder, $this->casesensitive);
+        $PAGE->requires->js_call_amd('core/form-autocomplete', 'enhance', $params);
 
         return parent::toHTML();
     }
