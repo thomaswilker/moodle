@@ -413,7 +413,7 @@ define(['jquery',
      * @method dragStart
      */
     var dragStart = function(e) {
-        e.originalEvent.dataTransfer.setData('text', $(e.target).data('id'));
+        e.originalEvent.dataTransfer.setData('text', $(e.target).parent().data('id'));
     };
 
     /**
@@ -450,7 +450,7 @@ define(['jquery',
     var dropOver = function(e) {
         e.preventDefault();
         moveSource = e.originalEvent.dataTransfer.getData('text');
-        moveTarget = $(e.target).data('id');
+        moveTarget = $(e.target).parent().data('id');
         $(this).removeClass('currentdragtarget');
 
         doMove();
@@ -638,11 +638,12 @@ define(['jquery',
 
             $('[data-region="filtercompetencies"]').on('submit', updateSearchHandler);
             // Simple html5 drag drop because we already added an accessible alternative.
-            $('[data-region="managecompetencies"] li').on('dragstart', dragStart);
-            $('[data-region="managecompetencies"] li').on('dragover', allowDrop);
-            $('[data-region="managecompetencies"] li').on('dragenter', dragEnter);
-            $('[data-region="managecompetencies"] li').on('dragleave', dragLeave);
-            $('[data-region="managecompetencies"] li').on('drop', dropOver);
+            var top = $('[data-region="managecompetencies"] [data-enhance="tree"]');
+            top.on('dragstart', 'li>span', dragStart)
+                .on('dragover', 'li>span', allowDrop)
+                .on('dragenter', 'li>span', dragEnter)
+                .on('dragleave', 'li>span', dragLeave)
+                .on('drop', 'li>span', dropOver);
 
             model.on('selectionchanged', selectionChanged);
         }
