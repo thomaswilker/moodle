@@ -156,8 +156,7 @@ define(['jquery',
                 methodname: 'tool_lp_search_competencies',
                 args: {
                     competencyframeworkid: competency.competencyframeworkid,
-                    searchtext: '',
-                    includerelated: false
+                    searchtext: ''
                 }
             },{
                 methodname: 'tool_lp_read_competency_framework',
@@ -531,8 +530,6 @@ define(['jquery',
         // Listeners to newly loaded related competencies.
         $('[data-action="deleterelation"]').on('click', deleteRelatedHandler);
 
-        // We update the full list of competencies.
-        treeModel.reloadCompetencies();
     };
 
     /**
@@ -600,6 +597,22 @@ define(['jquery',
                 $('[data-region="competencyinfo"]').html(html);
                 $('[data-action="deleterelation"]').on('click', deleteRelatedHandler);
             });
+        }).then(function() {
+            return templates.render('tool_lp/loading', {});
+        }).then(function(html, js) {
+            templates.replaceNodeContents('[data-region="relatedcompetencies"]', html, js);
+        }).done(function() {
+            ajax.call([{
+                methodname: 'tool_lp_data_for_related_competencies_section',
+                args: { competencyid: competency.id },
+                done: function(context) {
+                    return templates.render('tool_lp/related_competencies', context).done(function(html, js) {
+                        $('[data-region="relatedcompetencies"]').replaceWith(html);
+                        templates.runTemplateJS(js);
+                        updatedRelatedCompetencies();
+                    });
+                }
+            }]);
         }).fail(notification.exception);
     };
 
