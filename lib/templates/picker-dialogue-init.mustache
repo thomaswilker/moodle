@@ -1,0 +1,36 @@
+<form>
+<div class="container-fluid">
+<div class="row-fluid">
+<div class="span9">
+<label class="accesshide" for="pickersearch">{{#str}}search{{/str}}</label>
+<input type="search" id="pickersearch" class="search-query" placeholder="{{#str}}search{{/str}}"/>
+</div>
+<div class="span3">
+<label for="currentselection">{{#str}}currentselection{{/str}}</label>
+</div>
+</div>
+<div class="row-fluid">
+<hr>
+</div>
+<div class="row-fluid">
+<div class="span9">
+<label class="accesshide" for="searchresults">{{#str}}searchresults{{/str}}</label>
+<div id="searchresults" role="listbox" style="height: 400px; overflow: auto">
+{{> tool_lp/loading }}
+</div>
+</div>
+<div class="span3">
+<div id="currentselection" role="listbox" style="height: 400px; overflow: auto">
+{{#str}}noselection{{/str}}
+</div>
+</div>
+</div>
+<div class="row-fluid">
+<hr>
+<center>
+<button class="btn btn-primary">{{#str}}updateselection{{/str}}</button>
+<button class="btn btn-secondary">{{#str}}cancel{{/str}}</button>
+</center>
+</div>
+</div>
+</form>

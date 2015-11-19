@@ -31,21 +31,27 @@ define(['core/yui'], function(Y) {
      * @param {String} title Title for the window.
      * @param {String} content The content for the window.
      * @param {function} afterShow Callback executed after the window is opened.
+     * @param {String} preferredWidth If the screen is wide enough, make this the width.
      */
-    var dialogue = function(title, content, afterShow) {
+    var dialogue = function(title, content, afterShow, preferredWidth) {
         this.yuiDialogue = null;
         var parent = this;
 
         Y.use('moodle-core-notification', 'timers', function () {
 
-            parent.yuiDialogue = new M.core.dialogue({
+            var options = {
                 headerContent: title,
                 bodyContent: content,
                 draggable: true,
                 visible: false,
                 center: true,
-                modal: true
-            });
+                modal: true,
+            };
+            if (typeof preferredWidth !== "undefined") {
+                options.width = preferredWidth;
+            }
+
+            parent.yuiDialogue = new M.core.dialogue(options);
 
             parent.yuiDialogue.after('visibleChange', function(e) {
                 if (e.newVal) {
