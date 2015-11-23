@@ -37,14 +37,14 @@ class plan_exporter extends persistent_exporter {
         return 'tool_lp\\plan';
     }
 
-    protected function get_values(renderer_base $output) {
+    protected function get_other_values(renderer_base $output) {
         return array(
             'statusname' => $this->persistent->get_statusname(),
             'usercanupdate' => $this->persistent->can_manage(),
         );
     }
 
-    public static function define_properties() {
+    public static function define_other_properties() {
         return array(
             'statusname' => array(
                 'type' => PARAM_RAW,
