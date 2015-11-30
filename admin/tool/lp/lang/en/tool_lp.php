@@ -23,6 +23,7 @@
  */
 
 $string['actions'] = 'Actions';
+$string['addcohorts'] = 'Add cohorts';
 $string['addcompetency'] = 'Add competency';
 $string['addnewcompetency'] = 'Add new competency';
 $string['addnewcompetencyframework'] = 'Add new competency framework';
@@ -30,6 +31,7 @@ $string['addnewplan'] = 'Add new learning plan';
 $string['addnewtemplate'] = 'Add new learning plan template';
 $string['addrelatedcompetency'] = 'Add related competency';
 $string['allchildrenarecomplete'] = 'All children are complete';
+$string['aplanswerecreated'] = '{$a} plans were created';
 $string['assigncohorts'] = 'Assign cohorts';
 $string['cannotaddrules'] = 'This competency cannot be configured.';
 $string['cohortssyncedtotemplate'] = 'Cohorts synced to this template';
@@ -125,9 +127,11 @@ $string['nocompetenciesintemplate'] = 'No competencies have been linked to this 
 $string['nocompetencyframeworks'] = 'No competency frameworks have been created yet.';
 $string['nocompetencyselected'] = 'No competency selected';
 $string['nolinkedcourses'] = 'No courses are linked to this competency';
+$string['noplanswerecreated'] = 'No plans were created';
 $string['norelatedcompetencies'] = 'No other competencies have been related to this competency.';
 $string['notemplates'] = 'No learning plan templates have been created yet.';
 $string['nouserplans'] = 'No learning plans have been created yet.';
+$string['oneplanwascreated'] = 'A plan was created';
 $string['outcome'] = 'Outcome';
 $string['parentcompetency'] = 'Parent competency';
 $string['plancreated'] = 'Learning plan created';
@@ -154,6 +158,7 @@ $string['scalevalue'] = 'Scale value';
 $string['search'] = 'Search...';
 $string['selectcompetencymovetarget'] = 'Select a location to move this competency to:';
 $string['selectedcompetency'] = 'Selected competency';
+$string['selectcohortstosync'] = 'Select cohorts to sync';
 $string['shortname'] = 'Name';
 $string['state'] = 'State';
 $string['status'] = 'Status';
