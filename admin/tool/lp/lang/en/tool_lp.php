@@ -162,6 +162,7 @@ $string['selectcohortstosync'] = 'Select cohorts to sync';
 $string['shortname'] = 'Name';
 $string['state'] = 'State';
 $string['status'] = 'Status';
+$string['stopsyncingcohort'] = 'Stop syncing cohort';
 $string['taxonomies'] = 'Taxonomies';
 $string['taxonomy_add_behaviour'] = 'Add behaviour';
 $string['taxonomy_add_competency'] = 'Add competency';
