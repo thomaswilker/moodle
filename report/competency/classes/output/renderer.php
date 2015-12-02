@@ -15,17 +15,39 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version info
+ * Renderer class for report_competency
  *
- * @package    tool_lp
+ * @package    report_competency
  * @copyright  2015 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+namespace report_competency\output;
 
+defined('MOODLE_INTERNAL') || die;
 
-$plugin->version   = 2015111021; // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2014110400; // Requires this Moodle version.
-$plugin->component = 'tool_lp'; // Full name of the plugin (used for diagnostics).
+use plugin_renderer_base;
+use renderable;
 
+/**
+ * Renderer class for competency breakdown report
+ *
+ * @package    report_competency
+ * @copyright  2015 Damyon Wiese
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class renderer extends plugin_renderer_base {
+
+    /**
+     * Defer to template.
+     *
+     * @param report $report
+     *
+     * @return string html for the page
+     */
+    public function render_report(report $page) {
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('report_competency/report', $data);
+    }
+
+}

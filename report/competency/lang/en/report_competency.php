@@ -15,17 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Plugin version info
+ * Strings for component 'report_competency', language 'en'
  *
- * @package    tool_lp
+ * @package    report_competency
  * @copyright  2015 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
-
-
-$plugin->version   = 2015111021; // The current plugin version (Date: YYYYMMDDXX).
-$plugin->requires  = 2014110400; // Requires this Moodle version.
-$plugin->component = 'tool_lp'; // Full name of the plugin (used for diagnostics).
-
+$string['pluginname'] = 'Competency breakdown';
+$string['coursecompetencybreakdownsummary'] = 'A report of all the students in the course, and their progress towards the course competencies';
