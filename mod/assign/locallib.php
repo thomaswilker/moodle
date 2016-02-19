@@ -4323,6 +4323,15 @@ class assign {
 
         $instance = $this->get_instance();
 
+        $PAGE->requires->js_amd_inline('
+
+require(["mod_assign/c3loader"], function(c3) {
+    console.log(c3);
+    debugger;
+});
+
+        ');
+
         $o = '';
 
         $postfix = '';
