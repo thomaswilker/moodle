@@ -100,6 +100,7 @@ $string['formatnwiki_help'] = 'Nwiki is the Mediawiki-like markup language used 
 
 To create a new page, type the new page name enclosed in double square brackets, for example [[Page 2]].';
 $string['formatnwiki_link'] = 'mod/wiki/nwiki';
+$string['headerserror'] = 'Any heading 1 or heading 2 formatting is automatically adjusted for accessibility reasons.';
 $string['history'] = 'History';
 $string['history_help'] = 'The history lists links to previous versions of the page.';
 $string['html'] = 'HTML';

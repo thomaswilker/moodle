@@ -46,6 +46,9 @@ class html_parser extends nwiki_parser {
         parent::before_parsing();
 
         $this->minheaderlevel = $this->find_min_header_level($this->string);
+        if ($this->minheaderlevel < 3) {
+            \core\notification::warning(get_string('headerserror', 'mod_wiki'));
+        }
         $this->rules($this->string);
     }
 
