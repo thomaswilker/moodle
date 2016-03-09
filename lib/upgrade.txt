@@ -4,7 +4,7 @@ information provided here is intended especially for developers.
 === 3.1 ===
 
 * Webservice function core_course_search_courses now returns results when the search string
-  is less than 2 chars long.
+  is less than 2 chars long and will return all courses when the search string is empty.
 * Webservice function core_course_search_courses accepts a new parameter 'requiredcapabilities' to filter the results
   by the capabilities of the current user.
 * New mform element 'course' handles thousands of courses with good performance and usability.
