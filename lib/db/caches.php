@@ -291,4 +291,14 @@ $definitions = array(
             'resettagindexbuilder',
         ),
     ),
+
+    // Cache for the list of callback receivers.
+    'callbackreceivers' => array(
+        'mode' => cache_store::MODE_APPLICATION,
+        'simplekeys' => true,
+        'simpledata' => true,
+        'staticacceleration' => true,
+        'staticaccelerationsize' => 2,
+    ),
+
 );
