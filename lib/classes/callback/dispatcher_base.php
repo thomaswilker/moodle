@@ -181,7 +181,7 @@ public abstract class dispatcher_base {
 
         if (!PHPUNIT_TEST and !during_initial_install()) {
             $cache->set('all', $this->allreceivers);
-            $cache->set('dispatchables', $this->dispatchables);
+            $cache->set('dispatchables', $this->alldispatchables);
             $cache->set('dirroot', $CFG->dirroot);
         }
     }
@@ -193,7 +193,7 @@ public abstract class dispatcher_base {
      * @param string $fulldir
      */
     protected function add_component_receivers($componentname, $fulldir) {
-        $file = $fulldir . $this->get_registration_file_name();
+        $file = $fulldir . '/' . $this->get_registration_file_name();
         if (!file_exists($file)) {
             return;
         }

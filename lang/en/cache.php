@@ -38,6 +38,7 @@ $string['cacheadmin'] = 'Cache administration';
 $string['cacheconfig'] = 'Configuration';
 $string['cachedef_calendar_subscriptions'] = 'Calendar subscriptions';
 $string['cachedef_capabilities'] = 'System capabilities list';
+$string['cachedef_callbackreceivers'] = 'List of receivers of dispatched callbacks';
 $string['cachedef_config'] = 'Config settings';
 $string['cachedef_coursecat'] = 'Course categories lists for particular user';
 $string['cachedef_coursecatrecords'] = 'Course categories records';
