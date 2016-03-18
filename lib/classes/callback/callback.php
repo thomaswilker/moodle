@@ -54,8 +54,8 @@ abstract class callback implements dispatchable {
         }
         static::$dispatching = true;
         try {
-            callback_dispatcher::get_instance()->dispatch($this, $componentname, $throwexceptions);
-        } catch (\Throwable $e) {
+            callback_dispatcher::instance()->dispatch($this, $componentname, $throwexceptions);
+        } catch (\Exception $e) {
             static::$dispatching = false;
             throw $e;
         }

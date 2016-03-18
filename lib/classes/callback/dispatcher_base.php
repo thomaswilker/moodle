@@ -45,7 +45,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2016 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-public abstract class dispatcher_base {
+abstract class dispatcher_base {
 
     /** @var array cache of all receivers */
     protected $allreceivers = null;
@@ -57,14 +57,14 @@ public abstract class dispatcher_base {
     protected $reloadaftertest = false;
 
     /** @var dispatcher_base Singleton instance per sub-class */
-    private static $instance;
+    protected static $instance;
 
     /**
      * Returns the *Singleton* instance of this class.
      *
      * @return dispatcher_base The instance.
      */
-    public static function get_instance()
+    public static function instance()
     {
         if (null === static::$instance) {
             static::$instance = new static();
@@ -74,14 +74,14 @@ public abstract class dispatcher_base {
     }
 
     /**
-     * Private clone to prevent creating a new instance this class without using get_instance().
+     * Private clone to prevent creating a new instance this class without using instance().
      */
     private function __clone()
     {
     }
 
     /**
-     * Private wakeup to prevent creating a new instance this class without using get_instance().
+     * Private wakeup to prevent creating a new instance this class without using instance().
      */
     private function __wakeup()
     {
@@ -129,7 +129,7 @@ public abstract class dispatcher_base {
                 } else {
                     try {
                         call_user_func($receiver->callable, $dispatchable->get_arguments());
-                    } catch (\Throwable $e) {
+                    } catch (\Exception $e) {
                         debugging("Exception encountered in receiver '" . $receiver->callable . "': " .
                             $e->getMessage(), DEBUG_DEVELOPER, $e->getTrace());
                     }
@@ -300,35 +300,35 @@ public abstract class dispatcher_base {
      *
      * @param \core\callback\dispatchable $dispatchable
      */
-    abstract function validate(dispatchable $dispatchable);
+    abstract protected function validate(dispatchable $dispatchable);
 
     /**
      * Define the name of the cache to store the receivers.
      *
      * @return string The name of the cache.
      */
-    abstract function get_cache_name();
+    abstract protected function get_cache_name();
 
     /**
      * Define the name of the registration file relative to the component dir.
      *
      * @return string The file name of the registration file relative to the component dir.
      */
-    abstract function get_registration_file_name();
+    abstract protected function get_registration_file_name();
 
     /**
      * Define the name of the variable in the registration file containing the list of receivers.
      *
      * @return string The variable name in the registration file containing the list of receivers.
      */
-    abstract function get_receiver_array_name();
+    abstract protected function get_receiver_array_name();
 
     /**
      * Define the name of the variable in the registration file containing the list of dispatchable things.
      *
      * @return string The variable name in the registration file containing the list of dispatchable things.
      */
-    abstract function get_dispatchable_array_name();
+    abstract protected function get_dispatchable_array_name();
 
     /**
      * Replace all standard receivers.
@@ -375,6 +375,7 @@ public abstract class dispatcher_base {
         }
         if (!$this->reloadaftertest) {
             $this->allreceivers = null;
+            $this->alldispatchables = null;
         }
         $this->reloadaftertest = false;
     }
