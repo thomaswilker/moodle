@@ -25,6 +25,7 @@
 namespace core\hook;
 
 use core\callback\dispatcher_base;
+use core\callback\dispatchable;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -45,7 +46,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2016 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-public class hook extends dispatcher_base {
+class hook_dispatcher extends dispatcher_base {
 
     /**
      * We forbid the optional componentname and throwexceptions for hooks.
@@ -98,7 +99,7 @@ public class hook extends dispatcher_base {
      * This function is only executed in debugging mode.
      * @param dispatchable $dispatchable
      */
-    protected static function validate(dispatchable $dispatchable) {
+    protected function validate(dispatchable $dispatchable) {
         global $CFG;
         if (PHPUNIT_TEST && $component === 'core_tests') {
             // Ignore commands defined in phpunit fixtures.
