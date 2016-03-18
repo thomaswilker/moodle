@@ -45,7 +45,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2016 Marina Glancy
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-public class callback_dispatcher extends dispatcher_base {
+class callback_dispatcher extends dispatcher_base {
 
     /**
      * This dispatcher requires callbacks registered in db/callbacks.php.
@@ -97,12 +97,11 @@ public class callback_dispatcher extends dispatcher_base {
         if (!$dispatchable instanceof callback) {
             throw new coding_exception('Callback dispatcher is only allowed to dispatch subclasses of \\core\\callback\\callback');
         }
-        $callback = $dispatchable;
-        $callbackname = get_class($callback);
-        if (PHPUNIT_TEST && $component === 'core_tests') {
+        if (PHPUNIT_TEST) {
             // Ignore callbacks defined in phpunit fixtures.
             return;
         }
+        $callbackname = get_class($dispatchable);
         $component = $this->get_dispatchable_component($callbackname);
         if ($component !== 'core') {
             debugging('Only core is allowed to register new callbacks.', DEBUG_DEVELOPER);

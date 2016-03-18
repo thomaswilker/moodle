@@ -36,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2014 Petr Skoda
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-public class hook implements dispatchable {
+class hook implements dispatchable {
 
     /**
      * @var string The name of the hook
@@ -59,7 +59,7 @@ public class hook implements dispatchable {
     public static function fire(string $hookname, \stdClass $arguments = null) {
         $hook = new static($hookname, $arguments);
 
-        hook_dispatcher::get_instance()->dispatch($hook);
+        hook_dispatcher::instance()->dispatch($hook);
     }
 
     /**

@@ -21,7 +21,7 @@
  * @package core
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-namespace core\command;
+namespace core\callback;
 
 defined('MOODLE_INTERNAL') || die();
 
@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die();
  * @package core
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-public interface dispatchable {
+interface dispatchable {
     /**
      * Generate a key for this dispatchable.
      * @return string key used to identify this dispatchable.
