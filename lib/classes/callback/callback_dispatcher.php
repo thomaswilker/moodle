@@ -24,6 +24,8 @@
  */
 namespace core\callback;
 
+use coding_exception;
+
 defined('MOODLE_INTERNAL') || die();
 
 /**
@@ -46,6 +48,9 @@ defined('MOODLE_INTERNAL') || die();
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class callback_dispatcher extends dispatcher_base {
+
+    /** @var dispatcher_base Singleton instance per sub-class */
+    protected static $instance;
 
     /**
      * This dispatcher requires callbacks registered in db/callbacks.php.
@@ -108,4 +113,10 @@ class callback_dispatcher extends dispatcher_base {
         }
     }
 
+    /**
+     * Optionally sanitize the key from the registration file.
+     */
+    protected function sanitise_key($key) {
+        return '\\' . ltrim($key, '\\');
+    }
 }

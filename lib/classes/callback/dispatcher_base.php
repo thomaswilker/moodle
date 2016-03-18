@@ -66,11 +66,18 @@ abstract class dispatcher_base {
      */
     public static function instance()
     {
-        if (null === static::$instance) {
+        if (!(static::$instance instanceof static)) {
             static::$instance = new static();
         }
 
         return static::$instance;
+    }
+
+    /**
+     * Private constructor to prevent creating a new instance this class without using instance().
+     */
+    private function __construct()
+    {
     }
 
     /**
@@ -274,12 +281,19 @@ abstract class dispatcher_base {
                 $o->includefile = $receiver['includefile'];
             }
 
-            $key = '\\' . ltrim($receiver['name'], '\\');
+            $key = $this->sanitise_key($receiver['name']);
             if (!isset($this->allreceivers[$key])) {
                 $this->allreceivers[$key] = [];
             }
             $this->allreceivers[$key][] = $o;
         }
+    }
+
+    /**
+     * Optionally sanitize the key from the registration file.
+     */
+    protected function sanitise_key($key) {
+        return $key;
     }
 
     /**
