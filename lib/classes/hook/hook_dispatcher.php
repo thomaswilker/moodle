@@ -48,6 +48,9 @@ defined('MOODLE_INTERNAL') || die();
  */
 class hook_dispatcher extends dispatcher_base {
 
+    /** @var dispatcher_base Singleton instance per sub-class */
+    protected static $instance;
+
     /**
      * We ignore the optional componentname and throwexceptions for hooks.
      *
@@ -101,7 +104,7 @@ class hook_dispatcher extends dispatcher_base {
      */
     protected function validate(dispatchable $dispatchable) {
         global $CFG;
-        if (PHPUNIT_TEST && $component === 'core_tests') {
+        if (PHPUNIT_TEST) {
             // Ignore commands defined in phpunit fixtures.
             return;
         }

@@ -56,7 +56,7 @@ class hook implements dispatchable {
      * @param string $hookname
      * @param stdClass $arguments List of modifyable arguments.
      */
-    public static function fire(string $hookname, \stdClass $arguments = null) {
+    public static function fire($hookname, \stdClass $arguments = null) {
         $hook = new static($hookname, $arguments);
 
         hook_dispatcher::instance()->dispatch($hook);
