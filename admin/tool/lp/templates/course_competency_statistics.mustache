@@ -56,7 +56,7 @@
         </div>
     </div>
     {{/canbegradedincourse}}
-    {{^canbegradedincourse}}
+    {{#canmanagecoursecompetencies}}
     {{#leastproficientcount}}
     <div>
         <div>
@@ -64,13 +64,13 @@
         </div>
         <div>
             {{#leastproficient}}
-                <a href="#competency-info-link-{{idnumber}}">
+                <a href="#competency-info-link-{{id}}">
                 <div><p>{{shortname}} <em>{{idnumber}}</em></p></div>
                 </a>
             {{/leastproficient}}
         </div>
     </div>
     {{/leastproficientcount}}
-    {{/canbegradedincourse}}
+    {{/canmanagecoursecompetencies}}
 </div>
 {{/competencycount}}

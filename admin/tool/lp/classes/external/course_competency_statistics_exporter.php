@@ -64,6 +64,9 @@ class course_competency_statistics_exporter extends exporter {
             'canbegradedincourse' => array(
                 'type' => PARAM_BOOL
             ),
+            'canmanagecoursecompetencies' => array(
+                'type' => PARAM_BOOL
+            ),
         );
     }
 
@@ -93,7 +96,8 @@ class course_competency_statistics_exporter extends exporter {
             'proficientcompetencypercentageformatted' => $proficientcompetencypercentageformatted,
             'leastproficient' => $competencies,
             'leastproficientcount' => count($competencies),
-            'canbegradedincourse' => has_capability('tool/lp:coursecompetencygradable', $this->related['context'])
+            'canbegradedincourse' => has_capability('tool/lp:coursecompetencygradable', $this->related['context']),
+            'canmanagecoursecompetencies' => has_capability('tool/lp:coursecompetencymanage', $this->related['context'])
         );
     }
 }
