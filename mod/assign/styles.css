@@ -222,19 +222,6 @@
     background-color: #d0d0d0;
 }
 
-.path-mod-assign .submissionhistory .singlebutton {
-    display: inline-block;
-    float: right;
-}
-
-.path-mod-assign.dir-rtl .submissionhistory .singlebutton {
-    float: left;
-}
-
-.path-mod-assign .submissionsummarytable .singlebutton {
-    display: inline-block;
-}
-
 .path-mod-assign.jsenabled .mod-assign-history-link {
     display: block;
     cursor: pointer;
@@ -816,7 +803,6 @@
 
 .path-mod-assign [data-region="grade-panel"] .mform #id_attemptsettings .fitem {
     display: table-row;
-    margin-bottom: 0;
 }
 
 .path-mod-assign #page-content [data-region="grade-panel"] .mform:not(.unresponsive) #id_attemptsettings .fitem .fitemtitle,
@@ -902,7 +888,7 @@
         width: 100%;
         top: 0;
         left: 0;
-        overflow: none;
+        overflow: auto;
         height: auto;
         margin-bottom: 1em;
     }
