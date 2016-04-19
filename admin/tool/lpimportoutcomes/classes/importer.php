@@ -25,7 +25,7 @@
 namespace tool_lpimportoutcomes;
 
 use stdClass;
-use \tool_lp\api;
+use \core_competency\api;
 
 /**
  * Outcomes importer.
