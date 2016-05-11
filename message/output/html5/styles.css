@@ -1,0 +1,30 @@
+.message-html5-notification a {
+    float: left;
+    padding-right: 6px;
+}
+.message-html5-notification img {
+    width: 64px;
+}
+.dir-rtl message-html5-notification a {
+    float: right;
+    padding-left: 6px;
+    padding-right: 0px;
+}
+.message-html5 {
+    position: fixed;
+    right: 0px;
+    bottom: 0px;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: small;
+    padding: 8px;
+    cursor: pointer;
+}
+.dir-rtl .message-html5 {
+    position: fixed;
+    left: inherit;
+    right: 0px;
+    bottom: 0px;
+}
+

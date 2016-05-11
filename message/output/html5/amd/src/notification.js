@@ -23,7 +23,7 @@
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  * @since      3.0
  */
-define(['core/url', 'core/log'], function(urlmod, log) {
+define(['core/url', 'core/log', 'core/templates', 'core/notification', 'jquery'], function(urlmod, log, template, notify, $) {
 
     return /** @alias module:core/html5-notification */ {
         /**
@@ -33,17 +33,14 @@ define(['core/url', 'core/log'], function(urlmod, log) {
          * @param {String} title The notification title
          * @param {String} body The notification body
          * @param {String} url A url to open when the notification is clicked.
+         * @param {String} url A url to the icon to show.
          * @return {Promise}
          */
-        notify: function(title, content, url, id, icon, iconcomponent) {
+        notify: function(title, content, url, id, iconurl) {
             if ("Notification" in window) {
-                if (typeof icon === "undefined") {
-                    icon = 'notification';
-                    iconcomponent = 'message_html5';
-                }
                 var options = {
                     body: content,
-                    icon: urlmod.imageUrl(icon, iconcomponent)
+                    icon: iconurl
                 };
                 if (typeof id !== "undefined") {
                     // Prevent spamming the same notification.
@@ -65,7 +62,31 @@ define(['core/url', 'core/log'], function(urlmod, log) {
                     });
                 }
             } else {
-                log.warn('Browser does not support notifications API.');
+                // Fallback to showing a div in the page.
+                var context = {
+                    title: title,
+                    content: content,
+                    url: url,
+                    id: id,
+                    iconurl: iconurl
+                };
+
+                // Make sure there is a node at the end of the page to contain the message.
+                if (!$('.message-html5').length) {
+                    $('body').append($('<div class="message-html5"></div>'));
+                    $('.message-html5').click(function() {
+                        var url = $('.message-html5').data('message-url');
+                        $(this).empty();
+                        if (url) {
+                            window.location = url;
+                        }
+                    });
+                }
+                $('.message-html5').data('message-url', url);
+                template.render('message_html5/in-page-notification', context).done(function(html, js) {
+                    template.replaceNodeContents($('.message-html5'), html, js);
+                }).fail(notify.exception);
+
             }
         }
     };
