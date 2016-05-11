@@ -16,8 +16,8 @@
 /**
  * Expose the HTML5 Notification API
  *
- * @module     core/html5-notification
- * @class      html5-notification
+ * @module     core/popup-notification
+ * @class      popup-notification
  * @package    core
  * @copyright  2015 Damyon Wiese <damyon@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -25,7 +25,7 @@
  */
 define(['core/url', 'core/log', 'core/templates', 'core/notification', 'jquery'], function(urlmod, log, template, notify, $) {
 
-    return /** @alias module:core/html5-notification */ {
+    return /** @alias module:core/popup-notification */ {
         /**
          * Show a HTML notification.
          *
@@ -72,19 +72,19 @@ define(['core/url', 'core/log', 'core/templates', 'core/notification', 'jquery']
                 };
 
                 // Make sure there is a node at the end of the page to contain the message.
-                if (!$('.message-html5').length) {
-                    $('body').append($('<div class="message-html5"></div>'));
-                    $('.message-html5').click(function() {
-                        var url = $('.message-html5').data('message-url');
+                if (!$('.message-popup').length) {
+                    $('body').append($('<div class="message-popup"></div>'));
+                    $('.message-popup').click(function() {
+                        var url = $('.message-popup').data('message-url');
                         $(this).empty();
                         if (url) {
                             window.location = url;
                         }
                     });
                 }
-                $('.message-html5').data('message-url', url);
-                template.render('message_html5/in-page-notification', context).done(function(html, js) {
-                    template.replaceNodeContents($('.message-html5'), html, js);
+                $('.message-popup').data('message-url', url);
+                template.render('message_popup/in-page-notification', context).done(function(html, js) {
+                    template.replaceNodeContents($('.message-popup'), html, js);
                 }).fail(notify.exception);
 
             }

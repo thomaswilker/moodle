@@ -18,8 +18,8 @@
  * Strings for component 'message_popup', language 'en'
  *
  * @package   message_popup
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
+ * @copyright 2015 Damyon Wiese <damyon@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['pluginname'] = 'Popup notification';
+$string['pluginname'] = 'HTML5 notification';

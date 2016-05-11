@@ -1,16 +1,16 @@
-.message-html5-notification a {
+.message-popup-notification a {
     float: left;
     padding-right: 6px;
 }
-.message-html5-notification img {
+.message-popup-notification img {
     width: 64px;
 }
-.dir-rtl message-html5-notification a {
+.dir-rtl message-popup-notification a {
     float: right;
     padding-left: 6px;
     padding-right: 0px;
 }
-.message-html5 {
+.message-popup {
     position: fixed;
     right: 0px;
     bottom: 0px;
@@ -21,7 +21,7 @@
     padding: 8px;
     cursor: pointer;
 }
-.dir-rtl .message-html5 {
+.dir-rtl .message-popup {
     position: fixed;
     left: inherit;
     right: 0px;

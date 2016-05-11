@@ -18,11 +18,9 @@
  * Upgrade code for popup message processor
  *
  * @package   message_popup
- * @copyright 2008 Luis Rodrigues
+ * @copyright 2015 Damyon Wiese <damyon@moodle.com>
  * @license   http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
-
-defined('MOODLE_INTERNAL') || die();
 
 /**
  * Upgrade code for the popup message processor
@@ -30,16 +28,11 @@ defined('MOODLE_INTERNAL') || die();
  * @param int $oldversion The version that we are upgrading from
  */
 function xmldb_message_popup_upgrade($oldversion) {
-    global $CFG;
+    global $CFG, $DB;
 
-    // Moodle v2.8.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Moodle v2.9.0 release upgrade line.
-    // Put any upgrade step following this.
-
-    // Moodle v3.0.0 release upgrade line.
-    // Put any upgrade step following this.
+    $dbman = $DB->get_manager();
 
     return true;
 }
+
+
