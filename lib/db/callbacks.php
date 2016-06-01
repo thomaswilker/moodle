@@ -29,6 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $callbacks = [
+    '\\core\\callback\\inplace_editable',
     '\\core_rating\\callback\\can_see_item_ratings'
 ];
 
