@@ -121,6 +121,18 @@ abstract class dispatcher_base {
 
         if ($componentname !== null) {
             $componentname = \core_component::normalize_componentname($componentname);
+
+            $onefound = false;
+            foreach ($this->allreceivers[$key] as $receiver) {
+                if ($receiver->component === $componentname) {
+                    if ($onefound) {
+                        debugging("Component ($componentname) defined multiple receivers for the same callback ($key) " .
+                            " that was dispatched direct to a component.", DEBUG_DEVELOPER);
+                        return $dispatchable;
+                    }
+                    $onefound = true;
+                }
+            }
         }
 
         foreach ($this->allreceivers[$key] as $receiver) {
@@ -137,8 +149,13 @@ abstract class dispatcher_base {
                     try {
                         call_user_func($receiver->callable, $dispatchable->get_arguments());
                     } catch (\Exception $e) {
-                        debugging("Exception encountered in receiver '" . $receiver->callable . "': " .
-                            $e->getMessage(), DEBUG_DEVELOPER, $e->getTrace());
+                        // When dispatching direct to a component - we re-throw exceptions. Otherwise we squash them and continue.
+                        if ($componentname === null) {
+                            debugging("Exception encountered in receiver '" . $receiver->callable . "': " .
+                                $e->getMessage(), DEBUG_DEVELOPER, $e->getTrace());
+                        } else {
+                            throw $e;
+                        }
                     }
                }
             } else {
