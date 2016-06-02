@@ -136,6 +136,46 @@ abstract class dispatcher_base {
         }
 
         foreach ($this->allreceivers[$key] as $receiver) {
+
+            if ($CFG->debugdeveloper) {
+                $callbackname = $this->sanitise_key(get_class($dispatchable));
+                $component = $this->get_dispatchable_component($callbackname);
+
+                // It is allowed to communicate with another component if the calling component “depends” on the other component
+                $valid = false;
+
+                // It is always allowed to communicate with a “required” component. This includes core and all its subsystems.
+                // It is allowed to communicate with the current component.
+                if ($component === 'core' || $component === $receiver->component) {
+                    $valid = true;
+                }
+                // It is allowed to communicate with another component if the calling component “depends” on the other component
+                if (!$valid) {
+                    // Implicit depends because subtypes depend on their parent.
+                    $parent = \core_component::get_subtype_parent($receiver->component);
+                    if ($parent == $component) {
+                        $valid = true;
+                    }
+                }
+                if (!$valid) {
+                    // Implicit depends because subtypes depend on their parent.
+                    $pluginman = \core_plugin_manager::instance();
+
+                    $plugininfo = $pluginman->get_plugin_info($receiver->component);
+                    if ($plugininfo) {
+                        $dependencies = $plugininfo->get_other_required_plugins();
+                        if (isset($dependencies[$component])) {
+                            $valid = true;
+                        }
+                    }
+                }
+
+                if (!$valid) {
+                    debugging("Callback receiver registered for a component with no depends relationship. " .
+                        "Dispatcher: $component Receiver: " . $receiver->component, DEBUG_DEVELOPER);
+                }
+            }
+
             if ($componentname !== null && $receiver->component !== $componentname) {
                 continue;
             }
@@ -251,7 +291,8 @@ abstract class dispatcher_base {
      */
     protected function add_dispatchables(array $dispatchables, $file, $componentname) {
         foreach ($dispatchables as $dispatchablekey) {
-            $this->dispatchables[$dispatchablekey] = $componentname;
+            $key = $this->sanitise_key($dispatchablekey);
+            $this->alldispatchables[$key] = $componentname;
         }
     }
 
@@ -384,13 +425,36 @@ abstract class dispatcher_base {
     }
 
     /**
+     * Replace all standard dispatchers.
+     * @param array $dispatchers
+     * @param string $file
+     * @param string $componentname
+     * @return array
+     *
+     * @throws \coding_exception if used outside of unit tests.
+     */
+    public function phpunit_replace_dispatchables(array $dispatchables, $file, $componentname) {
+        if (!PHPUNIT_TEST) {
+            throw new \coding_exception('Cannot override dispatchables outside of phpunit tests!');
+        }
+
+        $this->phpunit_reset();
+        $this->alldispatchables = array();
+        $this->reloadaftertest = true;
+
+        $this->add_dispatchables($dispatchables, $file, $componentname);
+
+        return $this->alldispatchables;
+    }
+
+    /**
      * Check the list of dispatchables to see if we know about this one.
      *
      * @return boolean|string The component that defined the dispatchable or false.
      */
     public function get_dispatchable_component($key) {
         if (isset($this->alldispatchables[$key])) {
-            return $alldispatchables[$key];
+            return $this->alldispatchables[$key];
         }
         return false;
     }

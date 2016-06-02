@@ -91,7 +91,7 @@ class callback_dispatcher extends dispatcher_base {
     /**
      * Checks that callback classname is listed in lib/db/callbacks.php
      *
-     * Plugins are not allowed to broadcast to other plugins.
+     * Plugins are only allowed to broadcast to dependant plugins.
      *
      * This function is only executed in the debugging mode.
      * @param \core\callback\dispatchable $dispatchable
@@ -105,11 +105,6 @@ class callback_dispatcher extends dispatcher_base {
         if (PHPUNIT_TEST) {
             // Ignore callbacks defined in phpunit fixtures.
             return;
-        }
-        $callbackname = get_class($dispatchable);
-        $component = $this->get_dispatchable_component($callbackname);
-        if ($component !== 'core') {
-            debugging('Only core is allowed to register new callbacks.', DEBUG_DEVELOPER);
         }
     }
 

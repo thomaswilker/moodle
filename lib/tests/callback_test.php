@@ -274,4 +274,30 @@ class core_callback_testcase extends advanced_testcase {
             array('recursive_callback2-1'),
             \core_tests\callback\unittest_callback::$info);
     }
+
+    public function test_violation_of_interplugin_communication() {
+
+        $dispatchables = array(
+            '\core_tests\callback\unittest_executed'
+        );
+        \core\callback\callback_dispatcher::instance()->phpunit_replace_dispatchables($dispatchables, '', 'mod_forum');
+        $receivers = array(
+
+            array(
+                'name' => '\core_tests\callback\unittest_executed',
+                'callback' => '\core_tests\callback\unittest_callback::observe_one',
+            ),
+
+        );
+
+        \core\callback\callback_dispatcher::instance()->phpunit_replace_receivers($receivers);
+        \core_tests\callback\unittest_callback::reset();
+
+        // Execute ignoring exceptions.
+        $callback1 = \core_tests\callback\unittest_executed::create((object)array('id' => 1, 'name' => 'something'));
+        $callback1->dispatch();
+
+        // We are subscribing to a plugin callback from core.
+        $this->assertDebuggingCalled();
+    }
 }
