@@ -3943,20 +3943,6 @@ function course_get_tagged_courses($tag, $exclusivemode = false, $fromctx = 0, $
 }
 
 /**
- * Implements callback inplace_editable() allowing to edit values in-place
- *
- * @param string $itemtype
- * @param int $itemid
- * @param mixed $newvalue
- * @return \core\output\inplace_editable
- */
-function core_course_inplace_editable($itemtype, $itemid, $newvalue) {
-    if ($itemtype === 'activityname') {
-        return \core_course\output\course_module_name::update($itemid, $newvalue);
-    }
-}
-
-/**
  * Returns course modules tagged with a specified tag ready for output on tag/index.php page
  *
  * This is a callback used by the tag area core/course_modules to search for course modules

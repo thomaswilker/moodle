@@ -378,6 +378,7 @@ class core_external extends external_api {
         // Validate and normalize parameters.
         $params = self::validate_parameters(self::update_inplace_editable_parameters(),
                       array('component' => $component, 'itemtype' => $itemtype, 'itemid' => $itemid, 'value' => $value));
+
         $tmpl = \core\callback\inplace_editable::create($params)->dispatch($params['component'])->get_inplaceeditable();
 
         if (!$tmpl || !($tmpl instanceof \core\output\inplace_editable)) {
