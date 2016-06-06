@@ -146,7 +146,7 @@ abstract class dispatcher_base {
 
                 // It is always allowed to communicate with a “required” component. This includes core and all its subsystems.
                 // It is allowed to communicate with the current component.
-                if ($component === 'core' || $component === $receiver->component) {
+                if (substr($component, 0, 4) === 'core' || $component === $receiver->component) {
                     $valid = true;
                 }
                 // It is allowed to communicate with another component if the calling component “depends” on the other component
@@ -158,7 +158,7 @@ abstract class dispatcher_base {
                     }
                 }
                 if (!$valid) {
-                    // Implicit depends because subtypes depend on their parent.
+                    // Explicit depends declared in version.php.
                     $pluginman = \core_plugin_manager::instance();
 
                     $plugininfo = $pluginman->get_plugin_info($receiver->component);
@@ -183,19 +183,15 @@ abstract class dispatcher_base {
                 include_once($receiver->includefile);
             }
             if (is_callable($receiver->callable)) {
-                if ($throwexceptions) {
+                if ($throwexceptions || $componentname !== null) {
                     call_user_func($receiver->callable, $dispatchable->get_arguments());
                 } else {
                     try {
                         call_user_func($receiver->callable, $dispatchable->get_arguments());
                     } catch (\Exception $e) {
-                        // When dispatching direct to a component - we re-throw exceptions. Otherwise we squash them and continue.
-                        if ($componentname === null) {
-                            debugging("Exception encountered in receiver '" . $receiver->callable . "': " .
-                                $e->getMessage(), DEBUG_DEVELOPER, $e->getTrace());
-                        } else {
-                            throw $e;
-                        }
+                        // Squash them and continue.
+                        debugging("Exception encountered in receiver '" . $receiver->callable . "': " .
+                            $e->getMessage(), DEBUG_DEVELOPER, $e->getTrace());
                     }
                }
             } else {
@@ -231,6 +227,13 @@ abstract class dispatcher_base {
 
         $this->allreceivers = array();
         $this->add_component_receivers('core', $CFG->dirroot . '/lib');
+
+        $subsystems = \core_component::get_core_subsystems();
+        foreach ($subsystems as $subsystemname => $fulldir) {
+            if (!empty($fulldir)) {
+                $this->add_component_receivers('core_' . $subsystemname, $fulldir);
+            }
+        }
 
         $plugintypes = \core_component::get_plugin_types();
         foreach ($plugintypes as $plugintype => $ignored) {

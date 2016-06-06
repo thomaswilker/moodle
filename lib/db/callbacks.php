@@ -15,10 +15,10 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of all callbacks and receivers defined in core and core subsystems.
+ * Definition of all callbacks and receivers defined in core.
  *
  * For more information, take a look to the documentation available:
- *     - Callbacks API: {@link http://docs.moodle.org/dev/Logging_API}
+ *     - Callbacks API: {@link http://docs.moodle.org/dev/Callbacks_API}
  *
  * @package   core
  * @category  callback
