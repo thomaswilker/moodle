@@ -30,6 +30,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $callbacks = [
     '\\core\\callback\\inplace_editable',
+    '\\core\\callback\\report_supports_logstore',
     '\\core_rating\\callback\\can_see_item_ratings'
 ];
 

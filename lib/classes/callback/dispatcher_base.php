@@ -183,6 +183,7 @@ abstract class dispatcher_base {
                 include_once($receiver->includefile);
             }
             if (is_callable($receiver->callable)) {
+                $dispatchable->set_called_component($receiver->component);
                 if ($throwexceptions || $componentname !== null) {
                     call_user_func($receiver->callable, $dispatchable->get_arguments());
                 } else {

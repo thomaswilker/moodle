@@ -40,6 +40,18 @@ interface dispatchable {
     public function get_key();
 
     /**
+     * Set the component that is currently receiving this callback
+     * @param string $component
+     */
+    public function set_called_component($component);
+
+    /**
+     * Get the component that is currently receiving this callback
+     * @return string $component
+     */
+    public function get_called_component();
+
+    /**
      * Get the arguments to pass when this thing is dispatched.
      * @return mixed No restrictions.
      */

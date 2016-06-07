@@ -48,6 +48,9 @@ class hook implements dispatchable {
      */
     protected $arguments = null;
 
+    /** @var string $calledcomponent. Remember the component that is currently receiving a hook */
+    protected $calledcomponent = '';
+
     /**
      * Convenience to create a hook and dispatch it in a single line.
      *
@@ -86,5 +89,21 @@ class hook implements dispatchable {
      */
     public function get_arguments() {
         return $this->arguments;
+    }
+
+    /**
+     * Set the component that is currently receiving this callback
+     * @param string $component
+     */
+    public function set_called_component($component) {
+        $this->calledcomponent = $component;
+    }
+
+    /**
+     * Get the component that is currently receiving this callback
+     * @return string $component
+     */
+    public function get_called_component() {
+        return $this->calledcomponent;
     }
 }

@@ -47,10 +47,24 @@ abstract class callback_with_legacy_support extends callback {
     public function dispatch($componentname = null, $throwexceptions = false) {
         $result = parent::dispatch($componentname, $throwexceptions);
 
-        // We pass the result of the new callbacks as the default for the old style ones.
-        $default = $result->get_legacy_result();
-        $result = component_callback($componentname, $this->get_legacy_function(), $this->get_legacy_arguments(), $default);
-        $this->set_legacy_result($result);
+        if ($componentname) {
+            // We pass the result of the new callbacks as the default for the old style ones.
+            $default = $result->get_legacy_result();
+            $this->set_called_component($componentname);
+            $result = component_callback($componentname, $this->get_legacy_function(), $this->get_legacy_arguments(), $default);
+            $this->set_legacy_result($result);
+        } else {
+            $allplugins = get_plugins_with_function($this->get_legacy_function());
+            $default = $result->get_legacy_result();
+            foreach ($allplugins as $plugintype => $plugins) {
+                foreach ($plugins as $pluginname => $functionname) {
+                    $componentname = $plugintype . '_' . $pluginname;
+                    $this->set_called_component($componentname);
+                    $result = component_callback($componentname, $this->get_legacy_function(), $this->get_legacy_arguments(), $default);
+                    $this->set_legacy_result($result);
+                }
+            }
+        }
         return $this;
     }
 

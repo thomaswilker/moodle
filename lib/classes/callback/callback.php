@@ -38,6 +38,9 @@ abstract class callback implements dispatchable {
     /** @var bool $dispatching Is the callback being dispatched? */
     protected static $dispatching = false;
 
+    /** @var string $calledcomponent. Remember the component that is currently receiving a callback */
+    protected $calledcomponent = '';
+
     /**
      * Dispatch the callback.
      *
@@ -76,4 +79,21 @@ abstract class callback implements dispatchable {
     public function get_arguments() {
         return $this;
     }
+
+    /**
+     * Set the component that is currently receiving this callback
+     * @param string $component
+     */
+    public function set_called_component($component) {
+        $this->calledcomponent = $component;
+    }
+
+    /**
+     * Get the component that is currently receiving this callback
+     * @return string $component
+     */
+    public function get_called_component() {
+        return $this->calledcomponent;
+    }
+
 }
