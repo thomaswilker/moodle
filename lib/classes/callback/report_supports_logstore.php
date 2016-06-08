@@ -124,7 +124,7 @@ class report_supports_logstore extends callback_with_legacy_support {
     /**
      * Set the supported flag for a report.
      */
-    public function set_component_supported($supported) {
+    public function set_supported($supported) {
         if ($supported) {
             $this->componentssupported[$this->get_called_component()] = true;
         } else {
