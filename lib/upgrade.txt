@@ -1,8 +1,9 @@
 This files describes API changes in core libraries and APIs,
 information provided here is intended especially for developers.
 === 3.2 ===
-* component_callback 'restore_group_member' has been converted to callback '\core_group\callback\restore_group_member'
-* component_callback 'restore_role_assignment' has been converted to callback '\core_group\callback\restore_role_assignment'
+* component_callback 'inplace_editable' has been converted to callback '\core\callback\inplace_editable'
+* component_callback 'restore_group_member' has been converted to callback '\core\callback\restore_group_member'
+* component_callback 'restore_role_assignment' has been converted to callback '\core\callback\restore_role_assignment'
 
 === 3.2 ===
 
