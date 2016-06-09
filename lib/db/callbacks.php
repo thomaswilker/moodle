@@ -32,7 +32,8 @@ $callbacks = [
     '\\core\\callback\\inplace_editable',
     '\\core\\callback\\report_supports_logstore',
     '\\core\\callback\\restore_role_assignment',
-    '\\core\\callback\\restore_group_member'
+    '\\core\\callback\\restore_group_member',
+    '\\core\\callback\\print_recent_activity'
 ];
 
 $receivers = [];
