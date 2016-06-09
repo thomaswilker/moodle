@@ -15,12 +15,12 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of all callbacks and receivers defined in core.
+ * Definition of all callbacks and receivers defined in core_rating.
  *
  * For more information, take a look to the documentation available:
  *     - Callbacks API: {@link http://docs.moodle.org/dev/Callbacks_API}
  *
- * @package   core
+ * @package   core_rating
  * @category  callback
  * @copyright 2016 Damyon Wiese
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -29,10 +29,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 $callbacks = [
-    '\\core\\callback\\inplace_editable',
-    '\\core\\callback\\report_supports_logstore',
-    '\\core\\callback\\restore_role_assignment',
-    '\\core\\callback\\restore_group_member'
+    '\\core_rating\\callback\\can_see_item_ratings',
 ];
 
 $receivers = [];
