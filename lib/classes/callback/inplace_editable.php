@@ -15,10 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Can see item ratings callback.
+ * Inplace editable callback.
  *
- * @package    core_rating
- * @category   callback
+ * @package    core
  * @copyright  2016 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
