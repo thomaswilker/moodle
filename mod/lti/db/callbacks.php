@@ -15,25 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of all callbacks and receivers defined in core_course subsystem.
+ * Definition of all callbacks and receivers defined in mod_lti
  *
- * For more information, take a look to the documentation available:
- *     - Callbacks API: {@link http://docs.moodle.org/dev/Callbacks_API}
- *
- * @package   core_course
+ * @package   mod_lti
  * @copyright 2016 Damyon Wiese
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$callbacks = [
-    '\\core_course\\callback\\activity_chooser_shortcuts'
-];
-
 $receivers = [
     [
-        'name' => '\\core\\callback\\inplace_editable',
-        'callback' => '\\core_course\\callback\\inplace_editable::update'
+        'name' => '\\core_course\\callback\\activity_chooser_shortcuts',
+        'callback' => '\\mod_lti\\callback\\activity_chooser_shortcuts::get_shortcuts'
     ]
 ];

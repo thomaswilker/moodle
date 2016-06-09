@@ -1275,7 +1275,10 @@ function get_module_metadata($course, $modnames, $sectionreturn = null) {
 
         // Each module can implement callback modulename_get_shortcuts() in its lib.php and return the list
         // of elements to be added to activity chooser.
-        $items = component_callback($modname, 'get_shortcuts', array($defaultmodule), null);
+        $items = \core_course\callback\activity_chooser_shortcuts::create((array) $defaultmodule)
+            ->dispatch($modname)
+            ->get_shortcuts();
+
         if ($items !== null) {
             foreach ($items as $item) {
                 // Add all items to the return array. All items must have different links, use them as a key in the return array.
