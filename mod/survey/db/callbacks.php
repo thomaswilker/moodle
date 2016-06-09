@@ -15,9 +15,9 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of all callbacks and receivers defined in mod_forum
+ * Definition of all callbacks and receivers defined in mod_survey
  *
- * @package   mod_forum
+ * @package   mod_survey
  * @copyright 2016 Damyon Wiese
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -26,11 +26,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $receivers = [
     [
-        'name' => '\\core_rating\\callback\\can_see_item_ratings',
-        'callback' => '\\mod_forum\\callback\\rating::can_see_item_ratings'
-    ],
-    [
         'name' => '\\core\\callback\\print_recent_activity',
-        'callback' => '\\mod_forum\\callback\\print_recent_activity::output'
+        'callback' => '\\mod_survey\\callback\\print_recent_activity::output'
     ]
 ];
