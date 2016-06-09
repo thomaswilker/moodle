@@ -60,7 +60,7 @@ class inplace_editable extends callback_with_legacy_support {
         $this->value = clean_param($params['value'], PARAM_RAW);
         $this->inplaceeditable = null;
     }
-    
+
     /**
      * Public factory method. This is just because chaining on "new" seems ugly.
      *
