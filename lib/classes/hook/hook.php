@@ -30,7 +30,15 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Make hooks dispatchable by providing a get_key method which returns the hook name.
- * Don't call this directly - use \core\callback\hook::fire();
+ * Don't create this class directly - use \core\hook\hook::fire();
+ *
+ * What is a hook? A hook is an extension point that allows other code to “hook” into the execution at this point in the code.
+ *
+ * The extent of a hook is just that it is a point that plugins may want to inject or modify some data before execution continues.
+ * An example might be a pre and post hook when rendering the page so that any plugin can inject content in the header or footer.
+ * This is not an API with defined inputs and outputs etc, it is just a place that allows plugins to modify a limited set of data
+ * without requiring changes to core code. The data available to a hook is likely to change between releases with no deprecation
+ * warning. Hooks are not suitable for any uses when the dispatcher is expecting a response.
  *
  * @package    core
  * @copyright  2014 Petr Skoda
