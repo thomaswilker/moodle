@@ -464,6 +464,34 @@ abstract class dispatcher_base {
     }
 
     /**
+     * Sometimes we want different behaviour if a callback exists or not.
+     * @param string $componentname
+     * @param distpachable $distpachable
+     * @return bool
+     */
+    public function has_receiver($componentname, $dispatchable) {
+        global $CFG;
+
+        if (during_initial_install()) {
+            return $callback;
+        }
+        $this->init_all_receivers();
+
+        $key = $dispatchable->get_key();
+        if (!isset($this->allreceivers[$key])) {
+            return false;
+        }
+
+        foreach ($this->allreceivers[$key] as $receiver) {
+            if ($receiver->component !== $componentname) {
+                continue;
+            }
+            return true;
+        }
+        return false;
+    }
+
+    /**
      * Reset everything if necessary.
      *
      * @throws \coding_Exception if used outside of unit tests.

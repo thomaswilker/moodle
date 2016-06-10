@@ -67,6 +67,15 @@ abstract class callback implements dispatchable {
     }
 
     /**
+     * Sometimes we want different behaviour if a callback exists or not.
+     * @param string $componentname
+     * @return bool
+     */
+    public function has_receiver($componentname) {
+        return callback_dispatcher::instance()->has_receiver($componentname, $this);
+    }
+
+    /**
      * For callbacks the key is the absolute classname.
      */
     public function get_key() {
