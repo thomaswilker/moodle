@@ -28,5 +28,9 @@ $receivers = [
     [
         'name' => '\\core\\callback\\print_recent_activity',
         'callback' => '\\mod_assign\\callback\\print_recent_activity::output'
+    ],
+    [
+        'name' => '\\core\\callback\\rescale_activity_grades',
+        'callback' => '\\mod_assign\\callback\\rescale_activity_grades::rescale'
     ]
 ];

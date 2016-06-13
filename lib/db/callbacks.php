@@ -33,7 +33,8 @@ $callbacks = [
     '\\core\\callback\\report_supports_logstore',
     '\\core\\callback\\restore_role_assignment',
     '\\core\\callback\\restore_group_member',
-    '\\core\\callback\\print_recent_activity'
+    '\\core\\callback\\print_recent_activity',
+    '\\core\\callback\\rescale_activity_grades'
 ];
 
 $receivers = [];
