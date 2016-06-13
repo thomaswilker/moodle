@@ -15,27 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of all callbacks and receivers defined in core.
+ * Definition of all callbacks and receivers defined in enrol_cohort
  *
- * For more information, take a look to the documentation available:
- *     - Callbacks API: {@link http://docs.moodle.org/dev/Callbacks_API}
- *
- * @package   core
- * @category  callback
+ * @package   enrol_cohort
  * @copyright 2016 Damyon Wiese
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$callbacks = [
-    '\\core\\callback\\allow_group_member_remove',
-    '\\core\\callback\\inplace_editable',
-    '\\core\\callback\\print_recent_activity',
-    '\\core\\callback\\report_supports_logstore',
-    '\\core\\callback\\rescale_activity_grades',
-    '\\core\\callback\\restore_role_assignment',
-    '\\core\\callback\\restore_group_member',
+$receivers = [
+    [
+        'name' => '\\core\\callback\\allow_group_member_remove',
+        'callback' => '\\enrol_cohort\\callback\\allow_group_member_remove::check'
+    ]
 ];
-
-$receivers = [];

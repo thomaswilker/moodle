@@ -15,21 +15,18 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Definition of all callbacks and receivers defined in core_group.
+ * Definition of all callbacks and receivers defined in enrol_imsenterprise
  *
- * For more information, take a look to the documentation available:
- *     - Callbacks API: {@link http://docs.moodle.org/dev/Callbacks_API}
- *
- * @package   core_group
- * @category  callback
+ * @package   enrol_imsenterprise
  * @copyright 2016 Damyon Wiese
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$callbacks = [
-    '\\core_group\\callback\\restore_group_member'
+$receivers = [
+    [
+        'name' => '\\core\\callback\\allow_group_member_remove',
+        'callback' => '\\enrol_imsenterprise\\callback\\allow_group_member_remove::check'
+    ]
 ];
-
-$receivers = [];

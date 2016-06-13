@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Restore group member callback.
+ * Allow this group member to be removed from the group.
  *
  * @package    core
  * @category   callback
@@ -28,21 +28,26 @@ namespace core\callback;
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * Restore group member callback.
+ * Allow this group member to be removed from the group.
  *
- * This callback allows a component to do custom processing when restoring a group membership that was created by this component.
+ * Called whenever anybody tries (from the normal interface) to remove a group
+ * member which is registered as being created by this component. (Not called
+ * when deleting an entire group or course at once.)
+ *
  * @package    core
  * @copyright  2016 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class restore_group_member extends callback_with_legacy_support {
+class allow_group_member_remove extends callback_with_legacy_support {
 
-    /** @var restore_groups_members_structure_step $step */
-    private $step;
-    /** @var stdclass $data */
-    private $data;
-    /** @var bool $groupmemberrestored */
-    private $groupmemberrestored;
+    /** @var int $itemid */
+    private $itemid = 0;
+    /** @var int $groupid */
+    private $groupid = 0;
+    /** @var int $userid */
+    private $userid = 0;
+    /** @var bool $allowed */
+    private $allowed = true;
 
     /**
      * Constructor - take parameters from a named array of arguments.
@@ -53,16 +58,23 @@ class restore_group_member extends callback_with_legacy_support {
      * @param array $params - Named array of arguments including step and data.
      */
     private function __construct($params = []) {
-        $this->step = $params['step']
-        $this->data = $params['data'];
-        $this->groupmemberrestored = false;
+        if (isset($params['itemid'])) {
+            $this->itemid = $params['itemid']
+        }
+        if (isset($params['groupid'])) {
+            $this->groupid = $params['groupid']
+        }
+        if (isset($params['userid'])) {
+            $this->userid = $params['userid']
+        }
+        $this->allowed = true;
     }
 
     /**
      * Public factory method. This is just because chaining on "new" seems ugly.
      *
-     * @param array $params - Named array of arguments including step and data.
-     * @return restore_group_member
+     * @param array $params - Named array of arguments including itemid, groupid and userid.
+     * @return allow_group_member_remove
      */
     public static function create($params = []) {
         return new static($params);
@@ -74,8 +86,9 @@ class restore_group_member extends callback_with_legacy_support {
      */
     public function get_legacy_arguments() {
         $args = [
-            $this->step,
-            $this->data
+            $this->itemid,
+            $this->groupid,
+            $this->userid
         ];
         // The arguments are expected in a numerically indexed array.
         return $args;
@@ -86,7 +99,7 @@ class restore_group_member extends callback_with_legacy_support {
      * @return string $functionname
      */
     public function get_legacy_function() {
-        return 'restore_group_member';
+        return 'allow_group_member_remove';
     }
 
     /**
@@ -94,7 +107,7 @@ class restore_group_member extends callback_with_legacy_support {
      * @return mixed $result
      */
     public function get_legacy_result() {
-        return $this->groupmemberrestored;
+        return $this->allowed;
     }
 
     /**
@@ -102,39 +115,47 @@ class restore_group_member extends callback_with_legacy_support {
      * @param mixed $result
      */
     public function set_legacy_result($result) {
-        $this->groupmemberrestored = $result;
+        $this->allowed = $result;
     }
 
     /**
-     * Get the step
-     * @return restore_groups_members_structure_step
+     * Get the userid
+     * @return int
      */
-    public function get_step() {
-        return $this->step;
+    public function get_userid() {
+        return $this->userid;
     }
 
     /**
-     * Get the data from the backup file.
-     * @return array
+     * Get the itemid
+     * @return int
      */
-    public function get_data() {
-        return $this->data;
+    public function get_itemid() {
+        return $this->itemid;
+    }
+
+    /**
+     * Get the groupid
+     * @return int
+     */
+    public function get_groupid() {
+        return $this->groupid;
     }
 
     /**
      * Update the result of the callback.
-     * @param bool $groupmemberrestored
+     * @param bool $allowed
      */
-    public function set_groupmemberrestored($groupmemberrestored) {
-        $this->groupmemberrestored = $groupmemberrestored;
+    public function set_allowed($allowed) {
+        $this->allowed = $allowed;
     }
 
     /**
      * Get the result of the callback.
      * @return bool
      */
-    public function is_groupmemberrestored() {
-        return $this->groupmemberrestored;
+    public function is_allowed() {
+        return $this->allowed;
     }
 
 }
