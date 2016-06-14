@@ -152,7 +152,8 @@ abstract class dispatcher_base {
                 // It is allowed to communicate with another component if the calling component “depends” on the other component
                 if (!$valid) {
                     // Implicit depends because subtypes depend on their parent.
-                    $parent = \core_component::get_subtype_parent($receiver->component);
+                    list($type, $name) = explode('_', $receiver->component, 2);
+                    $parent = \core_component::get_subtype_parent($type);
                     if ($parent == $component) {
                         $valid = true;
                     }
