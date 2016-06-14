@@ -32,5 +32,9 @@ $receivers = [
     [
         'name' => '\\core\\callback\\rescale_activity_grades',
         'callback' => '\\mod_assign\\callback\\rescale_activity_grades::rescale'
+    ],
+    [
+        'name' => '\\core\\callback\\output_fragment',
+        'callback' => '\\mod_assign\\callback\\output_fragment::get_html'
     ]
 ];

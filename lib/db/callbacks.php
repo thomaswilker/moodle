@@ -31,6 +31,7 @@ defined('MOODLE_INTERNAL') || die();
 $callbacks = [
     '\\core\\callback\\allow_group_member_remove',
     '\\core\\callback\\inplace_editable',
+    '\\core\\callback\\output_fragment',
     '\\core\\callback\\print_recent_activity',
     '\\core\\callback\\report_supports_logstore',
     '\\core\\callback\\rescale_activity_grades',

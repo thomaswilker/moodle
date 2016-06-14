@@ -327,7 +327,11 @@ class core_external extends external_api {
         // Overwriting page_requirements_manager with the fragment one so only JS included from
         // this point is returned to the user.
         $PAGE->start_collecting_javascript_requirements();
-        $data = component_callback($params['component'], 'output_fragment_' . $params['callback'], array($arguments));
+        $callbackargs = array(
+            'args' => $arguments,
+            'fragmentname' => $params['callback']
+        );
+        $data = \core\callback\output_fragment::create($callbackargs)->dispatch($params['component'])->get_html();
         $jsfooter = $PAGE->requires->get_end_code();
         $output = array('html' => $data, 'javascript' => $jsfooter);
         return $output;
