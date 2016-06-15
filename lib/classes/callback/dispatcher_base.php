@@ -109,10 +109,10 @@ abstract class dispatcher_base {
         if (during_initial_install()) {
             return $callback;
         }
+        $this->init_all_receivers();
         if ($CFG->debugdeveloper) {
             $this->validate($dispatchable);
         }
-        $this->init_all_receivers();
 
         $key = $dispatchable->get_key();
         if (!isset($this->allreceivers[$key])) {
@@ -138,7 +138,7 @@ abstract class dispatcher_base {
         foreach ($this->allreceivers[$key] as $receiver) {
 
             if ($CFG->debugdeveloper) {
-                $callbackname = $this->sanitise_key(get_class($dispatchable));
+                $callbackname = $this->sanitise_key($dispatchable->get_key());
                 $component = $this->get_dispatchable_component($callbackname);
 
                 // It is allowed to communicate with another component if the calling component “depends” on the other component
@@ -172,7 +172,7 @@ abstract class dispatcher_base {
                 }
 
                 if (!$valid) {
-                    debugging("Callback receiver registered for a component with no depends relationship. " .
+                    debugging("Receiver registered for a component with no depends relationship. " .
                         "Dispatcher: $component Receiver: " . $receiver->component, DEBUG_DEVELOPER);
                 }
             }

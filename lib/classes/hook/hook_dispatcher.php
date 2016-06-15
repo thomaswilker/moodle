@@ -110,14 +110,14 @@ class hook_dispatcher extends dispatcher_base {
         }
 
         $hookname = $dispatchable->get_key();
-        if (!isset(static::$known[$hookname])) {
+        if (!isset($this->alldispatchables[$hookname])) {
             debugging("Attempt to fire a hook '$hookname' that is not registered in db/hooks.php of any component.",
                     DEBUG_DEVELOPER);
         }
 
-        $component = get_dispatchable_component($hookname);
-        if (strcmp($component, $hookname, count($component)) != 0) {
-            debugging("Hook names must begin with the component name. '$hookname' is not correct for component '$component'.",
+        $component = $this->get_dispatchable_component($hookname);
+        if (strncmp($component, $hookname, count($component)) != 0) {
+            debugging("Hook names must begin with the component name where the hook is declared. '$hookname' is not correct for component '$component'.",
                     DEBUG_DEVELOPER);
         }
     }
