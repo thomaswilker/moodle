@@ -55,7 +55,7 @@ class restore_role_assignment extends callback_with_legacy_support {
      * @param array $params - Named array of arguments including step and data.
      */
     private function __construct($params = []) {
-        $this->step = $params['step']
+        $this->step = $params['step'];
         $this->data = $params['data'];
         $this->roleassignmentrestored = false;
     }

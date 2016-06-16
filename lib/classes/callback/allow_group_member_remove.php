@@ -59,13 +59,13 @@ class allow_group_member_remove extends callback_with_legacy_support {
      */
     private function __construct($params = []) {
         if (isset($params['itemid'])) {
-            $this->itemid = $params['itemid']
+            $this->itemid = $params['itemid'];
         }
         if (isset($params['groupid'])) {
-            $this->groupid = $params['groupid']
+            $this->groupid = $params['groupid'];
         }
         if (isset($params['userid'])) {
-            $this->userid = $params['userid']
+            $this->userid = $params['userid'];
         }
         $this->allowed = true;
     }
