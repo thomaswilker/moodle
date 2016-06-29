@@ -87,9 +87,8 @@ class activity_chooser_shortcuts {
             // The return values are the same as of the 'mod' callbacks except that $defaultitem is only passed for reference and
             // should not be added to the return value.
             $params = (array) $callback->get_default_shortcut();
-            $moretypes = \core_course\callback\activity_chooser_shortcuts::create($params)
-                ->dispatch("ltisource_$pluginname")
-                ->get_shortcuts();
+            $callback = \core_course\callback\activity_chooser_shortcuts::create($params);
+            $moretypes = $callback->dispatch("ltisource_$pluginname")->get_shortcuts();
 
             foreach ($moretypes as $type) {
                 $callback->add_shortcut($type->archetype, $type->name, $type->title,

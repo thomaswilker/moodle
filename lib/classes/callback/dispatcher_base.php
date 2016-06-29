@@ -64,8 +64,7 @@ abstract class dispatcher_base {
      *
      * @return dispatcher_base The instance.
      */
-    public static function instance()
-    {
+    public static function instance() {
         if (!(static::$instance instanceof static)) {
             static::$instance = new static();
         }
@@ -76,22 +75,19 @@ abstract class dispatcher_base {
     /**
      * Private constructor to prevent creating a new instance this class without using instance().
      */
-    private function __construct()
-    {
+    private function __construct() {
     }
 
     /**
      * Private clone to prevent creating a new instance this class without using instance().
      */
-    private function __clone()
-    {
+    private function __clone() {
     }
 
     /**
      * Private wakeup to prevent creating a new instance this class without using instance().
      */
-    private function __wakeup()
-    {
+    private function __wakeup() {
     }
 
     /**
@@ -149,7 +145,7 @@ abstract class dispatcher_base {
                 if (substr($component, 0, 4) === 'core' || $component === $receiver->component) {
                     $valid = true;
                 }
-                // It is allowed to communicate with another component if the calling component “depends” on the other component
+                // It is allowed to communicate with another component if the calling component “depends” on the other component.
                 if (!$valid) {
                     // Implicit depends because subtypes depend on their parent.
                     list($type, $name) = explode('_', $receiver->component, 2);
@@ -195,7 +191,7 @@ abstract class dispatcher_base {
                         debugging("Exception encountered in receiver '" . $receiver->callable . "': " .
                             $e->getMessage(), DEBUG_DEVELOPER, $e->getTrace());
                     }
-               }
+                }
             } else {
                 debugging("Cannot dispatch to receiver '" . $receiver->callable . "'");
             }
@@ -354,6 +350,7 @@ abstract class dispatcher_base {
 
     /**
      * Optionally sanitize the key from the registration file.
+     * @param string $key
      */
     protected function sanitise_key($key) {
         return $key;
@@ -431,7 +428,8 @@ abstract class dispatcher_base {
 
     /**
      * Replace all standard dispatchers.
-     * @param array $dispatchers
+     *
+     * @param array $dispatchables
      * @param string $file
      * @param string $componentname
      * @return array
@@ -455,6 +453,7 @@ abstract class dispatcher_base {
     /**
      * Check the list of dispatchables to see if we know about this one.
      *
+     * @param string $key
      * @return boolean|string The component that defined the dispatchable or false.
      */
     public function get_dispatchable_component($key) {
@@ -467,7 +466,7 @@ abstract class dispatcher_base {
     /**
      * Sometimes we want different behaviour if a callback exists or not.
      * @param string $componentname
-     * @param distpachable $distpachable
+     * @param dispatchable $dispatchable
      * @return bool
      */
     public function has_receiver($componentname, $dispatchable) {
@@ -497,7 +496,7 @@ abstract class dispatcher_base {
      *
      * @throws \coding_Exception if used outside of unit tests.
      */
-   public function phpunit_reset() {
+    public function phpunit_reset() {
         if (!PHPUNIT_TEST) {
             throw new \coding_exception('Cannot reset dispatcher outside of phpunit tests!');
         }

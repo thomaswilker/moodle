@@ -17,7 +17,7 @@
 /**
  * Callbacks for inplace editable API.
  *
- * @package    format_topic
+ * @package    format_topics
  * @copyright  2016 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die;
 /**
  * Callbacks for inplace editable API.
  *
- * @package    format_topic
+ * @package    format_topics
  * @copyright  2016 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -47,7 +47,9 @@ class inplace_editable {
             $section = $DB->get_record_sql(
                 'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
                 array($callback->get_itemid(), 'topics'), MUST_EXIST);
-            $result = course_get_format($section->course)->inplace_editable_update_section_name($section, $callback->get_itemtype(), $callback->get_value());
+            $format = course_get_format($section->course);
+            $result = $format->inplace_editable_update_section_name($section, $callback->get_itemtype(), $callback->get_value());
+
             $callback->set_inplaceeditable($result);
         }
     }

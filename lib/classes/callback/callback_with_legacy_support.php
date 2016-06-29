@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Base legacy_callback class.
+ * Base callback_with_legacy_support class.
  *
  * @package    core
  * @copyright  2013 Petr Skoda {@link http://skodak.org}
@@ -27,6 +27,8 @@ namespace core\callback;
 defined('MOODLE_INTERNAL') || die();
 
 /**
+ * Base callback_with_legacy_support class.
+ *
  * Legacy callback is similar to callback, except that it also triggers a call to component_callback
  * to maintain backwards compatibility.
  *
@@ -60,7 +62,8 @@ abstract class callback_with_legacy_support extends callback {
                 foreach ($plugins as $pluginname => $functionname) {
                     $componentname = $plugintype . '_' . $pluginname;
                     $this->set_called_component($componentname);
-                    $result = component_callback($componentname, $this->get_legacy_function(), $this->get_legacy_arguments(), $default);
+                    $funcname = $this->get_legacy_function();
+                    $result = component_callback($componentname, $funcname, $this->get_legacy_arguments(), $default);
                     $this->set_legacy_result($result);
                 }
             }
@@ -73,14 +76,14 @@ abstract class callback_with_legacy_support extends callback {
      *
      * @return array $args
      */
-    abstract function get_legacy_arguments();
+    abstract public function get_legacy_arguments();
 
     /**
      * Get the name of the legacy function for component_callback.
      *
      * @return string $functionname
      */
-    abstract function get_legacy_function();
+    abstract public function get_legacy_function();
 
     /**
      * After calling component_callback - this function is used to store the result in the callback class.
@@ -88,7 +91,7 @@ abstract class callback_with_legacy_support extends callback {
      *
      * @param mixed $result
      */
-    abstract function set_legacy_result($result);
+    abstract public function set_legacy_result($result);
 
     /**
      * We need to map the correct field to the value that was returned by the old callback.
@@ -96,5 +99,5 @@ abstract class callback_with_legacy_support extends callback {
      *
      * @return mixed $result
      */
-    abstract function get_legacy_result();
+    abstract public function get_legacy_result();
 }

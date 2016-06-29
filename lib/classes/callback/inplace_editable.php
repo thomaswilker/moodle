@@ -135,7 +135,7 @@ class inplace_editable extends callback_with_legacy_support {
 
     /**
      * Update the result of the callback.
-     * @param \core\output\inplace_editable $visible
+     * @param \core\output\inplace_editable $inplaceeditable
      */
     public function set_inplaceeditable(\core\output\inplace_editable $inplaceeditable) {
         $this->inplaceeditable = $inplaceeditable;

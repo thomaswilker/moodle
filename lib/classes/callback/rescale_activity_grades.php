@@ -200,7 +200,7 @@ class rescale_activity_grades extends callback_with_legacy_support {
 
     /**
      * Update the result of the callback.
-     * @param bool Setting this to false, or not calling it will generate an error.
+     * @param bool $gradesscaled Setting this to false, or not calling it will generate an error.
      */
     public function set_gradesscaled($gradesscaled) {
         $this->gradesscaled = $gradesscaled;

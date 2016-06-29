@@ -110,6 +110,7 @@ class callback_dispatcher extends dispatcher_base {
 
     /**
      * Optionally sanitize the key from the registration file.
+     * @param string $key The key to sanitize.
      */
     protected function sanitise_key($key) {
         return '\\' . ltrim($key, '\\');

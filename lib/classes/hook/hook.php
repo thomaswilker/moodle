@@ -30,6 +30,8 @@ defined('MOODLE_INTERNAL') || die();
 
 /**
  * Make hooks dispatchable by providing a get_key method which returns the hook name.
+ *
+ * Make hooks dispatchable by providing a get_key method which returns the hook name.
  * Don't create this class directly - use \core\hook\hook::fire();
  *
  * What is a hook? A hook is an extension point that allows other code to “hook” into the execution at this point in the code.

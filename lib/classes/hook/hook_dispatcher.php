@@ -54,6 +54,9 @@ class hook_dispatcher extends dispatcher_base {
     /**
      * We ignore the optional componentname and throwexceptions for hooks.
      *
+     * @param dispatchable $dispatchable
+     * @param string $componentname
+     * @param bool $throwexceptions
      * @return dispatchable
      */
     public function dispatch(dispatchable $dispatchable, $componentname = null, $throwexceptions = false) {
@@ -112,13 +115,14 @@ class hook_dispatcher extends dispatcher_base {
         $hookname = $dispatchable->get_key();
         if (!isset($this->alldispatchables[$hookname])) {
             debugging("Attempt to fire a hook '$hookname' that is not registered in db/hooks.php of any component.",
-                    DEBUG_DEVELOPER);
+                      DEBUG_DEVELOPER);
         }
 
         $component = $this->get_dispatchable_component($hookname);
         if (strncmp($component, $hookname, count($component)) != 0) {
-            debugging("Hook names must begin with the component name where the hook is declared. '$hookname' is not correct for component '$component'.",
-                    DEBUG_DEVELOPER);
+            debugging("Hook names must begin with the component name where the hook is declared. " .
+                      "'$hookname' is not correct for component '$component'.",
+                      DEBUG_DEVELOPER);
         }
     }
 }

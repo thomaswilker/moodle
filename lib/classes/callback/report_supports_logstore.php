@@ -17,8 +17,7 @@
 /**
  * Can see item ratings callback.
  *
- * @package    core_report
- * @category   callback
+ * @package    core
  * @copyright  2016 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -123,6 +122,7 @@ class report_supports_logstore extends callback_with_legacy_support {
 
     /**
      * Set the supported flag for a report.
+     * @param bool $supported
      */
     public function set_supported($supported) {
         if ($supported) {

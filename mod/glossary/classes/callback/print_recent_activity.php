@@ -52,7 +52,7 @@ class print_recent_activity {
         $timestart = $callback->get_timestart();
         $viewfullnames = $callback->get_viewfullnames();
 
-        //TODO: use timestamp in approved field instead of changing timemodified when approving in 2.0.
+        // TODO: use timestamp in approved field instead of changing timemodified when approving in 2.0.
         if (!defined('GLOSSARY_RECENT_ACTIVITY_LIMIT')) {
             define('GLOSSARY_RECENT_ACTIVITY_LIMIT', 50);
         }
@@ -73,12 +73,12 @@ class print_recent_activity {
             return false;
         }
 
-        // generate list of approval capabilities for all glossaries in the course.
+        // Generate list of approval capabilities for all glossaries in the course.
         $approvals = array();
         foreach ($ids as $glinstanceid => $glcmid) {
             $context = context_module::instance($glcmid);
             if (has_capability('mod/glossary:view', $context)) {
-                // get records glossary entries that are approved if user has no capability to approve entries.
+                // Get records glossary entries that are approved if user has no capability to approve entries.
                 if (has_capability('mod/glossary:approve', $context)) {
                     $approvals[] = ' ge.glossaryid = :glsid'.$glinstanceid.' ';
                 } else {
@@ -92,7 +92,7 @@ class print_recent_activity {
             return false;
         }
         $selectsql = 'SELECT ge.id, ge.concept, ge.approved, ge.timemodified, ge.glossaryid,
-                                            '.user_picture::fields('u',null,'userid');
+                                            '.user_picture::fields('u', null, 'userid');
         $countsql = 'SELECT COUNT(*)';
 
         $joins = array(' FROM {glossary_entries} ge ');
@@ -108,7 +108,8 @@ class print_recent_activity {
             $approvalsql = '';
         }
         $ordersql = 'ORDER BY ge.timemodified ASC';
-        $entries = $DB->get_records_sql($selectsql.$fromsql.$clausesql.$approvalsql.$ordersql, $params, 0, (GLOSSARY_RECENT_ACTIVITY_LIMIT+1));
+        $query = $selectsql.$fromsql.$clausesql.$approvalsql.$ordersql;
+        $entries = $DB->get_records_sql($query, $params, 0, (GLOSSARY_RECENT_ACTIVITY_LIMIT + 1));
 
         if (empty($entries)) {
             return false;

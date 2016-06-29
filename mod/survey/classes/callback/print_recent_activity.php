@@ -66,7 +66,7 @@ class print_recent_activity {
             return;
         }
 
-        $slist = implode(',', $ids); // there should not be hundreds of glossaries in one course, right?
+        $slist = implode(',', $ids); // There should not be hundreds of glossaries in one course, right?
 
         $allusernames = user_picture::fields('u');
         $rs = $DB->get_recordset_sql("SELECT sa.userid, sa.survey, MAX(sa.time) AS time,
@@ -77,7 +77,7 @@ class print_recent_activity {
                                     GROUP BY sa.userid, sa.survey, $allusernames
                                     ORDER BY time ASC", array($timestart));
         if (!$rs->valid()) {
-            $rs->close(); // Not going to iterate (but exit), close rs
+            $rs->close(); // Not going to iterate (but exit), close rs.
             return;
         }
 

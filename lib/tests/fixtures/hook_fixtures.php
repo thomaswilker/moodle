@@ -82,7 +82,7 @@ class unittest_hook {
 
     /**
      * Generic callback that can be used in unittests for any callback
-     * @param \core\callback\callback $callback
+     * @param \stdClass $args
      */
     public static function generic_callback(\stdClass $args) {
         $info = json_encode($args);

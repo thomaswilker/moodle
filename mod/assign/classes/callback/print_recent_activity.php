@@ -118,7 +118,7 @@ class print_recent_activity {
                 if (!$modinfo->get_groups($cm->groupingid)) {
                     continue;
                 }
-                $usersgroups =  groups_get_all_groups($course->id, $submission->userid, $cm->groupingid);
+                $usersgroups = groups_get_all_groups($course->id, $submission->userid, $cm->groupingid);
                 if (is_array($usersgroups)) {
                     $usersgroups = array_keys($usersgroups);
                     $intersect = array_intersect($usersgroups, $modinfo->get_groups($cm->groupingid));

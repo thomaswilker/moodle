@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die;
 /**
  * Callbacks for print_recent_activity API.
  *
- * @package    mod_assign
+ * @package    mod_forum
  * @copyright  2016 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -117,10 +117,11 @@ class print_recent_activity {
                    '<div class="name">'.fullname($post, $viewfullnames).'</div>'.
                  '</div>';
             echo '<div class="info'.$subjectclass.'">';
+            $urlbase = $CFG->wwwroot.'/mod/forum/discuss.php?d='.$post->discussion;
             if (empty($post->parent)) {
-                echo '"<a href="'.$CFG->wwwroot.'/mod/forum/discuss.php?d='.$post->discussion.'">';
+                echo '"<a href="'.$urlbase.'">';
             } else {
-                echo '"<a href="'.$CFG->wwwroot.'/mod/forum/discuss.php?d='.$post->discussion.'&amp;parent='.$post->parent.'#p'.$post->id.'">';
+                echo '"<a href="'.$urlbase.'&amp;parent='.$post->parent.'#p'.$post->id.'">';
             }
             $post->subject = break_up_long_words(format_string($post->subject, true));
             echo $post->subject;

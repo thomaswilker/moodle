@@ -217,13 +217,14 @@ class print_recent_activity {
             $shown = true;
             echo $OUTPUT->heading(get_string('recentsubmissions', 'workshop'), 3);
             foreach ($submissions as $id => $submission) {
-                $link = new moodle_url('/mod/workshop/submission.php', array('id'=>$id, 'cmid'=>$submission->cmid));
+                $link = new moodle_url('/mod/workshop/submission.php', array('id' => $id, 'cmid' => $submission->cmid));
                 if ($submission->authornamevisible) {
                     $author = $users[$submission->authorid];
                 } else {
                     $author = null;
                 }
-                print_recent_activity_note($submission->timemodified, $author, $submission->title, $link->out(), false, $viewfullnames);
+                print_recent_activity_note($submission->timemodified, $author, $submission->title,
+                                           $link->out(), false, $viewfullnames);
             }
         }
 
@@ -238,7 +239,8 @@ class print_recent_activity {
                 } else {
                     $reviewer = null;
                 }
-                print_recent_activity_note($assessment->timemodified, $reviewer, $assessment->submissiontitle, $link->out(), false, $viewfullnames);
+                print_recent_activity_note($assessment->timemodified, $reviewer, $assessment->submissiontitle,
+                                           $link->out(), false, $viewfullnames);
             }
         }
 

@@ -29,7 +29,7 @@ defined('MOODLE_INTERNAL') || die;
 /**
  * Callbacks for supports logstore API.
  *
- * @package    format_topic
+ * @package    report_participation
  * @copyright  2016 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -47,5 +47,5 @@ class supports_logstore {
             $supported = true;
         }
         $callback->set_supported($supported);
-   }
+    }
 }

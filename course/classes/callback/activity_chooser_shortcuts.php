@@ -126,7 +126,7 @@ class activity_chooser_shortcuts extends callback_with_legacy_support {
 
     /**
      * Map the legacy result to the shortcuts field.
-     * @param mixed $result
+     * @param mixed $shortcuts
      */
     public function set_legacy_result($shortcuts) {
         $this->shortcuts = $shortcuts;

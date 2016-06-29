@@ -18,7 +18,6 @@
  * Can see item ratings callback.
  *
  * @package    core_rating
- * @category   callback
  * @copyright  2016 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -33,7 +32,6 @@ defined('MOODLE_INTERNAL') || die;
  * Can see item ratings callback.
  *
  * @package    core_rating
- * @category   callback
  * @copyright  2016 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

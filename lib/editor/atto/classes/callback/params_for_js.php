@@ -146,7 +146,7 @@ class params_for_js extends \core\callback\callback_with_legacy_support {
 
     /**
      * Set the params from a component_callback.
-     * @param mixed $result
+     * @param mixed $params
      */
     public function set_legacy_result($params) {
         $this->params = $params;

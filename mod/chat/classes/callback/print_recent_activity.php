@@ -32,7 +32,7 @@ defined('MOODLE_INTERNAL') || die;
 /**
  * Callbacks for print_recent_activity API.
  *
- * @package    mod_assign
+ * @package    mod_chat
  * @copyright  2016 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
@@ -144,7 +144,8 @@ class print_recent_activity {
 
             $params = array('timeold' => $timeold, 'timeoldext' => $timeoldext, 'cmid' => $cm->id);
 
-            $timeout = "AND ((chu.version<>'basic' AND chu.lastping>:timeold) OR (chu.version='basic' AND chu.lastping>:timeoldext))";
+            $timeout = "AND ((chu.version<>'basic' AND chu.lastping>:timeold)
+                                OR (chu.version='basic' AND chu.lastping>:timeoldext))";
 
             foreach ($current as $cm) {
                 // Count users first.
@@ -158,14 +159,13 @@ class print_recent_activity {
                 }
 
                 $userfields = user_picture::fields('u');
-                if (!$users = $DB->get_records_sql("SELECT $userfields
+                $users = $DB->get_records_sql("SELECT $userfields
                                                       FROM {course_modules} cm
                                                       JOIN {chat} ch        ON ch.id = cm.instance
                                                       JOIN {chat_users} chu ON chu.chatid = ch.id
                                                       JOIN {user} u         ON u.id = chu.userid
                                                      WHERE cm.id = :cmid $timeout $groupselect
-                                                  GROUP BY $userfields", $params)) {
-                }
+                                                  GROUP BY $userfields", $params);
 
                 $link = $CFG->wwwroot.'/mod/chat/view.php?id='.$cm->id;
                 $date = userdate($mcms[$cm->id]->lasttime, $strftimerecent);

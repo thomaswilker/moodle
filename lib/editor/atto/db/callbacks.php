@@ -21,7 +21,6 @@
  *     - Callbacks API: {@link http://docs.moodle.org/dev/Callbacks_API}
  *
  * @package   editor_atto
- * @category  callback
  * @copyright 2016 Damyon Wiese
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
