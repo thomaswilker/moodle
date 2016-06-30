@@ -119,8 +119,9 @@ class hook_dispatcher extends dispatcher_base {
         }
 
         $component = $this->get_dispatchable_component($hookname);
+        $component .= '-';
         if (strncmp($component, $hookname, count($component)) != 0) {
-            debugging("Hook names must begin with the component name where the hook is declared. " .
+            debugging("Hook names must begin with the component name where the hook is declared, followed by a dash. " .
                       "'$hookname' is not correct for component '$component'.",
                       DEBUG_DEVELOPER);
         }
