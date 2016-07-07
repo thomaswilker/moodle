@@ -705,6 +705,8 @@ class oci_native_moodle_database extends moodle_database {
             if ($column->meta_type == 'I' or $column->meta_type == 'F' or $column->meta_type == 'N') {
                 $value = 0; // prevent '' problems in numeric fields
             }
+        } else if ($value === null) {
+            $value = '';
         }
         return $value;
     }
@@ -922,8 +924,8 @@ class oci_native_moodle_database extends moodle_database {
         return true;
     }
 
-    protected function bind_params($stmt, array $params=null, $tablename=null) {
-        $descriptors = array();
+    protected function bind_params($stmt, array & $params=null, $tablename=null, array & $descriptors = null) {
+        $descriptorcount = 0;
         if ($params) {
             $columns = array();
             if ($tablename) {
@@ -943,15 +945,17 @@ class oci_native_moodle_database extends moodle_database {
                 if (is_array($value)) { // Let's go to bind special cases (lob descriptors)
                     if (isset($value['clob'])) {
                         $lob = oci_new_descriptor($this->oci, OCI_DTYPE_LOB);
-                        oci_bind_by_name($stmt, $key, $lob, -1, SQLT_CLOB);
+                        $descriptors[$descriptorcount] = $lob;
+                        oci_bind_by_name($stmt, $key, $descriptors[$descriptorcount], -1, SQLT_CLOB);
                         $lob->writeTemporary($this->oracle_dirty_hack($tablename, $columnname, $params[$key]['clob']), OCI_TEMP_CLOB);
-                        $descriptors[] = $lob;
+                        $descriptorcount++;
                         continue; // Column binding finished, go to next one
                     } else if (isset($value['blob'])) {
                         $lob = oci_new_descriptor($this->oci, OCI_DTYPE_LOB);
-                        oci_bind_by_name($stmt, $key, $lob, -1, SQLT_BLOB);
+                        $descriptors[$descriptorcount] = $lob;
+                        oci_bind_by_name($stmt, $key, $descriptors[$descriptorcount], -1, SQLT_BLOB);
                         $lob->writeTemporary($params[$key]['blob'], OCI_TEMP_BLOB);
-                        $descriptors[] = $lob;
+                        $descriptorcount++;
                         continue; // Column binding finished, go to next one
                     }
                 } else {
@@ -961,9 +965,10 @@ class oci_native_moodle_database extends moodle_database {
                     // conditions and other raw SQLs not covered by the above function.
                     if (strlen($value) > 4000) {
                         $lob = oci_new_descriptor($this->oci, OCI_DTYPE_LOB);
-                        oci_bind_by_name($stmt, $key, $lob, -1, SQLT_CLOB);
+                        $descriptors[$descriptorcount] = $lob;
+                        oci_bind_by_name($stmt, $key, $descriptors[$descriptorcount], -1, SQLT_CLOB);
                         $lob->writeTemporary($this->oracle_dirty_hack($tablename, $columnname, $params[$key]), OCI_TEMP_CLOB);
-                        $descriptors[] = $lob;
+                        $descriptorcount++;
                         continue; // Param binding finished, go to next one.
                     }
                 }
@@ -1241,16 +1246,17 @@ class oci_native_moodle_database extends moodle_database {
         list($sql, $params, $type) = $this->fix_sql_params($sql, $params);
         $sql .= $returning;
 
-        $id = null;
+        $id = 0;
 
         // note we don't need tweak_param_names() here. Placeholders are safe column names. MDL-28080
         // list($sql, $params) = $this->tweak_param_names($sql, $params);
         $this->query_start($sql, $params, SQL_QUERY_INSERT);
         $stmt = $this->parse_query($sql);
-        $descriptors = $this->bind_params($stmt, $params, $table);
+        $descriptors = [];
         if ($returning) {
             oci_bind_by_name($stmt, ":oracle_id", $id, 10, SQLT_INT);
         }
+        $this->bind_params($stmt, $params, $table, $descriptors);
         $result = oci_execute($stmt, $this->commit_status);
         $this->free_descriptors($descriptors);
         $this->query_end($result, $stmt);
@@ -1364,7 +1370,8 @@ class oci_native_moodle_database extends moodle_database {
         // list($sql, $params) = $this->tweak_param_names($sql, $params);
         $this->query_start($sql, $params, SQL_QUERY_UPDATE);
         $stmt = $this->parse_query($sql);
-        $descriptors = $this->bind_params($stmt, $params, $table);
+        $descriptors = [];
+        $this->bind_params($stmt, $params, $table, $descriptors);
         $result = oci_execute($stmt, $this->commit_status);
         $this->free_descriptors($descriptors);
         $this->query_end($result, $stmt);
@@ -1454,7 +1461,8 @@ class oci_native_moodle_database extends moodle_database {
         list($sql, $params) = $this->tweak_param_names($sql, $params);
         $this->query_start($sql, $params, SQL_QUERY_UPDATE);
         $stmt = $this->parse_query($sql);
-        $descriptors = $this->bind_params($stmt, $params, $table);
+        $descriptors = [];
+        $this->bind_params($stmt, $params, $table, $descriptors);
         $result = oci_execute($stmt, $this->commit_status);
         $this->free_descriptors($descriptors);
         $this->query_end($result, $stmt);
