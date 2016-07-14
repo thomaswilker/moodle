@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Can see item ratings callback.
+ * Validate ratings callback.
  *
  * @package    core_rating
  * @copyright  2016 Damyon Wiese
@@ -29,16 +29,16 @@ use \core\callback\callback_with_legacy_support;
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * Can see item ratings callback.
+ * Validate ratings callback.
  *
  * @package    core_rating
  * @copyright  2016 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class can_see_item_ratings extends callback_with_legacy_support {
+class validate extends callback_with_legacy_support {
 
-    /** @var int $contextid */
-    private $contextid;
+    /** @var context $context */
+    private $context;
     /** @var string $component */
     private $component;
     /** @var string $ratingarea */
@@ -47,8 +47,12 @@ class can_see_item_ratings extends callback_with_legacy_support {
     private $itemid;
     /** @var int $scaleid */
     private $scaleid;
-    /** @var bool $visible */
-    private $visible;
+    /** @var int $rateduserid */
+    private $rateduserid;
+    /** @var int $rating */
+    private $rating;
+     /** @var boolean $valid */
+    private $valid;
 
     /**
      * Constructor - take parameters from a named array of arguments.
@@ -59,19 +63,21 @@ class can_see_item_ratings extends callback_with_legacy_support {
      * @param array $params - List of arguments including contextid, component, ratingarea, itemid and scaleid.
      */
     public function __construct($params = array()) {
-        $this->contextid = clean_param($params['contextid'], PARAM_INT);
+        $this->context = $params['context'];
         $this->component = clean_param($params['component'], PARAM_COMPONENT);
         $this->ratingarea = clean_param($params['ratingarea'], PARAM_ALPHANUMEXT);
         $this->itemid = clean_param($params['itemid'], PARAM_INT);
         $this->scaleid = clean_param($params['scaleid'], PARAM_INT);
-        $this->visible = false;
+        $this->rateduserid = clean_param($params['rateduserid'], PARAM_INT);
+        $this->rating = clean_param($params['rating'], PARAM_INT);
+        $this->valid = null;
     }
 
     /**
      * Public factory method. This is just because chaining on "new" seems ugly.
      *
      * @param array $params - List of arguments for the constructor.
-     * @return can_see_item_ratings
+     * @return validate
      */
     public static function create($params = []) {
         return new static($params);
@@ -83,11 +89,13 @@ class can_see_item_ratings extends callback_with_legacy_support {
      */
     public function get_legacy_arguments() {
         $args = array(
-            'contextid' => $this->contextid,
+            'context' => $this->context,
             'component' => $this->component,
             'ratingarea' => $this->ratingarea,
             'itemid' => $this->itemid,
-            'scaleid' => $this->scaleid
+            'scaleid' => $this->scaleid,
+            'rateduserid' => $this->rateduserid,
+            'rating' => $this->rating
         );
         // The arguments are expected in a numerically indexed array.
         return array($args);
@@ -98,31 +106,31 @@ class can_see_item_ratings extends callback_with_legacy_support {
      * @return string $functionname
      */
     public function get_legacy_function() {
-        return 'rating_can_see_item_ratings';
+        return 'rating_validate';
     }
 
     /**
-     * Map the legacy result to the visible field.
+     * Map the legacy result to the field.
      * @return mixed $result
      */
     public function get_legacy_result() {
-        return $this->visible;
+        return $this->valid;
     }
 
     /**
      * Map the legacy result to the visible field.
      * @param mixed $result
      */
-    public function set_legacy_result($result) {
-        $this->visible = $result;
+    public function set_legacy_result($valid) {
+        $this->valid = $valid;
     }
 
     /**
-     * Get the context id.
-     * @return int
+     * Get the context.
+     * @return context
      */
-    public function get_contextid() {
-        return $this->contextid;
+    public function get_context() {
+        return $this->context;
     }
 
     /**
@@ -142,6 +150,14 @@ class can_see_item_ratings extends callback_with_legacy_support {
     }
 
     /**
+     * Get the rating
+     * @return int
+     */
+    public function get_rating() {
+        return $this->rating;
+    }
+
+    /**
      * Get the itemid
      * @return int
      */
@@ -158,19 +174,26 @@ class can_see_item_ratings extends callback_with_legacy_support {
     }
 
     /**
-     * Update the result of the callback.
-     * @param bool $visible
+     * Get the rateduserid
+     * @return int
      */
-    public function set_visible($visible) {
-        $this->visible = $visible;
+    public function get_rateduserid() {
+        return $this->rateduserid;
     }
 
     /**
-     * Get the result of the visiblity check.
-     * @return bool
+     * Update the result of the callback.
+     * @param bool $valid
      */
-    public function is_visible() {
-        return $this->visible;
+    public function set_valid($valid) {
+        $this->valid = $valid;
     }
 
+    /**
+     * Get the result of the callback.
+     * @returnparam bool $valid
+     */
+    public function is_valid() {
+        return $this->valid;
+    }
 }

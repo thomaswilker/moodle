@@ -28,5 +28,13 @@ $receivers = [
     [
         'name' => '\\core\\callback\\print_recent_activity',
         'callback' => '\\mod_glossary\\callback\\print_recent_activity::output'
+    ],
+    [
+        'name' => '\\core_rating\\callback\\validate',
+        'callback' => '\\mod_glossary\\callback\\rating::validate'
+    ],
+    [
+        'name' => '\\core_rating\\callback\\permissions',
+        'callback' => '\\mod_glossary\\callback\\rating::permissions'
     ]
 ];

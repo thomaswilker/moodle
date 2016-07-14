@@ -30,6 +30,14 @@ $receivers = [
         'callback' => '\\mod_forum\\callback\\rating::can_see_item_ratings'
     ],
     [
+        'name' => '\\core_rating\\callback\\permissions',
+        'callback' => '\\mod_forum\\callback\\rating::permissions'
+    ],
+    [
+        'name' => '\\core_rating\\callback\\validate',
+        'callback' => '\\mod_forum\\callback\\rating::validate'
+    ],
+    [
         'name' => '\\core\\callback\\print_recent_activity',
         'callback' => '\\mod_forum\\callback\\print_recent_activity::output'
     ]

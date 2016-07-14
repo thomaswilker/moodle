@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Can see item ratings callback.
+ * Get item fields ratings callback.
  *
  * @package    core_rating
  * @copyright  2016 Damyon Wiese
@@ -29,26 +29,34 @@ use \core\callback\callback_with_legacy_support;
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * Can see item ratings callback.
+ * Get the item table name, the item id field, and the item user field for the given rating item
+ * from the related component.
  *
  * @package    core_rating
  * @copyright  2016 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class can_see_item_ratings extends callback_with_legacy_support {
+class get_item_fields extends callback_with_legacy_support {
 
-    /** @var int $contextid */
-    private $contextid;
+    /** @var context $context */
+    private $context;
     /** @var string $component */
     private $component;
     /** @var string $ratingarea */
     private $ratingarea;
-    /** @var int $itemid */
-    private $itemid;
+    /** @var array $items */
+    private $items;
     /** @var int $scaleid */
     private $scaleid;
-    /** @var bool $visible */
-    private $visible;
+    /** @var string $aggregate */
+    private $aggregate;
+
+    /** @var string $itemtablename */
+    private $itemtablename;
+    /** @var string $itemidfield */
+    private $itemidfield;
+    /** @var string $itemuserfield */
+    private $itemuserfield;
 
     /**
      * Constructor - take parameters from a named array of arguments.
@@ -59,19 +67,22 @@ class can_see_item_ratings extends callback_with_legacy_support {
      * @param array $params - List of arguments including contextid, component, ratingarea, itemid and scaleid.
      */
     public function __construct($params = array()) {
-        $this->contextid = clean_param($params['contextid'], PARAM_INT);
+        $this->context = $params['context'];
         $this->component = clean_param($params['component'], PARAM_COMPONENT);
         $this->ratingarea = clean_param($params['ratingarea'], PARAM_ALPHANUMEXT);
-        $this->itemid = clean_param($params['itemid'], PARAM_INT);
+        $this->items = $params['items'];
         $this->scaleid = clean_param($params['scaleid'], PARAM_INT);
-        $this->visible = false;
+        $this->aggregate = clean_param($params['aggregate'], PARAM_ALPHANUMEXT);
+        $this->itemtablename = null;
+        $this->itemidfield = 'id';
+        $this->itemuserfield = 'userid';
     }
 
     /**
      * Public factory method. This is just because chaining on "new" seems ugly.
      *
      * @param array $params - List of arguments for the constructor.
-     * @return can_see_item_ratings
+     * @return get_item_fields
      */
     public static function create($params = []) {
         return new static($params);
@@ -83,11 +94,12 @@ class can_see_item_ratings extends callback_with_legacy_support {
      */
     public function get_legacy_arguments() {
         $args = array(
-            'contextid' => $this->contextid,
+            'context' => $this->context,
             'component' => $this->component,
             'ratingarea' => $this->ratingarea,
-            'itemid' => $this->itemid,
-            'scaleid' => $this->scaleid
+            'items' => $this->items,
+            'scaleid' => $this->scaleid,
+            'aggregate' => $this->aggregate
         );
         // The arguments are expected in a numerically indexed array.
         return array($args);
@@ -98,31 +110,36 @@ class can_see_item_ratings extends callback_with_legacy_support {
      * @return string $functionname
      */
     public function get_legacy_function() {
-        return 'rating_can_see_item_ratings';
+        return 'rating_get_item_fields';
     }
 
     /**
-     * Map the legacy result to the visible field.
+     * Map the legacy result to the itemtable fields.
      * @return mixed $result
      */
     public function get_legacy_result() {
-        return $this->visible;
+        return array($this->itemtablename, $this->itemidfield, $this->itemuserfield);
     }
 
     /**
      * Map the legacy result to the visible field.
      * @param mixed $result
      */
-    public function set_legacy_result($result) {
-        $this->visible = $result;
+    public function set_legacy_result($params) {
+        if (!is_array($params) || count($params) < 3) {
+            throw coding_exception('callback returned invalid data');
+        }
+        $this->itemtablename = $params[0];
+        $this->itemidfield = $params[1];
+        $this->itemuserfield = $params[2];
     }
 
     /**
-     * Get the context id.
-     * @return int
+     * Get the context.
+     * @return \context
      */
-    public function get_contextid() {
-        return $this->contextid;
+    public function get_context() {
+        return $this->context;
     }
 
     /**
@@ -142,11 +159,11 @@ class can_see_item_ratings extends callback_with_legacy_support {
     }
 
     /**
-     * Get the itemid
-     * @return int
+     * Get the items
+     * @return array
      */
-    public function get_itemid() {
-        return $this->itemid;
+    public function get_items() {
+        return $this->items;
     }
 
     /**
@@ -159,18 +176,49 @@ class can_see_item_ratings extends callback_with_legacy_support {
 
     /**
      * Update the result of the callback.
-     * @param bool $visible
+     * @param string $itemtablename
      */
-    public function set_visible($visible) {
-        $this->visible = $visible;
+    public function set_itemtablename($itemtablename) {
+        $this->itemtablename = $itemtablename;
     }
 
     /**
-     * Get the result of the visiblity check.
-     * @return bool
+     * Update the result of the callback.
+     * @param string $itemidfield
      */
-    public function is_visible() {
-        return $this->visible;
+    public function set_itemidfield($itemidfield) {
+        $this->itemidfield = $itemidfield;
     }
 
+    /**
+     * Update the result of the callback.
+     * @param string $itemuserfield
+     */
+    public function set_itemuserfield($itemuserfield) {
+        $this->itemuserfield = $itemuserfield;
+    }
+
+    /**
+     * Read the result of the callback
+     * @return string
+     */
+    public function get_itemtablename() {
+        return $this->itemtablename;
+    }
+
+    /**
+     * Read the result of the callback
+     * @return string
+     */
+    public function get_itemidfield() {
+        return $this->itemidfield;
+    }
+
+    /**
+     * Read the result of the callback
+     * @return string
+     */
+    public function get_itemuserfield() {
+        return $this->itemuserfield;
+    }
 }

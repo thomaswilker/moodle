@@ -15,7 +15,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Can see item ratings callback.
+ * Permissions ratings callback.
  *
  * @package    core_rating
  * @copyright  2016 Damyon Wiese
@@ -29,13 +29,13 @@ use \core\callback\callback_with_legacy_support;
 defined('MOODLE_INTERNAL') || die;
 
 /**
- * Can see item ratings callback.
+ * Permissions ratings callback.
  *
  * @package    core_rating
  * @copyright  2016 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class can_see_item_ratings extends callback_with_legacy_support {
+class permissions extends callback_with_legacy_support {
 
     /** @var int $contextid */
     private $contextid;
@@ -43,12 +43,15 @@ class can_see_item_ratings extends callback_with_legacy_support {
     private $component;
     /** @var string $ratingarea */
     private $ratingarea;
-    /** @var int $itemid */
-    private $itemid;
-    /** @var int $scaleid */
-    private $scaleid;
-    /** @var bool $visible */
-    private $visible;
+
+    /** @var bool $canrate */
+    private $canrate;
+    /** @var bool $canview */
+    private $canview;
+    /** @var bool $canviewany */
+    private $canviewany;
+    /** @var bool $canviewall */
+    private $canviewall;
 
     /**
      * Constructor - take parameters from a named array of arguments.
@@ -62,16 +65,17 @@ class can_see_item_ratings extends callback_with_legacy_support {
         $this->contextid = clean_param($params['contextid'], PARAM_INT);
         $this->component = clean_param($params['component'], PARAM_COMPONENT);
         $this->ratingarea = clean_param($params['ratingarea'], PARAM_ALPHANUMEXT);
-        $this->itemid = clean_param($params['itemid'], PARAM_INT);
-        $this->scaleid = clean_param($params['scaleid'], PARAM_INT);
-        $this->visible = false;
+        $this->canrate = false;
+        $this->canview = false;
+        $this->canviewany = false;
+        $this->canviewall = false;
     }
 
     /**
      * Public factory method. This is just because chaining on "new" seems ugly.
      *
      * @param array $params - List of arguments for the constructor.
-     * @return can_see_item_ratings
+     * @return permissions
      */
     public static function create($params = []) {
         return new static($params);
@@ -85,9 +89,7 @@ class can_see_item_ratings extends callback_with_legacy_support {
         $args = array(
             'contextid' => $this->contextid,
             'component' => $this->component,
-            'ratingarea' => $this->ratingarea,
-            'itemid' => $this->itemid,
-            'scaleid' => $this->scaleid
+            'ratingarea' => $this->ratingarea
         );
         // The arguments are expected in a numerically indexed array.
         return array($args);
@@ -98,7 +100,20 @@ class can_see_item_ratings extends callback_with_legacy_support {
      * @return string $functionname
      */
     public function get_legacy_function() {
-        return 'rating_can_see_item_ratings';
+        return 'rating_permissions';
+    }
+
+    /**
+     * Return an array of permissions.
+     * @return array $result
+     */
+    public function get_permissions_array() {
+        return array(
+            'rate' => $this->canrate,
+            'view' => $this->canview,
+            'viewany' => $this->canviewany,
+            'viewall' => $this->canviewall
+        );
     }
 
     /**
@@ -106,7 +121,7 @@ class can_see_item_ratings extends callback_with_legacy_support {
      * @return mixed $result
      */
     public function get_legacy_result() {
-        return $this->visible;
+        return $this->get_permissions_array();
     }
 
     /**
@@ -114,7 +129,10 @@ class can_see_item_ratings extends callback_with_legacy_support {
      * @param mixed $result
      */
     public function set_legacy_result($result) {
-        $this->visible = $result;
+        $this->canrate = $result['rate'];
+        $this->canview = $result['view'];
+        $this->canviewany = $result['viewany'];
+        $this->canviewall = $result['viewall'];
     }
 
     /**
@@ -142,35 +160,67 @@ class can_see_item_ratings extends callback_with_legacy_support {
     }
 
     /**
-     * Get the itemid
-     * @return int
+     * Update the result of the callback.
+     * @param bool $canrate
      */
-    public function get_itemid() {
-        return $this->itemid;
+    public function set_canrate($canrate) {
+        $this->canrate = $canrate;
     }
 
     /**
-     * Get the scaleid
-     * @return int
+     * Getter
+     * @return bool
      */
-    public function get_scaleid() {
-        return $this->scaleid;
+    public function canrate() {
+        return $this->canrate;
     }
 
     /**
      * Update the result of the callback.
-     * @param bool $visible
+     * @param bool $canview
      */
-    public function set_visible($visible) {
-        $this->visible = $visible;
+    public function set_canview($canview) {
+        $this->canview = $canview;
     }
 
     /**
-     * Get the result of the visiblity check.
+     * Getter
      * @return bool
      */
-    public function is_visible() {
-        return $this->visible;
+    public function canview() {
+        return $this->canview;
+    }
+
+    /**
+     * Update the result of the callback.
+     * @param bool $canviewall
+     */
+    public function set_canviewall($canviewall) {
+        $this->canviewall = $canviewall;
+    }
+
+    /**
+     * Getter
+     * @return bool
+     */
+    public function canviewall() {
+        return $this->canviewall;
+    }
+
+    /**
+     * Update the result of the callback.
+     * @param bool $canviewany
+     */
+    public function set_canviewany($canviewany) {
+        $this->canviewany = $canviewany;
+    }
+
+    /**
+     * Getter
+     * @return bool
+     */
+    public function canviewany() {
+        return $this->canviewany;
     }
 
 }

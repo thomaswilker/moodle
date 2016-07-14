@@ -28,5 +28,13 @@ $receivers = [
     [
         'name' => '\\core_rating\\callback\\can_see_item_ratings',
         'callback' => '\\mod_data\\callback\\rating::can_see_item_ratings'
+    ],
+    [
+        'name' => '\\core_rating\\callback\\validate',
+        'callback' => '\\mod_data\\callback\\rating::validate'
+    ],
+    [
+        'name' => '\\core_rating\\callback\\permissions',
+        'callback' => '\\mod_data\\callback\\rating::permissions'
     ]
 ];
