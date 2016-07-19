@@ -121,7 +121,6 @@
     .proceedbutton {
         float: right;
         margin-right: 5%;
-
     }
     .oneclickbackup {
         float: right;
@@ -231,17 +230,4 @@
     padding: 10px;
     height: 300px;
     overflow-y: scroll;
-}
-
-.dir-rtl {
-    &.path-backup .mform .fgroup {
-        .proceedbutton {
-            float: left;
-            margin-left: 5%;
-            margin-right: 0;
-        }
-        .oneclickbackup {
-            float: left;
-        }
-    }
 }

@@ -87,13 +87,11 @@
 /** Page layout CSS ends **/
 
 .dir-ltr,
-.mdl-left,
-.dir-rtl .mdl-right {
+.mdl-left {
     text-align: left;
 }
 .dir-rtl,
-.mdl-right,
-.dir-rtl .mdl-left {
+.mdl-right {
     text-align: right;
 }
 #add,
@@ -194,9 +192,6 @@ a.autolink.glossary:hover {
     display: none;
     text-align: right;
 }
-.dir-rtl .collapsible-actions {
-    text-align: left;
-}
 .jsenabled .collapsible-actions {
     display: block;
 }
@@ -204,13 +199,11 @@ a.autolink.glossary:hover {
     padding-left: 20px;
     background: url([[pix:t/collapsed]]) 2px center no-repeat;
 }
+/* rtl:ignore */
 .dir-rtl .collapsible-actions .collapseexpand {
-    padding-right: 20px;
-    padding-left: 0;
     background: url([[pix:t/collapsed_rtl]]) right center no-repeat;
 }
-.collapsible-actions .collapse-all,
-.dir-rtl .collapsible-actions .collapse-all {
+.collapsible-actions .collapse-all {
     background-image: url([[pix:t/expanded]]);
 }
 .yui-overlay .yui-widget-bd {
@@ -256,10 +249,6 @@ img.icon {
     width: 16px;
     padding-right: 6px;
 }
-.dir-rtl img.icon {
-    padding-left: 6px;
-    padding-right: 0;
-}
 img.iconsmall {
     height: 12px;
     margin-right: 3px;
@@ -282,10 +271,6 @@ h6 img.iconhelp, h6 img.icon {
   vertical-align: middle;
   padding: 4px;
 }
-.dir-rtl img.iconhelp, .dir-rtl .helplink img {
-    padding-right: 3px;
-    padding-left: 0;
-}
 img.iconlarge {
     height: 24px;
     width: 24px;
@@ -296,10 +281,6 @@ img.iconsort {
     padding-left: .3em;
     margin-bottom: .15em;
 }
-.dir-rtl img.iconsort {
-    padding-right: .3em;
-    padding-left: 0;
-}
 img.icontoggle {
     height: 17px;
     vertical-align: middle;
@@ -308,14 +289,6 @@ img.icontoggle {
 img.iconkbhelp {
     height: 17px;
     width: 49px;
-}
-img.icon-pre, .dir-rtl img.icon-post {
-    padding-right: 3px;
-    padding-left: 0;
-}
-img.icon-post, .dir-rtl img.icon-pre {
-    padding-left: 3px;
-    padding-right: 0;
 }
 .boxaligncenter {
     margin-left: auto;
@@ -392,10 +365,6 @@ form.popupform div {
     left: -10000px;
     font-weight: normal;
     font-size: 1em;
-}
-.dir-rtl .accesshide {
-    top: -30000px;
-    left: auto;
 }
 span.hide,
 div.hide {
@@ -477,9 +446,6 @@ a.skip:active {
 .groupmanagementtable #addselect_wrapper label {
     font-weight: normal;
 }
-.dir-rtl .groupmanagementtable p {
-    text-align: right;
-}
 #group-usersummary {
     width: 14em;
 }
@@ -524,9 +490,6 @@ a.skip:active {
 }
 .loginbox .signuppanel .subcontent {
     text-align: left;
-}
-.dir-rtl .loginbox .signuppanel .subcontent {
-    text-align: right;
 }
 .loginbox .loginsub {
     margin-left: 0;
@@ -577,12 +540,6 @@ a.skip:active {
     margin-bottom: -2000px;
     padding-bottom: 2000px;
 //  @include box-sizing(border-box);
-}
-.dir-rtl {
-    .loginbox.twocolumns .loginpanel,
-    .loginbox.twocolumns .signuppanel {
-        float:right;
-    }
 }
 
 .loginbox .potentialidp .smallicon {
@@ -687,9 +644,6 @@ table.mod_index {
     width: 20px;
     float: left;
 }
-.dir-rtl .comment-message .picture {
-    float: right;
-}
 .comment-message .text {
     margin: 0;
     padding: 0;
@@ -702,12 +656,6 @@ table.mod_index {
     position: absolute;
     top: 0;
     right: 0;
-    margin: .3em;
-}
-.dir-rtl .comment-delete {
-    position: absolute;
-    left: 0;
-    right: auto;
     margin: .3em;
 }
 .comment-report-selectall{
@@ -796,12 +744,6 @@ img.user-image {
 .path-tag .tagarea .controls .exclusivemode {
     display: inline-block;
 }
-.dir-rtl.path-tag  .tagarea .controls .gotopage.nextpage {
-    float: left;
-}
-.dir-rtl.path-tag  .tagarea .controls .gotopage.prevpage {
-    float: right;
-}
 .path-tag .tagarea .controls.controls-bottom {
     margin-top: 5px;
 }
@@ -835,9 +777,6 @@ tr.flagged-tag a {
     img {
         margin: 0 5px;
     }
-}
-.dir-rtl.path-admin-tag .addstandardtags {
-    float: left;
 }
 .path-tag .tag-relatedtags {
     padding-top: 10px;
@@ -873,9 +812,6 @@ tr.flagged-tag a {
 }
 .tag_feed.media-list .media .itemimage {
     float: left;
-}
-.dir-rtl .tag_feed.media-list .media .itemimage {
-    float: right;
 }
 .tag_feed.media-list .media .itemimage img {
     height: 35px;
@@ -1133,10 +1069,6 @@ tr.flagged-tag a {
     vertical-align: baseline;
 }
 
-.dir-rtl .userenrolment .col_role .role {
-    float: right;
-}
-
 .userenrolment .hasAllRoles .col_role .addrole {
     display: none;
 }
@@ -1204,70 +1136,8 @@ tr.flagged-tag a {
     width: 237px;
   }
 }
-.dir-rtl {
-    &#page-enrol-users {
-        .col_userdetails {
-            .subfield {
-                margin-right: 40px;
-                margin-left: 5px;
-            }
-            .subfield_picture {
-                float: right;
-                margin-right: 0;
-            }
-        }
-        .enrol_user_buttons {
-            float: left;
-            .enrolusersbutton {
-                margin-left: 0;
-                margin-right: 1em;
-                div {
-                    margin-left: 0;
-                }
-            }
-        }
-        #filterform {
-            .fitem {
-                margin-right: 0;
-                margin-left: .3em;
-                label {
-                    padding-right: 0;
-                    padding-left: .3em;
-                }
-            }
-        }
-    }
-}
-
 #page-enrol-users .enrol-users-page-action input {
     margin-left: 0
-}
-
-/**
-* Overide for RTL layout
-**/
-.dir-rtl .headermain {
-    float: right;
-}
-.dir-rtl .headermenu {
-    float: left;
-}
-.dir-rtl .loginbox .loginform .form-label {
-    float: right;
-    text-align: left;
-}
-.dir-rtl .loginbox .loginform .form-input {
-    text-align: right;
-    margin-right: 1%;
-}
-.dir-rtl .yui3-menu-hidden {
-    left: 0;
-}
-#page-admin-roles-define.dir-rtl #rolesform .felement {
-    margin-right: 180px;
-}
-#page-message-edit.dir-rtl table.generaltable th.c0 {
-    text-align: right;
 }
 .corelightbox {
     background-color: #CCC;
@@ -1340,105 +1210,6 @@ body#page-lib-editor-tinymce-plugins-moodlemedia-preview {
     margin: 0;
     min-width: 0;
     background: none;
-}
-/** Fix YUI 2 Treeview for Right to left languages **/
-.dir-rtl .ygtvtn,
-.dir-rtl .ygtvtm,
-.dir-rtl .ygtvtmh,
-.dir-rtl .ygtvtmhh,
-.dir-rtl .ygtvtp,
-.dir-rtl .ygtvtph,
-.dir-rtl .ygtvtphh,
-.dir-rtl .ygtvln,
-.dir-rtl .ygtvlm,
-.dir-rtl .ygtvlmh,
-.dir-rtl .ygtvlmhh,
-.dir-rtl .ygtvlp,
-.dir-rtl .ygtvlph,
-.dir-rtl .ygtvlphh,
-.dir-rtl .ygtvdepthcell,
-.dir-rtl .ygtvok,
-.dir-rtl .ygtvok:hover,
-.dir-rtl .ygtvcancel,
-.dir-rtl .ygtvcancel:hover {
-    width: 18px;
-    height: 22px;
-    background-image: url([[pix:theme|yui2-treeview-sprite-rtl]]);
-    background-repeat: no-repeat;
-    cursor: pointer;
-}
-.dir-rtl .ygtvtn {
-    background-position: 0 -5600px;
-}
-.dir-rtl .ygtvtm {
-    background-position: 0 -4000px;
-}
-.dir-rtl .ygtvtmh,
-.dir-rtl .ygtvtmhh {
-    background-position: 0 -4800px;
-}
-.dir-rtl .ygtvtp {
-    background-position: 0 -6400px;
-}
-.dir-rtl .ygtvtph,
-.dir-rtl .ygtvtphh {
-    background-position: 0 -7200px;
-}
-.dir-rtl .ygtvln {
-    background-position: 0 -1600px;
-}
-.dir-rtl .ygtvlm {
-    background-position: 0 0;
-}
-.dir-rtl .ygtvlmh,
-.dir-rtl .ygtvlmhh {
-    background-position: 0 -800px;
-}
-.dir-rtl .ygtvlp {
-    background-position: 0 -2400px;
-}
-.dir-rtl .ygtvlph,
-.dir-rtl .ygtvlphh {
-    background-position: 0 -3200px
-}
-.dir-rtl .ygtvdepthcell {
-    background-position: 0 -8000px;
-}
-.dir-rtl .ygtvok {
-    background-position: 0 -8800px;
-}
-.dir-rtl .ygtvok:hover {
-    background-position: 0 -8844px;
-}
-.dir-rtl .ygtvcancel {
-    background-position: 0 -8822px;
-}
-.dir-rtl .ygtvcancel:hover {
-    background-position: 0 -8866px;
-}
-.dir-rtl.yui-skin-sam .yui-panel .hd {
-    text-align: right;
-}
-.dir-rtl .yui-skin-sam .yui-layout .yui-layout-unit div.yui-layout-bd {
-    text-align: right;
-}
-/** Fix TinyMCE editor right to left **/
-.dir-rtl .clearlooks2.ie9 .mceAlert .mceMiddle span,.dir-rtl .clearlooks2 .mceConfirm .mceMiddle span {
-    top: 44px;
-}
-.dir-rtl .o2k7Skin table,
-.dir-rtl .o2k7Skin tbody,
-.dir-rtl .o2k7Skin a,
-.dir-rtl .o2k7Skin img,
-.dir-rtl .o2k7Skin tr,
-.dir-rtl .o2k7Skin div,
-.dir-rtl .o2k7Skin td,
-.dir-rtl .o2k7Skin iframe,
-.dir-rtl .o2k7Skin span,
-.dir-rtl .o2k7Skin *,
-.dir-rtl .o2k7Skin .mceText,
-.dir-rtl .o2k7Skin .mceListBox .mceText {
-    text-align: right;
 }
 .path-rating .ratingtable {
     width: 100%;
@@ -1537,10 +1308,6 @@ body#page-lib-editor-tinymce-plugins-moodlemedia-preview {
     background-image: url([[pix:theme|sprite]]);
     background-repeat: no-repeat;
     border-style: none;
-}
-.dir-rtl .moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialogue-hd .yui3-widget-buttons {
-    left: 0;
-    right: auto;
 }
 .moodle-dialogue-base .moodle-dialogue .moodle-dialogue-bd {
     padding: 1em;
@@ -1675,11 +1442,6 @@ body#page-lib-editor-tinymce-plugins-moodlemedia-preview {
     }
 }
 
-/* Question Bank - Question Chooser "Close" button */
-#page-question-edit.dir-rtl a.container-close {
-    right: auto;
-    left: 6px;
-}
 /**
  * Chooser Dialogues (moodle-core-chooserdialogue)
  *
@@ -1738,9 +1500,6 @@ body#page-lib-editor-tinymce-plugins-moodlemedia-preview {
         }
     }
 }
-.dir-rtl.jschooser .choosercontainer #chooseform .alloptions {
-    max-width: 18.3em;
-}
 /* Settings for option rows and option subtypes */
 .choosercontainer #chooseform .moduletypetitle,
 .choosercontainer #chooseform .option,
@@ -1758,12 +1517,6 @@ body#page-lib-editor-tinymce-plugins-moodlemedia-preview {
 .choosercontainer #chooseform .nonoption .typename,
 .choosercontainer #chooseform .nonoption span.modicon img.icon {
     padding: 0 0 0 0.5em;
-}
-.dir-rtl .choosercontainer #chooseform .option .typename,
-.dir-rtl .choosercontainer #chooseform .option span.modicon img.icon,
-.dir-rtl .choosercontainer #chooseform .nonoption .typename,
-.dir-rtl .choosercontainer #chooseform .nonoption span.modicon img.icon {
-    padding: 0 0.5em 0 0;
 }
 
 .chooserdialogue-course-modchooser .choosercontainer #chooseform .option span.modicon img.icon,
@@ -1786,22 +1539,12 @@ body#page-lib-editor-tinymce-plugins-moodlemedia-preview {
     padding-top: 0.3em;
     padding-bottom: 0.1em;
 }
-.dir-rtl .choosercontainer #chooseform .nonoption {
-    padding-right: 2.7em;
-    padding-left: 0;
-}
 .choosercontainer #chooseform .subtype {
     margin-bottom: 0;
     padding: 0 1.6em 0 3.2em;
 }
-.dir-rtl .choosercontainer #chooseform .subtype {
-    padding: 0 3.2em 0 1.6em;
-}
 .choosercontainer #chooseform .subtype .typename {
     margin: 0 0 0 0.2em;
-}
-.dir-rtl .choosercontainer #chooseform .subtype .typename {
-    margin: 0 0.2em 0 0;
 }
 /* The instruction/help area */
 .jschooser .choosercontainer #chooseform .instruction,
@@ -1818,12 +1561,6 @@ body#page-lib-editor-tinymce-plugins-moodlemedia-preview {
     overflow-x: hidden;
     overflow-y: auto;
     line-height: 2em;
-}
-.dir-rtl.jschooser .choosercontainer #chooseform .instruction,
-.dir-rtl.jschooser .choosercontainer #chooseform .typesummary {
-    left: 0;
-    right: 18.5em;
-    border-right: 1px solid grey;
 }
 /* Selected option settings */
 .jschooser .choosercontainer #chooseform .instruction,
@@ -1926,13 +1663,6 @@ table.collection .description {
     width: 25%;
     text-align: left;
 }
-.dir-rtl table.collection {
-    .name,
-    .criteria,
-    .description  {
-        text-align: right;
-    }
-}
 table.collection .actions {
     width: 11em;
     text-align: center;
@@ -2016,13 +1746,6 @@ ul.badges {
         }
     }
 }
-.dir-rtl #badge-image {
-    float: right;
-
-    .expireimage {
-        left: 41px;
-    }
-}
 #badge-details {
     display: inline-block;
     width: 79%;
@@ -2100,9 +1823,6 @@ ul.badges {
     text-align: left;
     vertical-align: middle;
 }
-.dir-rtl .activatebadge {
-    text-align: right;
-}
 img#persona_signin {
     cursor: pointer;
 }
@@ -2118,9 +1838,6 @@ img#persona_signin {
 .breadcrumb-nav {
     float: left;
     margin-bottom: 10px;
-}
-.dir-rtl .breadcrumb-nav {
-    float: right;
 }
 .breadcrumb-button .singlebutton div {
     margin-right: 0;
@@ -2184,16 +1901,6 @@ img#persona_signin {
     }
 }
 
-.dir-rtl .page-context-header {
-    .page-header-image {
-        float: right;
-        margin-left: 1em;
-    }
-
-    .header-button-group {
-        float: right;
-    }
-}
 
 /** Action menu component styles **/
 .moodle-actionmenu,
@@ -2261,20 +1968,6 @@ img#persona_signin {
         }
         .menu-action-text  {
             display:inline;
-        }
-    }
-
-    &.dir-rtl {
-        .moodle-actionmenu[data-enhance] {
-            .toggle-display.textmenu {
-                margin-left: initial;
-                margin-right: 4px;
-
-                .caret {
-                    margin-left: initial;
-                    margin-right: 2px;
-                }
-            }
         }
     }
 }
@@ -2355,48 +2048,6 @@ img#persona_signin {
     text-align: right;
 }
 
-.dir-rtl {
-    .moodle-actionmenu[data-enhanced].show  {
-        .menu {
-            text-align: right;
-            left: 0;
-            right: auto;
-            a {
-                padding: 2px 28px 2px 1em;
-            }
-            .iconsmall,
-            .smallicon {
-                margin-right: -24px;
-                margin-left: 4px;
-            }
-
-            /** bottom left of button **/
-            &.align-tl-bl {left: auto; right: 0;}
-            &.align-tr-bl {right: auto; left: 100%;}
-            &.align-bl-bl {left: auto; right: 0;}
-            &.align-br-bl {right: auto; left: 100%;}
-            /** bottom right of button **/
-            &.align-tl-br {left: auto; right: 100%;}
-            &.align-tr-br {right: auto; left: 0;}
-            &.align-bl-br {left: auto; right: 100%;}
-            &.align-br-br {right: auto; left: 0;}
-            /** top left of button **/
-            &.align-tl-tl {left: auto; right: 0;}
-            &.align-tr-tl {right: auto; left: 100%;}
-            &.align-bl-tl {left: auto; right: 0;}
-            &.align-br-tl {right: auto; left: 100%;}
-            /** top right of button **/
-            &.align-tl-tr {left: auto; right: 100%;}
-            &.align-tr-tr {right: auto; left: 0;}
-            &.align-bl-tr {left: auto; right: 100%;}
-            &.align-br-tr {right: auto; left: 0;}
-        }
-    }
-    .block .moodle-actionmenu {
-        text-align: right;
-    }
-}
-
 ul.dragdrop-keyboard-drag li {
     list-style-type: none;
 }
@@ -2416,15 +2067,6 @@ a.disabled {
 body.lockscroll {
   height: 100%;
   overflow: hidden;
-}
-
-.dir-rtl {
-    // Bootstrap sets right margin to 0. Fail.
-    // They set left margin to 25px so we will copy that.
-    ul {
-        margin-left: 0;
-        margin-right: 25px;
-    }
 }
 
 .progressbar_container {
@@ -2500,16 +2142,6 @@ dd:after {
     }
 }
 
-.dir-rtl {
-    .inplaceeditable {
-        &.inplaceeditingon {
-            .editinstructions {
-                right: 0;
-                left: auto;
-            }
-        }
-    }
-}
 h3.sectionname .inplaceeditable.inplaceeditingon .editinstructions {
     margin-top: -20px;
 }

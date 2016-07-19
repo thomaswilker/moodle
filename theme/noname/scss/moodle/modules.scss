@@ -103,23 +103,6 @@ select {
     }
 }
 
-.dir-rtl .forumpost {
-    .picture img {
-        &.userpicture {
-            margin-left: 10px;
-            margin-right: 3px;
-        }
-    }
-    .row {
-        .topic,
-        .content-mask,
-        .options {
-            margin-left: 0;
-            margin-right: 48px;
-        }
-    }
-}
-
 .forumpost .row .left {
     width: 48px;
 }
@@ -182,36 +165,9 @@ select {
     margin-left: 4px;
 }
 
-.dir-rtl {
-    .nav-tabs > li,
-    .nav-pills > li {
-        float: right;
-    }
-}
-.dir-rtl .navbar .brand {
-    padding: 10px 0 10px 20px;
-    float: right;
-}
-
 .navbar-fixed-top,
 .navbar-fixed-bottom {
     z-index: 4030;
-}
-
-.dir-rtl .breadcrumb-button,
-.dir-rtl .navbar .btn-navbar {
-    float: left;
-}
-
-.dir-rtl .breadcrumb-button .singlebutton {
-    float: right;
-    margin-right: 4px;
-    margin-left: 0;
-}
-.dir-rtl .breadcrumb-button .singlebutton div,
-.dir-rtl .breadcrumb-button .singlebutton div input[type="submit"] {
-    margin-right: 5px;
-    margin-left: 0;
 }
 
 .ie .row-fluid .desktop-first-column {
@@ -277,15 +233,6 @@ div#dock {
         padding: 3px 20px 3px 8px;
     }
 }
-.dir-rtl .dropdown-menu {
-    > li > a {
-        padding: 3px 8px 3px 20px;
-    }
-}
-.dir-rtl .dropdown-submenu > .dropdown-menu {
-  @include border-radius(6px 0px 6px 6px);
-}
-
 
 // Survey module
 
@@ -299,25 +246,9 @@ div#dock {
         text-align:center;
     }
 }
-// rtl overrides
-.dir-rtl {
-    &.path-mod-forum .forumheaderlist {
-        thead .header.lastpost {
-            text-align: left;
-        }
-        .discussion {
-            .lastpost {
-                text-align: left;
-            }
-        }
-    }
-}
 
 .nav .caret {
     margin-left: 4px;
-}
-.dir-rtl .nav .caret {
-    margin-right: 4px;
 }
 
 // Dividers
@@ -547,34 +478,6 @@ div#dock {
         }
     }
 }
-
-.dir-rtl {
-    .usermenu {
-        float: left;
-        > .moodle-actionmenu {
-            > .menu {
-                margin-right: 0px;
-                &:before {
-                    left: 9px;
-                }
-                &:after {
-                    left: 10px;
-                }
-            }
-            > .menubar li a {
-                text-align: left;
-            }
-        }
-    }
-    &.userloggedinas .usermenu .userbutton .avatars {
-        .avatar {
-            &.current {
-                left: -14px;
-            }
-        }
-    }
-}
-
 
 .userloggedinas .usermenu .userbutton .avatars {
     .avatar {
