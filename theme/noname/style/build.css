@@ -177,8 +177,7 @@ textarea {
 optgroup {
   font-weight: bold; }
 
-table, table.collection, table.flexible,
-.generaltable {
+table {
   border-collapse: collapse;
   border-spacing: 0; }
 
@@ -246,15 +245,16 @@ th {
     border-top-color: #000 !important; }
   .label {
     border: 1px solid #000; }
-  .table {
+  .table, table.collection, table.flexible,
+  .generaltable {
     border-collapse: collapse !important; }
-    .table td,
-    .table th {
+    .table td, table.collection td, table.flexible td,
+    .generaltable td,
+    .table th, table.collection th, table.flexible th,
+    .generaltable th {
       background-color: #fff !important; }
   .table-bordered th, table.collection th,
-  .collection.generaltable th,
-  .table-bordered td, table.collection td,
-  .collection.generaltable td {
+  .table-bordered td, table.collection td {
     border: 1px solid #ddd !important; } }
 
 html {
@@ -370,8 +370,7 @@ summary,
 textarea {
   touch-action: manipulation; }
 
-table, table.collection, table.flexible,
-.generaltable {
+table {
   background-color: transparent; }
 
 caption {
@@ -1261,78 +1260,75 @@ pre {
   .col-xl-offset-12 {
     margin-left: 100%; } }
 
-.table {
+.table, table.collection, table.flexible,
+.generaltable {
   width: 100%;
   max-width: 100%;
   margin-bottom: 1rem; }
-  .table th,
-  .table td {
+  .table th, table.collection th, table.flexible th,
+  .generaltable th,
+  .table td, table.collection td, table.flexible td,
+  .generaltable td {
     padding: 0.75rem;
     line-height: 1.5;
     vertical-align: top;
     border-top: 1px solid #eceeef; }
-  .table thead th {
+  .table thead th, table.collection thead th, table.flexible thead th,
+  .generaltable thead th {
     vertical-align: bottom;
     border-bottom: 2px solid #eceeef; }
-  .table tbody + tbody {
+  .table tbody + tbody, table.collection tbody + tbody, table.flexible tbody + tbody,
+  .generaltable tbody + tbody {
     border-top: 2px solid #eceeef; }
-  .table .table {
+  .table .table, table.collection .table, table.flexible .table,
+  .generaltable .table, .table table.collection, table.collection table.collection, table.flexible table.collection,
+  .generaltable table.collection, .table table.flexible, table.collection table.flexible, table.flexible table.flexible,
+  .generaltable table.flexible, .table
+  .generaltable, table.collection
+  .generaltable, table.flexible
+  .generaltable,
+  .generaltable
+  .generaltable {
     background-color: #fff; }
 
 .table-sm th, #page-report-loglive-index .generaltable th,
 #page-admin-report-log-index .generaltable th,
 #page-report-log-user .generaltable th,
 #page-admin-user table th,
-#page-admin-user
-.generaltable th,
 .environmenttable th,
 .category_subcategories th,
 .rcs-results th,
 table#listdirectories th,
-#listdirectories.generaltable th,
 .table-sm td, #page-report-loglive-index .generaltable td,
 #page-admin-report-log-index .generaltable td,
 #page-report-log-user .generaltable td,
 #page-admin-user table td,
-#page-admin-user
-.generaltable td,
 .environmenttable td,
 .category_subcategories td,
 .rcs-results td,
-table#listdirectories td,
-#listdirectories.generaltable td {
+table#listdirectories td {
   padding: 0.3rem; }
 
-.table-bordered, table.collection,
-.collection.generaltable {
+.table-bordered, table.collection {
   border: 1px solid #eceeef; }
   .table-bordered th, table.collection th,
-  .collection.generaltable th,
-  .table-bordered td, table.collection td,
-  .collection.generaltable td {
+  .table-bordered td, table.collection td {
     border: 1px solid #eceeef; }
   .table-bordered thead th, table.collection thead th,
-  .collection.generaltable thead th,
-  .table-bordered thead td, table.collection thead td,
-  .collection.generaltable thead td {
+  .table-bordered thead td, table.collection thead td {
     border-bottom-width: 2px; }
 
 .table-striped tbody tr:nth-of-type(odd), table.collection tbody tr:nth-of-type(odd), table#explaincaps tbody tr:nth-of-type(odd),
-#explaincaps.generaltable tbody tr:nth-of-type(odd),
 table#defineroletable tbody tr:nth-of-type(odd),
-#defineroletable.generaltable tbody tr:nth-of-type(odd),
 table.grading-report tbody tr:nth-of-type(odd),
 table#listdirectories tbody tr:nth-of-type(odd),
-#listdirectories.generaltable tbody tr:nth-of-type(odd),
 table.rolecaps tbody tr:nth-of-type(odd),
 table.userenrolment tbody tr:nth-of-type(odd),
 table#form tbody tr:nth-of-type(odd),
-#form.generaltable tbody tr:nth-of-type(odd),
 form#movecourses table tbody tr:nth-of-type(odd),
-form#movecourses
-.generaltable tbody tr:nth-of-type(odd),
 #page-admin-course-index .editcourse tbody tr:nth-of-type(odd),
-.forumheaderlist tbody tr:nth-of-type(odd), table.flexible tbody tr:nth-of-type(odd),
+.forumheaderlist tbody tr:nth-of-type(odd),
+table.flexible tbody tr:nth-of-type(odd),
 .generaltable tbody tr:nth-of-type(odd) {
   background-color: #f9f9f9; }
 
@@ -1340,12 +1336,11 @@ form#movecourses
 .user-enroller-panel .uep-search-results .cohorts tbody tr:hover,
 table.grading-report tbody tr:hover,
 .forumheaderlist tbody tr:hover,
-.generaltable tbody tr:hover, table.flexible tbody tr:hover,
+.generaltable tbody tr:hover,
+table.flexible tbody tr:hover,
 .category_subcategories tbody tr:hover,
 table#modules tbody tr:hover,
-#modules.generaltable tbody tr:hover,
-table#permissions tbody tr:hover,
-#permissions.generaltable tbody tr:hover {
+table#permissions tbody tr:hover {
   background-color: #f5f5f5; }
 
 .table-active,
@@ -1357,33 +1352,30 @@ table#permissions tbody tr:hover,
 .user-enroller-panel .uep-search-results .cohorts .table-active:hover,
 table.grading-report .table-active:hover,
 .forumheaderlist .table-active:hover,
-.generaltable .table-active:hover, table.flexible .table-active:hover,
+.generaltable .table-active:hover,
+table.flexible .table-active:hover,
 .category_subcategories .table-active:hover,
 table#modules .table-active:hover,
-#modules.generaltable .table-active:hover,
-table#permissions .table-active:hover,
-#permissions.generaltable .table-active:hover {
+table#permissions .table-active:hover {
   background-color: #e8e8e8; }
   .table-hover .table-active:hover > td, #page-admin-roles-define .capdefault .table-active:hover > td, .user-enroller-panel .uep-search-results .users .table-active:hover > td,
   .user-enroller-panel .uep-search-results .cohorts .table-active:hover > td,
   table.grading-report .table-active:hover > td,
   .forumheaderlist .table-active:hover > td,
-  .generaltable .table-active:hover > td, table.flexible .table-active:hover > td,
+  .generaltable .table-active:hover > td,
+  table.flexible .table-active:hover > td,
   .category_subcategories .table-active:hover > td,
   table#modules .table-active:hover > td,
-  #modules.generaltable .table-active:hover > td,
   table#permissions .table-active:hover > td,
-  #permissions.generaltable .table-active:hover > td,
   .table-hover .table-active:hover > th, #page-admin-roles-define .capdefault .table-active:hover > th, .user-enroller-panel .uep-search-results .users .table-active:hover > th,
   .user-enroller-panel .uep-search-results .cohorts .table-active:hover > th,
   table.grading-report .table-active:hover > th,
   .forumheaderlist .table-active:hover > th,
-  .generaltable .table-active:hover > th, table.flexible .table-active:hover > th,
+  .generaltable .table-active:hover > th,
+  table.flexible .table-active:hover > th,
   .category_subcategories .table-active:hover > th,
   table#modules .table-active:hover > th,
-  #modules.generaltable .table-active:hover > th,
-  table#permissions .table-active:hover > th,
-  #permissions.generaltable .table-active:hover > th {
+  table#permissions .table-active:hover > th {
     background-color: #e8e8e8; }
 
 .table-success, .environmenttable .ok,
@@ -1395,12 +1387,11 @@ table#permissions .table-active:hover,
 .user-enroller-panel .uep-search-results .cohorts .table-success:hover,
 table.grading-report .table-success:hover,
 .forumheaderlist .table-success:hover,
-.generaltable .table-success:hover, table.flexible .table-success:hover,
+.generaltable .table-success:hover,
+table.flexible .table-success:hover,
 .category_subcategories .table-success:hover,
 table#modules .table-success:hover,
-#modules.generaltable .table-success:hover,
-table#permissions .table-success:hover,
-#permissions.generaltable .table-success:hover, .table-hover .environmenttable .ok:hover, .environmenttable .table-hover .ok:hover, #page-admin-roles-define .capdefault .environmenttable .ok:hover, .environmenttable #page-admin-roles-define .capdefault .ok:hover, .user-enroller-panel .uep-search-results .users .environmenttable .ok:hover, .environmenttable .user-enroller-panel .uep-search-results .users .ok:hover,
+table#permissions .table-success:hover, .table-hover .environmenttable .ok:hover, .environmenttable .table-hover .ok:hover, #page-admin-roles-define .capdefault .environmenttable .ok:hover, .environmenttable #page-admin-roles-define .capdefault .ok:hover, .user-enroller-panel .uep-search-results .users .environmenttable .ok:hover, .environmenttable .user-enroller-panel .uep-search-results .users .ok:hover,
 .user-enroller-panel .uep-search-results .cohorts .environmenttable .ok:hover, .environmenttable
 .user-enroller-panel .uep-search-results .cohorts .ok:hover,
 table.grading-report .environmenttable .ok:hover, .environmenttable
@@ -1408,28 +1399,25 @@ table.grading-report .ok:hover,
 .forumheaderlist .environmenttable .ok:hover, .environmenttable
 .forumheaderlist .ok:hover,
 .generaltable .environmenttable .ok:hover, .environmenttable
-.generaltable .ok:hover, table.flexible .environmenttable .ok:hover, .environmenttable table.flexible .ok:hover,
+.generaltable .ok:hover,
+table.flexible .environmenttable .ok:hover, .environmenttable
+table.flexible .ok:hover,
 .category_subcategories .environmenttable .ok:hover, .environmenttable
 .category_subcategories .ok:hover,
 table#modules .environmenttable .ok:hover, .environmenttable
 table#modules .ok:hover,
-#modules.generaltable .environmenttable .ok:hover, .environmenttable
-#modules.generaltable .ok:hover,
 table#permissions .environmenttable .ok:hover, .environmenttable
-table#permissions .ok:hover,
-#permissions.generaltable .environmenttable .ok:hover, .environmenttable
-#permissions.generaltable .ok:hover {
+table#permissions .ok:hover {
   background-color: #d0e9c6; }
   .table-hover .table-success:hover > td, #page-admin-roles-define .capdefault .table-success:hover > td, .user-enroller-panel .uep-search-results .users .table-success:hover > td,
   .user-enroller-panel .uep-search-results .cohorts .table-success:hover > td,
   table.grading-report .table-success:hover > td,
   .forumheaderlist .table-success:hover > td,
-  .generaltable .table-success:hover > td, table.flexible .table-success:hover > td,
+  .generaltable .table-success:hover > td,
+  table.flexible .table-success:hover > td,
   .category_subcategories .table-success:hover > td,
   table#modules .table-success:hover > td,
-  #modules.generaltable .table-success:hover > td,
-  table#permissions .table-success:hover > td,
-  #permissions.generaltable .table-success:hover > td, .table-hover .environmenttable .ok:hover > td, .environmenttable .table-hover .ok:hover > td, #page-admin-roles-define .capdefault .environmenttable .ok:hover > td, .environmenttable #page-admin-roles-define .capdefault .ok:hover > td, .user-enroller-panel .uep-search-results .users .environmenttable .ok:hover > td, .environmenttable .user-enroller-panel .uep-search-results .users .ok:hover > td,
+  table#permissions .table-success:hover > td, .table-hover .environmenttable .ok:hover > td, .environmenttable .table-hover .ok:hover > td, #page-admin-roles-define .capdefault .environmenttable .ok:hover > td, .environmenttable #page-admin-roles-define .capdefault .ok:hover > td, .user-enroller-panel .uep-search-results .users .environmenttable .ok:hover > td, .environmenttable .user-enroller-panel .uep-search-results .users .ok:hover > td,
   .user-enroller-panel .uep-search-results .cohorts .environmenttable .ok:hover > td, .environmenttable
   .user-enroller-panel .uep-search-results .cohorts .ok:hover > td,
   table.grading-report .environmenttable .ok:hover > td, .environmenttable
@@ -1437,27 +1425,24 @@ table#permissions .ok:hover,
   .forumheaderlist .environmenttable .ok:hover > td, .environmenttable
   .forumheaderlist .ok:hover > td,
   .generaltable .environmenttable .ok:hover > td, .environmenttable
-  .generaltable .ok:hover > td, table.flexible .environmenttable .ok:hover > td, .environmenttable table.flexible .ok:hover > td,
+  .generaltable .ok:hover > td,
+  table.flexible .environmenttable .ok:hover > td, .environmenttable
+  table.flexible .ok:hover > td,
   .category_subcategories .environmenttable .ok:hover > td, .environmenttable
   .category_subcategories .ok:hover > td,
   table#modules .environmenttable .ok:hover > td, .environmenttable
   table#modules .ok:hover > td,
-  #modules.generaltable .environmenttable .ok:hover > td, .environmenttable
-  #modules.generaltable .ok:hover > td,
   table#permissions .environmenttable .ok:hover > td, .environmenttable
   table#permissions .ok:hover > td,
-  #permissions.generaltable .environmenttable .ok:hover > td, .environmenttable
-  #permissions.generaltable .ok:hover > td,
   .table-hover .table-success:hover > th, #page-admin-roles-define .capdefault .table-success:hover > th, .user-enroller-panel .uep-search-results .users .table-success:hover > th,
   .user-enroller-panel .uep-search-results .cohorts .table-success:hover > th,
   table.grading-report .table-success:hover > th,
   .forumheaderlist .table-success:hover > th,
-  .generaltable .table-success:hover > th, table.flexible .table-success:hover > th,
+  .generaltable .table-success:hover > th,
+  table.flexible .table-success:hover > th,
   .category_subcategories .table-success:hover > th,
   table#modules .table-success:hover > th,
-  #modules.generaltable .table-success:hover > th,
   table#permissions .table-success:hover > th,
-  #permissions.generaltable .table-success:hover > th,
   .table-hover .environmenttable .ok:hover > th, .environmenttable
   .table-hover .ok:hover > th, #page-admin-roles-define .capdefault .environmenttable .ok:hover > th, .environmenttable #page-admin-roles-define .capdefault .ok:hover > th, .user-enroller-panel .uep-search-results .users .environmenttable .ok:hover > th, .environmenttable .user-enroller-panel .uep-search-results .users .ok:hover > th,
   .user-enroller-panel .uep-search-results .cohorts .environmenttable .ok:hover > th, .environmenttable
@@ -1467,17 +1452,15 @@ table#permissions .ok:hover,
   .forumheaderlist .environmenttable .ok:hover > th, .environmenttable
   .forumheaderlist .ok:hover > th,
   .generaltable .environmenttable .ok:hover > th, .environmenttable
-  .generaltable .ok:hover > th, table.flexible .environmenttable .ok:hover > th, .environmenttable table.flexible .ok:hover > th,
+  .generaltable .ok:hover > th,
+  table.flexible .environmenttable .ok:hover > th, .environmenttable
+  table.flexible .ok:hover > th,
   .category_subcategories .environmenttable .ok:hover > th, .environmenttable
   .category_subcategories .ok:hover > th,
   table#modules .environmenttable .ok:hover > th, .environmenttable
   table#modules .ok:hover > th,
-  #modules.generaltable .environmenttable .ok:hover > th, .environmenttable
-  #modules.generaltable .ok:hover > th,
   table#permissions .environmenttable .ok:hover > th, .environmenttable
-  table#permissions .ok:hover > th,
-  #permissions.generaltable .environmenttable .ok:hover > th, .environmenttable
-  #permissions.generaltable .ok:hover > th {
+  table#permissions .ok:hover > th {
     background-color: #d0e9c6; }
 
 .table-info, #plugins-check-page .pluginupdateinfo, #plugins-control-panel .pluginupdateinfo,
@@ -1489,12 +1472,11 @@ table#permissions .ok:hover,
 .user-enroller-panel .uep-search-results .cohorts .table-info:hover,
 table.grading-report .table-info:hover,
 .forumheaderlist .table-info:hover,
-.generaltable .table-info:hover, table.flexible .table-info:hover,
+.generaltable .table-info:hover,
+table.flexible .table-info:hover,
 .category_subcategories .table-info:hover,
 table#modules .table-info:hover,
-#modules.generaltable .table-info:hover,
-table#permissions .table-info:hover,
-#permissions.generaltable .table-info:hover, .table-hover #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page .table-hover .pluginupdateinfo:hover, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo:hover, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo:hover,
+table#permissions .table-info:hover, .table-hover #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page .table-hover .pluginupdateinfo:hover, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo:hover, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo:hover,
 .user-enroller-panel .uep-search-results .cohorts #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page
 .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo:hover,
 table.grading-report #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page
@@ -1502,7 +1484,9 @@ table.grading-report .pluginupdateinfo:hover,
 .forumheaderlist #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page
 .forumheaderlist .pluginupdateinfo:hover,
 .generaltable #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page
-.generaltable .pluginupdateinfo:hover, table.flexible #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page table.flexible .pluginupdateinfo:hover,
+.generaltable .pluginupdateinfo:hover,
+table.flexible #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page
+table.flexible .pluginupdateinfo:hover,
 .category_subcategories #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page
 .category_subcategories .pluginupdateinfo:hover,
 table#modules #plugins-check-page .pluginupdateinfo:hover, #plugins-check-page
@@ -1516,7 +1500,9 @@ table.grading-report .pluginupdateinfo:hover,
 .forumheaderlist #plugins-control-panel .pluginupdateinfo:hover, #plugins-control-panel
 .forumheaderlist .pluginupdateinfo:hover,
 .generaltable #plugins-control-panel .pluginupdateinfo:hover, #plugins-control-panel
-.generaltable .pluginupdateinfo:hover, table.flexible #plugins-control-panel .pluginupdateinfo:hover, #plugins-control-panel table.flexible .pluginupdateinfo:hover,
+.generaltable .pluginupdateinfo:hover,
+table.flexible #plugins-control-panel .pluginupdateinfo:hover, #plugins-control-panel
+table.flexible .pluginupdateinfo:hover,
 .category_subcategories #plugins-control-panel .pluginupdateinfo:hover, #plugins-control-panel
 .category_subcategories .pluginupdateinfo:hover,
 table#modules #plugins-control-panel .pluginupdateinfo:hover, #plugins-control-panel
@@ -1528,12 +1514,11 @@ table#permissions .pluginupdateinfo:hover {
   .user-enroller-panel .uep-search-results .cohorts .table-info:hover > td,
   table.grading-report .table-info:hover > td,
   .forumheaderlist .table-info:hover > td,
-  .generaltable .table-info:hover > td, table.flexible .table-info:hover > td,
+  .generaltable .table-info:hover > td,
+  table.flexible .table-info:hover > td,
   .category_subcategories .table-info:hover > td,
   table#modules .table-info:hover > td,
-  #modules.generaltable .table-info:hover > td,
-  table#permissions .table-info:hover > td,
-  #permissions.generaltable .table-info:hover > td, .table-hover #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page .table-hover .pluginupdateinfo:hover > td, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo:hover > td, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo:hover > td,
+  table#permissions .table-info:hover > td, .table-hover #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page .table-hover .pluginupdateinfo:hover > td, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo:hover > td, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo:hover > td,
   .user-enroller-panel .uep-search-results .cohorts #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page
   .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo:hover > td,
   table.grading-report #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page
@@ -1541,7 +1526,9 @@ table#permissions .pluginupdateinfo:hover {
   .forumheaderlist #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page
   .forumheaderlist .pluginupdateinfo:hover > td,
   .generaltable #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page
-  .generaltable .pluginupdateinfo:hover > td, table.flexible #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page table.flexible .pluginupdateinfo:hover > td,
+  .generaltable .pluginupdateinfo:hover > td,
+  table.flexible #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page
+  table.flexible .pluginupdateinfo:hover > td,
   .category_subcategories #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page
   .category_subcategories .pluginupdateinfo:hover > td,
   table#modules #plugins-check-page .pluginupdateinfo:hover > td, #plugins-check-page
@@ -1555,7 +1542,9 @@ table#permissions .pluginupdateinfo:hover {
   .forumheaderlist #plugins-control-panel .pluginupdateinfo:hover > td, #plugins-control-panel
   .forumheaderlist .pluginupdateinfo:hover > td,
   .generaltable #plugins-control-panel .pluginupdateinfo:hover > td, #plugins-control-panel
-  .generaltable .pluginupdateinfo:hover > td, table.flexible #plugins-control-panel .pluginupdateinfo:hover > td, #plugins-control-panel table.flexible .pluginupdateinfo:hover > td,
+  .generaltable .pluginupdateinfo:hover > td,
+  table.flexible #plugins-control-panel .pluginupdateinfo:hover > td, #plugins-control-panel
+  table.flexible .pluginupdateinfo:hover > td,
   .category_subcategories #plugins-control-panel .pluginupdateinfo:hover > td, #plugins-control-panel
   .category_subcategories .pluginupdateinfo:hover > td,
   table#modules #plugins-control-panel .pluginupdateinfo:hover > td, #plugins-control-panel
@@ -1566,12 +1555,11 @@ table#permissions .pluginupdateinfo:hover {
   .user-enroller-panel .uep-search-results .cohorts .table-info:hover > th,
   table.grading-report .table-info:hover > th,
   .forumheaderlist .table-info:hover > th,
-  .generaltable .table-info:hover > th, table.flexible .table-info:hover > th,
+  .generaltable .table-info:hover > th,
+  table.flexible .table-info:hover > th,
   .category_subcategories .table-info:hover > th,
   table#modules .table-info:hover > th,
-  #modules.generaltable .table-info:hover > th,
   table#permissions .table-info:hover > th,
-  #permissions.generaltable .table-info:hover > th,
   .table-hover #plugins-check-page .pluginupdateinfo:hover > th, #plugins-check-page
   .table-hover .pluginupdateinfo:hover > th, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo:hover > th, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo:hover > th, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo:hover > th, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo:hover > th,
   .user-enroller-panel .uep-search-results .cohorts #plugins-check-page .pluginupdateinfo:hover > th, #plugins-check-page
@@ -1581,7 +1569,9 @@ table#permissions .pluginupdateinfo:hover {
   .forumheaderlist #plugins-check-page .pluginupdateinfo:hover > th, #plugins-check-page
   .forumheaderlist .pluginupdateinfo:hover > th,
   .generaltable #plugins-check-page .pluginupdateinfo:hover > th, #plugins-check-page
-  .generaltable .pluginupdateinfo:hover > th, table.flexible #plugins-check-page .pluginupdateinfo:hover > th, #plugins-check-page table.flexible .pluginupdateinfo:hover > th,
+  .generaltable .pluginupdateinfo:hover > th,
+  table.flexible #plugins-check-page .pluginupdateinfo:hover > th, #plugins-check-page
+  table.flexible .pluginupdateinfo:hover > th,
   .category_subcategories #plugins-check-page .pluginupdateinfo:hover > th, #plugins-check-page
   .category_subcategories .pluginupdateinfo:hover > th,
   table#modules #plugins-check-page .pluginupdateinfo:hover > th, #plugins-check-page
@@ -1597,7 +1587,9 @@ table#permissions .pluginupdateinfo:hover {
   .forumheaderlist #plugins-control-panel .pluginupdateinfo:hover > th, #plugins-control-panel
   .forumheaderlist .pluginupdateinfo:hover > th,
   .generaltable #plugins-control-panel .pluginupdateinfo:hover > th, #plugins-control-panel
-  .generaltable .pluginupdateinfo:hover > th, table.flexible #plugins-control-panel .pluginupdateinfo:hover > th, #plugins-control-panel table.flexible .pluginupdateinfo:hover > th,
+  .generaltable .pluginupdateinfo:hover > th,
+  table.flexible #plugins-control-panel .pluginupdateinfo:hover > th, #plugins-control-panel
+  table.flexible .pluginupdateinfo:hover > th,
   .category_subcategories #plugins-control-panel .pluginupdateinfo:hover > th, #plugins-control-panel
   .category_subcategories .pluginupdateinfo:hover > th,
   table#modules #plugins-control-panel .pluginupdateinfo:hover > th, #plugins-control-panel
@@ -1614,448 +1606,331 @@ table#permissions .pluginupdateinfo:hover {
 .table-hover .table-warning:hover, #page-admin-roles-define .capdefault .table-warning:hover, .user-enroller-panel .uep-search-results .users .table-warning:hover,
 .user-enroller-panel .uep-search-results .cohorts .table-warning:hover,
 table.grading-report .table-warning:hover,
-.grading-report.generaltable .table-warning:hover,
 .forumheaderlist .table-warning:hover,
-.generaltable .table-warning:hover, table.flexible .table-warning:hover,
-.flexible.generaltable .table-warning:hover,
+.generaltable .table-warning:hover,
+table.flexible .table-warning:hover,
 .category_subcategories .table-warning:hover,
 table#modules .table-warning:hover,
-#modules.generaltable .table-warning:hover,
-table#permissions .table-warning:hover,
-#permissions.generaltable .table-warning:hover, .table-hover .environmenttable .warn:hover, .environmenttable .table-hover .warn:hover, #page-admin-roles-define .capdefault .environmenttable .warn:hover, .environmenttable #page-admin-roles-define .capdefault .warn:hover, .user-enroller-panel .uep-search-results .users .environmenttable .warn:hover, .environmenttable .user-enroller-panel .uep-search-results .users .warn:hover,
+table#permissions .table-warning:hover, .table-hover .environmenttable .warn:hover, .environmenttable .table-hover .warn:hover, #page-admin-roles-define .capdefault .environmenttable .warn:hover, .environmenttable #page-admin-roles-define .capdefault .warn:hover, .user-enroller-panel .uep-search-results .users .environmenttable .warn:hover, .environmenttable .user-enroller-panel .uep-search-results .users .warn:hover,
 .user-enroller-panel .uep-search-results .cohorts .environmenttable .warn:hover, .environmenttable
 .user-enroller-panel .uep-search-results .cohorts .warn:hover,
 table.grading-report .environmenttable .warn:hover, .environmenttable
 table.grading-report .warn:hover,
-.grading-report.generaltable .environmenttable .warn:hover, .environmenttable
-.grading-report.generaltable .warn:hover,
 .forumheaderlist .environmenttable .warn:hover, .environmenttable
 .forumheaderlist .warn:hover,
 .generaltable .environmenttable .warn:hover, .environmenttable
-.generaltable .warn:hover, table.flexible .environmenttable .warn:hover, .environmenttable table.flexible .warn:hover,
-.flexible.generaltable .environmenttable .warn:hover, .environmenttable
-.flexible.generaltable .warn:hover,
+.generaltable .warn:hover,
+table.flexible .environmenttable .warn:hover, .environmenttable
+table.flexible .warn:hover,
 .category_subcategories .environmenttable .warn:hover, .environmenttable
 .category_subcategories .warn:hover,
 table#modules .environmenttable .warn:hover, .environmenttable
 table#modules .warn:hover,
-#modules.generaltable .environmenttable .warn:hover, .environmenttable
-#modules.generaltable .warn:hover,
 table#permissions .environmenttable .warn:hover, .environmenttable
-table#permissions .warn:hover,
-#permissions.generaltable .environmenttable .warn:hover, .environmenttable
-#permissions.generaltable .warn:hover, .table-hover #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing .table-hover td:hover, #page-admin-roles-define .capdefault #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing #page-admin-roles-define .capdefault td:hover, .user-enroller-panel .uep-search-results .users #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing .user-enroller-panel .uep-search-results .users td:hover,
+table#permissions .warn:hover, .table-hover #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing .table-hover td:hover, #page-admin-roles-define .capdefault #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing #page-admin-roles-define .capdefault td:hover, .user-enroller-panel .uep-search-results .users #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing .user-enroller-panel .uep-search-results .users td:hover,
 .user-enroller-panel .uep-search-results .cohorts #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing
 .user-enroller-panel .uep-search-results .cohorts td:hover,
 table.grading-report #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing
 table.grading-report td:hover,
-.grading-report.generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing
-.grading-report.generaltable td:hover,
 .forumheaderlist #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing
 .forumheaderlist td:hover,
 .generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing
-.generaltable td:hover, table.flexible #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing table.flexible td:hover,
-.flexible.generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing
-.flexible.generaltable td:hover,
+.generaltable td:hover,
+table.flexible #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing
+table.flexible td:hover,
 .category_subcategories #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing
 .category_subcategories td:hover,
 table#modules #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing
 table#modules td:hover,
-#modules.generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing
-#modules.generaltable td:hover,
 table#permissions #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing
-table#permissions td:hover,
-#permissions.generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover, #page-admin-plugins #plugins-control-panel .status-missing
-#permissions.generaltable td:hover, .table-hover #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page .table-hover .pluginupdateinfo.maturity100:hover, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo.maturity100:hover, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity100:hover,
+table#permissions td:hover, .table-hover #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page .table-hover .pluginupdateinfo.maturity100:hover, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo.maturity100:hover, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity100:hover,
 .user-enroller-panel .uep-search-results .cohorts #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page
 .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo.maturity100:hover,
 table.grading-report #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page
 table.grading-report .pluginupdateinfo.maturity100:hover,
-.grading-report.generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page
-.grading-report.generaltable .pluginupdateinfo.maturity100:hover,
 .forumheaderlist #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page
 .forumheaderlist .pluginupdateinfo.maturity100:hover,
 .generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page
-.generaltable .pluginupdateinfo.maturity100:hover, table.flexible #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page table.flexible .pluginupdateinfo.maturity100:hover,
-.flexible.generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page
-.flexible.generaltable .pluginupdateinfo.maturity100:hover,
+.generaltable .pluginupdateinfo.maturity100:hover,
+table.flexible #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page
+table.flexible .pluginupdateinfo.maturity100:hover,
 .category_subcategories #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page
 .category_subcategories .pluginupdateinfo.maturity100:hover,
 table#modules #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page
 table#modules .pluginupdateinfo.maturity100:hover,
-#modules.generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page
-#modules.generaltable .pluginupdateinfo.maturity100:hover,
 table#permissions #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page
-table#permissions .pluginupdateinfo.maturity100:hover,
-#permissions.generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover, #plugins-check-page
-#permissions.generaltable .pluginupdateinfo.maturity100:hover, .table-hover #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page .table-hover .pluginupdateinfo.maturity150:hover, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo.maturity150:hover, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity150:hover,
+table#permissions .pluginupdateinfo.maturity100:hover, .table-hover #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page .table-hover .pluginupdateinfo.maturity150:hover, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo.maturity150:hover, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity150:hover,
 .user-enroller-panel .uep-search-results .cohorts #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page
 .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo.maturity150:hover,
 table.grading-report #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page
 table.grading-report .pluginupdateinfo.maturity150:hover,
-.grading-report.generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page
-.grading-report.generaltable .pluginupdateinfo.maturity150:hover,
 .forumheaderlist #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page
 .forumheaderlist .pluginupdateinfo.maturity150:hover,
 .generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page
-.generaltable .pluginupdateinfo.maturity150:hover, table.flexible #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page table.flexible .pluginupdateinfo.maturity150:hover,
-.flexible.generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page
-.flexible.generaltable .pluginupdateinfo.maturity150:hover,
+.generaltable .pluginupdateinfo.maturity150:hover,
+table.flexible #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page
+table.flexible .pluginupdateinfo.maturity150:hover,
 .category_subcategories #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page
 .category_subcategories .pluginupdateinfo.maturity150:hover,
 table#modules #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page
 table#modules .pluginupdateinfo.maturity150:hover,
-#modules.generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page
-#modules.generaltable .pluginupdateinfo.maturity150:hover,
 table#permissions #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page
-table#permissions .pluginupdateinfo.maturity150:hover,
-#permissions.generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover, #plugins-check-page
-#permissions.generaltable .pluginupdateinfo.maturity150:hover, .table-hover #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel .table-hover .pluginupdateinfo.maturity100:hover, #page-admin-roles-define .capdefault #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel #page-admin-roles-define .capdefault .pluginupdateinfo.maturity100:hover, .user-enroller-panel .uep-search-results .users #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity100:hover,
+table#permissions .pluginupdateinfo.maturity150:hover, .table-hover #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel .table-hover .pluginupdateinfo.maturity100:hover, #page-admin-roles-define .capdefault #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel #page-admin-roles-define .capdefault .pluginupdateinfo.maturity100:hover, .user-enroller-panel .uep-search-results .users #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity100:hover,
 .user-enroller-panel .uep-search-results .cohorts #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel
 .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo.maturity100:hover,
 table.grading-report #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel
 table.grading-report .pluginupdateinfo.maturity100:hover,
-.grading-report.generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel
-.grading-report.generaltable .pluginupdateinfo.maturity100:hover,
 .forumheaderlist #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel
 .forumheaderlist .pluginupdateinfo.maturity100:hover,
 .generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel
-.generaltable .pluginupdateinfo.maturity100:hover, table.flexible #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel table.flexible .pluginupdateinfo.maturity100:hover,
-.flexible.generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel
-.flexible.generaltable .pluginupdateinfo.maturity100:hover,
+.generaltable .pluginupdateinfo.maturity100:hover,
+table.flexible #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel
+table.flexible .pluginupdateinfo.maturity100:hover,
 .category_subcategories #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel
 .category_subcategories .pluginupdateinfo.maturity100:hover,
 table#modules #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel
 table#modules .pluginupdateinfo.maturity100:hover,
-#modules.generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel
-#modules.generaltable .pluginupdateinfo.maturity100:hover,
 table#permissions #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel
-table#permissions .pluginupdateinfo.maturity100:hover,
-#permissions.generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover, #plugins-control-panel
-#permissions.generaltable .pluginupdateinfo.maturity100:hover, .table-hover #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel .table-hover .pluginupdateinfo.maturity150:hover, #page-admin-roles-define .capdefault #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel #page-admin-roles-define .capdefault .pluginupdateinfo.maturity150:hover, .user-enroller-panel .uep-search-results .users #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity150:hover,
+table#permissions .pluginupdateinfo.maturity100:hover, .table-hover #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel .table-hover .pluginupdateinfo.maturity150:hover, #page-admin-roles-define .capdefault #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel #page-admin-roles-define .capdefault .pluginupdateinfo.maturity150:hover, .user-enroller-panel .uep-search-results .users #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity150:hover,
 .user-enroller-panel .uep-search-results .cohorts #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel
 .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo.maturity150:hover,
 table.grading-report #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel
 table.grading-report .pluginupdateinfo.maturity150:hover,
-.grading-report.generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel
-.grading-report.generaltable .pluginupdateinfo.maturity150:hover,
 .forumheaderlist #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel
 .forumheaderlist .pluginupdateinfo.maturity150:hover,
 .generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel
-.generaltable .pluginupdateinfo.maturity150:hover, table.flexible #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel table.flexible .pluginupdateinfo.maturity150:hover,
-.flexible.generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel
-.flexible.generaltable .pluginupdateinfo.maturity150:hover,
+.generaltable .pluginupdateinfo.maturity150:hover,
+table.flexible #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel
+table.flexible .pluginupdateinfo.maturity150:hover,
 .category_subcategories #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel
 .category_subcategories .pluginupdateinfo.maturity150:hover,
 table#modules #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel
 table#modules .pluginupdateinfo.maturity150:hover,
-#modules.generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel
-#modules.generaltable .pluginupdateinfo.maturity150:hover,
 table#permissions #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel
-table#permissions .pluginupdateinfo.maturity150:hover,
-#permissions.generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover, #plugins-control-panel
-#permissions.generaltable .pluginupdateinfo.maturity150:hover {
+table#permissions .pluginupdateinfo.maturity150:hover {
   background-color: #faf2cc; }
   .table-hover .table-warning:hover > td, #page-admin-roles-define .capdefault .table-warning:hover > td, .user-enroller-panel .uep-search-results .users .table-warning:hover > td,
   .user-enroller-panel .uep-search-results .cohorts .table-warning:hover > td,
   table.grading-report .table-warning:hover > td,
-  .grading-report.generaltable .table-warning:hover > td,
   .forumheaderlist .table-warning:hover > td,
-  .generaltable .table-warning:hover > td, table.flexible .table-warning:hover > td,
-  .flexible.generaltable .table-warning:hover > td,
+  .generaltable .table-warning:hover > td,
+  table.flexible .table-warning:hover > td,
   .category_subcategories .table-warning:hover > td,
   table#modules .table-warning:hover > td,
-  #modules.generaltable .table-warning:hover > td,
-  table#permissions .table-warning:hover > td,
-  #permissions.generaltable .table-warning:hover > td, .table-hover .environmenttable .warn:hover > td, .environmenttable .table-hover .warn:hover > td, #page-admin-roles-define .capdefault .environmenttable .warn:hover > td, .environmenttable #page-admin-roles-define .capdefault .warn:hover > td, .user-enroller-panel .uep-search-results .users .environmenttable .warn:hover > td, .environmenttable .user-enroller-panel .uep-search-results .users .warn:hover > td,
+  table#permissions .table-warning:hover > td, .table-hover .environmenttable .warn:hover > td, .environmenttable .table-hover .warn:hover > td, #page-admin-roles-define .capdefault .environmenttable .warn:hover > td, .environmenttable #page-admin-roles-define .capdefault .warn:hover > td, .user-enroller-panel .uep-search-results .users .environmenttable .warn:hover > td, .environmenttable .user-enroller-panel .uep-search-results .users .warn:hover > td,
   .user-enroller-panel .uep-search-results .cohorts .environmenttable .warn:hover > td, .environmenttable
   .user-enroller-panel .uep-search-results .cohorts .warn:hover > td,
   table.grading-report .environmenttable .warn:hover > td, .environmenttable
   table.grading-report .warn:hover > td,
-  .grading-report.generaltable .environmenttable .warn:hover > td, .environmenttable
-  .grading-report.generaltable .warn:hover > td,
   .forumheaderlist .environmenttable .warn:hover > td, .environmenttable
   .forumheaderlist .warn:hover > td,
   .generaltable .environmenttable .warn:hover > td, .environmenttable
-  .generaltable .warn:hover > td, table.flexible .environmenttable .warn:hover > td, .environmenttable table.flexible .warn:hover > td,
-  .flexible.generaltable .environmenttable .warn:hover > td, .environmenttable
-  .flexible.generaltable .warn:hover > td,
+  .generaltable .warn:hover > td,
+  table.flexible .environmenttable .warn:hover > td, .environmenttable
+  table.flexible .warn:hover > td,
   .category_subcategories .environmenttable .warn:hover > td, .environmenttable
   .category_subcategories .warn:hover > td,
   table#modules .environmenttable .warn:hover > td, .environmenttable
   table#modules .warn:hover > td,
-  #modules.generaltable .environmenttable .warn:hover > td, .environmenttable
-  #modules.generaltable .warn:hover > td,
   table#permissions .environmenttable .warn:hover > td, .environmenttable
-  table#permissions .warn:hover > td,
-  #permissions.generaltable .environmenttable .warn:hover > td, .environmenttable
-  #permissions.generaltable .warn:hover > td, .table-hover #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing .table-hover td:hover > td, #page-admin-roles-define .capdefault #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing #page-admin-roles-define .capdefault td:hover > td, .user-enroller-panel .uep-search-results .users #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing .user-enroller-panel .uep-search-results .users td:hover > td,
+  table#permissions .warn:hover > td, .table-hover #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing .table-hover td:hover > td, #page-admin-roles-define .capdefault #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing #page-admin-roles-define .capdefault td:hover > td, .user-enroller-panel .uep-search-results .users #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing .user-enroller-panel .uep-search-results .users td:hover > td,
   .user-enroller-panel .uep-search-results .cohorts #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing
   .user-enroller-panel .uep-search-results .cohorts td:hover > td,
   table.grading-report #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing
   table.grading-report td:hover > td,
-  .grading-report.generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing
-  .grading-report.generaltable td:hover > td,
   .forumheaderlist #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing
   .forumheaderlist td:hover > td,
   .generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing
-  .generaltable td:hover > td, table.flexible #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing table.flexible td:hover > td,
-  .flexible.generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing
-  .flexible.generaltable td:hover > td,
+  .generaltable td:hover > td,
+  table.flexible #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing
+  table.flexible td:hover > td,
   .category_subcategories #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing
   .category_subcategories td:hover > td,
   table#modules #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing
   table#modules td:hover > td,
-  #modules.generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing
-  #modules.generaltable td:hover > td,
   table#permissions #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing
-  table#permissions td:hover > td,
-  #permissions.generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover > td, #page-admin-plugins #plugins-control-panel .status-missing
-  #permissions.generaltable td:hover > td, .table-hover #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page .table-hover .pluginupdateinfo.maturity100:hover > td, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo.maturity100:hover > td, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity100:hover > td,
+  table#permissions td:hover > td, .table-hover #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page .table-hover .pluginupdateinfo.maturity100:hover > td, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo.maturity100:hover > td, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity100:hover > td,
   .user-enroller-panel .uep-search-results .cohorts #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page
   .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo.maturity100:hover > td,
   table.grading-report #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page
   table.grading-report .pluginupdateinfo.maturity100:hover > td,
-  .grading-report.generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page
-  .grading-report.generaltable .pluginupdateinfo.maturity100:hover > td,
   .forumheaderlist #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page
   .forumheaderlist .pluginupdateinfo.maturity100:hover > td,
   .generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page
-  .generaltable .pluginupdateinfo.maturity100:hover > td, table.flexible #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page table.flexible .pluginupdateinfo.maturity100:hover > td,
-  .flexible.generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page
-  .flexible.generaltable .pluginupdateinfo.maturity100:hover > td,
+  .generaltable .pluginupdateinfo.maturity100:hover > td,
+  table.flexible #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page
+  table.flexible .pluginupdateinfo.maturity100:hover > td,
   .category_subcategories #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page
   .category_subcategories .pluginupdateinfo.maturity100:hover > td,
   table#modules #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page
   table#modules .pluginupdateinfo.maturity100:hover > td,
-  #modules.generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page
-  #modules.generaltable .pluginupdateinfo.maturity100:hover > td,
   table#permissions #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page
-  table#permissions .pluginupdateinfo.maturity100:hover > td,
-  #permissions.generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover > td, #plugins-check-page
-  #permissions.generaltable .pluginupdateinfo.maturity100:hover > td, .table-hover #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page .table-hover .pluginupdateinfo.maturity150:hover > td, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo.maturity150:hover > td, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity150:hover > td,
+  table#permissions .pluginupdateinfo.maturity100:hover > td, .table-hover #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page .table-hover .pluginupdateinfo.maturity150:hover > td, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo.maturity150:hover > td, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity150:hover > td,
   .user-enroller-panel .uep-search-results .cohorts #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page
   .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo.maturity150:hover > td,
   table.grading-report #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page
   table.grading-report .pluginupdateinfo.maturity150:hover > td,
-  .grading-report.generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page
-  .grading-report.generaltable .pluginupdateinfo.maturity150:hover > td,
   .forumheaderlist #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page
   .forumheaderlist .pluginupdateinfo.maturity150:hover > td,
   .generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page
-  .generaltable .pluginupdateinfo.maturity150:hover > td, table.flexible #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page table.flexible .pluginupdateinfo.maturity150:hover > td,
-  .flexible.generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page
-  .flexible.generaltable .pluginupdateinfo.maturity150:hover > td,
+  .generaltable .pluginupdateinfo.maturity150:hover > td,
+  table.flexible #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page
+  table.flexible .pluginupdateinfo.maturity150:hover > td,
   .category_subcategories #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page
   .category_subcategories .pluginupdateinfo.maturity150:hover > td,
   table#modules #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page
   table#modules .pluginupdateinfo.maturity150:hover > td,
-  #modules.generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page
-  #modules.generaltable .pluginupdateinfo.maturity150:hover > td,
   table#permissions #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page
-  table#permissions .pluginupdateinfo.maturity150:hover > td,
-  #permissions.generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover > td, #plugins-check-page
-  #permissions.generaltable .pluginupdateinfo.maturity150:hover > td, .table-hover #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel .table-hover .pluginupdateinfo.maturity100:hover > td, #page-admin-roles-define .capdefault #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel #page-admin-roles-define .capdefault .pluginupdateinfo.maturity100:hover > td, .user-enroller-panel .uep-search-results .users #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity100:hover > td,
+  table#permissions .pluginupdateinfo.maturity150:hover > td, .table-hover #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel .table-hover .pluginupdateinfo.maturity100:hover > td, #page-admin-roles-define .capdefault #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel #page-admin-roles-define .capdefault .pluginupdateinfo.maturity100:hover > td, .user-enroller-panel .uep-search-results .users #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity100:hover > td,
   .user-enroller-panel .uep-search-results .cohorts #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel
   .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo.maturity100:hover > td,
   table.grading-report #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel
   table.grading-report .pluginupdateinfo.maturity100:hover > td,
-  .grading-report.generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel
-  .grading-report.generaltable .pluginupdateinfo.maturity100:hover > td,
   .forumheaderlist #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel
   .forumheaderlist .pluginupdateinfo.maturity100:hover > td,
   .generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel
-  .generaltable .pluginupdateinfo.maturity100:hover > td, table.flexible #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel table.flexible .pluginupdateinfo.maturity100:hover > td,
-  .flexible.generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel
-  .flexible.generaltable .pluginupdateinfo.maturity100:hover > td,
+  .generaltable .pluginupdateinfo.maturity100:hover > td,
+  table.flexible #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel
+  table.flexible .pluginupdateinfo.maturity100:hover > td,
   .category_subcategories #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel
   .category_subcategories .pluginupdateinfo.maturity100:hover > td,
   table#modules #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel
   table#modules .pluginupdateinfo.maturity100:hover > td,
-  #modules.generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel
-  #modules.generaltable .pluginupdateinfo.maturity100:hover > td,
   table#permissions #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel
-  table#permissions .pluginupdateinfo.maturity100:hover > td,
-  #permissions.generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover > td, #plugins-control-panel
-  #permissions.generaltable .pluginupdateinfo.maturity100:hover > td, .table-hover #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel .table-hover .pluginupdateinfo.maturity150:hover > td, #page-admin-roles-define .capdefault #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel #page-admin-roles-define .capdefault .pluginupdateinfo.maturity150:hover > td, .user-enroller-panel .uep-search-results .users #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity150:hover > td,
+  table#permissions .pluginupdateinfo.maturity100:hover > td, .table-hover #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel .table-hover .pluginupdateinfo.maturity150:hover > td, #page-admin-roles-define .capdefault #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel #page-admin-roles-define .capdefault .pluginupdateinfo.maturity150:hover > td, .user-enroller-panel .uep-search-results .users #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity150:hover > td,
   .user-enroller-panel .uep-search-results .cohorts #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel
   .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo.maturity150:hover > td,
   table.grading-report #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel
   table.grading-report .pluginupdateinfo.maturity150:hover > td,
-  .grading-report.generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel
-  .grading-report.generaltable .pluginupdateinfo.maturity150:hover > td,
   .forumheaderlist #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel
   .forumheaderlist .pluginupdateinfo.maturity150:hover > td,
   .generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel
-  .generaltable .pluginupdateinfo.maturity150:hover > td, table.flexible #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel table.flexible .pluginupdateinfo.maturity150:hover > td,
-  .flexible.generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel
-  .flexible.generaltable .pluginupdateinfo.maturity150:hover > td,
+  .generaltable .pluginupdateinfo.maturity150:hover > td,
+  table.flexible #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel
+  table.flexible .pluginupdateinfo.maturity150:hover > td,
   .category_subcategories #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel
   .category_subcategories .pluginupdateinfo.maturity150:hover > td,
   table#modules #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel
   table#modules .pluginupdateinfo.maturity150:hover > td,
-  #modules.generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel
-  #modules.generaltable .pluginupdateinfo.maturity150:hover > td,
   table#permissions #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel
   table#permissions .pluginupdateinfo.maturity150:hover > td,
-  #permissions.generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover > td, #plugins-control-panel
-  #permissions.generaltable .pluginupdateinfo.maturity150:hover > td,
   .table-hover .table-warning:hover > th, #page-admin-roles-define .capdefault .table-warning:hover > th, .user-enroller-panel .uep-search-results .users .table-warning:hover > th,
   .user-enroller-panel .uep-search-results .cohorts .table-warning:hover > th,
   table.grading-report .table-warning:hover > th,
-  .grading-report.generaltable .table-warning:hover > th,
   .forumheaderlist .table-warning:hover > th,
-  .generaltable .table-warning:hover > th, table.flexible .table-warning:hover > th,
-  .flexible.generaltable .table-warning:hover > th,
+  .generaltable .table-warning:hover > th,
+  table.flexible .table-warning:hover > th,
   .category_subcategories .table-warning:hover > th,
   table#modules .table-warning:hover > th,
-  #modules.generaltable .table-warning:hover > th,
   table#permissions .table-warning:hover > th,
-  #permissions.generaltable .table-warning:hover > th,
   .table-hover .environmenttable .warn:hover > th, .environmenttable
   .table-hover .warn:hover > th, #page-admin-roles-define .capdefault .environmenttable .warn:hover > th, .environmenttable #page-admin-roles-define .capdefault .warn:hover > th, .user-enroller-panel .uep-search-results .users .environmenttable .warn:hover > th, .environmenttable .user-enroller-panel .uep-search-results .users .warn:hover > th,
   .user-enroller-panel .uep-search-results .cohorts .environmenttable .warn:hover > th, .environmenttable
   .user-enroller-panel .uep-search-results .cohorts .warn:hover > th,
   table.grading-report .environmenttable .warn:hover > th, .environmenttable
   table.grading-report .warn:hover > th,
-  .grading-report.generaltable .environmenttable .warn:hover > th, .environmenttable
-  .grading-report.generaltable .warn:hover > th,
   .forumheaderlist .environmenttable .warn:hover > th, .environmenttable
   .forumheaderlist .warn:hover > th,
   .generaltable .environmenttable .warn:hover > th, .environmenttable
-  .generaltable .warn:hover > th, table.flexible .environmenttable .warn:hover > th, .environmenttable table.flexible .warn:hover > th,
-  .flexible.generaltable .environmenttable .warn:hover > th, .environmenttable
-  .flexible.generaltable .warn:hover > th,
+  .generaltable .warn:hover > th,
+  table.flexible .environmenttable .warn:hover > th, .environmenttable
+  table.flexible .warn:hover > th,
   .category_subcategories .environmenttable .warn:hover > th, .environmenttable
   .category_subcategories .warn:hover > th,
   table#modules .environmenttable .warn:hover > th, .environmenttable
   table#modules .warn:hover > th,
-  #modules.generaltable .environmenttable .warn:hover > th, .environmenttable
-  #modules.generaltable .warn:hover > th,
   table#permissions .environmenttable .warn:hover > th, .environmenttable
   table#permissions .warn:hover > th,
-  #permissions.generaltable .environmenttable .warn:hover > th, .environmenttable
-  #permissions.generaltable .warn:hover > th,
   .table-hover #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing
   .table-hover td:hover > th, #page-admin-roles-define .capdefault #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing #page-admin-roles-define .capdefault td:hover > th, .user-enroller-panel .uep-search-results .users #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing .user-enroller-panel .uep-search-results .users td:hover > th,
   .user-enroller-panel .uep-search-results .cohorts #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing
   .user-enroller-panel .uep-search-results .cohorts td:hover > th,
   table.grading-report #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing
   table.grading-report td:hover > th,
-  .grading-report.generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing
-  .grading-report.generaltable td:hover > th,
   .forumheaderlist #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing
   .forumheaderlist td:hover > th,
   .generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing
-  .generaltable td:hover > th, table.flexible #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing table.flexible td:hover > th,
-  .flexible.generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing
-  .flexible.generaltable td:hover > th,
+  .generaltable td:hover > th,
+  table.flexible #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing
+  table.flexible td:hover > th,
   .category_subcategories #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing
   .category_subcategories td:hover > th,
   table#modules #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing
   table#modules td:hover > th,
-  #modules.generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing
-  #modules.generaltable td:hover > th,
   table#permissions #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing
   table#permissions td:hover > th,
-  #permissions.generaltable #page-admin-plugins #plugins-control-panel .status-missing td:hover > th, #page-admin-plugins #plugins-control-panel .status-missing
-  #permissions.generaltable td:hover > th,
   .table-hover #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page
   .table-hover .pluginupdateinfo.maturity100:hover > th, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo.maturity100:hover > th, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity100:hover > th,
   .user-enroller-panel .uep-search-results .cohorts #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page
   .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo.maturity100:hover > th,
   table.grading-report #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page
   table.grading-report .pluginupdateinfo.maturity100:hover > th,
-  .grading-report.generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page
-  .grading-report.generaltable .pluginupdateinfo.maturity100:hover > th,
   .forumheaderlist #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page
   .forumheaderlist .pluginupdateinfo.maturity100:hover > th,
   .generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page
-  .generaltable .pluginupdateinfo.maturity100:hover > th, table.flexible #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page table.flexible .pluginupdateinfo.maturity100:hover > th,
-  .flexible.generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page
-  .flexible.generaltable .pluginupdateinfo.maturity100:hover > th,
+  .generaltable .pluginupdateinfo.maturity100:hover > th,
+  table.flexible #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page
+  table.flexible .pluginupdateinfo.maturity100:hover > th,
   .category_subcategories #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page
   .category_subcategories .pluginupdateinfo.maturity100:hover > th,
   table#modules #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page
   table#modules .pluginupdateinfo.maturity100:hover > th,
-  #modules.generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page
-  #modules.generaltable .pluginupdateinfo.maturity100:hover > th,
   table#permissions #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page
   table#permissions .pluginupdateinfo.maturity100:hover > th,
-  #permissions.generaltable #plugins-check-page .pluginupdateinfo.maturity100:hover > th, #plugins-check-page
-  #permissions.generaltable .pluginupdateinfo.maturity100:hover > th,
   .table-hover #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page
   .table-hover .pluginupdateinfo.maturity150:hover > th, #page-admin-roles-define .capdefault #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page #page-admin-roles-define .capdefault .pluginupdateinfo.maturity150:hover > th, .user-enroller-panel .uep-search-results .users #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity150:hover > th,
   .user-enroller-panel .uep-search-results .cohorts #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page
   .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo.maturity150:hover > th,
   table.grading-report #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page
   table.grading-report .pluginupdateinfo.maturity150:hover > th,
-  .grading-report.generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page
-  .grading-report.generaltable .pluginupdateinfo.maturity150:hover > th,
   .forumheaderlist #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page
   .forumheaderlist .pluginupdateinfo.maturity150:hover > th,
   .generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page
-  .generaltable .pluginupdateinfo.maturity150:hover > th, table.flexible #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page table.flexible .pluginupdateinfo.maturity150:hover > th,
-  .flexible.generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page
-  .flexible.generaltable .pluginupdateinfo.maturity150:hover > th,
+  .generaltable .pluginupdateinfo.maturity150:hover > th,
+  table.flexible #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page
+  table.flexible .pluginupdateinfo.maturity150:hover > th,
   .category_subcategories #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page
   .category_subcategories .pluginupdateinfo.maturity150:hover > th,
   table#modules #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page
   table#modules .pluginupdateinfo.maturity150:hover > th,
-  #modules.generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page
-  #modules.generaltable .pluginupdateinfo.maturity150:hover > th,
   table#permissions #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page
   table#permissions .pluginupdateinfo.maturity150:hover > th,
-  #permissions.generaltable #plugins-check-page .pluginupdateinfo.maturity150:hover > th, #plugins-check-page
-  #permissions.generaltable .pluginupdateinfo.maturity150:hover > th,
   .table-hover #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel
   .table-hover .pluginupdateinfo.maturity100:hover > th, #page-admin-roles-define .capdefault #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel #page-admin-roles-define .capdefault .pluginupdateinfo.maturity100:hover > th, .user-enroller-panel .uep-search-results .users #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity100:hover > th,
   .user-enroller-panel .uep-search-results .cohorts #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel
   .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo.maturity100:hover > th,
   table.grading-report #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel
   table.grading-report .pluginupdateinfo.maturity100:hover > th,
-  .grading-report.generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel
-  .grading-report.generaltable .pluginupdateinfo.maturity100:hover > th,
   .forumheaderlist #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel
   .forumheaderlist .pluginupdateinfo.maturity100:hover > th,
   .generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel
-  .generaltable .pluginupdateinfo.maturity100:hover > th, table.flexible #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel table.flexible .pluginupdateinfo.maturity100:hover > th,
-  .flexible.generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel
-  .flexible.generaltable .pluginupdateinfo.maturity100:hover > th,
+  .generaltable .pluginupdateinfo.maturity100:hover > th,
+  table.flexible #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel
+  table.flexible .pluginupdateinfo.maturity100:hover > th,
   .category_subcategories #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel
   .category_subcategories .pluginupdateinfo.maturity100:hover > th,
   table#modules #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel
   table#modules .pluginupdateinfo.maturity100:hover > th,
-  #modules.generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel
-  #modules.generaltable .pluginupdateinfo.maturity100:hover > th,
   table#permissions #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel
   table#permissions .pluginupdateinfo.maturity100:hover > th,
-  #permissions.generaltable #plugins-control-panel .pluginupdateinfo.maturity100:hover > th, #plugins-control-panel
-  #permissions.generaltable .pluginupdateinfo.maturity100:hover > th,
   .table-hover #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel
   .table-hover .pluginupdateinfo.maturity150:hover > th, #page-admin-roles-define .capdefault #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel #page-admin-roles-define .capdefault .pluginupdateinfo.maturity150:hover > th, .user-enroller-panel .uep-search-results .users #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel .user-enroller-panel .uep-search-results .users .pluginupdateinfo.maturity150:hover > th,
   .user-enroller-panel .uep-search-results .cohorts #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel
   .user-enroller-panel .uep-search-results .cohorts .pluginupdateinfo.maturity150:hover > th,
   table.grading-report #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel
   table.grading-report .pluginupdateinfo.maturity150:hover > th,
-  .grading-report.generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel
-  .grading-report.generaltable .pluginupdateinfo.maturity150:hover > th,
   .forumheaderlist #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel
   .forumheaderlist .pluginupdateinfo.maturity150:hover > th,
   .generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel
-  .generaltable .pluginupdateinfo.maturity150:hover > th, table.flexible #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel table.flexible .pluginupdateinfo.maturity150:hover > th,
-  .flexible.generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel
-  .flexible.generaltable .pluginupdateinfo.maturity150:hover > th,
+  .generaltable .pluginupdateinfo.maturity150:hover > th,
+  table.flexible #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel
+  table.flexible .pluginupdateinfo.maturity150:hover > th,
   .category_subcategories #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel
   .category_subcategories .pluginupdateinfo.maturity150:hover > th,
   table#modules #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel
   table#modules .pluginupdateinfo.maturity150:hover > th,
-  #modules.generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel
-  #modules.generaltable .pluginupdateinfo.maturity150:hover > th,
   table#permissions #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel
-  table#permissions .pluginupdateinfo.maturity150:hover > th,
-  #permissions.generaltable #plugins-control-panel .pluginupdateinfo.maturity150:hover > th, #plugins-control-panel
-  #permissions.generaltable .pluginupdateinfo.maturity150:hover > th {
+  table#permissions .pluginupdateinfo.maturity150:hover > th {
     background-color: #faf2cc; }
 
 .table-danger, .environmenttable .error, #plugins-check-page #plugins-check .status-missing td, #plugins-check-page #plugins-check .status-downgrade td, #plugins-check-page .pluginupdateinfo.maturity50, #plugins-control-panel .pluginupdateinfo.maturity50,
@@ -2067,12 +1942,11 @@ table#permissions .pluginupdateinfo.maturity150:hover,
 .user-enroller-panel .uep-search-results .cohorts .table-danger:hover,
 table.grading-report .table-danger:hover,
 .forumheaderlist .table-danger:hover,
-.generaltable .table-danger:hover, table.flexible .table-danger:hover,
+.generaltable .table-danger:hover,
+table.flexible .table-danger:hover,
 .category_subcategories .table-danger:hover,
 table#modules .table-danger:hover,
-#modules.generaltable .table-danger:hover,
-table#permissions .table-danger:hover,
-#permissions.generaltable .table-danger:hover, .table-hover .environmenttable .error:hover, .environmenttable .table-hover .error:hover, #page-admin-roles-define .capdefault .environmenttable .error:hover, .environmenttable #page-admin-roles-define .capdefault .error:hover, .user-enroller-panel .uep-search-results .users .environmenttable .error:hover, .environmenttable .user-enroller-panel .uep-search-results .users .error:hover,
+table#permissions .table-danger:hover, .table-hover .environmenttable .error:hover, .environmenttable .table-hover .error:hover, #page-admin-roles-define .capdefault .environmenttable .error:hover, .environmenttable #page-admin-roles-define .capdefault .error:hover, .user-enroller-panel .uep-search-results .users .environmenttable .error:hover, .environmenttable .user-enroller-panel .uep-search-results .users .error:hover,
 .user-enroller-panel .uep-search-results .cohorts .environmenttable .error:hover, .environmenttable
 .user-enroller-panel .uep-search-results .cohorts .error:hover,
 table.grading-report .environmenttable .error:hover, .environmenttable
@@ -2080,17 +1954,15 @@ table.grading-report .error:hover,
 .forumheaderlist .environmenttable .error:hover, .environmenttable
 .forumheaderlist .error:hover,
 .generaltable .environmenttable .error:hover, .environmenttable
-.generaltable .error:hover, table.flexible .environmenttable .error:hover, .environmenttable table.flexible .error:hover,
+.generaltable .error:hover,
+table.flexible .environmenttable .error:hover, .environmenttable
+table.flexible .error:hover,
 .category_subcategories .environmenttable .error:hover, .environmenttable
 .category_subcategories .error:hover,
 table#modules .environmenttable .error:hover, .environmenttable
 table#modules .error:hover,
-#modules.generaltable .environmenttable .error:hover, .environmenttable
-#modules.generaltable .error:hover,
 table#permissions .environmenttable .error:hover, .environmenttable
-table#permissions .error:hover,
-#permissions.generaltable .environmenttable .error:hover, .environmenttable
-#permissions.generaltable .error:hover, .table-hover #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing .table-hover td:hover, #page-admin-roles-define .capdefault #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing #page-admin-roles-define .capdefault td:hover, .user-enroller-panel .uep-search-results .users #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing .user-enroller-panel .uep-search-results .users td:hover,
+table#permissions .error:hover, .table-hover #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing .table-hover td:hover, #page-admin-roles-define .capdefault #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing #page-admin-roles-define .capdefault td:hover, .user-enroller-panel .uep-search-results .users #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing .user-enroller-panel .uep-search-results .users td:hover,
 .user-enroller-panel .uep-search-results .cohorts #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing
 .user-enroller-panel .uep-search-results .cohorts td:hover,
 table.grading-report #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing
@@ -2098,7 +1970,9 @@ table.grading-report td:hover,
 .forumheaderlist #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing
 .forumheaderlist td:hover,
 .generaltable #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing
-.generaltable td:hover, table.flexible #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing table.flexible td:hover,
+.generaltable td:hover,
+table.flexible #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing
+table.flexible td:hover,
 .category_subcategories #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing
 .category_subcategories td:hover,
 table#modules #plugins-check-page #plugins-check .status-missing td:hover, #plugins-check-page #plugins-check .status-missing
@@ -2112,7 +1986,9 @@ table.grading-report td:hover,
 .forumheaderlist #plugins-check-page #plugins-check .status-downgrade td:hover, #plugins-check-page #plugins-check .status-downgrade
 .forumheaderlist td:hover,
 .generaltable #plugins-check-page #plugins-check .status-downgrade td:hover, #plugins-check-page #plugins-check .status-downgrade
-.generaltable td:hover, table.flexible #plugins-check-page #plugins-check .status-downgrade td:hover, #plugins-check-page #plugins-check .status-downgrade table.flexible td:hover,
+.generaltable td:hover,
+table.flexible #plugins-check-page #plugins-check .status-downgrade td:hover, #plugins-check-page #plugins-check .status-downgrade
+table.flexible td:hover,
 .category_subcategories #plugins-check-page #plugins-check .status-downgrade td:hover, #plugins-check-page #plugins-check .status-downgrade
 .category_subcategories td:hover,
 table#modules #plugins-check-page #plugins-check .status-downgrade td:hover, #plugins-check-page #plugins-check .status-downgrade
@@ -2126,7 +2002,9 @@ table.grading-report .pluginupdateinfo.maturity50:hover,
 .forumheaderlist #plugins-check-page .pluginupdateinfo.maturity50:hover, #plugins-check-page
 .forumheaderlist .pluginupdateinfo.maturity50:hover,
 .generaltable #plugins-check-page .pluginupdateinfo.maturity50:hover, #plugins-check-page
-.generaltable .pluginupdateinfo.maturity50:hover, table.flexible #plugins-check-page .pluginupdateinfo.maturity50:hover, #plugins-check-page table.flexible .pluginupdateinfo.maturity50:hover,
+.generaltable .pluginupdateinfo.maturity50:hover,
+table.flexible #plugins-check-page .pluginupdateinfo.maturity50:hover, #plugins-check-page
+table.flexible .pluginupdateinfo.maturity50:hover,
 .category_subcategories #plugins-check-page .pluginupdateinfo.maturity50:hover, #plugins-check-page
 .category_subcategories .pluginupdateinfo.maturity50:hover,
 table#modules #plugins-check-page .pluginupdateinfo.maturity50:hover, #plugins-check-page
@@ -2140,7 +2018,9 @@ table.grading-report .pluginupdateinfo.maturity50:hover,
 .forumheaderlist #plugins-control-panel .pluginupdateinfo.maturity50:hover, #plugins-control-panel
 .forumheaderlist .pluginupdateinfo.maturity50:hover,
 .generaltable #plugins-control-panel .pluginupdateinfo.maturity50:hover, #plugins-control-panel
-.generaltable .pluginupdateinfo.maturity50:hover, table.flexible #plugins-control-panel .pluginupdateinfo.maturity50:hover, #plugins-control-panel table.flexible .pluginupdateinfo.maturity50:hover,
+.generaltable .pluginupdateinfo.maturity50:hover,
+table.flexible #plugins-control-panel .pluginupdateinfo.maturity50:hover, #plugins-control-panel
+table.flexible .pluginupdateinfo.maturity50:hover,
 .category_subcategories #plugins-control-panel .pluginupdateinfo.maturity50:hover, #plugins-control-panel
 .category_subcategories .pluginupdateinfo.maturity50:hover,
 table#modules #plugins-control-panel .pluginupdateinfo.maturity50:hover, #plugins-control-panel
@@ -2152,12 +2032,11 @@ table#permissions .pluginupdateinfo.maturity50:hover {
   .user-enroller-panel .uep-search-results .cohorts .table-danger:hover > td,
   table.grading-report .table-danger:hover > td,
   .forumheaderlist .table-danger:hover > td,
-  .generaltable .table-danger:hover > td, table.flexible .table-danger:hover > td,
+  .generaltable .table-danger:hover > td,
+  table.flexible .table-danger:hover > td,
   .category_subcategories .table-danger:hover > td,
   table#modules .table-danger:hover > td,
-  #modules.generaltable .table-danger:hover > td,
-  table#permissions .table-danger:hover > td,
-  #permissions.generaltable .table-danger:hover > td, .table-hover .environmenttable .error:hover > td, .environmenttable .table-hover .error:hover > td, #page-admin-roles-define .capdefault .environmenttable .error:hover > td, .environmenttable #page-admin-roles-define .capdefault .error:hover > td, .user-enroller-panel .uep-search-results .users .environmenttable .error:hover > td, .environmenttable .user-enroller-panel .uep-search-results .users .error:hover > td,
+  table#permissions .table-danger:hover > td, .table-hover .environmenttable .error:hover > td, .environmenttable .table-hover .error:hover > td, #page-admin-roles-define .capdefault .environmenttable .error:hover > td, .environmenttable #page-admin-roles-define .capdefault .error:hover > td, .user-enroller-panel .uep-search-results .users .environmenttable .error:hover > td, .environmenttable .user-enroller-panel .uep-search-results .users .error:hover > td,
   .user-enroller-panel .uep-search-results .cohorts .environmenttable .error:hover > td, .environmenttable
   .user-enroller-panel .uep-search-results .cohorts .error:hover > td,
   table.grading-report .environmenttable .error:hover > td, .environmenttable
@@ -2165,17 +2044,15 @@ table#permissions .pluginupdateinfo.maturity50:hover {
   .forumheaderlist .environmenttable .error:hover > td, .environmenttable
   .forumheaderlist .error:hover > td,
   .generaltable .environmenttable .error:hover > td, .environmenttable
-  .generaltable .error:hover > td, table.flexible .environmenttable .error:hover > td, .environmenttable table.flexible .error:hover > td,
+  .generaltable .error:hover > td,
+  table.flexible .environmenttable .error:hover > td, .environmenttable
+  table.flexible .error:hover > td,
   .category_subcategories .environmenttable .error:hover > td, .environmenttable
   .category_subcategories .error:hover > td,
   table#modules .environmenttable .error:hover > td, .environmenttable
   table#modules .error:hover > td,
-  #modules.generaltable .environmenttable .error:hover > td, .environmenttable
-  #modules.generaltable .error:hover > td,
   table#permissions .environmenttable .error:hover > td, .environmenttable
-  table#permissions .error:hover > td,
-  #permissions.generaltable .environmenttable .error:hover > td, .environmenttable
-  #permissions.generaltable .error:hover > td, .table-hover #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing .table-hover td:hover > td, #page-admin-roles-define .capdefault #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing #page-admin-roles-define .capdefault td:hover > td, .user-enroller-panel .uep-search-results .users #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing .user-enroller-panel .uep-search-results .users td:hover > td,
+  table#permissions .error:hover > td, .table-hover #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing .table-hover td:hover > td, #page-admin-roles-define .capdefault #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing #page-admin-roles-define .capdefault td:hover > td, .user-enroller-panel .uep-search-results .users #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing .user-enroller-panel .uep-search-results .users td:hover > td,
   .user-enroller-panel .uep-search-results .cohorts #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing
   .user-enroller-panel .uep-search-results .cohorts td:hover > td,
   table.grading-report #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing
@@ -2183,7 +2060,9 @@ table#permissions .pluginupdateinfo.maturity50:hover {
   .forumheaderlist #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing
   .forumheaderlist td:hover > td,
   .generaltable #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing
-  .generaltable td:hover > td, table.flexible #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing table.flexible td:hover > td,
+  .generaltable td:hover > td,
+  table.flexible #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing
+  table.flexible td:hover > td,
   .category_subcategories #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing
   .category_subcategories td:hover > td,
   table#modules #plugins-check-page #plugins-check .status-missing td:hover > td, #plugins-check-page #plugins-check .status-missing
@@ -2197,7 +2076,9 @@ table#permissions .pluginupdateinfo.maturity50:hover {
   .forumheaderlist #plugins-check-page #plugins-check .status-downgrade td:hover > td, #plugins-check-page #plugins-check .status-downgrade
   .forumheaderlist td:hover > td,
   .generaltable #plugins-check-page #plugins-check .status-downgrade td:hover > td, #plugins-check-page #plugins-check .status-downgrade
-  .generaltable td:hover > td, table.flexible #plugins-check-page #plugins-check .status-downgrade td:hover > td, #plugins-check-page #plugins-check .status-downgrade table.flexible td:hover > td,
+  .generaltable td:hover > td,
+  table.flexible #plugins-check-page #plugins-check .status-downgrade td:hover > td, #plugins-check-page #plugins-check .status-downgrade
+  table.flexible td:hover > td,
   .category_subcategories #plugins-check-page #plugins-check .status-downgrade td:hover > td, #plugins-check-page #plugins-check .status-downgrade
   .category_subcategories td:hover > td,
   table#modules #plugins-check-page #plugins-check .status-downgrade td:hover > td, #plugins-check-page #plugins-check .status-downgrade
@@ -2211,7 +2092,9 @@ table#permissions .pluginupdateinfo.maturity50:hover {
   .forumheaderlist #plugins-check-page .pluginupdateinfo.maturity50:hover > td, #plugins-check-page
   .forumheaderlist .pluginupdateinfo.maturity50:hover > td,
   .generaltable #plugins-check-page .pluginupdateinfo.maturity50:hover > td, #plugins-check-page
-  .generaltable .pluginupdateinfo.maturity50:hover > td, table.flexible #plugins-check-page .pluginupdateinfo.maturity50:hover > td, #plugins-check-page table.flexible .pluginupdateinfo.maturity50:hover > td,
+  .generaltable .pluginupdateinfo.maturity50:hover > td,
+  table.flexible #plugins-check-page .pluginupdateinfo.maturity50:hover > td, #plugins-check-page
+  table.flexible .pluginupdateinfo.maturity50:hover > td,
   .category_subcategories #plugins-check-page .pluginupdateinfo.maturity50:hover > td, #plugins-check-page
   .category_subcategories .pluginupdateinfo.maturity50:hover > td,
   table#modules #plugins-check-page .pluginupdateinfo.maturity50:hover > td, #plugins-check-page
@@ -2225,7 +2108,9 @@ table#permissions .pluginupdateinfo.maturity50:hover {
   .forumheaderlist #plugins-control-panel .pluginupdateinfo.maturity50:hover > td, #plugins-control-panel
   .forumheaderlist .pluginupdateinfo.maturity50:hover > td,
   .generaltable #plugins-control-panel .pluginupdateinfo.maturity50:hover > td, #plugins-control-panel
-  .generaltable .pluginupdateinfo.maturity50:hover > td, table.flexible #plugins-control-panel .pluginupdateinfo.maturity50:hover > td, #plugins-control-panel table.flexible .pluginupdateinfo.maturity50:hover > td,
+  .generaltable .pluginupdateinfo.maturity50:hover > td,
+  table.flexible #plugins-control-panel .pluginupdateinfo.maturity50:hover > td, #plugins-control-panel
+  table.flexible .pluginupdateinfo.maturity50:hover > td,
   .category_subcategories #plugins-control-panel .pluginupdateinfo.maturity50:hover > td, #plugins-control-panel
   .category_subcategories .pluginupdateinfo.maturity50:hover > td,
   table#modules #plugins-control-panel .pluginupdateinfo.maturity50:hover > td, #plugins-control-panel
@@ -2236,12 +2121,11 @@ table#permissions .pluginupdateinfo.maturity50:hover {
   .user-enroller-panel .uep-search-results .cohorts .table-danger:hover > th,
   table.grading-report .table-danger:hover > th,
   .forumheaderlist .table-danger:hover > th,
-  .generaltable .table-danger:hover > th, table.flexible .table-danger:hover > th,
+  .generaltable .table-danger:hover > th,
+  table.flexible .table-danger:hover > th,
   .category_subcategories .table-danger:hover > th,
   table#modules .table-danger:hover > th,
-  #modules.generaltable .table-danger:hover > th,
   table#permissions .table-danger:hover > th,
-  #permissions.generaltable .table-danger:hover > th,
   .table-hover .environmenttable .error:hover > th, .environmenttable
   .table-hover .error:hover > th, #page-admin-roles-define .capdefault .environmenttable .error:hover > th, .environmenttable #page-admin-roles-define .capdefault .error:hover > th, .user-enroller-panel .uep-search-results .users .environmenttable .error:hover > th, .environmenttable .user-enroller-panel .uep-search-results .users .error:hover > th,
   .user-enroller-panel .uep-search-results .cohorts .environmenttable .error:hover > th, .environmenttable
@@ -2251,17 +2135,15 @@ table#permissions .pluginupdateinfo.maturity50:hover {
   .forumheaderlist .environmenttable .error:hover > th, .environmenttable
   .forumheaderlist .error:hover > th,
   .generaltable .environmenttable .error:hover > th, .environmenttable
-  .generaltable .error:hover > th, table.flexible .environmenttable .error:hover > th, .environmenttable table.flexible .error:hover > th,
+  .generaltable .error:hover > th,
+  table.flexible .environmenttable .error:hover > th, .environmenttable
+  table.flexible .error:hover > th,
   .category_subcategories .environmenttable .error:hover > th, .environmenttable
   .category_subcategories .error:hover > th,
   table#modules .environmenttable .error:hover > th, .environmenttable
   table#modules .error:hover > th,
-  #modules.generaltable .environmenttable .error:hover > th, .environmenttable
-  #modules.generaltable .error:hover > th,
   table#permissions .environmenttable .error:hover > th, .environmenttable
   table#permissions .error:hover > th,
-  #permissions.generaltable .environmenttable .error:hover > th, .environmenttable
-  #permissions.generaltable .error:hover > th,
   .table-hover #plugins-check-page #plugins-check .status-missing td:hover > th, #plugins-check-page #plugins-check .status-missing
   .table-hover td:hover > th, #page-admin-roles-define .capdefault #plugins-check-page #plugins-check .status-missing td:hover > th, #plugins-check-page #plugins-check .status-missing #page-admin-roles-define .capdefault td:hover > th, .user-enroller-panel .uep-search-results .users #plugins-check-page #plugins-check .status-missing td:hover > th, #plugins-check-page #plugins-check .status-missing .user-enroller-panel .uep-search-results .users td:hover > th,
   .user-enroller-panel .uep-search-results .cohorts #plugins-check-page #plugins-check .status-missing td:hover > th, #plugins-check-page #plugins-check .status-missing
@@ -2271,7 +2153,9 @@ table#permissions .pluginupdateinfo.maturity50:hover {
   .forumheaderlist #plugins-check-page #plugins-check .status-missing td:hover > th, #plugins-check-page #plugins-check .status-missing
   .forumheaderlist td:hover > th,
   .generaltable #plugins-check-page #plugins-check .status-missing td:hover > th, #plugins-check-page #plugins-check .status-missing
-  .generaltable td:hover > th, table.flexible #plugins-check-page #plugins-check .status-missing td:hover > th, #plugins-check-page #plugins-check .status-missing table.flexible td:hover > th,
+  .generaltable td:hover > th,
+  table.flexible #plugins-check-page #plugins-check .status-missing td:hover > th, #plugins-check-page #plugins-check .status-missing
+  table.flexible td:hover > th,
   .category_subcategories #plugins-check-page #plugins-check .status-missing td:hover > th, #plugins-check-page #plugins-check .status-missing
   .category_subcategories td:hover > th,
   table#modules #plugins-check-page #plugins-check .status-missing td:hover > th, #plugins-check-page #plugins-check .status-missing
@@ -2287,7 +2171,9 @@ table#permissions .pluginupdateinfo.maturity50:hover {
   .forumheaderlist #plugins-check-page #plugins-check .status-downgrade td:hover > th, #plugins-check-page #plugins-check .status-downgrade
   .forumheaderlist td:hover > th,
   .generaltable #plugins-check-page #plugins-check .status-downgrade td:hover > th, #plugins-check-page #plugins-check .status-downgrade
-  .generaltable td:hover > th, table.flexible #plugins-check-page #plugins-check .status-downgrade td:hover > th, #plugins-check-page #plugins-check .status-downgrade table.flexible td:hover > th,
+  .generaltable td:hover > th,
+  table.flexible #plugins-check-page #plugins-check .status-downgrade td:hover > th, #plugins-check-page #plugins-check .status-downgrade
+  table.flexible td:hover > th,
   .category_subcategories #plugins-check-page #plugins-check .status-downgrade td:hover > th, #plugins-check-page #plugins-check .status-downgrade
   .category_subcategories td:hover > th,
   table#modules #plugins-check-page #plugins-check .status-downgrade td:hover > th, #plugins-check-page #plugins-check .status-downgrade
@@ -2303,7 +2189,9 @@ table#permissions .pluginupdateinfo.maturity50:hover {
   .forumheaderlist #plugins-check-page .pluginupdateinfo.maturity50:hover > th, #plugins-check-page
   .forumheaderlist .pluginupdateinfo.maturity50:hover > th,
   .generaltable #plugins-check-page .pluginupdateinfo.maturity50:hover > th, #plugins-check-page
-  .generaltable .pluginupdateinfo.maturity50:hover > th, table.flexible #plugins-check-page .pluginupdateinfo.maturity50:hover > th, #plugins-check-page table.flexible .pluginupdateinfo.maturity50:hover > th,
+  .generaltable .pluginupdateinfo.maturity50:hover > th,
+  table.flexible #plugins-check-page .pluginupdateinfo.maturity50:hover > th, #plugins-check-page
+  table.flexible .pluginupdateinfo.maturity50:hover > th,
   .category_subcategories #plugins-check-page .pluginupdateinfo.maturity50:hover > th, #plugins-check-page
   .category_subcategories .pluginupdateinfo.maturity50:hover > th,
   table#modules #plugins-check-page .pluginupdateinfo.maturity50:hover > th, #plugins-check-page
@@ -2319,7 +2207,9 @@ table#permissions .pluginupdateinfo.maturity50:hover {
   .forumheaderlist #plugins-control-panel .pluginupdateinfo.maturity50:hover > th, #plugins-control-panel
   .forumheaderlist .pluginupdateinfo.maturity50:hover > th,
   .generaltable #plugins-control-panel .pluginupdateinfo.maturity50:hover > th, #plugins-control-panel
-  .generaltable .pluginupdateinfo.maturity50:hover > th, table.flexible #plugins-control-panel .pluginupdateinfo.maturity50:hover > th, #plugins-control-panel table.flexible .pluginupdateinfo.maturity50:hover > th,
+  .generaltable .pluginupdateinfo.maturity50:hover > th,
+  table.flexible #plugins-control-panel .pluginupdateinfo.maturity50:hover > th, #plugins-control-panel
+  table.flexible .pluginupdateinfo.maturity50:hover > th,
   .category_subcategories #plugins-control-panel .pluginupdateinfo.maturity50:hover > th, #plugins-control-panel
   .category_subcategories .pluginupdateinfo.maturity50:hover > th,
   table#modules #plugins-control-panel .pluginupdateinfo.maturity50:hover > th, #plugins-control-panel
@@ -2345,8 +2235,7 @@ table#permissions .pluginupdateinfo.maturity50:hover {
 .table-inverse {
   color: #eceeef;
   background-color: #373a3c; }
-  .table-inverse.table-bordered, table.table-inverse.collection,
-  .table-inverse.collection.generaltable {
+  .table-inverse.table-bordered, table.table-inverse.collection {
     border: 0; }
   .table-inverse th,
   .table-inverse td,
@@ -2542,7 +2431,6 @@ input[type="reset"], #dock
   border-radius: 0.3rem; }
 
 .form-group, table#form td.submit,
-#form.generaltable td.submit,
 .form-buttons,
 .path-admin .buttons,
 #fitem_id_submitbutton,
@@ -2727,8 +2615,6 @@ input[type="checkbox"].disabled {
 
 @media (min-width: 544px) {
   .form-inline .form-group, .form-inline table#form td.submit, table#form .form-inline td.submit, .form-inline
-  #form.generaltable td.submit,
-  #form.generaltable .form-inline td.submit, .form-inline
   .form-buttons, .form-inline
   .path-admin .buttons,
   .path-admin .form-inline .buttons, .form-inline
@@ -7859,13 +7745,11 @@ img.iconkbhelp {
 img.uihint {
   cursor: help; }
 
-#addmembersform table, #addmembersform
-.generaltable {
+#addmembersform table {
   margin-left: auto;
   margin-right: auto; }
 
-table.flexible .emptyrow,
-.flexible.generaltable .emptyrow {
+table.flexible .emptyrow {
   display: none; }
 
 img.emoticon {
@@ -8099,8 +7983,7 @@ a.skip:active {
 .mod_introbox {
   padding: 10px; }
 
-table.mod_index,
-.mod_index.generaltable {
+table.mod_index {
   width: 100%; }
 
 .comment-ctrl {
@@ -9194,37 +9077,31 @@ body.jsenabled .formlisting {
   display: block; }
 
 /* Badges styles */
-table.collection .name,
-.collection.generaltable .name {
+table.collection .name {
   text-align: left;
   vertical-align: middle; }
 
-table.collection .awards,
-.collection.generaltable .awards {
+table.collection .awards {
   width: 10%;
   text-align: center;
   vertical-align: middle; }
 
-table.collection .criteria,
-.collection.generaltable .criteria {
+table.collection .criteria {
   width: 40%;
   text-align: left;
   vertical-align: top; }
 
 table.collection .badgeimage,
-.collection.generaltable .badgeimage, table.collection .status,
-.collection.generaltable .status {
+table.collection .status {
   width: 15%;
   text-align: center;
   vertical-align: middle; }
 
-table.collection .description,
-.collection.generaltable .description {
+table.collection .description {
   width: 25%;
   text-align: left; }
 
-table.collection .actions,
-.collection.generaltable .actions {
+table.collection .actions {
   width: 11em;
   text-align: center;
   vertical-align: middle; }
@@ -9814,8 +9691,7 @@ img.iconsmall {
 .path-admin .roleassigntable #addselect_wrapper {
   width: 100%; }
 
-.path-admin table.rolecap tr.rolecap th, .path-admin
-.rolecap.generaltable tr.rolecap th {
+.path-admin table.rolecap tr.rolecap th {
   text-align: left;
   font-weight: normal; }
 
@@ -9849,8 +9725,7 @@ img.iconsmall {
 .environmentbox {
   margin-top: 1em; }
 
-#mnetconfig table, #mnetconfig
-.generaltable {
+#mnetconfig table {
   margin-left: auto;
   margin-right: auto; }
 
@@ -10103,21 +9978,13 @@ img.iconsmall {
   padding: 4px;
   margin-bottom: 5px; }
 
-#core-cache-plugin-summaries table, #core-cache-plugin-summaries
-.generaltable,
-#core-cache-store-summaries table,
-#core-cache-store-summaries
-.generaltable {
+#core-cache-plugin-summaries table,
+#core-cache-store-summaries table {
   width: 100%; }
 
-#core-cache-lock-summary table, #core-cache-lock-summary
-.generaltable,
+#core-cache-lock-summary table,
 #core-cache-definition-summaries table,
-#core-cache-definition-summaries
-.generaltable,
-#core-cache-mode-mappings table,
-#core-cache-mode-mappings
-.generaltable {
+#core-cache-mode-mappings table {
   margin: 0 auto; }
 
 #core-cache-store-summaries .default-store td {
@@ -10180,8 +10047,7 @@ img.iconsmall {
 .path-calendar .calendar-controls .next {
   text-align: right; }
 
-.path-calendar .filters table, .path-calendar .filters
-.generaltable {
+.path-calendar .filters table {
   border-collapse: separate;
   border-spacing: 2px;
   width: 100%; }
@@ -11629,8 +11495,7 @@ span.editinstructions {
   padding-bottom: 12px;
   min-width: 112px; }
 
-.file-picker .yui3-datatable table, .file-picker .yui3-datatable
-.generaltable {
+.file-picker .yui3-datatable table {
   border: 0 solid #BBBBBB;
   width: 100%; }
 
@@ -11809,8 +11674,7 @@ a.ygtvspacer:hover {
   width: 100%;
   display: table; }
 
-.file-picker .fp-login-form table, .file-picker .fp-login-form
-.generaltable {
+.file-picker .fp-login-form table {
   margin: 0 auto; }
 
 .file-picker .fp-login-form p {
@@ -11833,8 +11697,7 @@ a.ygtvspacer:hover {
   width: 100%;
   display: table; }
 
-.file-picker .fp-upload-form table, .file-picker .fp-upload-form
-.generaltable {
+.file-picker .fp-upload-form table {
   margin: 0 auto; }
 
 .file-picker.fp-dlg {
@@ -11906,12 +11769,10 @@ a.ygtvspacer:hover {
   width: auto;
   margin: 10px 0; }
 
-.fp-select table, .fp-select
-.generaltable {
+.fp-select table {
   padding: 0 0 10px; }
 
-.fp-select table .mdl-right, .fp-select
-.generaltable .mdl-right {
+.fp-select table .mdl-right {
   min-width: 84px; }
 
 .fp-select .fp-reflist .mdl-right {
@@ -12127,8 +11988,7 @@ a.ygtvspacer:hover {
   background: url([[pix:s/dead]]) no-repeat;
   background-position: center center; }
 
-.filemanager .yui3-datatable table, .filemanager .yui3-datatable
-.generaltable {
+.filemanager .yui3-datatable table {
   border: 0 solid #BBBBBB;
   width: 100%; }
 
@@ -12549,8 +12409,7 @@ a.ygtvspacer:hover {
 .message .note {
   padding: 10px; }
 
-table.message .searchresults td,
-.message.generaltable .searchresults td {
+table.message .searchresults td {
   padding: 5px; }
 
 .message .contactselector {
@@ -13086,8 +12945,7 @@ body.path-question-type .fitem_fgroup .accesshide {
   margin: 0 0 0.2em;
   font-size: 1em; }
 
-.que .history table, .que .history
-.generaltable {
+.que .history table {
   width: 100%;
   margin: 0; }
 
@@ -13310,176 +13168,67 @@ body.path-question-type .mform fieldset.hidden {
 .userlist .buttons label, .userlist .buttons .que .correctness, .que .userlist .buttons .correctness {
   padding: 0 3px; }
 
-.userlist table#participants, .userlist
-#participants.generaltable {
+.userlist table#participants {
   text-align: center; }
 
-.userlist table#participants td, .userlist
-#participants.generaltable td,
-.userlist table#participants th,
-.userlist
-#participants.generaltable th {
+.userlist table#participants td,
+.userlist table#participants th {
   vertical-align: middle;
   text-align: left;
   padding: 4px; }
 
-.userlist table.controls, .userlist .form-item table.form-setting, .form-item .userlist table.form-setting, .userlist .form-item
-.form-setting.generaltable, .form-item .userlist
-.form-setting.generaltable, .userlist
+.userlist table.controls, .userlist .form-item table.form-setting, .form-item .userlist table.form-setting, .userlist
 .form-item table.form-description,
 .form-item .userlist table.form-description, .userlist
-.form-item
-.form-description.generaltable,
-.form-item .userlist
-.form-description.generaltable, .userlist
 .mform .fitem table.felement,
 .mform .fitem .userlist table.felement, .userlist
-.mform .fitem
-.felement.generaltable,
-.mform .fitem .userlist
-.felement.generaltable, .userlist
 #page-mod-forum-search .c1 table.form-horizontal,
-#page-mod-forum-search .c1 .userlist table.form-horizontal, .userlist
-#page-mod-forum-search .c1
-.form-horizontal.generaltable,
-#page-mod-forum-search .c1 .userlist
-.form-horizontal.generaltable, .userlist
-.controls.generaltable {
+#page-mod-forum-search .c1 .userlist table.form-horizontal {
   width: 100%; }
-  .userlist table.controls tr, .userlist .form-item table.form-setting tr, .form-item .userlist table.form-setting tr, .userlist .form-item
-  .form-setting.generaltable tr, .form-item .userlist
-  .form-setting.generaltable tr, .userlist
+  .userlist table.controls tr, .userlist .form-item table.form-setting tr, .form-item .userlist table.form-setting tr, .userlist
   .form-item table.form-description tr,
   .form-item .userlist table.form-description tr, .userlist
-  .form-item
-  .form-description.generaltable tr,
-  .form-item .userlist
-  .form-description.generaltable tr, .userlist
   .mform .fitem table.felement tr,
   .mform .fitem .userlist table.felement tr, .userlist
-  .mform .fitem
-  .felement.generaltable tr,
-  .mform .fitem .userlist
-  .felement.generaltable tr, .userlist
   #page-mod-forum-search .c1 table.form-horizontal tr,
-  #page-mod-forum-search .c1 .userlist table.form-horizontal tr, .userlist
-  #page-mod-forum-search .c1
-  .form-horizontal.generaltable tr,
-  #page-mod-forum-search .c1 .userlist
-  .form-horizontal.generaltable tr, .userlist
-  .controls.generaltable tr {
+  #page-mod-forum-search .c1 .userlist table.form-horizontal tr {
     vertical-align: top; }
-  .userlist table.controls .right, .userlist .form-item table.form-setting .right, .form-item .userlist table.form-setting .right, .userlist .form-item
-  .form-setting.generaltable .right, .form-item .userlist
-  .form-setting.generaltable .right, .userlist
+  .userlist table.controls .right, .userlist .form-item table.form-setting .right, .form-item .userlist table.form-setting .right, .userlist
   .form-item table.form-description .right,
   .form-item .userlist table.form-description .right, .userlist
-  .form-item
-  .form-description.generaltable .right,
-  .form-item .userlist
-  .form-description.generaltable .right, .userlist
   .mform .fitem table.felement .right,
   .mform .fitem .userlist table.felement .right, .userlist
-  .mform .fitem
-  .felement.generaltable .right,
-  .mform .fitem .userlist
-  .felement.generaltable .right, .userlist
   #page-mod-forum-search .c1 table.form-horizontal .right,
-  #page-mod-forum-search .c1 .userlist table.form-horizontal .right, .userlist
-  #page-mod-forum-search .c1
-  .form-horizontal.generaltable .right,
-  #page-mod-forum-search .c1 .userlist
-  .form-horizontal.generaltable .right, .userlist
-  .controls.generaltable .right {
+  #page-mod-forum-search .c1 .userlist table.form-horizontal .right {
     text-align: right; }
-  .userlist table.controls .groupselector, .userlist .form-item table.form-setting .groupselector, .form-item .userlist table.form-setting .groupselector, .userlist .form-item
-  .form-setting.generaltable .groupselector, .form-item .userlist
-  .form-setting.generaltable .groupselector, .userlist
+  .userlist table.controls .groupselector, .userlist .form-item table.form-setting .groupselector, .form-item .userlist table.form-setting .groupselector, .userlist
   .form-item table.form-description .groupselector,
   .form-item .userlist table.form-description .groupselector, .userlist
-  .form-item
-  .form-description.generaltable .groupselector,
-  .form-item .userlist
-  .form-description.generaltable .groupselector, .userlist
   .mform .fitem table.felement .groupselector,
   .mform .fitem .userlist table.felement .groupselector, .userlist
-  .mform .fitem
-  .felement.generaltable .groupselector,
-  .mform .fitem .userlist
-  .felement.generaltable .groupselector, .userlist
   #page-mod-forum-search .c1 table.form-horizontal .groupselector,
-  #page-mod-forum-search .c1 .userlist table.form-horizontal .groupselector, .userlist
-  #page-mod-forum-search .c1
-  .form-horizontal.generaltable .groupselector,
-  #page-mod-forum-search .c1 .userlist
-  .form-horizontal.generaltable .groupselector, .userlist
-  .controls.generaltable .groupselector {
+  #page-mod-forum-search .c1 .userlist table.form-horizontal .groupselector {
     margin-bottom: 0;
     margin-top: 0; }
-    .userlist table.controls .groupselector label, .userlist .form-item table.form-setting .groupselector label, .form-item .userlist table.form-setting .groupselector label, .userlist .form-item
-    .form-setting.generaltable .groupselector label, .form-item .userlist
-    .form-setting.generaltable .groupselector label, .userlist
+    .userlist table.controls .groupselector label, .userlist .form-item table.form-setting .groupselector label, .form-item .userlist table.form-setting .groupselector label, .userlist
     .form-item table.form-description .groupselector label,
     .form-item .userlist table.form-description .groupselector label, .userlist
-    .form-item
-    .form-description.generaltable .groupselector label,
-    .form-item .userlist
-    .form-description.generaltable .groupselector label, .userlist
     .mform .fitem table.felement .groupselector label,
     .mform .fitem .userlist table.felement .groupselector label, .userlist
-    .mform .fitem
-    .felement.generaltable .groupselector label,
-    .mform .fitem .userlist
-    .felement.generaltable .groupselector label, .userlist
     #page-mod-forum-search .c1 table.form-horizontal .groupselector label,
-    #page-mod-forum-search .c1 .userlist table.form-horizontal .groupselector label, .userlist
-    #page-mod-forum-search .c1
-    .form-horizontal.generaltable .groupselector label,
-    #page-mod-forum-search .c1 .userlist
-    .form-horizontal.generaltable .groupselector label, .userlist
-    .controls.generaltable .groupselector label, .userlist table.controls .groupselector .que .correctness, .que .userlist table.controls .groupselector .correctness, .userlist .form-item table.form-setting .groupselector .que .correctness, .que .userlist .form-item table.form-setting .groupselector .correctness, .form-item .userlist table.form-setting .groupselector .que .correctness, .que .form-item .userlist table.form-setting .groupselector .correctness, .userlist .form-item
-    .form-setting.generaltable .groupselector .que .correctness, .que .userlist .form-item
-    .form-setting.generaltable .groupselector .correctness, .form-item .userlist
-    .form-setting.generaltable .groupselector .que .correctness, .que .form-item .userlist
-    .form-setting.generaltable .groupselector .correctness, .userlist
+    #page-mod-forum-search .c1 .userlist table.form-horizontal .groupselector label, .userlist table.controls .groupselector .que .correctness, .que .userlist table.controls .groupselector .correctness, .userlist .form-item table.form-setting .groupselector .que .correctness, .que .userlist .form-item table.form-setting .groupselector .correctness, .form-item .userlist table.form-setting .groupselector .que .correctness, .que .form-item .userlist table.form-setting .groupselector .correctness, .userlist
     .form-item table.form-description .groupselector .que .correctness, .que .userlist
     .form-item table.form-description .groupselector .correctness,
     .form-item .userlist table.form-description .groupselector .que .correctness, .que
     .form-item .userlist table.form-description .groupselector .correctness, .userlist
-    .form-item
-    .form-description.generaltable .groupselector .que .correctness, .que .userlist
-    .form-item
-    .form-description.generaltable .groupselector .correctness,
-    .form-item .userlist
-    .form-description.generaltable .groupselector .que .correctness, .que
-    .form-item .userlist
-    .form-description.generaltable .groupselector .correctness, .userlist
     .mform .fitem table.felement .groupselector .que .correctness, .que .userlist
     .mform .fitem table.felement .groupselector .correctness,
     .mform .fitem .userlist table.felement .groupselector .que .correctness, .que
     .mform .fitem .userlist table.felement .groupselector .correctness, .userlist
-    .mform .fitem
-    .felement.generaltable .groupselector .que .correctness, .que .userlist
-    .mform .fitem
-    .felement.generaltable .groupselector .correctness,
-    .mform .fitem .userlist
-    .felement.generaltable .groupselector .que .correctness, .que
-    .mform .fitem .userlist
-    .felement.generaltable .groupselector .correctness, .userlist
     #page-mod-forum-search .c1 table.form-horizontal .groupselector .que .correctness, .que .userlist
     #page-mod-forum-search .c1 table.form-horizontal .groupselector .correctness,
     #page-mod-forum-search .c1 .userlist table.form-horizontal .groupselector .que .correctness, .que
-    #page-mod-forum-search .c1 .userlist table.form-horizontal .groupselector .correctness, .userlist
-    #page-mod-forum-search .c1
-    .form-horizontal.generaltable .groupselector .que .correctness, .que .userlist
-    #page-mod-forum-search .c1
-    .form-horizontal.generaltable .groupselector .correctness,
-    #page-mod-forum-search .c1 .userlist
-    .form-horizontal.generaltable .groupselector .que .correctness, .que
-    #page-mod-forum-search .c1 .userlist
-    .form-horizontal.generaltable .groupselector .correctness, .userlist
-    .controls.generaltable .groupselector .que .correctness, .que .userlist
-    .controls.generaltable .groupselector .correctness {
+    #page-mod-forum-search .c1 .userlist table.form-horizontal .groupselector .correctness {
       display: block; }
 
 .userinfobox {
@@ -13939,7 +13688,6 @@ input#id_externalurl {
   font-weight: bold; }
 
 table#form td.submit,
-#form.generaltable td.submit,
 .form-buttons,
 .path-admin .buttons,
 #fitem_id_submitbutton,
@@ -14753,32 +14501,20 @@ div#dock {
     border-radius: 0; }
   .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax .yui-layout-unit div.yui-layout-bd {
     background-color: transparent; }
-  .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable, .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area
-  .generaltable,
-  .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable td.cell,
-  .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area
-  .generaltable td.cell {
+  .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable,
+  .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable td.cell {
     border: 0;
     padding: 3px 15px;
     white-space: nowrap; }
-    .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable input, .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area
-    .generaltable input,
-    .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable td.cell input,
-    .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area
-    .generaltable td.cell input {
+    .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable input,
+    .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable td.cell input {
       margin: 0 10px; }
-      .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable input#input-message, .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area
-      .generaltable input#input-message,
-      .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable td.cell input#input-message,
-      .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area
-      .generaltable td.cell input#input-message {
+      .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable input#input-message,
+      .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable td.cell input#input-message {
         width: 45%;
         margin: auto; }
-    .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable a, .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area
-    .generaltable a,
-    .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable td.cell a,
-    .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area
-    .generaltable td.cell a {
+    .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable a,
+    .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-input-area table.generaltable td.cell a {
       margin: 0 5px; }
   .yui-skin-sam .yui-layout.path-mod-chat-gui_ajax #chat-userlist {
     padding: 10px 5px; }
@@ -14946,14 +14682,12 @@ div#dock {
   width: 70%;
   min-width: 400px; }
 
-.restore-course-search .rcs-results table, .restore-course-search .rcs-results
-.generaltable {
+.restore-course-search .rcs-results table {
   width: 100%;
   margin: 0;
   border-width: 0; }
 
-.restore-course-search .rcs-results table .no-overflow, .restore-course-search .rcs-results
-.generaltable .no-overflow {
+.restore-course-search .rcs-results table .no-overflow {
   max-width: 600px; }
 
 .restore-course-search .rcs-results .paging {
@@ -14968,14 +14702,12 @@ div#dock {
   border: 1px solid #ddd;
   margin: 5px 0; }
 
-.restore-course-category .rcs-results table, .restore-course-category .rcs-results
-.generaltable {
+.restore-course-category .rcs-results table {
   width: 100%;
   margin: 0;
   border-width: 0; }
 
-.restore-course-category .rcs-results table .no-overflow, .restore-course-category .rcs-results
-.generaltable .no-overflow {
+.restore-course-category .rcs-results table .no-overflow {
   max-width: 600px; }
 
 .restore-course-category .rcs-results .paging {
@@ -15419,15 +15151,13 @@ body.has_dock div#dock {
 /**
  * Grader report.
  */
-.path-grade-report .gradeparent table, .path-grade-report .gradeparent
-.generaltable {
+.path-grade-report .gradeparent table {
   border-radius: 0.25rem; }
 
 .path-grade-report .gradeparent tr .cell {
   background-color: #fff; }
 
-.path-grade-report .gradeparent table, .path-grade-report .gradeparent
-.generaltable,
+.path-grade-report .gradeparent table,
 .path-grade-report .gradeparent .cell {
   border-color: #eceeef; }
 
@@ -15436,8 +15166,7 @@ body.has_dock div#dock {
 .path-grade-report .gradeparent .avg {
   background-color: #f9f9f9; }
 
-.path-grade-report .gradeparent table .clickable, .path-grade-report .gradeparent
-.generaltable .clickable {
+.path-grade-report .gradeparent table .clickable {
   cursor: pointer; }
 
 /**
@@ -15455,8 +15184,7 @@ body.has_dock div#dock {
 .has_dock.path-grade-report-grader .gradeparent .sideonly.floating > .cell {
   padding-left: 47px; }
 
-.content-only.path-grade-report-grader .gradeparent table, .content-only.path-grade-report-grader .gradeparent
-.generaltable {
+.content-only.path-grade-report-grader .gradeparent table {
   margin-left: 42px; }
 
 .columns-autoflow-1to1to1 {
@@ -15629,8 +15357,7 @@ ol {
 body.behat-site .navbar-fixed-top {
   position: absolute; }
 
-.phpinfo table, .phpinfo
-.generaltable,
+.phpinfo table,
 .phpinfo th,
 .phpinfo h2 {
   margin: auto;
@@ -15707,8 +15434,7 @@ body.behat-site .navbar-fixed-top {
 #page-footer .performanceinfo {
   text-align: center; }
 
-table caption, table.collection caption, table.flexible caption,
-.generaltable caption {
+table caption {
   font-size: 24px;
   font-weight: bold;
   line-height: 42px;

@@ -1635,7 +1635,7 @@ body.jsenabled .formlisting {
 
 /* Badges styles */
 table.collection {
-    @extend table;
+    @extend .table;
     @extend .table-bordered;
     @extend .table-striped;
 }
