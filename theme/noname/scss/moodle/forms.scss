@@ -292,6 +292,7 @@ div.backup-section + form,
     text-align:center;
 }
 /* Install Process' text fields Forms, should always be justified to the left */
+/* rtl:ignore */
 #installform #id_wwwroot,
 #installform #id_dirroot,
 #installform #id_dataroot,

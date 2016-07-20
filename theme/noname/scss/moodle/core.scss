@@ -116,7 +116,7 @@ a.dimmed_text:visited,
 .usersuspended a:visited,
 .dimmed_category,
 .dimmed_category a {
-    @extend .muted
+    @extend .text-muted
 }
 .activity.label .dimmed_text {
     opacity: 0.5;
@@ -1860,6 +1860,8 @@ img#persona_signin {
         position: relative;
     }
     .page-header-image {
+        float: left;
+        margin-right: 1em;
         margin-bottom: 1em;
     }
     .page-header-headings {
@@ -1880,7 +1882,7 @@ img#persona_signin {
 
     .header-button-group {
         display: block;
-
+        float: left;
         a {
             position: relative;
 
@@ -1889,18 +1891,6 @@ img#persona_signin {
         }
     }
 }
-
-.dir-ltr .page-context-header {
-    .page-header-image {
-        float: left;
-        margin-right: 1em;
-    }
-
-    .header-button-group {
-        float: left;
-    }
-}
-
 
 /** Action menu component styles **/
 .moodle-actionmenu,

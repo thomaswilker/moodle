@@ -112,26 +112,25 @@ table.message .searchresults td {
         }
     }
 }
-.dir-ltr {
-    .message .message-contacts li {
-        text-align: left;
-        > div {
-            &.pix {
-                float: left;
-            }
-            &.link {
-                float: right;
-                text-align: right;
-            }
-            &.contact {
-                margin: 0 60px 0 24px;
-                &.nolinks {
-                    margin: 0 0 0 24px;
-                }
+.message .message-contacts li {
+    text-align: left;
+    > div {
+        &.pix {
+            float: left;
+        }
+        &.link {
+            float: right;
+            text-align: right;
+        }
+        &.contact {
+            margin: 0 60px 0 24px;
+            &.nolinks {
+                margin: 0 0 0 24px;
             }
         }
     }
 }
+
 
 .message .messagearea  {
     @media screen and (min-width: 1000px) {
@@ -225,7 +224,7 @@ table.message .searchresults td {
     margin-bottom: 0;
     margin-top: 5px;
 }
-.dir-ltr .message .messagearea .messagehistory .right .message {
+.message .messagearea .messagehistory .right .message {
     margin-left: 20px;
 }
 .message .messagearea .messagehistory .messageactive {
@@ -235,8 +234,6 @@ table.message .searchresults td {
     width: 20px;
     position: absolute;
     top: -2px;
-}
-.dir-ltr .message .messagearea .messagehistory .messagecontent .deleteicon {
     right: 0;
 }
 .message .messagearea .messagesend {

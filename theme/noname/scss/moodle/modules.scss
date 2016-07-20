@@ -453,31 +453,30 @@ div#dock {
     }
 }
 
-.dir-ltr {
-    .usermenu {
-        float: right;
-        > .moodle-actionmenu {
-            > .menu {
-                &:before {
-                    right: 9px;
-                }
-                &:after {
-                    right: 10px;
-                }
+.usermenu {
+    float: right;
+    > .moodle-actionmenu {
+        > .menu {
+            &:before {
+                right: 9px;
             }
-            > .menubar li a {
-                text-align: right;
+            &:after {
+                right: 10px;
             }
         }
-    }
-    &.userloggedinas .usermenu .userbutton .avatars {
-        .avatar {
-            &.current {
-                left: 16px;
-            }
+        > .menubar li a {
+            text-align: right;
         }
     }
 }
+&.userloggedinas .usermenu .userbutton .avatars {
+    .avatar {
+        &.current {
+            left: 16px;
+        }
+    }
+}
+
 
 .userloggedinas .usermenu .userbutton .avatars {
     .avatar {
