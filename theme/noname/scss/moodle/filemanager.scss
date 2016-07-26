@@ -1,28 +1,10 @@
  // File Picker and File Manager
-.filemanager,
-.filepicker,
-.file-picker {
-    font-size: 11px;
-}
 .filemanager a,
 .file-picker a,
 .filemanager a:hover,
 .file-picker a:hover {
     color: #555555;
     text-decoration: none;
-}
-.filemanager input[type="text"],
-.file-picker input[type="text"] {
-    width: 265px;
-}
-.filemanager .fp-license,
-.file-picker .fp-setlicense {
-    td {
-        max-width: 265px;
-    }
-    select {
-        max-width: 100%;
-    }
 }
 .fp-content-center {
     height: 100%;
@@ -36,26 +18,6 @@
 // Dialogue (File Picker and File Manager)
 .yui3-panel-focused {
     outline: none;
-}
-#filesskin .yui3-panel-content {
-    padding-bottom: 20px;
-    background: #F2F2F2;
-    @include border-radius(8px);
-    border: 1px solid #fff;
-    display: inline-block;
-    @include box-shadow(5px 5px 20px 0 #666);
-}
-#filesskin .yui3-widget-hd {
-    @include border-radius(10px 10px 0 0);
-    border-bottom: 1px solid #BBBBBB;
-    padding: 5px;
-    text-align: center;
-    font-size: 12px;
-    color: #333;
-    letter-spacing: 1px;
-    text-shadow: 1px 1px 1px #fff;
-    filter: dropshadow(color=#FFFFFF, offx=1, offy=1);
-    @include gradient-vertical (#fff, #ccc);
 }
 .fp-panel-button {
     background: #fff;
@@ -78,24 +40,23 @@
 }
 
 // File Picker layout
-#filesskin .file-picker.fp-generallayout {
-    width: 859px;
-    background: #FFFFFF;
-    @include border-radius(10px);
-    border: 1px solid #CCCCCC;
-    position: relative;
+.filepicker .yui3-widget-content-expanded {
+    height: auto;
 }
 .file-picker .fp-repo-area {
-    width: 180px;
+    width: calc(25% - 1px);
+    float: left;
     overflow: auto;
-    display: inline-block;
-    height: 525px;
-    border-right: 1px solid #BBBBBB;
+    height: 100%;
 }
 .file-picker .fp-repo-items {
-    float: none;
-    width: auto;
-    margin-left:181px;
+    float: left;
+    width: 75%;
+    height: 100%;
+    border-left: 1px solid #BBBBBB;
+}
+.filepicker .moodle-dialogue-ft {
+    clear: both;
 }
 .moodle-dialogue-fullscreen .file-picker .fp-repo-items {
     margin-left: 0px;
@@ -305,20 +266,6 @@
 .file-picker .yui3-datatable table {
     border: 0 solid #BBBBBB;
     width: 100%;
-}
-#filesskin .file-picker .yui3-datatable-header {
-    background: #FFFFFF;
-    border-bottom: 1px solid #CCCCCC;
-    border-left: 0 solid #FFFFFF;
-    color: #555555;
-}
-#filesskin .file-picker .yui3-datatable-odd .yui3-datatable-cell {
-    background-color: #F6F6F6;
-    border-left: 0 solid #F6F6F6;
-}
-#filesskin .file-picker .yui3-datatable-even .yui3-datatable-cell {
-    background-color: #FFFFFF;
-    border-left: 0 solid #FFFFFF;
 }
 // Tree view (File Manager only)
 
@@ -1030,9 +977,6 @@ a.ygtvspacer:hover {
 .filemanager.fp-select .fp-reflist .fp-reflistloading {
     display: none;
 }
-.filemanager.fp-select .fp-refcount {
-    max-width: 265px;
-}
 .filemanager.fp-select .fp-reflist.fp-loading .fp-reflistloading {
     display: inline;
 }
@@ -1041,7 +985,6 @@ a.ygtvspacer:hover {
     border: 1px solid #BBBBBB;
     padding: 8px 7px;
     margin: 0;
-    max-width: 265px;
     max-height: 75px;
     overflow: auto;
 }
