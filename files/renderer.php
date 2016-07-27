@@ -1057,7 +1057,7 @@ class core_files_renderer extends plugin_renderer_base {
      * (form with id {TOOLSEARCHID}).
      * Default contents is one text input field with name="s"
      */
-    protected function repository_default_searchform() {
+    public function repository_default_searchform() {
         $searchinput = html_writer::label(get_string('searchrepo', 'repository'),
             'reposearch', false, array('class' => 'accesshide'));
         $searchinput .= html_writer::empty_tag('input', array('type' => 'text',
