@@ -11643,14 +11643,6 @@ a.ygtvspacer:hover {
   text-align: center;
   margin-top: 20px; }
 
-.fp-select .fp-hr {
-  clear: both;
-  height: 1px;
-  background-color: #FFFFFF;
-  border-bottom: 1px solid #BBBBBB;
-  width: auto;
-  margin: 10px 0; }
-
 .fp-select table {
   padding: 0 0 10px; }
 
@@ -13021,12 +13013,6 @@ body.path-question-type .mform fieldset.hidden {
   #groupeditform .groups select,
   #groupeditform .members select {
     min-width: 175px; }
-
-/** Preferences page */
-.preferences-group ul {
-  list-style: none;
-  margin-left: 0;
-  margin-right: 0; }
 
 .search-results .result {
   margin-left: 0;
