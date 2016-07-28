@@ -5,7 +5,7 @@
 
 {{! Start Block Container }}
 <aside id="{{id}}"
-     class="{{#hidden}}hidden{{/hidden}} m-b-1 block block_{{type}}"
+     class="{{#hidden}}hidden{{/hidden}} m-b-1 block block_{{type}} card"
      role="{{ariarole}}"
      {{#arialabel}}
         aria-label="{{{arialabel}}}"
@@ -17,16 +17,17 @@
     </div>
     {{/hascontrols}}
 
-    {{! Block header }}
-    {{#title}}
-        <h1><small>{{title}}</small></h1>
-    {{/title}}
-
     {{! Block contents }}
-    <div>
-        {{{content}}}
-        {{{footer}}}
-        {{{annotation}}}
+    <div class="card-block">
+        {{! Block header }}
+        {{#title}}
+            <h3 class="card-title"><small>{{title}}</small></h3>
+        {{/title}}
+        <div class="card-text">
+            {{{content}}}
+            {{{footer}}}
+            {{{annotation}}}
+        </div>
     </div>
 
 {{! End Block Container }}
