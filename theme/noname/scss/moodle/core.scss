@@ -172,6 +172,14 @@ img.resize {
     box-sizing: content-box;
     padding-right: 0.5rem;
 }
+.action-menu .userpicture {
+    width: auto;
+    height: auto;
+    padding-left: 1rem;
+}
+.mform {
+    max-width: 720px;
+}
 .block img.resize,
 .breadcrumb img.resize {
     height: 0.9em;
