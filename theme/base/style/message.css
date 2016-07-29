@@ -30,9 +30,6 @@ table.message .searchresults td {padding:5px;}
     width: 24%;
     float: left;
 }
-.dir-rtl .message .contactselector {
-    float: right;
-}
 .message .contactselector .paging {
     z-index: 1;
     position: relative;
@@ -51,31 +48,16 @@ table.message .searchresults td {padding:5px;}
     left: 0;
     position: absolute;
 }
-.dir-rtl .message .message-contacts li .pix {
-    left: auto;
-    right: 0;
-}
 .message .message-contacts li .contact {
     margin: 0 24% 0 25px;
     text-align: left;
 }
-.dir-rtl .message .message-contacts li .contact {
-    text-align: right;
-    margin: 0 25px 0 24%;
-}
 .message .message-contacts li .contact.nolinks {
     margin-right: 5px;
-}
-.dir-rtl .message .message-contacts li .contact.nolinks {
-    margin-left: 5px;
-    margin-right: 25px;
 }
 .message .message-contacts li .link {
     float: right;
     max-width: 30%;
-}
-.dir-rtl .message .message-contacts li .link {
-    float: left;
 }
 
 .message .messagearea  {padding-left:1%;border-left:1px solid LightGrey;width:74%;float:right;min-height:200px;}
@@ -94,14 +76,6 @@ table.message .searchresults td {padding:5px;}
 .message .messagearea .messagehistory .user:last-child {
     margin-right: 13%;
 }
-.dir-rtl .message .messagearea .messagehistory .user:first-child {
-    margin-right: 13%;
-    margin-left: 0;
-}
-.dir-rtl .message .messagearea .messagehistory .user:last-child {
-    margin-left: 13%;
-    margin-right: 0;
-}
 .message .messagearea .messagehistory .user > div {
     text-align: center;
     border: none;
@@ -112,29 +86,17 @@ table.message .searchresults td {padding:5px;}
     margin: 0 3%;
     padding-top: 40px;
 }
-.dir-rtl .message .messagearea .messagehistory .between,
-.dir-rtl .message .messagearea .messagehistory .user {
-    float: right;
-}
 
 .message .messagearea .messagehistory .heading,
 .message .messagearea .messagehistory h3 {width:100%;clear:both;}
 .message .messagearea .messagehistory .left {position:relative;margin-bottom:10px;width:50%;float:left;clear:both;}
-.dir-rtl .message .messagearea .messagehistory .left { float: right; }
 .message .messagearea .messagehistory .right {position:relative;margin-bottom:10px;width:50%;float:right;clear:both;}
-.dir-rtl .message .messagearea .messagehistory .right { float:left; }
 
-.dir-ltr .message .messagearea .messagehistory .message {
+.message .messagearea .messagehistory .message {
     margin-right: 20px;
 }
-.dir-ltr .message .messagearea .messagehistory .right .message {
+.message .messagearea .messagehistory .right .message {
     margin-left: 20px;
-}
-.dir-rtl .message .messagearea .messagehistory .message {
-    margin-left: 20px;
-}
-.dir-rtl .message .messagearea .messagehistory .right .message {
-    margin-right: 20px;
 }
 .message .messagearea .messagehistory .messageactive {
     background-color: #F5F5F5;
@@ -144,11 +106,8 @@ table.message .searchresults td {padding:5px;}
     position: absolute;
     top: -2px;
 }
-.dir-ltr .message .messagearea .messagehistory .messagecontent .deleteicon {
+.message .messagearea .messagehistory .messagecontent .deleteicon {
     right: 0;
-}
-.dir-rtl .message .messagearea .messagehistory .messagecontent .deleteicon {
-    left: 0;
 }
 
 .message .messagearea .messagehistory .notification {padding:10px;background-color:#EEEEEE;margin-top:5px;}

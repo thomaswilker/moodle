@@ -8,7 +8,6 @@
 
 .path-admin #assignrole {width: 60%;margin-left: auto;margin-right: auto;}
 .path-admin .admintable .leftalign {text-align: left;}
-.dir-rtl.path-admin .admintable .leftalign {text-align: right;}
 .path-admin .admintable .centeralign {text-align: center;}
 
 .path-admin .admintable.environmenttable .name,
@@ -74,8 +73,6 @@
 #page-admin-course-manage .editcourse th,
 #page-admin-course-manage .editcourse td {padding-left:10px;padding-right:10px;}
 #page-admin-course-manage .editcourse .count {text-align:right;}
-#page-admin-course-manage.dir-rtl .editcourse td[align="left"] {text-align: right;}
-#page-admin-course-manage.dir-rtl .editcourse td[align="right"] {text-align: left;}
 
 #page-admin-report-security-index .timewarninghidden {display:none;}
 #page-admin-report-security-index .statuswarning, #page-admin-report-performance-index .statuswarning {background-color: #f0e000;}
@@ -187,7 +184,6 @@
 
 .path-admin table.rolecap {margin-left: auto;margin-right: auto;}
 .path-admin table.rolecap tr.rolecap th {text-align: left;font-weight: normal;}
-.path-admin.dir-rtl table.rolecap tr.rolecap th {text-align: right;}
 .path-admin .rolecap .hiddenrow {display: none;}
 .path-admin .rolecap .inherit,
 .path-admin .rolecap .allow,
@@ -206,7 +202,6 @@
 .environmenttable {margin-left:auto;margin-right:auto;}
 .environmenttable .cell {padding: 0.15em 0.5em;}
 .environmenttable img.iconhelp { padding-right: 0.3em;}
-.dir-rtl .environmenttable img.iconhelp { padding-left: 0.3em; padding-right: 0}
 #trustedhosts .generaltable {margin-left: auto;margin-right: auto;width: 500px;}
 #trustedhosts .standard {width: auto;}
 .form-buttons {margin: 10px 0 0 13em;}
@@ -217,24 +212,17 @@
 #adminsettings fieldset.error legend {display: block;}
 #adminsettings .form-item {clear: both;margin: 1em 0 2em 0;}
 #adminsettings .form-item .form-label {display: block;float: left;width: 12.5em;text-align: right;}
-.dir-rtl #adminsettings .form-item .form-label {float:right;}
 #adminsettings .form-item .form-label .form-shortname {display:block;}
-.dir-rtl #adminsettings .form-item .form-label .form-shortname {text-align: left;}
 #adminsettings .form-item .form-setting {display: block;margin-left: 13.5em;text-align: left;}
-.dir-rtl #adminsettings .form-item .form-setting {margin-right: 13.5em; margin-left: auto;text-align: right;}
-.dir-rtl #admin-spelllanguagelist textarea,
-#page-admin-setting-editorsettingstinymce.dir-rtl .form-textarea textarea {text-align: left;direction: ltr;}
 #adminsettings .form-item .form-setting .form-htmlarea {width:  640px;display:inline;}
 #adminsettings .form-item .form-setting .form-htmlarea .htmlarea {width:  640px;display:block;}
 #adminsettings .form-item .form-setting .form-multicheckbox li {list-style: none;}
 #adminsettings .form-item .form-setting .form-multicheckbox ul {padding:0;margin:0;}
 #adminsettings .form-item .form-setting .defaultsnext {margin-right: 0.5em;display: inline;}
 #adminsettings .form-item .form-setting .locked-checkbox {margin-right: 0.2em; margin-left: 0.5em;display: inline;}
-.dir-rtl #adminsettings .form-item .form-setting .locked-checkbox {margin-right: 0.5em; margin-left: 0.2em;display: inline;}
 #adminsettings .form-item .form-setting .form-password .unmask,
 #adminsettings .form-item .form-setting .form-defaultinfo {display: inline;}
 #adminsettings .form-item .form-description {display: block;margin: 0.5em 0 0em 14.25em;text-align: left;}
-.dir-rtl #adminsettings .form-item .form-description {margin: 0.5em 14.25em 0em 0em;}
 #adminsettings .form-item .pathok,
 #adminsettings .form-item .patherror {margin-left: 0.5em;}
 #adminsettings #admin-emoticons table td input {width: 8em;}
@@ -255,15 +243,9 @@
 
 /* Styles for flags on admin settings */
 .adminsettingsflags { float: right; }
-.dir-rtl .adminsettingsflags { float: left; }
 .adminsettingsflags label { margin-right: 7px; }
-.dir-rtl .adminsettingsflags label { margin-left: 7px; }
 
 /** Overide for RTL layout **/
-.dir-rtl #adminsettings .form-item  .form-setting,
-.dir-rtl #adminsettings .form-item  .form-label,
-.dir-rtl #adminsettings .form-item .form-description {text-align: right}
-.dir-rtl.path-admin .roleassigntable p {text-align: right;}
 
 /** Plugins check */
 #page-admin-index .checkforupdates {text-align:center;}

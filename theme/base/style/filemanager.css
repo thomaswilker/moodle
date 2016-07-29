@@ -29,7 +29,6 @@ background:#E2E2E2;filter:progid:DXImageTransform.Microsoft.gradient(startColors
  */
 #filesskin .file-picker.fp-generallayout {width:859px;background:#FFFFFF;border-radius:10px;border:1px solid #CCCCCC;position:relative;}
 .file-picker .fp-repo-area {width:180px;overflow:auto;float:left;height:525px;border-right:1px solid #BBBBBB}
-.dir-rtl .file-picker .fp-repo-area {border-left:1px solid #BBBBBB;border-right:none;float:right;}
 .file-picker .fp-repo-items {overflow: hidden;}
 .file-picker .fp-navbar {background:#F2F2F2;min-height:40px;border-bottom:1px solid #BBBBBB;}
 .file-picker .fp-content {background:#FFFFFF;clear:both;overflow:auto;height:452px;}
@@ -38,27 +37,10 @@ background:#E2E2E2;filter:progid:DXImageTransform.Microsoft.gradient(startColors
 .file-picker .fp-content-loading {height:100%;width:100%;display:table;text-align:center;}
 .file-picker .fp-content .fp-object-container {width:98%;height:98%;}
 
-.dir-rtl .file-picker .fp-list {text-align:right;}
-.dir-rtl .file-picker .fp-toolbar {padding:0;}
-.dir-rtl .file-picker .fp-list {text-align:right;}
-.dir-rtl .file-picker .fp-repo-name {display:inline;}
-.dir-rtl .file-picker .fp-pathbar {text-align:right;display:block;border-top:none;}
-.dir-rtl .file-picker div.bd {text-align:right;}
-.dir-rtl #filemenu .yuimenuitemlabel {text-align:right;}
-.dir-rtl .filepicker .yui-layout-unit-left {left:500px;}
-.dir-rtl .filepicker .yui-layout-unit-center {left:0px;}
-.dir-rtl .filepicker.moodle-dialogue-fullscreen .file-picker .fp-repo-items { float:none; }
-
-/**
- * File Manager
- */
-.dir-rtl .filemanager-toolbar a {padding:0px;}
-
 /*
  * Repositories on fp-repo-area (File Picker only)
  */
 .file-picker .fp-list {list-style-type:none;padding:0;float:left;width:100%;margin:0;}
-.dir-rtl .file-picker .fp-list {text-align:right;float:left;}
 .file-picker .fp-list .fp-repo a{display:block;padding:.5em .7em;}
 .file-picker .fp-list .fp-repo.active {background:#F2F2F2;}
 .file-picker .fp-list .fp-repo-icon {padding:0 7px 0 5px;vertical-align:text-bottom;}
@@ -67,7 +49,6 @@ background:#E2E2E2;filter:progid:DXImageTransform.Microsoft.gradient(startColors
  * Tools, Path & View on fp-navbar (File Picker and File Manager)
  */
 .fp-toolbar {display:block;line-height:22px;float:left;}
-.dir-rtl .fp-toolbar {float:right;}
 .fp-toolbar.empty {display:none;}
 .fp-toolbar .disabled {display:none;}
 .file-picker .fp-toolbar div, .fp-navbar .filemanager-toolbar .fp-toolbar div {float:left;margin:4px 0 4px 4px;}
@@ -77,14 +58,11 @@ background:#E2E2E2;filter:progid:DXImageTransform.Microsoft.gradient(startColors
 .fp-toolbar a {display:block;height:30px;width:30px;}
 .fp-toolbar a:hover {background-image:radial-gradient(ellipse at center, #ffffff 60%,#dfdfdf 100%);background-color:#ebebeb;}
 .fp-toolbar a:active {background-image:radial-gradient(ellipse at center, #ffffff 40%,#dfdfdf 100%);background-color:#dfdfdf;}
-.dir-rtl .fp-navbar .filemanager-toolbar .fp-toolbar div {margin:4px 4px 4px 0;}
 .file-picker .fp-toolbar div.disabled {display:none;}
 .fp-toolbar img {vertical-align:-15%;margin:7px;}
 .file-picker .fp-toolbar .fp-tb-search {height:30px;}
 .file-picker .fp-toolbar .fp-tb-search .fp-def-search {border:0;background:transparent;margin:0;padding:0;}
 .fp-toolbar .fp-tb-search input {background:#fff url('[[pix:a/search]]') no-repeat 7px 7px;padding:2px 6px 1px 27px;width:200px;height:27px;border: 1px solid #bbb;-webkit-border-radius: 4px;-moz-border-radius: 4px;border-radius: 4px;}
-.dir-rtl .fp-toolbar img {vertical-align:-35%;}
-.dir-rtl .file-picker .fp-viewbar, .dir-rtl .fp-navbar .filemanager-toolbar .fp-viewbar {float:left;}
 .file-picker .fp-viewbar, .fp-navbar .filemanager-toolbar .fp-viewbar {float:right;margin:4px; background:white;border:1px solid #CCCCCC;border-radius:4px;border-bottom:1px solid #B3B3B3;height:30px;}
 .fp-viewbar .fp-vb-icons, .fp-viewbar .fp-vb-details, .fp-viewbar .fp-vb-tree {width:30px;height:30px;display:block;float:left;border-right:1px solid #CCCCCC;}
 .fp-viewbar a.fp-vb-icons {border-radius:4px 0 0 4px;}
@@ -95,19 +73,13 @@ background:#E2E2E2;filter:progid:DXImageTransform.Microsoft.gradient(startColors
 .fp-viewbar.disabled a {opacity:.45;background:none;cursor:default;}
 .file-picker .fp-clear-left {clear:left;}
 
-/* over ride hover rule from core.css*/
-.dir-rtl .fp-vb-details a:hover {background:none;border:20px solid black}
-.dir-rtl .fp-vb-details.checked a:hover {background:none;border:40px solid black}
-.dir-rtl .fp-vb-tree a:hover {background:none;border:30px solid black}
-.dir-rtl .fp-vb-tree.checked a:hover {background:none;border:50px solid black}
-
 .file-picker .fp-pathbar {display:table-row;}
 .fp-pathbar.empty {display:none;}
 .fp-pathbar .fp-path-folder {background:url('[[pix:theme|fp/path_folder]]') no-repeat 0 0;width:27px;height:12px;margin-left:4px;}
-.dir-rtl .fp-pathbar .fp-path-folder {background:url('[[pix:theme|fp/path_folder_rtl]]') no-repeat right top;width:auto;height:12px;margin-left:4px;}
-.dir-rtl .fp-pathbar span {display:inline-block;float:right;margin-left:32px;}
+/*rtl:raw:
+.fp-pathbar .fp-path-folder {background-image: url('[[pix:theme|fp/path_folder_rtl]]'); }
+*/
 .fp-pathbar .fp-path-folder-name {margin-left:32px;line-height:20px;}
-.dir-rtl .fp-pathbar .fp-path-folder-name {margin-right:32px;line-height:20px;}
 
 /*
  * Icon view (File Picker and File Manager)
@@ -119,7 +91,6 @@ background:#E2E2E2;filter:progid:DXImageTransform.Microsoft.gradient(startColors
 .fp-iconview .fp-filename-field {height:33px;word-wrap:break-word;overflow:hidden;position:absolute;}
 .fp-iconview .fp-filename-field:hover {overflow:visible;z-index:1000;}
 .fp-iconview .fp-filename-field .fp-filename {background:#FFFFFF;padding-top:5px;padding-bottom:12px;min-width:112px;}
-.dir-rtl .fp-iconview .fp-file {float:right;}
 
 /*
  * Table view (File Picker only)
@@ -128,7 +99,6 @@ background:#E2E2E2;filter:progid:DXImageTransform.Microsoft.gradient(startColors
 #filesskin .file-picker .yui3-datatable-header {background:#FFFFFF;border-bottom:1px solid #CCCCCC;border-left:0 solid #FFFFFF;color:#555555;}
 #filesskin .file-picker .yui3-datatable-odd .yui3-datatable-cell {background-color:#F6F6F6;border-left:0px solid #F6F6F6;}
 #filesskin .file-picker .yui3-datatable-even .yui3-datatable-cell {background-color:#FFFFFF;border-left:0px solid #FFFFFF;}
-.dir-rtl .file-picker .yui3-datatable-header {text-align:right;}
 
 /*
  * Tree view (File Manager only)
@@ -136,30 +106,48 @@ background:#E2E2E2;filter:progid:DXImageTransform.Microsoft.gradient(startColors
 /*.file-picker .fp-treeview .fp-folder .fp-icon, .filemanager .fp-treeview .fp-folder .fp-icon {}*/
 /* first or middle sibling, no children */
 .file-picker .ygtvtn, .filemanager .ygtvtn {background:url('[[pix:moodle|y/tn]]') 0px 0px no-repeat;width:17px;height:22px;}
-.dir-rtl .file-picker .ygtvtn, .dir-rtl .filemanager .ygtvtn {background:url('[[pix:moodle|y/tn_rtl]]') 0px 0px no-repeat;}
+/*rtl:raw:
+.file-picker .ygtvtn,
+.filemanager .ygtvtn {background:url('[[pix:moodle|y/tn_rtl]]') 0px 0px no-repeat;}
+*/
 /* first or middle sibling, collapsable */
 .file-picker .ygtvtm, .filemanager .ygtvtm {background:url('[[pix:moodle|y/tm]]') 0px 10px no-repeat;width:13px;height:12px;cursor:pointer;}
 /* first or middle sibling, collapsable, hover */
 .file-picker .ygtvtmh, .filemanager .ygtvtmh {background:url('[[pix:moodle|y/tm]]') 0px 10px no-repeat;width:13px;height:12px;cursor:pointer;}
 /* first or middle sibling, expandable */
 .file-picker .ygtvtp, .filemanager .ygtvtp {background:url('[[pix:moodle|y/tp]]') 0px 10px no-repeat;width:13px;height:12px;cursor:pointer;}
-.dir-rtl .file-picker .ygtvtp, .dir-rtl .filemanager .ygtvtp {background:url('[[pix:moodle|y/tp_rtl]]') 0px 10px no-repeat;}
+/*rtl:raw:
+.file-picker .ygtvtp,
+.filemanager .ygtvtp {background:url('[[pix:moodle|y/tp_rtl]]') 0px 10px no-repeat;}
+*/
 /* first or middle sibling, expandable, hover */
 .file-picker .ygtvtph, .filemanager .ygtvtph {background:url('[[pix:moodle|y/tp]]') 0px 10px no-repeat;width:13px;height:22px;cursor:pointer;}
-.dir-rtl .file-picker .ygtvtph, .dir-rtl .filemanager .ygtvtph {background:url('[[pix:moodle|y/tp_rtl]]') 0px 10px no-repeat}
+/*rtl:raw:
+.file-picker .ygtvtph,
+.filemanager .ygtvtph {background:url('[[pix:moodle|y/tp_rtl]]') 0px 10px no-repeat}
+*/
 /* last sibling, no children */
 .file-picker .ygtvln, .filemanager .ygtvln {background:url('[[pix:moodle|y/ln]]') 0px 0px no-repeat;width:17px;height:22px;}
-.dir-rtl .file-picker .ygtvln, .dir-rtl .filemanager .ygtvln {background:url('[[pix:moodle|y/ln_rtl]]') 0px 0px no-repeat;}
+/*rtl:raw:
+.file-picker .ygtvln,
+.filemanager .ygtvln {background:url('[[pix:moodle|y/ln_rtl]]') 0px 0px no-repeat;}
+*/
 /* Last sibling, collapsable */
 .file-picker .ygtvlm, .filemanager .ygtvlm {background:url('[[pix:moodle|y/lm]]') 0px 10px no-repeat;width:13px;height:12px;cursor:pointer;}
 /* Last sibling, collapsable, hover */
 .file-picker .ygtvlmh, .filemanager .ygtvlmh {background:url('[[pix:moodle|y/lm]]') 0px 10px no-repeat;width:13px;height:12px;cursor:pointer;}
 /* Last sibling, expandable */
 .file-picker .ygtvlp, .filemanager .ygtvlp {background:url('[[pix:moodle|y/lp]]') 0px 10px no-repeat;width:13px;height:12px;cursor:pointer;}
-.dir-rtl .file-picker .ygtvlp, .dir-rtl .filemanager .ygtvlp {background:url('[[pix:moodle|y/lp_rtl]]') 0px 10px no-repeat;}
+/*rtl:raw:
+.file-picker .ygtvlp,
+.filemanager .ygtvlp {background:url('[[pix:moodle|y/lp_rtl]]') 0px 10px no-repeat;}
+*/
 /* Last sibling, expandable, hover */
 .file-picker .ygtvlph, .filemanager .ygtvlph {background:url('[[pix:moodle|y/lp]]') 0px 10px no-repeat;width:13px;height:12px;cursor:pointer;}
-.dir-rtl .file-picker .ygtvlph, .dir-rtl .filemanager .ygtvlph {background:url('[[pix:moodle|y/lp_rtl]]') 0px 10px no-repeat;}
+/*rtl:raw:
+.file-picker .ygtvlph,
+.filemanager .ygtvlph {background:url('[[pix:moodle|y/lp_rtl]]') 0px 10px no-repeat;}
+*/
 /* Loading icon */
 .file-picker .ygtvloading, .filemanager .ygtvloading {background:transparent url('[[pix:moodle|y/loading]]') 0 0 no-repeat;width:16px;height:22px;}
 /* the style for the empty cells that are used for rendering the depth* of the node */
@@ -179,10 +167,8 @@ a.ygtvspacer:hover {color:transparent;text-decoration:none;}
 
 .fp-filename-icon {margin-top:10px;display:block;position:relative;}
 .fp-icon {float:left;margin-top:-7px;width:24px;height:24px;margin-right:10px;text-align:center;line-height:24px;}
-.dir-rtl .fp-icon {float:right;margin-left:10px;margin-right:0;}
 .fp-icon img {max-height:24px;max-width:24px;vertical-align:middle;}
 .fp-filename {padding-right:10px;}
-.dir-rtl .fp-filename {padding-left:10px;padding-right:0;}
 
 /*
  * Repositories Login on fp-content (File Picker only)
@@ -327,10 +313,6 @@ a.ygtvspacer:hover {color:transparent;text-decoration:none;}
 .filemanager .fp-treeview .fp-folder.fp-hascontextmenu .fp-contextmenu,
 .filemanager .fp-tableview .fp-folder.fp-hascontextmenu .fp-contextmenu {display:inline;position:absolute;left:14px;margin-right:-20px;top:6px;}
 
-.dir-rtl .filemanager .fp-iconview .fp-folder.fp-hascontextmenu .fp-contextmenu {left:7px;right:inherit;}
-.dir-rtl .filemanager .fp-treeview .fp-folder.fp-hascontextmenu .fp-contextmenu,
-.dir-rtl .filemanager .fp-tableview .fp-folder.fp-hascontextmenu .fp-contextmenu {left:inherit;right:16px;margin-right:0;}
-
 /*
  * Drag and drop support (filemanager and filepicker form elements)
  */
@@ -397,8 +379,6 @@ a.ygtvspacer:hover {color:transparent;text-decoration:none;}
 .filemanager.fp-mkdir-dlg {text-align:center;}
 .filemanager.fp-mkdir-dlg .fp-mkdir-dlg-text {text-align:left;margin:20px;}
 
-.dir-rtl .filemanager .fp-mkdir-dlg p {text-align:right;}
-
 /*
  * Confirm dialogue for delete (File Manager only)
  */
@@ -409,25 +389,6 @@ a.ygtvspacer:hover {color:transparent;text-decoration:none;}
  *file picker search dialog
  */
 .file-picker div.bd {text-align:left;}
-
-/* RTL Overrides
--------------------------*/
-.dir-rtl .file-picker div.bd {text-align:right;}
-.dir-rtl .file-picker .fp-pathbar {text-align:right;}
-.dir-rtl .file-picker .fp-list {text-align:right;}
-.dir-rtl .filepicker .yui-layout-unit-left {left:500px;}
-.dir-rtl .filepicker .yui-layout-unit-center {left:0;}
-.dir-rtl #filemenu .yuimenuitemlabel {text-align:right;}
-.dir-rtl .filemanager-container .yui3-skin-sam .yui3-datatable-header {text-align:right;}
-.dir-rtl .filemanager .fp-restrictions { text-align: left; }
-.dir-rtl .file-picker .fp-toolbar .fp-tb-search input {
-    background-position: 208px 7px;
-    padding: 2px 30px 1px 3px;
-}
-.dir-rtl .file-picker .fp-toolbar div {
-    float: right;
-    margin-left:4px;
-}
 
 /*
  * Forms for file picker.
@@ -447,17 +408,7 @@ a.ygtvspacer:hover {color:transparent;text-decoration:none;}
 .fp-forminset .controls.control-radio { margin-left: 105px; }
 .fp-forminset .controls.control-radio input { margin-top: 5px; }
 .file-picker .fp-fileinfo .fp-value { display: inline-block; padding-left: 5px; }
-.dir-rtl .fp-forminset label {display:block;float:right;width:95px;text-align:right;margin:0 0 0 10px;}
-.dir-rtl .fp-forminset .controls {float:right;}
-.dir-rtl .fp-forminset .fp-select-buttons {float:left;}
-.dir-rtl .fp-forminset .fp-setlicense select, .dir-rtl .fp-forminset .fp-license select {width:272px;}
-.dir-rtl .fp-forminset input[type="text"] { width: 258px; margin: 0; }
-.dir-rtl .fp-forminset label.control-radio { float: left; text-align: right; width: 250px; margin-left: 0; }
-.dir-rtl .fp-forminset .controls.control-radio { margin: 0 100px 0 0; }
-.dir-rtl .fp-select .fp-thumbnail { margin-right: 0;}
-.dir-rtl .file-picker .fp-fileinfo .fp-value { display: inline-block; padding: 0 5px 0 0; }
-.dir-rtl .fp-formset div {text-align:right;}
-.dir-rtl .fp-formset label {float:right;text-align:left; margin:0 0 0 10px;}
+
 /**
  * Responsive styles for the filepicker
  */
@@ -465,14 +416,9 @@ a.ygtvspacer:hover {color:transparent;text-decoration:none;}
     .file-picker .fp-repo-area {width:100%;height:auto;max-height:220px;y-scroll:auto;float:none;border:0px;}
     .file-picker .fp-repo-items {width:100%;float:none;margin-left:0;}
     .file-picker .fp-login-form .fp-login-input .label {text-align:left;}
-    .dir-rtl .file-picker .fp-login-form .fp-login-input .label {text-align:right;}
     .file-picker .fp-content form td {display:block;width:100%;text-align:left;}
-    .dir-rtl .file-picker .fp-content form td {text-align:right;}
     .fp-content .mdl-right {text-align:left;}
-    .dir-rtl .fp-content .mdl-right {text-align:right;}
     .fp-repo-items .fp-navbar {border-top:1px solid rgb(187, 187, 187);}
     .fp-formset, .fp-forminset {margin:0 10px;width:auto;}
     .fp-formset label, .fp-forminset label {float:none;width:210px;text-align:left;margin:5px 0;}
-    .dir-rtl .fp-formset label, .dir-rtl .fp-forminset label {text-align:right;float:none;}
-    .dir-rtl .filepicker.moodle-dialogue-fullscreen .file-picker .fp-repo-items { float:right; }
 }

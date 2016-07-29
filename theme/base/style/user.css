@@ -52,19 +52,11 @@
 #userselector_options {padding:0.3em 0;}
 #userselector_options .collapsibleregioncaption {font-weight: bold;}
 #userselector_options p {margin:0.2em 0;text-align:left;}
-.dir-rtl #userselector_options p {text-align:right;}
 /** user full profile */
 #page-user-profile .messagebox {text-align:center;margin-left:auto;margin-right:auto;}
 /** user course profile */
 #page-course-view-weeks .messagebox {text-align:center;margin-left:auto;margin-right:auto;}
 
-/** Overide for RTL layout **/
-.dir-rtl .userprofile .profilepicture {float:right; margin-left:20px;margin-right:0px;}
-.dir-rtl .userlist table#participants td,
-.dir-rtl .userlist table#participants th {text-align: right;}
-.dir-rtl .userlist table#participants {margin: 0 auto;}
-.dir-rtl .userprofile dl dt {float:right; width:110px; margin-left:10px;}
-.dir-rtl .userprofile dl dd {margin-right: 120px;}
 #page-my-index.dir-rtl .block h3 { text-align: right;}
 
 #groupeditform .groups,
@@ -78,8 +70,4 @@
 #groupeditform .members select {
     min-width: 175px;
 }
-.dir-rtl #groupeditform .groups,
-.dir-rtl #groupeditform .members {
-    float: right;
-    text-align: right;
-}
+
