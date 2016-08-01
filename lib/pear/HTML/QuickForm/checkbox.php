@@ -23,7 +23,7 @@ require_once("HTML/QuickForm/input.php");
 
 /**
  * HTML class for a checkbox type field
- * 
+ *
  * @author       Adam Daniel <adaniel1@eesus.jnj.com>
  * @author       Bertrand Mansion <bmansion@mamasam.com>
  * @version      1.1
@@ -47,11 +47,11 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
 
     /**
      * Class constructor
-     * 
+     *
      * @param     string    $elementName    (optional)Input field name attribute
      * @param     string    $elementLabel   (optional)Input field value
      * @param     string    $text           (optional)Checkbox display text
-     * @param     mixed     $attributes     (optional)Either a typical HTML attribute string 
+     * @param     mixed     $attributes     (optional)Either a typical HTML attribute string
      *                                      or an associative array
      * @since     1.0
      * @access    public
@@ -80,7 +80,7 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
 
     /**
      * Sets whether a checkbox is checked
-     * 
+     *
      * @param     bool    $checked  Whether the field is checked or not
      * @since     1.0
      * @access    public
@@ -100,7 +100,7 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
 
     /**
      * Returns whether a checkbox is checked
-     * 
+     *
      * @since     1.0
      * @access    public
      * @return    bool
@@ -109,13 +109,13 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
     {
         return (bool)$this->getAttribute('checked');
     } //end func getChecked
-    
+
     // }}}
     // {{{ toHtml()
 
     /**
      * Returns the checkbox element in HTML
-     * 
+     *
      * @since     1.0
      * @access    public
      * @return    string
@@ -123,6 +123,7 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
     function toHtml()
     {
         $this->_generateId(); // Seems to be necessary when this is used in a group.
+
         if (0 == strlen($this->_text)) {
             $label = '';
         } elseif ($this->_flagFrozen) {
@@ -130,15 +131,23 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
         } else {
             $label = '<label for="' . $this->getAttribute('id') . '">' . $this->_text . '</label>';
         }
-        return HTML_QuickForm_input::toHtml() . $label;
+
+        $out = '';
+        if ($this->_flagFrozen) {
+            $out = $this->getFrozenHtml();
+        } else {
+            $out = $this->_getTabs() . '<input class="form-check-input" ' . $this->_getAttrString($this->_attributes) . ' />';
+        }
+
+        return $out . $label;
     } //end func toHtml
-    
+
     // }}}
     // {{{ getFrozenHtml()
 
     /**
      * Returns the value of field without HTML tags
-     * 
+     *
      * @since     1.0
      * @access    public
      * @return    string
@@ -158,8 +167,8 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
 
     /**
      * Sets the checkbox text
-     * 
-     * @param     string    $text  
+     *
+     * @param     string    $text
      * @since     1.1
      * @access    public
      * @return    void
@@ -173,8 +182,8 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
     // {{{ getText()
 
     /**
-     * Returns the checkbox text 
-     * 
+     * Returns the checkbox text
+     *
      * @since     1.1
      * @access    public
      * @return    string
@@ -271,7 +280,7 @@ class HTML_QuickForm_checkbox extends HTML_QuickForm_input
         }
         return $this->_prepareValue($value, $assoc);
     }
-    
+
     // }}}
 } //end class HTML_QuickForm_checkbox
 ?>

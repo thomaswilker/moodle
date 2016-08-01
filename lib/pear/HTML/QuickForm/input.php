@@ -23,7 +23,7 @@ require_once("HTML/QuickForm/element.php");
 
 /**
  * Base class for input form elements
- * 
+ *
  * @author       Adam Daniel <adaniel1@eesus.jnj.com>
  * @author       Bertrand Mansion <bmansion@mamasam.com>
  * @version      1.0
@@ -37,7 +37,7 @@ class HTML_QuickForm_input extends HTML_QuickForm_element
 
     /**
      * Class constructor
-     * 
+     *
      * @param    string     Input field name attribute
      * @param    mixed      Label(s) for the input field
      * @param    mixed      Either a typical HTML attribute string or an associative array
@@ -75,13 +75,13 @@ class HTML_QuickForm_input extends HTML_QuickForm_element
         $this->_type = $type;
         $this->updateAttributes(array('type'=>$type));
     } // end func setType
-    
+
     // }}}
     // {{{ setName()
 
     /**
      * Sets the input field name
-     * 
+     *
      * @param     string    $name   Input field name attribute
      * @since     1.0
      * @access    public
@@ -91,13 +91,13 @@ class HTML_QuickForm_input extends HTML_QuickForm_element
     {
         $this->updateAttributes(array('name'=>$name));
     } //end func setName
-    
+
     // }}}
     // {{{ getName()
 
     /**
      * Returns the element name
-     * 
+     *
      * @since     1.0
      * @access    public
      * @return    string
@@ -106,7 +106,7 @@ class HTML_QuickForm_input extends HTML_QuickForm_element
     {
         return $this->getAttribute('name');
     } //end func getName
-    
+
     // }}}
     // {{{ setValue()
 
@@ -137,13 +137,13 @@ class HTML_QuickForm_input extends HTML_QuickForm_element
     {
         return $this->getAttribute('value');
     } // end func getValue
-    
+
     // }}}
     // {{{ toHtml()
 
     /**
      * Returns the input field in HTML
-     * 
+     *
      * @since     1.0
      * @access    public
      * @return    string
@@ -153,7 +153,7 @@ class HTML_QuickForm_input extends HTML_QuickForm_element
         if ($this->_flagFrozen) {
             return $this->getFrozenHtml();
         } else {
-            return $this->_getTabs() . '<input' . $this->_getAttrString($this->_attributes) . ' />';
+            return $this->_getTabs() . '<input class="form-control" ' . $this->_getAttrString($this->_attributes) . ' />';
         }
     } //end func toHtml
 
@@ -169,7 +169,7 @@ class HTML_QuickForm_input extends HTML_QuickForm_element
      * @since     1.0
      * @access    public
      * @return    void
-     * @throws    
+     * @throws
      */
     function onQuickFormEvent($event, $arg, &$caller)
     {
@@ -205,7 +205,7 @@ class HTML_QuickForm_input extends HTML_QuickForm_element
             return parent::exportValue($submitValues, $assoc);
         }
     }
-    
+
     // }}}
 } // end class HTML_QuickForm_element
 ?>

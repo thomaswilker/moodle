@@ -98,7 +98,7 @@ class MoodleQuickForm_text extends HTML_QuickForm_text{
     {
         $attributes = array('readonly' => 'readonly');
         $this->updateAttributes($attributes);
-        return $this->_getTabs() . '<input' . $this->_getAttrString($this->_attributes) . ' />' . $this->_getPersistantData();
+        return $this->_getTabs() . '<input class="form-control" ' . $this->_getAttrString($this->_attributes) . ' />' . $this->_getPersistantData();
     } //end func getFrozenHtml
 
     /**
