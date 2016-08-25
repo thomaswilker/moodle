@@ -1,0 +1,20 @@
+.action-menu .userbutton {
+    padding-top: .425rem;
+    padding-bottom: .425rem;
+    display: inline-block;
+
+    .userpicture {
+        position: absolute;
+        margin-top: -24px;
+        margin-left: -4px;
+    }
+
+    .usertext {
+        padding-top: .425rem;
+        padding-bottom: .425rem;
+    }
+    .avatars {
+        width: 42px;
+        display: inline-block;
+    }
+}

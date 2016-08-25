@@ -17,6 +17,10 @@
     </div>
     <a class="navbar-brand" href="{{{ config.wwwroot }}}">{{{ sitename }}}</a>
 
+    <nav class="nav navbar-nav">
+    {{> theme_noname/navbar_blocks }}
+    </nav>
+
     <div class="collapse navbar-toggleable-xs" id="bd-main-nav">
         <nav class="nav navbar-nav">
             <!-- search_box -->
@@ -35,15 +39,16 @@
     {{{ output.full_header }}}
 
     <div id="page-content" class="row">
-        <div id="region-main-box" class="col-md-9">
+        <div id="region-main-box">
             <div class="row">
-                <section id="region-main" class="col-md-8 push-md-4 col-lg-9 push-lg-3">
+                <section id="region-main" class="col-md-10 push-md-2">
                     {{{ output.main_content }}}
                 </section>
-                {{{ sidepreblocks }}}
+                <section id="region-flat-nav" class="col-md-2 pull-md-10">
+                    Flat nav region.
+                </section>
             </div>
         </div>
-        {{{ sidepostblocks }}}
     </div>
 
     {{{ output.standard_end_of_body_html }}}

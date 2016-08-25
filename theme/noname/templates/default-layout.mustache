@@ -16,8 +16,12 @@
         <button class="navbar-toggler pull-xs-right hidden-sm-up" data-toggle="collapse" data-target="#bd-main-mav">☰<span class="sr-only">{{#str}}expand{{/str}}</span></button>
     </div>
     <a class="navbar-brand" href="{{{ config.wwwroot }}}">{{{ sitename }}}</a>
+
+    <nav class="nav navbar-nav">
     <!-- user_menu -->
     {{{ output.user_menu }}}
+    {{> theme_noname/navbar_blocks }}
+    </nav>
 
     <div class="collapse navbar-toggleable-xs" id="bd-main-nav">
         <nav class="nav navbar-nav">
@@ -27,24 +31,31 @@
             {{{ output.custom_menu }}}
             <!-- page_heading_menu -->
             {{{ output.page_heading_menu }}}
-        </div>
-    </nav>
+        </nav>
+    </div>
 </header>
 
 <div id="page" class="container-fluid">
     {{{ output.full_header }}}
 
     <div id="page-content" class="row">
-        <div id="region-main-box" class="col-md-9 push-md-3">
-            <section id="region-main">
+        <div id="region-main-box">
+            <section id="region-main" class="col-md-9 push-md-3 p-r-1 col-lg-10 push-lg-2">
                 {{{ output.course_content_header }}}
                 {{{ output.main_content }}}
                 {{{ output.course_content_footer }}}
             </section>
+            <section id="region-flat-nav" class="col-md-3 pull-md-9 col-lg-2 pull-lg-10">
+                <div class="list-group">
+                  {{#flatnav}}
+                  <a href="{{{action}}}" class="list-group-item list-group-item-action {{#active}}active{{/active}}">
+                     {{{icon}}}{{{text}}}
+                  </a>
+                  {{/flatnav}}
+                </div>
+            </section>
         </div>
-        {{{ sidepreblocks }}}
     </div>
-
 </div>
 <footer id="page-footer">
     <div id="course-footer">{{{ output.course_footer }}}</div>

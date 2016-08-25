@@ -1,0 +1,16 @@
+<div class="pull-xs-right m-r-2 nav-item" data-region="blocks-menu-button">
+    <span class="dropdown">
+        <a href="#" class="dropdown-toggle nav-link" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" id="dropdownblockslabel">{{#pix}}blocks, theme_noname, {{#str}}blocks{{/str}}{{/pix}}</a>
+        <div class="dropdown-menu aria-labelledby="dropdownblockslabel" data-region="blocks-menu">
+            {{! Content of blocks menu is inserted here with javascript }}
+        </div>
+    </span>
+    <div data-region="blocks">
+        {{{ blocks }}}
+    </div>
+    {{#js}}
+        require(['theme_noname/blocks'], function(mod) {
+            mod.init('[data-region="blocks"]', '[data-region="blocks-menu"]', '[data-region="blocks-menu-button"]');
+        });
+    {{/js}}
+</div>

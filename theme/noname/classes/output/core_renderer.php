@@ -232,7 +232,11 @@ class core_renderer extends \core_renderer {
             $context->controls = $this->block_controls($bc->controls, $id);
         }
 
-        return $this->render_from_template('core/block', $context);
+        if ($region == 'content') {
+            return $this->render_from_template('core/block_content', $context);
+        } else {
+            return $this->render_from_template('core/block', $context);
+        }
     }
 
     /**

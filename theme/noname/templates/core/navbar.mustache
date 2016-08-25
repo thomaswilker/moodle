@@ -1,10 +1,34 @@
 <ol class="breadcrumb" role="navigation">
     {{#get_items}}
-        {{#has_action}}
-        <li class="breadcrumb-item {{#is_active}}active{{/is_active}}"><a href="{{action}}" {{#get_title}}title="{{get_title}}"{{/get_title}}>{{text}}</a></li>
-        {{/has_action}}
-        {{^has_action}}
-        <li class="breadcrumb-item {{#is_active}}active{{/is_active}}">{{text}}</li>
-        {{/has_action}}
+        <li class="breadcrumb-item {{#is_active}}active{{/is_active}}">
+        {{! <div class="NO-btn-group"> }}
+            <span class="dropdown">
+            <a {{#parent.has_children}}
+                    id="crumbs{{key}}"
+                    href="#"
+                    class="dropdown-toggle"
+                    data-toggle="dropdown"
+                    aria-haspopup="true"
+                    aria-expanded="false"
+                {{/parent.has_children}}
+                {{^parent.has_children}}
+                    href="{{{action}}}"
+                {{/parent.has_children}}
+                 {{#get_title}}title="{{get_title}}"{{/get_title}}>
+                {{text}}
+            </a>
+            {{#parent.has_children}}
+                <div class="dropdown-menu" aria-labelledby="crumbs{{key}}">
+                    {{#parent}}
+                        {{#children}}
+                            <a class="dropdown-item" href="{{{action}}}" {{#get_title}}title="{{get_title}}"{{/get_title}}>{{text}}</a>
+                        {{/children}}
+                    {{/parent}}
+                </div>
+            {{/parent.has_children}}
+            </span>
+        {{! </div> }}
+        </li>
     {{/get_items}}
 </ol>
+

@@ -41,7 +41,9 @@ $string['presetpaper'] = 'Paper';
 $string['presetreadable'] = 'Readable';
 $string['rawscss'] = 'Raw SCSS';
 $string['rawscss_desc'] = 'Use this field to provide SCSS code which will be injected at the end of the the stylesheet.';
-$string['region-side-post'] = 'Right';
-$string['region-side-pre'] = 'Left';
+$string['region-default'] = 'Blocks menu';
 $string['scssvariables'] = 'SCSS variables';
 $string['scssvariables_desc'] = 'Use this field to set your own SCSS variable values. Define one variable per line. Syntax: $my-color: red;.';
+
+$string['choosefromnav'] = 'Choose a sub-page from the navigation';
+$string['togglemenu'] = 'Toggle menu';

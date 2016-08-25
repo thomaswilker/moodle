@@ -10,16 +10,7 @@
     margin-right: 0.5rem;
 }
 
-a:first-of-type > .icon {
-    margin-left: 0.5rem;
-}
-
 // Fix the cog icon for an action menu.
-.action-menu > .dropdown {
-    margin-left: -0.5rem;
-}
-
-// Fix the first item in a drop down menu (it's a list of links and icons, but has been made vertical.
-.dropdown a.dropdown-item .icon {
-    margin-left: 0px;
+.dropdown-toggle .icon {
+    margin-right: 0;
 }
