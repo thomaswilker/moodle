@@ -40,12 +40,12 @@ define(['jquery', 'core/templates'], function($, Templates) {
                     id = $(block).attr('id'),
                     type = $(block).data('type');
 
-                //if (type != "navigation") {
+                if (type != "navigation" && type != 'settings') {
                     allblocks.push({
                         title : title,
                         id : id
                     });
-                //}
+                }
             }).bind(this);
 
             allblocks = allblocks.sort(function(a, b) {
