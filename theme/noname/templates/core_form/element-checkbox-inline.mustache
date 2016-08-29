@@ -1,7 +1,18 @@
 <label class="form-check-inline {{#error}}has-danger{{/error}}">
+<input type="hidden" name="{{element.name}}" value="0">
 <input type="checkbox" name="{{element.name}}"
-    id="{{element.id}}" value="{{element.value}}" size="{{element.size}}"
-    {{#element.frozen}}readonly disabled{{/element.frozen}}
+    id="{{element.id}}"
+    {{#element.value}}
+        value="{{element.value}}"
+    {{/element.value}}
+    {{^element.value}}
+        value="1"
+    {{/element.value}}
+    {{#element.checked}}checked{{/element.checked}}
+    size="{{element.size}}"
+    {{#element.frozen}}
+        readonly disabled
+    {{/element.frozen}}
     {{#error}}
         autofocus aria-describedby="id_error_{{element.name}}"
     {{/error}}

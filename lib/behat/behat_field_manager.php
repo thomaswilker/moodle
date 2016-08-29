@@ -228,6 +228,11 @@ class behat_field_manager {
             return 'availability';
         }
 
+        // If the type is explictly set on the element pointed to by the label - use it.
+        if ($type = $fieldnode->getParent()->getAttribute('data-fieldtype')) {
+            return $type;
+        }
+
         // We look for a parent node with 'felement' class.
         if ($class = $fieldnode->getParent()->getAttribute('class')) {
 

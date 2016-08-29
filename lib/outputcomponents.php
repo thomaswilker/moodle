@@ -971,11 +971,30 @@ class single_select implements renderable, templatable {
         $data->nothingkey = $hasnothing ? key($nothing) : false;
 
         foreach ($options as $value => $name) {
-            $data->options[] = [
-                'value' => $value,
-                'name' => $options[$value],
-                'selected' => $this->selected == $value
-            ];
+            if (is_array($options[$value])) {
+                foreach ($options[$value] as $optgroupname => $optgroupvalues) {
+                    $sublist = [];
+                    foreach ($optgroupvalues as $optvalue => $optname) {
+                        $sublist[] = [
+                            'value' => $optvalue,
+                            'name' => $optname,
+                            'selected' => $this->selected == $optvalue,
+                        ];
+                    }
+                    $data->options[] = [
+                        'name' => $optgroupname,
+                        'optgroup' => true,
+                        'options' => $sublist
+                    ];
+                }
+            } else {
+                $data->options[] = [
+                    'value' => $value,
+                    'name' => $options[$value],
+                    'selected' => $this->selected == $value,
+                    'optgroup' => false
+                ];
+            }
         }
 
         // Label attributes.

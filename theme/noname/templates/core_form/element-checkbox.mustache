@@ -1,8 +1,16 @@
 <div class="form-group row {{#error}}has-danger{{/error}}">
     <div class="col-md-9 push-md-3 checkbox">
         <label>
-        <input type="checkbox" name="{{element.name}}"
-            id="{{element.id}}" value="{{element.value}}" size="{{element.size}}"
+        <input type="hidden" name="{{element.name}}" value="0">
+        <input type="checkbox"
+            name="{{element.name}}"
+            {{#element.value}}
+                value="{{element.value}}"
+            {{/element.value}}
+            {{^element.value}}
+                value="1"
+            {{/element.value}}
+            id="{{element.id}}" {{#element.checked}}checked{{/element.checked}}
             {{#element.frozen}}readonly disabled{{/element.frozen}}
             {{#error}}
                 autofocus aria-describedby="id_error_{{element.name}}"

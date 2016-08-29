@@ -548,6 +548,27 @@ div#dock {
 .path-mod-assign [data-region="grade-actions-panel"] [data-region="grade-actions"] .collapse-buttons {
     top: auto;
 }
+.path-mod-assign [data-region="grade-panel"] .has-popout {
+  background-color: $card-bg;
+  @include border-radius($card-border-radius);
+  border: $card-border-width solid $card-border-color;
+}
+.path-mod-assign [data-region="grade-panel"] .popout {
+    background-color: $modal-content-bg;
+}
+.path-mod-assign [data-region="grade-panel"] .col-md-3 {
+    width: 100%;
+}
+.path-mod-assign [data-region="grade-panel"] .popout > .col-md-3 {
+    @extend .modal-header;
+    font-size: 1.5rem;
+}
+.path-mod-assign [data-region="grade-panel"] [data-region="popout-button"] {
+    margin-top: 0.5rem;
+}
+.path-mod-assign [data-region="grade-panel"] .popout [data-region="popout-button"] {
+    margin-top: 0;
+}
 .path-mod-assign [data-region="grade-panel"] h3 {
     margin: 10px 0;
     line-height: 40px;

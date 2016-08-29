@@ -17,11 +17,11 @@
 {{#js}}
 require(['core/form-autocomplete'], function(module) {
     module.enhance({{#quote}}#{{element.id}}{{/quote}},
-                   {{#quote}}{{element.tags}}{{/quote}},
+                   {{element.tags}},
                    {{#quote}}{{element.ajax}}{{/quote}},
                    {{#quote}}{{element.placeholder}}{{/quote}},
-                   {{#quote}}{{element.casesensitive}}{{/quote}},
-                   {{#quote}}{{element.showsuggestions}}{{/quote}},
+                   {{element.casesensitive}},
+                   {{element.showsuggestions}},
                    {{#quote}}{{element.noselectionstring}}{{/quote}});
 });
 {{/js}}

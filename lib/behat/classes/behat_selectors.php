@@ -95,10 +95,9 @@ class behat_selectors {
 .//li[contains(concat(' ', normalize-space(@class), ' '), ' activity ')][normalize-space(.) = %locator% ]
 XPATH
         , 'block' => <<<XPATH
-.//div[contains(concat(' ', normalize-space(@class), ' '), ' block ') and
-    (contains(concat(' ', normalize-space(@class), ' '), concat(' ', %locator%, ' ')) or
-     descendant::h2[normalize-space(.) = %locator%] or
-     @aria-label = %locator%)]
+.//*[@data-block][contains(concat(' ', normalize-space(@class), ' '), concat(' ', %locator%, ' ')) or
+     descendant::*[self::h2|self::h3][normalize-space(.) = %locator%]  or
+     @aria-label = %locator%]
 XPATH
         , 'dialogue' => <<<XPATH
 .//div[contains(concat(' ', normalize-space(@class), ' '), ' moodle-dialogue ') and

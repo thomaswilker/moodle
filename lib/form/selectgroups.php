@@ -533,6 +533,7 @@ class MoodleQuickForm_selectgroups extends HTML_QuickForm_element implements tem
                     $o['selected'] = false;
                 }
                 $o['text'] = $option['text'];
+                $o['value'] = $option['attr']['value'];
                 $options[] = $o;
             }
 
