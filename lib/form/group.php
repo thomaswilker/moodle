@@ -125,9 +125,8 @@ class MoodleQuickForm_group extends HTML_QuickForm_group implements templatable 
         include_once('HTML/QuickForm/Renderer/Default.php');
 
         $elements = [];
+        $name = $this->getName();
         foreach ($this->_elements as $key => $element) {
-            $element->_generateId();
-            $name = $this->getName();
             $elementname = '';
             if ($this->_appendName) {
                 $elementname = $element->getName();
@@ -137,6 +136,7 @@ class MoodleQuickForm_group extends HTML_QuickForm_group implements templatable 
                     $element->setName($name);
                 }
             }
+            $element->_generateId();
 
             $out = $OUTPUT->mform_element($element, false, false, '', true);
 
