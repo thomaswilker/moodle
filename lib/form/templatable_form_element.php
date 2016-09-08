@@ -65,6 +65,7 @@ trait templatable_form_element {
             $classpropname = '_' . $propname;
             $context[strtolower($propname)] = isset($this->$classpropname) ? $this->$classpropname : false;
         }
+        $extraclasses = $this->getAttribute('class');
 
         // Special wierd named property.
         $context['frozen'] = !empty($this->_flagFrozen);
@@ -72,10 +73,11 @@ trait templatable_form_element {
         // Other attributes.
         $otherattributes = [];
         foreach ($this->getAttributes() as $attr => $value) {
-            if (!in_array($attr, $standardattributes)) {
+            if (!in_array($attr, $standardattributes) && $attr != 'class') {
                 $otherattributes[] = $attr . '="' . s($value) . '"';
             }
         }
+        $context['extraclasses'] = $extraclasses;
         $context['type'] = $this->getType();
         $context['attributes'] = implode(' ', $otherattributes);
 
