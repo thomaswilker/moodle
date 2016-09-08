@@ -844,6 +844,10 @@ $table-border-color: #f4f4f4;
             color: #fff;
         }
     }
+    .container {
+        padding-left: 0;
+        padding-right: 0;
+    }
     .navbar-nav {
         .nav-link {
             font-size: $font-size-sm;
@@ -989,25 +993,10 @@ $table-border-color: #f4f4f4;
     margin-top: 0;
 }
 
-.activityinstance {
-    > a,
-    .inplaceeditable.inplaceeditable-text {
-        display: block;
-        text-indent: -31px;
-        padding-left: 31px;
-    }
-}
 
-.editing .section .activity {
-    &:hover,
-    &.action-menu-shown {
-        background-color: $table-bg-accent;
-    }
-}
-
-
-// Forum
-
+/**
+ * Forum.
+ */
 .forumaddnew {
     text-align: center;
     display: block;
