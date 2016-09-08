@@ -4,9 +4,11 @@
         {{#required}}<abbr class="initialism text-danger" title="{{#str}}required{{/str}}">✲</abbr>{{/required}}
         {{#advanced}}<abbr class="initialism text-info" title="{{#str}}advanced{{/str}}">❗</abbr>{{/advanced}}
     </label>
+    <span data-fieldtype="{{element.type}}">
         {{$ element }}
             <!-- Element goes here -->
         {{/ element }}
+    </span>
     <div class="form-control-feedback" id="id_error_{{element.name}}" {{^error}} style="display: none;"{{/error}}>
         {{{error}}}
     </div>

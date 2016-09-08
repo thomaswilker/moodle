@@ -4,6 +4,7 @@
         <input type="radio" name="{{element.name}}"
             id="{{element.id}}" value="{{element.value}}" size="{{element.size}}"
             {{#element.frozen}}readonly disabled{{/element.frozen}}
+            {{element.checked}}checked{{/element.checked}}
             {{#error}}
                 autofocus aria-describedby="id_error_{{element.name}}"
             {{/error}} {{{element.attributes}}} >

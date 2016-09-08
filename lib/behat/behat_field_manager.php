@@ -204,7 +204,6 @@ class behat_field_manager {
 
         // We already waited when getting the NodeElement and we don't want an exception if it's not part of a moodleform.
         $parentformfound = $fieldnode->find('xpath',
-            "/ancestor::fieldset" .
             "/ancestor::form[contains(concat(' ', normalize-space(@class), ' '), ' mform ')]"
         );
 
