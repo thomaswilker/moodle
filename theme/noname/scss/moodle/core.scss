@@ -377,8 +377,12 @@ a.skip:active {
 }
 
 // My Moodle
-.path-my .coursebox .overview {
-    margin: 15px 30px 10px 30px;
+.path-my .coursebox {
+    margin: $spacer-y 0;
+    padding: 0;
+    .overview {
+        margin: 15px 30px 10px 30px;
+    }
 }
 .path-my .coursebox .info {
     float: none;
