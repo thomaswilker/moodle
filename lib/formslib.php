@@ -2200,6 +2200,9 @@ class MoodleQuickForm extends HTML_QuickForm_DHTMLRulesTableless {
 
         $js = '
 
+window.skipClientValidation = false;
+
+
 require(["core/event", "jquery"], function(Event, $) {
 
     function qf_errorHandler(element, _qfMsg, escapedName) {
@@ -2361,9 +2364,7 @@ require(["core/event", "jquery"], function(Event, $) {
 ';
 
         $PAGE->requires->js_amd_inline($js);
-
-        // Global variable used to skip the client validation.
-        return 'var skipClientValidation = false;';
+        return '';
     } // end func getValidationScript
 
     /**
