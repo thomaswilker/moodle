@@ -1601,35 +1601,59 @@ class oci_native_moodle_database extends moodle_database {
 
     public function sql_concat() {
         $arr = func_get_args();
+        $needhack = false;
         if (empty($arr)) {
             return " ' ' ";
         }
         foreach ($arr as $k => $v) {
             if ($v === "' '") {
                 $arr[$k] = "'*OCISP*'"; // New mega hack.
+                $needhack = true;
+            } else if (strpos("'", $v) === false) {
+                // This was not a quoted string.
+                $needhack = true;
             }
         }
-        $s = $this->recursive_concat($arr);
-        return " MOODLELIB.UNDO_MEGA_HACK($s) ";
+        // The MEGA HACK is very slow. If it is not required skip it.
+        if ($needhack) {
+            $s = $this->recursive_concat($arr);
+            return " MOODLELIB.UNDO_MEGA_HACK($s) ";
+        } else {
+            return '(' . implode(' || ', $arr) . ')';
+        }
     }
 
     public function sql_concat_join($separator="' '", $elements = array()) {
+        $needhack = false;
         if ($separator === "' '") {
             $separator = "'*OCISP*'"; // New mega hack.
+            $needhack = true;
+        } else if ($separator == '') {
+            $needhack = true;
         }
         foreach ($elements as $k => $v) {
             if ($v === "' '") {
                 $elements[$k] = "'*OCISP*'"; // New mega hack.
+                $needhack = true;
+            } else if (strpos("'", $v) === false) {
+                // This was not a quoted string.
+                $needhack = true;
             }
         }
         for ($n = count($elements)-1; $n > 0 ; $n--) {
             array_splice($elements, $n, 0, $separator);
         }
+
         if (empty($elements)) {
             return " ' ' ";
         }
-        $s = $this->recursive_concat($elements);
-        return " MOODLELIB.UNDO_MEGA_HACK($s) ";
+        // The MEGA HACK is very slow. If it is not required skip it.
+        if ($needhack) {
+            $s = $this->recursive_concat($elements);
+            return " MOODLELIB.UNDO_MEGA_HACK($s) ";
+        } else {
+            return '(' . implode(' || ', $elements) . ')';
+        }
     }
 
     /**
