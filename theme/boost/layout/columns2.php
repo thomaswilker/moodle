@@ -23,10 +23,21 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright 2016 Damyon Wiese
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+user_preference_allow_ajax_update('blocks-drawer-open', PARAM_ALPHA);
+
+$blocksdraweropen = (get_user_preferences('blocks-drawer-open', 'true') == 'true');
+$extraclasses = [];
+if ($blocksdraweropen) {
+    $extraclasses = ['blocks-drawer-open'];
+}
+$bodyattributes = $OUTPUT->body_attributes($extraclasses);
 $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, array('context' => context_course::instance(SITEID))),
     'output' => $OUTPUT,
-    'sidepreblocks' => $OUTPUT->blocks('side-pre', 'col-md-4 pull-md-8'),
+    'sidepreblocks' => $OUTPUT->blocks('side-pre'),
+    'bodyattributes' => $bodyattributes,
+    'blocksdraweropen' => $blocksdraweropen
 ];
 
 echo $OUTPUT->render_from_template('theme_boost/columns2', $templatecontext);

@@ -319,7 +319,7 @@ class core_renderer extends \core_renderer {
      * @return string
      */
     public function body_css_classes(array $additionalclasses = array()) {
-        return $this->page->bodyclasses;
+        return $this->page->bodyclasses . ' ' . implode(' ', $additionalclasses);
     }
 
     /**
