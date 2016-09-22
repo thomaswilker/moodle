@@ -109,6 +109,9 @@ class core_renderer extends \core_renderer {
      * Uses bootstrap compatible html.
      */
     public function navbar() {
+        if (get_config('theme_boost', 'alternatenavigation')) {
+            $this->page->navbar->set_breadcrumb_menus(true);
+        }
         return $this->render_from_template('core/navbar', $this->page->navbar);
     }
 

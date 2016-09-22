@@ -237,6 +237,65 @@ class navigation_node implements renderable {
     }
 
     /**
+     * True if this nav node has siblings in the tree.
+     *
+     * @return bool
+     */
+    public function has_siblings() {
+        if (empty($this->parent) || empty($this->parent->children)) {
+            return false;
+        }
+        if ($this->parent->children instanceof navigation_node_collection) {
+            $count = $this->parent->children->count();
+        } else {
+            $count = count($this->parent->children);
+        }
+        return ($count > 1);
+    }
+
+    /**
+     * Recursively walk the tree looking for a node with a valid action.
+     * Depth first search.
+     *
+     * @return bool
+     */
+    public function resolve_action() {
+        if ($this->action) {
+            return $this->action;
+        }
+        if (!empty($this->children)) {
+            foreach ($this->children as $child) {
+                $action = $child->resolve_action();
+                if (!empty($action)) {
+                    return $action;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Get a list of sibling navigation nodes at the same level as this one.
+     *
+     * @return bool|array of navigation_node
+     */
+    public function get_siblings() {
+        // Returns a list of the siblings of the current node for display in a flat navigation element. Either
+        // the in-page links or the breadcrumb links.
+        $siblings = false;
+
+        if ($this->has_siblings()) {
+            $siblings = [];
+            foreach ($this->parent->children as $child) {
+                if ($child->display) {
+                    $siblings[] = $child;
+                }
+            }
+        }
+        return $siblings;
+    }
+
+    /**
      * This sets the URL that the URL of new nodes get compared to when locating
      * the active node.
      *
@@ -3090,13 +3149,14 @@ class navbar extends navigation_node {
     public $includesettingsbase = false;
     /** @var breadcrumb_navigation_node[] $prependchildren */
     protected $prependchildren = array();
+    /** @var bool A switch if we want menus from the breadcrumbs */
+    public $breadcrumbmenus = false;
+
     /**
      * The almighty constructor
      *
      * @param moodle_page $page
      */
-
-
     public function __construct(moodle_page $page) {
         global $CFG;
         if (during_initial_install()) {
@@ -3109,6 +3169,15 @@ class navbar extends navigation_node {
         $this->action = new moodle_url($CFG->wwwroot);
         $this->nodetype = self::NODETYPE_BRANCH;
         $this->type = self::TYPE_SYSTEM;
+    }
+
+    /**
+     * Enable menus from each item in the breadcrumb.
+     *
+     * @param bool Are they enabled?
+     */
+    public function set_breadcrumb_menus($val) {
+        $this->breadcrumbmenus = $val;
     }
 
     /**
@@ -3255,6 +3324,10 @@ class navbar extends navigation_node {
             $items = array_merge($items, array_reverse($this->prependchildren));
         }
 
+        $last = reset($items);
+        if ($last) {
+            $last->set_last(true);
+        }
         $this->items = array_reverse($items);
         return $this->items;
     }
@@ -3416,6 +3489,9 @@ class navbar extends navigation_node {
  */
 class breadcrumb_navigation_node extends navigation_node {
 
+    /** @var $last boolean A flag indicating this is the last item in the list of breadcrumbs. */
+    private $last = false;
+
     /**
      * A proxy constructor
      *
@@ -3433,6 +3509,183 @@ class breadcrumb_navigation_node extends navigation_node {
             }
         } else {
             throw coding_exception('Not a valid breadcrumb_navigation_node');
+        }
+    }
+
+    /**
+     * Getter for "last"
+     * @return boolean
+     */
+    public function is_last() {
+        return $this->last;
+    }
+
+    /**
+     * Setter for "last"
+     * @param $val boolean
+     */
+    public function set_last($val) {
+        $this->last = $val;
+    }
+}
+
+/**
+ * Subclass of navigation_node allowing different rendering for the flat navigation
+ * in particular allowing dividers and indents.
+ *
+ * @package   core
+ * @category  navigation
+ * @copyright 2016 Damyon Wiese
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class flat_navigation_node extends navigation_node {
+
+    /** @var $indent integer The indent level */
+    private $indent = 0;
+
+    /** @var $showdivider bool Show a divider before this element */
+    private $showdivider = false;
+
+    /**
+     * A proxy constructor
+     *
+     * @param mixed $navnode A navigation_node or an array
+     */
+    public function __construct($navnode, $indent) {
+        if (is_array($navnode)) {
+            parent::__construct($navnode);
+        } else if ($navnode instanceof navigation_node) {
+
+            // Just clone everything.
+            $objvalues = get_object_vars($navnode);
+            foreach ($objvalues as $key => $value) {
+                 $this->$key = $value;
+            }
+        } else {
+            throw coding_exception('Not a valid flat_navigation_node');
+        }
+        $this->indent = $indent;
+    }
+
+    /**
+     * Getter for "showdivider"
+     * @return boolean
+     */
+    public function showdivider() {
+        return $this->showdivider;
+    }
+
+    /**
+     * Setter for "showdivider"
+     * @param $val boolean
+     */
+    public function set_showdivider($val) {
+        $this->showdivider = $val;
+    }
+
+    /**
+     * Getter for "indent"
+     * @return boolean
+     */
+    public function get_indent() {
+        return $this->indent;
+    }
+
+    /**
+     * Setter for "indent"
+     * @param $val boolean
+     */
+    public function set_indent($val) {
+        $this->indent = $val;
+    }
+}
+
+/**
+ * Class used to generate a collection of navigation nodes most closely related
+ * to the current page.
+ *
+ * @package core
+ * @copyright 2016 Damyon Wiese
+ * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class flat_navigation extends navigation_node_collection {
+    /** @var moodle_page the moodle page that the navigation belongs to */
+    protected $page;
+
+    /**
+     * Constructor.
+     *
+     * @param moodle_page $page
+     */
+    public function __construct(moodle_page &$page) {
+        if (during_initial_install()) {
+            return false;
+        }
+        $this->page = $page;
+    }
+
+    /**
+     * Build the list of navigation nodes based on the current navigation and settings trees.
+     *
+     */
+    public function initialise() {
+        if (during_initial_install()) {
+            return;
+        }
+
+        $current = false;
+
+        // First look for the active node in the settings block.
+        $settings = $this->page->settingsnav;
+        if ($settings) {
+            $current = $settings->find_active_node();
+        }
+        // If no active node was found, look in the nav block.
+        if (!$current || !$current->display) {
+            $current = $this->page->navigation->find_active_node();
+        }
+
+        // And all the siblings.
+        if ($current && $current->has_siblings()) {
+            $this->add_nodes_with_children($current->get_siblings());
+        } else if ($current) {
+            $this->add_nodes_with_children([$current]);
+        }
+
+        // If there are top level settings nodes, add them.
+        if ($settings) {
+            $firstsetting = true;
+            foreach ($settings->children as $top) {
+                if ($top->display && !$this->find($top->key, $top->type)) {
+                    $flat = new flat_navigation_node($top, 0);
+                    if ($firstsetting) {
+                        $flat->set_showdivider(true);
+                        $firstsetting = false;
+                    }
+                    $this->add($flat);
+                }
+            }
+        }
+    }
+
+    /**
+     * Add 2 levels of nodes (only adding children if the parent is expanded)
+     * @param navigation_node_collection $nodelist
+     */
+    private function add_nodes_with_children($nodelist) {
+        foreach ($nodelist as $node) {
+            if ($node->display) {
+                $flat = new flat_navigation_node($node, 0);
+                $this->add($flat);
+                if ($node->forceopen || $node->isactive) {
+                    foreach ($node->children as $child) {
+                        if ($child->display) {
+                            $flat = new flat_navigation_node($child, 1);
+                            $this->add($flat);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -3480,6 +3733,7 @@ class settings_navigation extends navigation_node {
         $this->cache = new navigation_cache(NAVIGATION_CACHE_NAME);
         $this->children = new navigation_node_collection();
     }
+
     /**
      * Initialise the settings navigation based on the current context
      *
@@ -3789,6 +4043,21 @@ class settings_navigation extends navigation_node {
             $coursenode->force_open();
         }
 
+        if ($adminoptions->update) {
+            // Add the course settings link
+            $url = new moodle_url('/course/edit.php', array('id'=>$course->id));
+            $coursenode->add(get_string('editsettings'), $url, self::TYPE_SETTING, null, 'editsettings', new pix_icon('i/settings', ''));
+
+            // Add the course completion settings link
+            if ($CFG->enablecompletion && $course->enablecompletion) {
+                $url = new moodle_url('/course/completion.php', array('id'=>$course->id));
+                $coursenode->add(get_string('coursecompletion', 'completion'), $url, self::TYPE_SETTING, null, null, new pix_icon('i/settings', ''));
+            }
+        } else if ($adminoptions->tags) {
+            $url = new moodle_url('/course/tags.php', array('id' => $course->id));
+            $coursenode->add(get_string('coursetags', 'tag'), $url, self::TYPE_SETTING, null, 'coursetags', new pix_icon('i/settings', ''));
+        }
+
         if ($this->page->user_allowed_editing()) {
             // Add the turn on/off settings
 
@@ -3810,21 +4079,6 @@ class settings_navigation extends navigation_node {
                 $editstring = get_string('turneditingon');
             }
             $coursenode->add($editstring, $editurl, self::TYPE_SETTING, null, 'turneditingonoff', new pix_icon('i/edit', ''));
-        }
-
-        if ($adminoptions->update) {
-            // Add the course settings link
-            $url = new moodle_url('/course/edit.php', array('id'=>$course->id));
-            $coursenode->add(get_string('editsettings'), $url, self::TYPE_SETTING, null, 'editsettings', new pix_icon('i/settings', ''));
-
-            // Add the course completion settings link
-            if ($CFG->enablecompletion && $course->enablecompletion) {
-                $url = new moodle_url('/course/completion.php', array('id'=>$course->id));
-                $coursenode->add(get_string('coursecompletion', 'completion'), $url, self::TYPE_SETTING, null, null, new pix_icon('i/settings', ''));
-            }
-        } else if ($adminoptions->tags) {
-            $url = new moodle_url('/course/tags.php', array('id' => $course->id));
-            $coursenode->add(get_string('coursetags', 'tag'), $url, self::TYPE_SETTING, null, 'coursetags', new pix_icon('i/settings', ''));
         }
 
         // add enrol nodes
@@ -3959,7 +4213,8 @@ class settings_navigation extends navigation_node {
             }
         }
         if (is_array($roles) && count($roles)>0) {
-            $switchroles = $this->add(get_string('switchroleto'), null, self::TYPE_CONTAINER, null, 'switchroleto');
+            $url = new moodle_url('/course/switchrole.php', array('id'=>$course->id, 'switchrole'=>'-1', 'returnurl'=>$this->page->url->out_as_local_url(false)));
+            $switchroles = $this->add(get_string('switchroleto'), $url, self::TYPE_CONTAINER, null, 'switchroleto');
             if ((count($roles)==1 && array_key_exists(0, $roles))|| $assumedrole!==false) {
                 $switchroles->force_open();
             }

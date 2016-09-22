@@ -1,0 +1,8 @@
+<nav class="nav nav-stacked nav-pills">
+{{# flatnavigation }}
+    {{#showdivider}}
+    <div class="nav-item"><hr></div>
+    {{/showdivider}}
+    <div class="nav-item"><a class="nav-link {{#isactive}}active{{/isactive}} m-l-{{get_indent}}" href="{{{resolve_action}}}">{{text}}</a></div>
+{{/ flatnavigation }}
+</div>

@@ -2162,3 +2162,18 @@ ul {
     background-image: url([[pix:theme|yui2-treeview-sprite-rtl]]);
 }
 */
+
+#region-flat-nav {
+    padding-right: 0;
+    padding-left: 0;
+    .nav {
+        margin-right: $grid-gutter-width / 2;
+        background-color: $card-bg;
+    }
+    @include media-breakpoint-down(sm) {
+        .nav {
+            margin-top: $grid-gutter-width;
+            margin-right: 0;
+        }
+    }
+}

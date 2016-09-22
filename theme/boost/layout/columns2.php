@@ -40,4 +40,10 @@ $templatecontext = [
     'blocksdraweropen' => $blocksdraweropen
 ];
 
-echo $OUTPUT->render_from_template('theme_boost/columns2', $templatecontext);
+if (get_config('theme_boost', 'alternatenavigation')) {
+    $templatecontext['flatnavigation'] = $PAGE->flatnav;
+    echo $OUTPUT->render_from_template('theme_boost/columns2flat', $templatecontext);
+} else {
+    echo $OUTPUT->render_from_template('theme_boost/columns2', $templatecontext);
+}
+
