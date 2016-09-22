@@ -27,6 +27,8 @@ defined('MOODLE_INTERNAL') || die();
 $string['advancedsettings'] = 'Advanced settings';
 $string['brandcolor'] = 'Brand colour';
 $string['brandcolor_desc'] = 'The accent colour.';
+$string['alternatenavigation'] = 'Alternative navigation';
+$string['alternatenavigation_desc'] = 'Enables an alternate style of navigation that allows you to get to most pages in Moodle without using the navigation block. An additional list of links is displayed in the page, and each entry in the breadcrumb becomes a menu, which allows you to quickly navigate between related pages.';
 $string['choosereadme'] = 'Boost is a modern highly customizable theme. This theme is intended to used directly, or used as a parent theme when creating new themes utilising Boostrap 4.';
 $string['currentinparentheses'] = '(current)';
 $string['configtitle'] = 'Boost';

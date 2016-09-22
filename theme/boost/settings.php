@@ -51,6 +51,14 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
+    // Alternative navigation.
+    $name = 'theme_boost/alternatenavigation';
+    $title = get_string('alternatenavigation', 'theme_boost');
+    $description = get_string('alternatenavigation_desc', 'theme_boost');
+    $default = '0';   // Straight from bootstrap variables.
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $page->add($setting);
+
     // Must add the page after definiting all the settings!
     $settings->add($page);
 
