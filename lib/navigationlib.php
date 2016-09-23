@@ -3658,7 +3658,7 @@ class flat_navigation extends navigation_node_collection {
         if ($settings) {
             $firstsetting = true;
             foreach ($settings->children as $top) {
-                if ($top->display && !$this->find($top->key, $top->type)) {
+                if (!$this->find($top->key, $top->type)) {
                     $flat = new flat_navigation_node($top, 0);
                     if ($firstsetting) {
                         $flat->set_showdivider(true);
@@ -3676,15 +3676,13 @@ class flat_navigation extends navigation_node_collection {
      */
     private function add_nodes_with_children($nodelist) {
         foreach ($nodelist as $node) {
-            if ($node->display) {
-                $flat = new flat_navigation_node($node, 0);
-                $this->add($flat);
-                if ($node->forceopen || $node->isactive) {
-                    foreach ($node->children as $child) {
-                        if ($child->display) {
-                            $flat = new flat_navigation_node($child, 1);
-                            $this->add($flat);
-                        }
+            $flat = new flat_navigation_node($node, 0);
+            $this->add($flat);
+            if ($node->forceopen || $node->isactive) {
+                foreach ($node->children as $child) {
+                    if ($child->display) {
+                        $flat = new flat_navigation_node($child, 1);
+                        $this->add($flat);
                     }
                 }
             }
