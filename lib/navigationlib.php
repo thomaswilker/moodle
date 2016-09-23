@@ -1156,7 +1156,6 @@ class global_navigation extends navigation_node {
         // content and are as follows:
         // site: Navigation for the front page.
         // myprofile: User profile information goes here.
-        // currentcourse: The course being currently viewed.
         // mycourses: The users courses get added here.
         // courses: Additional courses are added here.
         // users: Other users information loaded here.
@@ -1176,7 +1175,6 @@ class global_navigation extends navigation_node {
         }
         $this->rootnodes['site'] = $this->add_course($SITE);
         $this->rootnodes['myprofile'] = $this->add(get_string('profile'), null, self::TYPE_USER, null, 'myprofile');
-        $this->rootnodes['currentcourse'] = $this->add(get_string('currentcourse'), null, self::TYPE_ROOTNODE, null, 'currentcourse');
         $this->rootnodes['mycourses'] = $this->add(get_string('mycourses'), null, self::TYPE_ROOTNODE, null, 'mycourses');
         $this->rootnodes['courses'] = $this->add(get_string('courses'), new moodle_url('/course/index.php'), self::TYPE_ROOTNODE, null, 'courses');
         $this->rootnodes['users'] = $this->add(get_string('users'), null, self::TYPE_ROOTNODE, null, 'users');
@@ -1187,13 +1185,13 @@ class global_navigation extends navigation_node {
         $this->load_course_sections($SITE, $this->rootnodes['site']);
 
         $course = $this->page->course;
+        $this->load_courses_enrolled();
 
         // $issite gets set to true if the current pages course is the sites frontpage course
         $issite = ($this->page->course->id == $SITE->id);
         // Determine if the user is enrolled in any course.
         $enrolledinanycourse = enrol_user_sees_own_courses();
 
-        $this->rootnodes['currentcourse']->mainnavonly = true;
         if ($enrolledinanycourse) {
             $this->rootnodes['mycourses']->isexpandable = true;
             if ($CFG->navshowallcourses) {
@@ -2487,6 +2485,14 @@ class global_navigation extends navigation_node {
         // This is the name that will be shown for the course.
         $coursename = empty($CFG->navshowfullcoursenames) ? $shortname : $fullname;
 
+        if ($coursetype == self::COURSE_CURRENT) {
+            if ($coursenode = $this->rootnodes['mycourses']->find($course->id, self::TYPE_COURSE)) {
+                return $coursenode;
+            } else {
+                $coursetype = self::COURSE_OTHER;
+            }
+        }
+
         // Can the user expand the course to see its content.
         $canexpandcourse = true;
         if ($issite) {
@@ -2495,10 +2501,6 @@ class global_navigation extends navigation_node {
             if (empty($CFG->usesitenameforsitepages)) {
                 $coursename = get_string('sitepages');
             }
-        } else if ($coursetype == self::COURSE_CURRENT) {
-            $parent = $this->rootnodes['currentcourse'];
-            $url = new moodle_url('/course/view.php', array('id'=>$course->id));
-            $canexpandcourse = $this->can_expand_course($course);
         } else if ($coursetype == self::COURSE_MY && !$forcegeneric) {
             if (!empty($CFG->navshowmycoursecategories) && ($parent = $this->rootnodes['mycourses']->find($course->category, self::TYPE_MY_CATEGORY))) {
                 // Nothing to do here the above statement set $parent to the category within mycourses.
