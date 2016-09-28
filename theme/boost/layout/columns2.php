@@ -32,12 +32,15 @@ if ($blocksdraweropen) {
     $extraclasses = ['blocks-drawer-open'];
 }
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
+
+$fullwidth = get_config('theme_boost', 'fullwidth');
 $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, array('context' => context_course::instance(SITEID))),
     'output' => $OUTPUT,
     'sidepreblocks' => $OUTPUT->blocks('side-pre'),
     'bodyattributes' => $bodyattributes,
-    'blocksdraweropen' => $blocksdraweropen
+    'blocksdraweropen' => $blocksdraweropen,
+    'fullwidth' => $fullwidth
 ];
 
 if (get_config('theme_boost', 'alternatenavigation')) {

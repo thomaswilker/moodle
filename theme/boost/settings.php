@@ -55,7 +55,15 @@ if ($ADMIN->fulltree) {
     $name = 'theme_boost/alternatenavigation';
     $title = get_string('alternatenavigation', 'theme_boost');
     $description = get_string('alternatenavigation_desc', 'theme_boost');
-    $default = '0';   // Straight from bootstrap variables.
+    $default = '0';
+    $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
+    $page->add($setting);
+
+    // Full width.
+    $name = 'theme_boost/fullwidth';
+    $title = get_string('fullwidth', 'theme_boost');
+    $description = get_string('fullwidth_desc', 'theme_boost');
+    $default = '0';
     $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
     $page->add($setting);
 
