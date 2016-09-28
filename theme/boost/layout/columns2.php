@@ -24,12 +24,17 @@ defined('MOODLE_INTERNAL') || die();
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-user_preference_allow_ajax_update('blocks-drawer-open', PARAM_ALPHA);
+user_preference_allow_ajax_update('drawer-open-blocks', PARAM_ALPHA);
+user_preference_allow_ajax_update('drawer-open-nav', PARAM_ALPHA);
 
-$blocksdraweropen = (get_user_preferences('blocks-drawer-open', 'true') == 'true');
+$navdraweropen = (get_user_preferences('drawer-open-nav', 'true') == 'true');
+$blocksdraweropen = (get_user_preferences('drawer-open-blocks', 'true') == 'true');
 $extraclasses = [];
 if ($blocksdraweropen) {
-    $extraclasses = ['blocks-drawer-open'];
+    $extraclasses[] = 'drawer-open-right';
+}
+if ($navdraweropen) {
+    $extraclasses[] = 'drawer-open-left';
 }
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 
@@ -40,6 +45,7 @@ $templatecontext = [
     'sidepreblocks' => $OUTPUT->blocks('side-pre'),
     'bodyattributes' => $bodyattributes,
     'blocksdraweropen' => $blocksdraweropen,
+    'navdraweropen' => $navdraweropen,
     'fullwidth' => $fullwidth
 ];
 
