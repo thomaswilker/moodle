@@ -38,7 +38,7 @@ if ($navdraweropen) {
 }
 $bodyattributes = $OUTPUT->body_attributes($extraclasses);
 
-$fullwidth = get_config('theme_boost', 'fullwidth');
+$fullwidth = true;
 $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, array('context' => context_course::instance(SITEID))),
     'output' => $OUTPUT,

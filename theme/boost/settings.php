@@ -59,10 +59,10 @@ if ($ADMIN->fulltree) {
     $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
     $page->add($setting);
 
-    // Full width.
-    $name = 'theme_boost/fullwidth';
-    $title = get_string('fullwidth', 'theme_boost');
-    $description = get_string('fullwidth_desc', 'theme_boost');
+    // Tweek
+    $name = 'theme_boost/tweak';
+    $title = get_string('tweak', 'theme_boost');
+    $description = get_string('tweak_desc', 'theme_boost');
     $default = '0';
     $setting = new admin_setting_configcheckbox($name, $title, $description, $default);
     $page->add($setting);

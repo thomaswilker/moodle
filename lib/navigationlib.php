@@ -3631,40 +3631,99 @@ class flat_navigation extends navigation_node_collection {
      *
      */
     public function initialise() {
+        global $PAGE;
         if (during_initial_install()) {
             return;
         }
 
         $current = false;
 
-        // First look for the active node in the settings block.
-        $settings = $this->page->settingsnav;
-        if ($settings) {
-            $current = $settings->find_active_node();
-        }
-        // If no active node was found, look in the nav block.
-        if (!$current || !$current->display) {
-            $current = $this->page->navigation->find_active_node();
-        }
+        $tweak = get_config('theme_boost', 'tweak');
+        if ($tweak) {
+            $course = $PAGE->course;
+            if ($course->id > 1) {
+                // It's a real course.
+                $flat = new flat_navigation_node(new navigation_node('Dashboard'), 0);
+                $flat->key = 'dashboard';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('Course Home'), 0);
+                $flat->key = 'coursehome';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('Grades'), 0);
+                $flat->key = 'grades';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('Competencies'), 0);
+                $flat->key = 'competencies';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('Badges'), 0);
+                $flat->key = 'badges';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('Announcements'), 0);
+                $flat->key = 'announcements';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('Calendar'), 0);
+                $flat->key = 'calendar';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('Participants'), 0);
+                $flat->key = 'participants';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('Course Administration'), 0);
+                $flat->key = 'settings';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('Site Administration'), 0);
+                $flat->key = 'sitesettings';
+                $this->add($flat);
+            } else {
+                $flat = new flat_navigation_node(new navigation_node('Dashboard'), 0);
+                $flat->key = 'dashboard';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('My Courses'), 0);
+                $flat->key = 'mycourses';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('Profile'), 0);
+                $flat->key = 'profile';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('Grades'), 0);
+                $flat->key = 'grades';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('Messages'), 0);
+                $flat->key = 'messages';
+                $this->add($flat);
+                $flat = new flat_navigation_node(new navigation_node('Preferences'), 0);
+                $flat->key = 'preferences';
+                $this->add($flat);
+            }
+            
+        } else {
+            // First look for the active node in the settings block.
+            $settings = $this->page->settingsnav;
+            if ($settings) {
+                $current = $settings->find_active_node();
+            }
+            // If no active node was found, look in the nav block.
+            if (!$current || !$current->display) {
+                $current = $this->page->navigation->find_active_node();
+            }
 
-        // And all the siblings.
-        if ($current && $current->has_siblings()) {
-            $this->add_nodes_with_children($current->get_siblings());
-        } else if ($current) {
-            $this->add_nodes_with_children([$current]);
-        }
+            // And all the siblings.
+            if ($current && $current->has_siblings()) {
+                $this->add_nodes_with_children($current->get_siblings());
+            } else if ($current) {
+                $this->add_nodes_with_children([$current]);
+            }
 
-        // If there are top level settings nodes, add them.
-        if ($settings) {
-            $firstsetting = true;
-            foreach ($settings->children as $top) {
-                if (!$this->find($top->key, $top->type)) {
-                    $flat = new flat_navigation_node($top, 0);
-                    if ($firstsetting) {
-                        $flat->set_showdivider(true);
-                        $firstsetting = false;
+            // If there are top level settings nodes, add them.
+            if ($settings) {
+                $firstsetting = true;
+                foreach ($settings->children as $top) {
+                    if (!$this->find($top->key, $top->type)) {
+                        $flat = new flat_navigation_node($top, 0);
+                        if ($firstsetting) {
+                            $flat->set_showdivider(true);
+                            $firstsetting = false;
+                        }
+                        $this->add($flat);
                     }
-                    $this->add($flat);
                 }
             }
         }
