@@ -17,17 +17,20 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * A three column layout for the boost theme.
+ * A two column layout for the boost theme.
  *
  * @package   theme_boost
  * @copyright 2016 Damyon Wiese
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+$bodyattributes = $OUTPUT->body_attributes();
+
 $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, array('context' => context_course::instance(SITEID))),
     'output' => $OUTPUT,
-    'sidepreblocks' => $OUTPUT->blocks('side-pre'),
+    'bodyattributes' => $bodyattributes
 ];
 
-echo $OUTPUT->render_from_template('theme_boost/secure', $templatecontext);
+echo $OUTPUT->render_from_template('theme_boost/login', $templatecontext);
 

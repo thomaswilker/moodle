@@ -17,15 +17,36 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * A one column layout for the boost theme.
+ * A two column layout for the boost theme.
  *
  * @package   theme_boost
  * @copyright 2016 Damyon Wiese
  * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+
+user_preference_allow_ajax_update('drawer-open-blocks', PARAM_ALPHA);
+user_preference_allow_ajax_update('drawer-open-nav', PARAM_ALPHA);
+
+$navdraweropen = (get_user_preferences('drawer-open-nav', 'true') == 'true');
+$blocksdraweropen = (get_user_preferences('drawer-open-blocks', 'true') == 'true');
+$extraclasses = [];
+if ($blocksdraweropen) {
+    $extraclasses[] = 'drawer-open-right';
+}
+if ($navdraweropen) {
+    $extraclasses[] = 'drawer-open-left';
+}
+$bodyattributes = $OUTPUT->body_attributes($extraclasses);
+
 $templatecontext = [
     'sitename' => format_string($SITE->shortname, true, array('context' => context_course::instance(SITEID))),
-    'output' => $OUTPUT
+    'output' => $OUTPUT,
+    'sidepreblocks' => $OUTPUT->blocks('side-pre'),
+    'bodyattributes' => $bodyattributes,
+    'blocksdraweropen' => $blocksdraweropen,
+    'navdraweropen' => $navdraweropen
 ];
 
+$templatecontext['flatnavigation'] = $PAGE->flatnav;
 echo $OUTPUT->render_from_template('theme_boost/columns1', $templatecontext);
+
