@@ -20,7 +20,7 @@ Feature: User can be enrolled into a course
     And I navigate to "Enrolled users" node in "Course administration > Users"
     Then I should see "Studie One"
 
-  @javascript
+  @javascript @huh
   Scenario: User can be enrolled with javascript enrol element
     When I enrol "Studie One" user as "Student"
     And I navigate to "Enrolled users" node in "Course administration > Users"

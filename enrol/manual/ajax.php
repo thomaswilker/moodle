@@ -107,15 +107,30 @@ switch ($action) {
         break;
     case 'enrol':
         $enrolid = required_param('enrolid', PARAM_INT);
-        $cohort = $user = null;
+        $cohorts = $users = [];
+
+        $userids = optional_param('userlist', [], PARAM_SEQUENCE);
+        $userid = optional_param('userid', 0, PARAM_INT);
+        if ($userid) {
+            $userids[] = $userid;
+        }
+        if ($userids) {
+            foreach ($userids as $userid) {
+                $users[] = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
+            }
+        }
+        $cohortids = optional_param('cohortlist', [], PARAM_SEQUENCE);
         $cohortid = optional_param('cohortid', 0, PARAM_INT);
-        if (!$cohortid) {
-            $userid = required_param('userid', PARAM_INT);
-            $user = $DB->get_record('user', array('id' => $userid), '*', MUST_EXIST);
-        } else {
-            $cohort = $DB->get_record('cohort', array('id' => $cohortid), '*', MUST_EXIST);
-            if (!cohort_can_view_cohort($cohort, $context)) {
-                throw new enrol_ajax_exception('invalidenrolinstance'); // TODO error text!
+        if ($cohortid) {
+            $cohortids[] = $cohortid;
+        }
+        if ($cohortids) {
+            foreach ($cohortids as $cohortid) {
+                $cohort = $DB->get_record('cohort', array('id' => $cohortid), '*', MUST_EXIST);
+                if (!cohort_can_view_cohort($cohort, $context)) {
+                    throw new enrol_ajax_exception('invalidenrolinstance'); // TODO error text!
+                }
+                $cohorts[] = $cohort;
             }
         }
 
@@ -168,9 +183,10 @@ switch ($action) {
         }
         $plugin = $plugins[$instance->enrol];
         if ($plugin->allow_enrol($instance) && has_capability('enrol/'.$plugin->get_name().':enrol', $context)) {
-            if ($user) {
+            foreach ($users as $user) {
                 $plugin->enrol_user($instance, $user->id, $roleid, $timestart, $timeend, null, $recovergrades);
-            } else {
+            }
+            foreach ($cohorts as $cohort) {
                 $plugin->enrol_cohort($instance, $cohort->id, $roleid, $timestart, $timeend, null, $recovergrades);
             }
         } else {

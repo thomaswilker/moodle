@@ -317,6 +317,7 @@ class core_external extends external_api {
             $arguments[$paramargument['name']] = $paramargument['value'];
         }
 
+
         $context = context::instance_by_id($contextid);
         self::validate_context($context);
         $arguments['context'] = $context;
