@@ -28,6 +28,7 @@
  */
 
 define('AJAX_SCRIPT', true);
+define('PREFERRED_RENDERER_TARGET', RENDERER_TARGET_GENERAL);
 
 require_once(dirname(__FILE__) . '/../../config.php');
 require_once($CFG->libdir . '/externallib.php');
