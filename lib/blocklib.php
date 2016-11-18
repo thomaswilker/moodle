@@ -216,10 +216,12 @@ class block_manager {
                     ($bi->instance_allow_multiple() || !$this->is_block_present($block->name)) &&
                     blocks_name_allowed_in_format($block->name, $pageformat) &&
                     $bi->user_can_addto($this->page)) {
+                $block->title = $bi->get_title();
                 $this->addableblocks[$block->name] = $block;
             }
         }
 
+        core_collator::asort_objects_by_property($this->addableblocks, 'title');
         return $this->addableblocks;
     }
 
@@ -1067,7 +1069,7 @@ class block_manager {
                 $contents = $this->extracontent[$region];
             }
             $contents = array_merge($contents, $this->create_block_contents($this->blockinstances[$region], $output, $region));
-            if ($region == $this->defaultregion) {
+            if (($region == $this->defaultregion) && empty($this->page->theme->hideaddblock)) {
                 $addblockui = block_add_block_ui($this->page, $output);
                 if ($addblockui) {
                     $contents[] = $addblockui;
@@ -1212,8 +1214,10 @@ class block_manager {
      * @return boolean true if anything was done. False if not.
      */
     public function process_url_add() {
+        global $CFG, $PAGE, $OUTPUT;
+
         $blocktype = optional_param('bui_addblock', null, PARAM_PLUGIN);
-        if (!$blocktype) {
+        if ($blocktype === null) {
             return false;
         }
 
@@ -1223,7 +1227,53 @@ class block_manager {
             throw new moodle_exception('nopermissions', '', $this->page->url->out(), get_string('addblock'));
         }
 
-        if (!array_key_exists($blocktype, $this->get_addable_blocks())) {
+        $addableblocks = $this->get_addable_blocks();
+
+        if ($blocktype === '') {
+            // Display add block selection.
+            $addpage = new moodle_page();
+            $addpage->set_pagelayout('admin');
+            $addpage->set_course($this->page->course);
+            $addpage->set_context($this->page->context);
+            if ($this->page->cm) {
+                $addpage->set_cm($this->page->cm);
+            }
+
+            $addpagebase = str_replace($CFG->wwwroot . '/', '/', $this->page->url->out_omit_querystring());
+            $addpageparams = $this->page->url->params();
+            $addpage->set_url($addpagebase, $addpageparams);
+            $addpage->set_block_actions_done();
+            // At this point we are either going to display the form, so overwrite global $PAGE ready for this. (Formslib refers to it).
+            $PAGE = $addpage;
+            // Some functions like MoodleQuickForm::addHelpButton use $OUTPUT so we need to replace that too.
+            $OUTPUT = $addpage->get_renderer('core');
+
+            $site = get_site();
+            $straddblock = get_string('addblock');
+
+            $PAGE->navbar->add($straddblock);
+            $PAGE->set_title($straddblock);
+            $PAGE->set_heading($site->fullname);
+            echo $OUTPUT->header();
+            echo $OUTPUT->heading($straddblock);
+
+            if (!$addableblocks) {
+                echo $OUTPUT->box(get_string('noblockstoaddhere'));
+                echo $OUTPUT->container($OUTPUT->action_link($addpage->url, get_string('back')), 'm-x-3 m-b-1');
+            } else {
+                foreach ($addableblocks as $blockname => $block) {
+                    $url = new moodle_url($addpage->url, array('sesskey' => sesskey(), 'bui_addblock' => $blockname));
+                    echo $OUTPUT->container($OUTPUT->single_button($url, $block->title), 'm-x-3 m-b-1');
+                }
+                echo $OUTPUT->container($OUTPUT->action_link($addpage->url, get_string('cancel')), 'm-x-3 m-b-1');
+            }
+
+            echo $OUTPUT->footer();
+            // Make sure that nothing else happens after we have displayed this form.
+            exit;
+        }
+
+        if (!array_key_exists($blocktype, $addableblocks)) {
             throw new moodle_exception('cannotaddthisblocktype', '', $this->page->url->out(), $blocktype);
         }
 
@@ -1998,12 +2048,8 @@ function block_add_block_ui($page, $output) {
 
     $menu = array();
     foreach ($missingblocks as $block) {
-        $blockobject = block_instance($block->name);
-        if ($blockobject !== false && $blockobject->user_can_addto($page)) {
-            $menu[$block->name] = $blockobject->get_title();
-        }
+        $menu[$block->name] = $block->title;
     }
-    core_collator::asort($menu);
 
     $actionurl = new moodle_url($page->url, array('sesskey'=>sesskey()));
     $select = new single_select($actionurl, 'bui_addblock', $menu, null, array(''=>get_string('adddots')), 'add_block');
