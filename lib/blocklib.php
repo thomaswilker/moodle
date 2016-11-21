@@ -1232,7 +1232,7 @@ class block_manager {
         if ($blocktype === '') {
             // Display add block selection.
             $addpage = new moodle_page();
-            $addpage->set_pagelayout('admin');
+            $addpage->set_pagelayout('popup');
             $addpage->set_course($this->page->course);
             $addpage->set_context($this->page->context);
             if ($this->page->cm) {
@@ -1307,7 +1307,7 @@ class block_manager {
 
         if (!$confirmdelete) {
             $deletepage = new moodle_page();
-            $deletepage->set_pagelayout('admin');
+            $deletepage->set_pagelayout('popup');
             $deletepage->set_course($this->page->course);
             $deletepage->set_context($this->page->context);
             if ($this->page->cm) {
@@ -1427,7 +1427,7 @@ class block_manager {
         }
 
         $editpage = new moodle_page();
-        $editpage->set_pagelayout('admin');
+        $editpage->set_pagelayout('popup');
         $editpage->set_course($this->page->course);
         //$editpage->set_context($block->context);
         $editpage->set_context($this->page->context);
