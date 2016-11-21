@@ -2473,6 +2473,9 @@ h3.sectionname .inplaceeditable.inplaceeditingon .editinstructions {
   visibility: visible;
   transition: opacity 0.15s 0.5s, visibility 0.15s 0.5s;
 }
+.header-right {
+  float: right;
+}
 /* admin.less */
 .formtable tbody th {
   font-weight: normal;
@@ -7697,9 +7700,9 @@ body.path-question-type .mform fieldset.hidden {
   font-style: italic;
 }
 .search-input-wrapper {
-  margin: 0 5px 0 2px;
+  margin: 0 5px 0 5px;
   overflow: hidden;
-  float: right;
+  float: left;
   height: 100%;
   width: 16px;
   transition: width 0.5s ease, left 0.5s ease;
@@ -7729,7 +7732,7 @@ body.path-question-type .mform fieldset.hidden {
   display: inline-block;
 }
 .popover-region {
-  float: right;
+  float: left;
   position: relative;
 }
 .popover-region.collapsed .popover-region-toggle:before,
@@ -7859,7 +7862,7 @@ body.path-question-type .mform fieldset.hidden {
   display: none;
 }
 .navbar .popover-region {
-  float: right;
+  float: left;
 }
 .navbar .popover-region.collapsed .popover-region-container {
   height: 0;
@@ -15095,7 +15098,7 @@ div#dock {
   background-color: #111111;
 }
 .usermenu {
-  float: right;
+  float: left;
 }
 .usermenu > .moodle-actionmenu > .menu:before {
   right: 9px;

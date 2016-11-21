@@ -42,6 +42,18 @@ function message_popup_render_navbar_output(\renderer_base $renderer) {
 
     $output = '';
 
+    // Add the notifications popover.
+    $enabled = \core_message\api::is_processor_enabled("popup");
+    if ($enabled) {
+        $context = [
+            'userid' => $USER->id,
+            'urls' => [
+                'preferences' => (new moodle_url('/message/notificationpreferences.php', ['userid' => $USER->id]))->out(),
+            ],
+        ];
+        $output .= $renderer->render_from_template('message_popup/notification_popover', $context);
+    }
+
     // Add the messages popover.
     if (!empty($CFG->messaging)) {
         $context = [
@@ -55,17 +67,6 @@ function message_popup_render_navbar_output(\renderer_base $renderer) {
         $output .= $renderer->render_from_template('message_popup/message_popover', $context);
     }
 
-    // Add the notifications popover.
-    $enabled = \core_message\api::is_processor_enabled("popup");
-    if ($enabled) {
-        $context = [
-            'userid' => $USER->id,
-            'urls' => [
-                'preferences' => (new moodle_url('/message/notificationpreferences.php', ['userid' => $USER->id]))->out(),
-            ],
-        ];
-        $output .= $renderer->render_from_template('message_popup/notification_popover', $context);
-    }
 
     return $output;
 }

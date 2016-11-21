@@ -6,6 +6,11 @@
     min-height: 45rem;
 }
 
+/* We can't use xs-pull-right because it comes with baggage because of too many styles in popover and search css */
+.header-right {
+    float: right;
+}
+
 .context-header-settings-menu,
 .region-main-settings-menu {
     float: right;

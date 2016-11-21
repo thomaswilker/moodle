@@ -38,16 +38,17 @@
             <span class="site-name hidden-sm-down">{{{ sitename }}}</span>
         </a>
 
-        <!-- user_menu -->
-        {{{ output.user_menu }}}
+        <div style="header-right">
+            <!-- search_box -->
+            <span class="hidden-md-down">
+            {{{ output.search_box }}}
 
-        <!-- navbar_plugin_output -->
-        {{{ output.navbar_plugin_output }}}
-
-        <!-- search_box -->
-        <span class="hidden-md-down">
-        {{{ output.search_box }}}
-        </span>
+            </span>
+            <!-- navbar_plugin_output -->
+            {{{ output.navbar_plugin_output }}}
+            <!-- user_menu -->
+            {{{ output.user_menu }}}
+        </div>
 
         <nav class="nav navbar-nav hidden-md-down">
             <!-- custom_menu -->

@@ -46,9 +46,11 @@ echo $OUTPUT->doctype() ?>
         <div class="container-fluid">
             <?php echo $OUTPUT->navbar_home(); ?>
             <?php echo $OUTPUT->navbar_button(); ?>
-            <?php echo $OUTPUT->user_menu(); ?>
-            <?php echo $OUTPUT->navbar_plugin_output(); ?>
-            <?php echo $OUTPUT->search_box(); ?>
+            <div class="header-right">
+                <?php echo $OUTPUT->search_box(); ?>
+                <?php echo $OUTPUT->navbar_plugin_output(); ?>
+                <?php echo $OUTPUT->user_menu(); ?>
+            </div>
             <div class="nav-collapse collapse">
                 <?php echo $OUTPUT->custom_menu(); ?>
                 <ul class="nav pull-right">
