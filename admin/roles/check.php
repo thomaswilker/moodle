@@ -25,6 +25,7 @@
 require_once(__DIR__ . '/../../config.php');
 
 $contextid = required_param('contextid', PARAM_INT);
+$returnurl  = optional_param('returnurl', null, PARAM_LOCALURL);
 
 list($context, $course, $cm) = get_context_info_array($contextid);
 
@@ -49,7 +50,13 @@ require_login($course, false, $cm);
 if (!has_any_capability(array('moodle/role:assign', 'moodle/role:safeoverride', 'moodle/role:override', 'moodle/role:manage'), $context)) {
     print_error('nopermissions', 'error', '', get_string('checkpermissions', 'core_role'));
 }
-$PAGE->set_url($url);
+
+navigation_node::override_active_url($url);
+$pageurl = new moodle_url($url);
+if ($returnurl) {
+    $pageurl->param('returnurl', $returnurl);
+}
+$PAGE->set_url($pageurl);
 
 if ($context->contextlevel == CONTEXT_USER and $USER->id != $context->instanceid) {
     $PAGE->navbar->includesettingsbase = true;
@@ -74,7 +81,12 @@ $userselector->set_rows(20);
 // Work out an appropriate page title.
 $title = get_string('checkpermissionsin', 'core_role', $contextname);
 
-$PAGE->set_pagelayout('admin');
+if ($context->contextlevel == CONTEXT_BLOCK) {
+    // Do not show blocks when changing block's settings, it is confusing.
+    $PAGE->set_pagelayout('popup');
+} else {
+    $PAGE->set_pagelayout('admin');
+}
 $PAGE->set_title($title);
 
 switch ($context->contextlevel) {
@@ -156,16 +168,7 @@ if (!is_null($reportuser)) {
 
 // Show UI for choosing a user to report on.
 echo $OUTPUT->box_start('generalbox boxwidthnormal boxaligncenter', 'chooseuser');
-echo '<form method="get" action="' . $CFG->wwwroot . '/' . $CFG->admin . '/roles/check.php" >';
-
-// Hidden fields.
-echo '<input type="hidden" name="contextid" value="' . $context->id . '" />';
-if (!empty($user->id)) {
-    echo '<input type="hidden" name="userid" value="' . $user->id . '" />';
-}
-if ($isfrontpage) {
-    echo '<input type="hidden" name="courseid" value="' . $courseid . '" />';
-}
+echo '<form method="post" action="' . $PAGE->url . '" >';
 
 // User selector.
 echo $OUTPUT->heading('<label for="reportuser">' . $selectheading . '</label>', 3);
@@ -180,7 +183,12 @@ echo $OUTPUT->box_end();
 // Appropriate back link.
 if ($context->contextlevel > CONTEXT_USER) {
     echo html_writer::start_tag('div', array('class'=>'backlink'));
-    echo html_writer::tag('a', get_string('backto', '', $contextname), array('href'=>$context->get_url()));
+    if ($returnurl) {
+        $backurl = new moodle_url($returnurl);
+    } else {
+        $backurl = $context->get_url();
+    }
+    echo html_writer::link($backurl, get_string('backto', '', $contextname));
     echo html_writer::end_tag('div');
 }
 
