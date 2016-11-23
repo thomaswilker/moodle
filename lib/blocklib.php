@@ -1246,7 +1246,7 @@ class block_manager {
         if ($blocktype === '') {
             // Display add block selection.
             $addpage = new moodle_page();
-            $addpage->set_pagelayout('popup');
+            $addpage->set_pagelayout('incourse');
             $addpage->set_course($this->page->course);
             $addpage->set_context($this->page->context);
             if ($this->page->cm) {
