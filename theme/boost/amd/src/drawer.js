@@ -63,12 +63,33 @@ define(['jquery', 'core/custom_interaction_events', 'core/log'],
         }.bind(this));
 
         this.registerEventListeners();
-        var small = $(document).width() < 768;
-        if (small) {
+        if (this.isSmall()) {
+            // On mobile close all drawers on page load, and after each click.
             this.closeAll();
+
+            $(SELECTORS.TOGGLE_REGION).each(function(index, ele) {
+                var trigger = $(ele).find(SELECTORS.TOGGLE_ACTION);
+                var drawerid = trigger.attr('aria-controls');
+                var drawer = $(document.getElementById(drawerid));
+
+                CustomEvents.define(drawer, [CustomEvents.events.activate]);
+                drawer.on(CustomEvents.events.activate, 'a', this.closeAll.bind(this));
+            }.bind(this));
         }
     };
 
+    /**
+     * Test for small screens.
+     * @method isSmall
+     */
+    Drawer.prototype.isSmall = function() {
+        return $(document).width() < 768;
+    };
+
+    /**
+     * Close all open drawers.
+     * @method closeAll
+     */
     Drawer.prototype.closeAll = function() {
         $(SELECTORS.TOGGLE_REGION).each(function(index, ele) {
             var trigger = $(ele).find(SELECTORS.TOGGLE_ACTION);
@@ -85,6 +106,7 @@ define(['jquery', 'core/custom_interaction_events', 'core/log'],
             M.util.set_user_preference(preference, 'false');
         }.bind(this));
     };
+
 
     /**
      * Open / close the blocks drawer.
@@ -103,8 +125,7 @@ define(['jquery', 'core/custom_interaction_events', 'core/log'],
         body.addClass('drawer-ease');
         var open = trigger.attr('aria-expanded') == 'true';
         if (!open) {
-            var small = $(document).width() < 768;
-            if (small) {
+            if (this.isSmall()) {
                 this.closeAll();
             }
             // Open.
