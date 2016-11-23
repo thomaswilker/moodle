@@ -54,6 +54,8 @@ Removed themes:
   - css_is_width
   - css_sort_by_count
   - class css_optimiser no longer does anything.
+* Theme can choose how to display "Add a block" control in $THEME->addblockposition, default value is
+  BLOCK_ADDBLOCK_POSITION_DEFAULT that displays it as a fake block in editing mode.
 
 === 3.1 ===
 

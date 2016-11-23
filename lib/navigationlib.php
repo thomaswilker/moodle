@@ -3758,7 +3758,10 @@ class flat_navigation extends navigation_node_collection {
         }
 
         // Add-a-block in editing mode.
-        if ($PAGE->user_is_editing() && $PAGE->user_can_edit_blocks() && $PAGE->blocks->get_addable_blocks()) {
+        if (isset($this->page->theme->addblockposition) &&
+                $this->page->theme->addblockposition == BLOCK_ADDBLOCK_POSITION_FLATNAV &&
+                $PAGE->user_is_editing() && $PAGE->user_can_edit_blocks() &&
+                $PAGE->blocks->get_addable_blocks()) {
             $url = new moodle_url($PAGE->url, ['bui_addblock' => '', 'sesskey' => sesskey()]);
             $addablock = navigation_node::create(get_string('addblock'), $url);
             $flat = new flat_navigation_node($addablock, 0);

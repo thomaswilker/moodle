@@ -43,6 +43,16 @@ define('BUI_CONTEXTS_CURRENT', 0);
 define('BUI_CONTEXTS_CURRENT_SUBS', 1);
 
 /**
+ * Position of "Add block" control, to be used in theme config as a value for $THEME->addblockposition:
+ * - default: as a fake block that is displayed in editing mode
+ * - flatnav: "Add block" item in the flat navigation drawer in editing mode
+ * - custom: none of the above, theme will take care of displaying the control
+ */
+define('BLOCK_ADDBLOCK_POSITION_DEFAULT', 0);
+define('BLOCK_ADDBLOCK_POSITION_FLATNAV', 1);
+define('BLOCK_ADDBLOCK_POSITION_CUSTOM', 100);
+
+/**
  * Exception thrown when someone tried to do something with a block that does
  * not exist on a page.
  *
@@ -1069,7 +1079,8 @@ class block_manager {
                 $contents = $this->extracontent[$region];
             }
             $contents = array_merge($contents, $this->create_block_contents($this->blockinstances[$region], $output, $region));
-            if (($region == $this->defaultregion) && empty($this->page->theme->hideaddblock)) {
+            if (($region == $this->defaultregion) && (!isset($this->page->theme->addblockposition) ||
+                    $this->page->theme->addblockposition == BLOCK_ADDBLOCK_POSITION_DEFAULT)) {
                 $addblockui = block_add_block_ui($this->page, $output);
                 if ($addblockui) {
                     $contents[] = $addblockui;
