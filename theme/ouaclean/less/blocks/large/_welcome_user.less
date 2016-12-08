@@ -1,0 +1,40 @@
+// User Activites
+// ==========================================================================
+
+.welcome-user {
+	.welcome-header { /* table wraper */
+			display: table;
+		> * {
+			.v-top;
+		}
+		.welcome-picture {
+			display: table-cell;
+		}
+		.welcome-message {
+				display: table-cell;
+				width: 100%; /* Firefox fix to make nav-tabs take full width */
+			.welcome-text {
+				margin-top: -13px;
+				margin-bottom: 7px;
+				.font-size(@default-font-size * 0.9);
+				.line-height(@default-line-height * 0.9);
+				h2 {
+					margin-top: -5px;
+					margin-left: 0;
+				}
+			}
+			.user-navigation {
+				.nav-tabs {
+					li {
+						a {
+							padding: 15px 30px;
+							.badge {
+								margin-left: -45px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

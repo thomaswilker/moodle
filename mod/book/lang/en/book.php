@@ -100,3 +100,25 @@ $string['page-mod-book-x'] = 'Any book module page';
 $string['subchapternotice'] = '(Only available once the first chapter has been created)';
 $string['subplugintype_booktool'] = 'Book tool';
 $string['subplugintype_booktool_plural'] = 'Book tools';
+
+/* OUA Custom */
+$string['navfirst'] = 'First Page (Index)';
+$string['navlast'] = 'Last Page';
+
+$string['pagenumberx'] = 'Page <span class="current">{$a->current_page_num}</span> of <span class="total">{$a->total_pages}</span>';
+$string['totalpages'] = 'Total Pages: <span class="total">{$a}</span>';
+
+$string['useoldbookstyle'] = 'Use Old Book styling';
+$string['useoldbookstyle_help'] = 'Revert Book Resource display styling to original (core styling).';
+
+$string['usebookanimation'] = 'Use book style animation';
+$string['usebookanimation_help'] = 'When changing to a new chapter/page, displays a page turning animation.';
+
+/* Customised original strings */
+$string['customtitles'] = 'Hide chapter title';
+$string['customtitles_help'] = 'Normally the chapter title is displayed in the table of contents (TOC) AND as a heading above the content.
+
+If the Hide chapter title checkbox is ticked, the chapter title is NOT displayed as a heading above the content. A different title (perhaps longer than the chapter title) may be entered as part of the content.';
+$string['navprev'] = 'Prev Page';
+$string['navnext'] = 'Next Page';
+/* END OUA Custom */

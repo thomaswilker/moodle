@@ -1,0 +1,47 @@
+<li class="coursecol course-header col-xs-12">
+    <div class="course-header-content {{coursenameclass}} ">
+        <div class="course-class-logo {{brandlogoclass}} {{cobrandingname}}">
+            {{#cobrandinglogo}}
+                <span class="logo-course"><img class="logo img-responsive" src="{{{cobrandinglogo}}}" alt="{{cobrandingname}}"/></span>
+            {{/cobrandinglogo}}
+        </div>
+        <div class="course-class-summary results">
+            <div class="progress-bar-show-weeks">
+                <div class="course-name-progress-bar">
+                    <a href="{{{finalgradelink}}}">{{{coursename}}}</a>
+
+                </div>
+                <div class="my-course-show-weeks hidden-sm hidden-xs">
+                    <div class="{{courselinkclass}}">
+                        <a class="gotocourse btn btn-orange" href="{{courseviewurl}}">
+                            <i class="fa fa-university"></i><span class="weeks-label">{{#str}}gotocourse, block_oua_course_list{{/str}}</span>
+                        </a>
+                        <a class="more btn btn-white collapsed" role="button" data-toggle="collapse" href=".weeks_for_{{courseid}}" aria-expanded="false" aria-controls="weeks_for_{{courseid}}">
+                             <span class="final-grade"><i class="fa fa-chevron-up"></i>{{!finalgrade}}</span>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</li>
+<li class="coursecol collapse weeks_for_{{courseid}}">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Grade</th>
+            </tr>
+            </thead>
+            <tbody>
+                {{#resultsdata}}
+                    <tr>
+                            <td>{{{itemname}}}</td><td>{{{grade}}}</td>
+                    </tr>
+                {{/resultsdata}}
+            </tbody>
+            </table>
+    </div>
+</li>

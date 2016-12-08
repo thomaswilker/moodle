@@ -1,0 +1,57 @@
+// CLASSROOM
+// ==========================================================================
+
+// Course Classroom
+.region-main {
+	// Expand / Collapse
+	&.fullwidth {
+			width: 100%;
+			-webkit-transition: all .5s ease;
+				-moz-transition: all .5s ease;
+					transition: all .5s ease;
+		.toggle .expand { display: none; }
+	}
+	&:not(.fullwidth) {
+		.toggle .expanded { display: none; }
+	}
+}
+.course-content-header {
+	.course-header {
+			.border-top-radius(@round);
+		.course-header-content {
+				padding-right: 105px - 13*2; /* spacing for toggle minus border-spacing for pointer */
+			.course-class-logo { /* Set fixed width to align logos */
+				.logo-wrap(); /* reset logo size to default */
+			}
+			.course-class-summary {
+					padding: 15px 20px;
+                .course-nav-scroll { .hide; }
+				.course-name {
+					.font-size(@h2-font-size);
+				}
+			}
+			.toggle { /* Toggle Expand/Collapse */
+					display: inline-block;
+					position: absolute;
+					top: 18px;
+					right: 10px;
+					margin: 5px;
+					.pointer;
+					text-align: center;
+					.font-size(@font-sm);
+				i.fa {
+					display: block;
+					color: @LinkDark;
+					.font-size(@h1-font-size);
+				}
+			}
+		}
+	}
+}
+
+.book-section {
+	margin: 0;
+}
+.lesson-section {
+	margin: 20px 0 0;
+}

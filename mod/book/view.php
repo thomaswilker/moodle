@@ -68,6 +68,13 @@ if ($allowedit) {
     $edit = 0;
 }
 
+/* OUA Custom - new book styling. */
+if(!$book->useoldbookstyle) {
+    include "view_oua.php";
+    return;
+}
+/* End OUA Custom. */
+
 // read chapters
 $chapters = book_preload_chapters($book);
 

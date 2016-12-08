@@ -1,0 +1,39 @@
+// User Activites
+// ==========================================================================
+
+.welcome-user {
+		display: table; /* prevent tabs from having extra line to the right because "table" display only increments in whole pixels */
+		table-layout: fixed; /* prevent it breaking when the tab content is too long */
+		width: 100%; /* needs width specified to work */
+	.welcome-header { /* table wraper */
+
+		.welcome-picture { display: initial; }
+		.welcome-message {
+			.welcome-text { display: initial; }
+			.user-navigation {
+				.nav-tabs.nav-flat {
+					margin-bottom: 0;
+					li {
+						&.units { .hide; }
+						a {
+							padding: 13px 3px;
+							.badge {
+								margin: -7px 0 0 -25px;
+								.font-size(@default-font-size - 4);
+							}
+							.fa {
+								display: inline-block;
+								margin-right: 5px;
+								.font-size(@default-font-size * 1.2857);
+							}
+						}
+					}
+					&:after {
+						table-layout: fixed;
+						width:100%;;
+					}
+				}
+			}
+		}
+	}
+}

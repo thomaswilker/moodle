@@ -1,0 +1,61 @@
+{{#canmanageforum}}
+    <div class="manage-forum"><a href="{{linktoforum}}">{{#str}}managethisforum, block_oua_forum_recent_posts{{/str}}</a></div>
+{{/canmanageforum}}
+<div class="enrolled-students"><i class="fa fa-users"></i>{{#str}}peopleincourse, block_oua_forum_recent_posts, {{studentcount}}{{/str}}</div>
+<div class="discussion-recent">
+    <div class="discussion-new clearfix">
+        <button class="btn btn-primary"  data-forumid="{{forumid}}" data-toggle="collapse" data-target="#new-post" aria-expanded="false" aria-controls="new-post">{{#str}}addnewdiscussion, block_oua_forum_recent_posts{{/str}}</button>
+    </div>
+    {{>block_oua_forum_recent_posts/form_discussion_post}}{{! Form for new discussion }}
+    {{#canmanageforum}}
+        <div class="discussion-posted alert alert-success " style="display:none" role="alert"> {{#str}}postsuccess, block_oua_forum_recent_posts{{/str}}</div>
+    {{/canmanageforum}}
+    {{^canmanageforum}}
+        <div class="discussion-posted alert alert-success " style="display:none" role="alert"> {{#str}}postsuccesswithedittime, block_oua_forum_recent_posts, {{maxeditminute}}{{/str}}</div>
+    {{/canmanageforum}}
+
+    <div class="discussion-posted alert alert-warning " style="display:none" role="alert"> {{#str}}newposterror, block_oua_forum_recent_posts{{/str}}</div>
+    <div class="discussion-deleted alert alert-success " style="display:none" role="alert"> {{#str}}deletepostsuccess, block_oua_forum_recent_posts{{/str}}</div>
+    <div class="discussion-deleted alert alert-warning " style="display:none" role="alert"> {{#str}}deleteposterror, block_oua_forum_recent_posts{{/str}}</div>
+    {{#canmanageforum}}
+        <div class="discussion-reply alert alert-success " style="display:none" role="alert"> {{#str}}postsuccess, block_oua_forum_recent_posts{{/str}}</div>
+    {{/canmanageforum}}
+    {{^canmanageforum}}
+        <div class="discussion-reply alert alert-success " style="display:none" role="alert"> {{#str}}postsuccesswithedittime, block_oua_forum_recent_posts, {{maxeditminute}}{{/str}}</div>
+    {{/canmanageforum}}
+
+    <div class="discussion-reply alert alert-warning " style="display:none" role="alert"> {{#str}}deletereplyerror, block_oua_forum_recent_posts{{/str}}</div>
+	<div class="disucssion-list-head clearfix"  data-forumid="{{forumid}}" data-page="0" data-perpage="{{perpage}}">
+		<div class="col-md-5">{{#str}}discussion, forum{{/str}}</div>
+		<div class="col-md-2">{{#str}}replies, forum{{/str}}</div>
+		<div class="col-md-2">{{#str}}startedby, forum{{/str}}</div>
+		<div class="col-md-2">{{#str}}lastpost, forum{{/str}}</div>
+        <div class="col-md-1"></div>
+	</div>
+
+	<div class="panel clearfix">
+		<div class="panel-group discussion-list-body"  role="tablist" aria-multiselectable="true">
+            {{>block_oua_forum_recent_posts/discussions}}
+		</div>
+	</div>
+</div>
+{{>block_oua_forum_recent_posts/confirm_delete_modal}}
+{{<block_oua_forum_recent_posts/form_discussion_post}}
+{{! Form for discussion reply}}
+{{$formid}}reply-post{{/formid}}
+{{$formtitle}}{{#str}}yourreply, mod_forum{{/str}}{{/formtitle}}
+{{$action}}{{#str}}reply, mod_forum{{/str}}{{/action}}
+{{$hidesubject}}hide{{/hidesubject}}
+{{$inlineattachmentsid}}{{replypostitemid}}{{/inlineattachmentsid}}
+{{/block_oua_forum_recent_posts/form_discussion_post}}
+<div class="discussionloading">
+    <div class="glyphicon glyphicon-refresh glyphicon-refresh-animate spinning"></div>
+</div>
+<div class="discussion-show">
+    <a href="#" class=" showmore" data-stringshow="{{#str}}showmorediscussions, block_oua_forum_recent_posts{{/str}}"><i class="fa fa-chevron-down"></i></a>
+</div>
+{{#js}}
+    require(['theme_bootstrap/bootstrap', 'jquery', 'block_oua_forum_recent_posts/recent_posts'], function($bs, $, $rp) {
+        $rp.initialise();
+    });
+{{/js}}

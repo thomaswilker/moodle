@@ -1,0 +1,50 @@
+{{#posts}}
+    {{^parent}}
+        <div class="avatar clearfix">
+                <a href="{{userprofileurl}}">
+                <img src="{{userpictureurl}}" alt="" title="" class="userpicture" />
+                </a>
+
+            <p class="fullname">{{userfullname}}</p>
+            <!-- {{name}} -->
+        </div>
+    {{/parent}}
+
+    <div class="post-header clearfix">
+        <a href="{{userprofileurl}}"><img src="{{{userpictureurl}}}" alt="" title="" class="userpicture" /></a>
+        <p>{{userfullname}} <span>{{formatted_modified_date}}</span></p>
+    </div>
+
+    <div class="discussion-post" data-postid="{{id}}">
+        {{{message}}}
+
+    {{#hasattachments}}
+        {{#attachments}}
+           <a href="{{fileurl}}">{{{pix_url_html}}}</a> <a href="{{fileurl}}">{{filename}}</a> <br/>
+        {{/attachments}}
+    {{/hasattachments}}
+        <div class="commands">
+            {{#candeletepost}}
+                <div class="deletepost"><i class="fa fa-times"></i><a href="#">{{#str}}delete, mod_forum{{/str}}</a></div>
+            {{/candeletepost}}
+            {{#caneditpost}}
+                <div class="editpost"><i class="fa fa-pencil"></i><a href="#">{{#str}}edit, mod_forum{{/str}}</a></div>
+            {{/caneditpost}}
+            {{#canreply}}
+                <div class="discussionreply"><i class="fa fa-reply"></i><a href="#">{{#str}}reply, mod_forum{{/str}}</a></div>
+            {{/canreply}}
+            {{^parent}}
+                {{#canmanageforum}}
+                    <div><i class="fa fa-edit"></i><a href="{{modereateforumurl}}" target="_blank">{{#str}}moderatediscussion, block_oua_forum_recent_posts{{/str}}</a></div>
+                {{/canmanageforum}}
+
+                {{#canpindiscussion}}
+                    <div class="pinpost"><i class="fa fa-thumb-tack"></i><a href="#">{{#pinned}}{{#str}}discussionunpin, mod_forum{{/str}}{{/pinned}}{{^pinned}}{{#str}}discussionpin, mod_forum{{/str}}{{/pinned}}</a></div>
+                {{/canpindiscussion}}
+            {{/parent}}
+        </div>
+    </div>
+    <div class="col-md-12 {{^parent}}discussion-post-replies{{/parent}}">
+        {{>block_oua_forum_recent_posts/postsr}}
+    </div>
+{{/posts}}

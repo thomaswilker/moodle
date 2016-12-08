@@ -1,0 +1,24 @@
+<ul class="nav nav-tabs nav-pills nav-stacked {{^search}}original{{/search}} {{#search}}searchlist{{/search}}" role="tablist">
+    {{#mycontactswithmessages}}
+        <li role="presentation" data-userid="{{id}}" class="message-contact {{#unreadcount}}unread{{/unreadcount}}">
+            <a href="#user-{{id}}-tab" aria-controls="{{id}}" role="tab" data-toggle="tab" class="clearfix">
+                <div class="col-xs-1">
+                    <img src="{{otheruserpictureurl}}" alt="" title="" class="userpicture"/>
+                </div>
+                <div class="col-xs-10">
+                    {{#unreadcount}}<span class="badge pull-right">{{unreadcount}}</span> {{/unreadcount}}
+                    <p class="fullname">{{otheruserfullname}}</p>
+                    {{#lastmessagesnippet}}<p class="message-snippet">{{lastmessagesnippet}}</p>{{/lastmessagesnippet}}
+                </div>
+            </a>
+        </li>
+    {{/mycontactswithmessages}}
+    <li class="nocontactsormessages {{#hascontacts}}hidden{{/hascontacts}}">
+        {{#search}}
+            {{#str}}nocontactsfound, local_conversations{{/str}}
+        {{/search}}
+        {{^search}}
+            {{#str}}noconversations, local_conversations{{/str}}
+        {{/search}}
+    </li>
+</ul>

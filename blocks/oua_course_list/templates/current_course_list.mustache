@@ -1,0 +1,52 @@
+<li class="coursecol course-header col-xs-12">
+    <div class="course-header-content {{coursenameclass}} ">
+        <div class="course-class-logo {{brandlogoclass}} {{cobrandingname}}">
+            {{#cobrandinglogo}}
+                <span class="logo-course"><img class="logo img-responsive" src="{{{cobrandinglogo}}}" alt="{{cobrandingname}}"/></span>
+            {{/cobrandinglogo}}
+        </div>
+        <div class="course-class-summary">
+            <div class="progress-bar-show-weeks">
+                <div class="course-name-progress-bar">
+                    <a href="{{courseviewurl}}">{{{coursename}}}</a>
+                    {{#nextactivityname}}
+                        <div class="whatsnext">{{#str}}whatsnextx, block_oua_course_list, {{nextactivityname}}{{/str}}</div>
+                    {{/nextactivityname}}
+                    {{{courseprogressbar}}}
+                </div>
+                <div class="my-course-show-weeks hidden-sm hidden-xs">
+                    <div class="{{courselinkclass}}">
+                        <a class="gotocourse btn btn-orange" href="{{courseviewurl}}">
+                            <i class="fa fa-university"></i><span class="weeks-label">{{#str}}gotocourse, block_oua_course_list{{/str}}</span>
+                        </a>
+                        <a class="more btn btn-white collapsed" role="button" data-toggle="collapse" href=".weeks_for_{{courseid}}" aria-expanded="false" aria-controls="weeks_for_{{courseid}}">
+                            <i class="fa fa-list"></i><span class="weeks-label"  data-stringhide="{{#str}}hideweeks, block_oua_course_list{{/str}}" data-stringshow="{{#str}}showweeks, block_oua_course_list{{/str}}"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</li>
+<li class="coursecol collapse weeks_for_{{courseid}}">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Weeks</th>
+                <!--<th class="course-status">Complete</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            {{#coursesections}}
+                {{#url}}
+                    <tr>
+                        <td><a href="{{url}}">{{name}} </a></td>
+                        <!--<td class="course-status"><span class="icon completedstate complete"></span></td>-->
+                    </tr>
+                {{/url}}
+            {{/coursesections}}
+            </tbody>
+        </table>
+    </div>
+</li>

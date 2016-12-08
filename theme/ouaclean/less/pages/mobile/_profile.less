@@ -1,0 +1,207 @@
+// Profile
+// ==========================================================================
+
+// GENERAL AVATAR
+// ----------------------------------------------------------------------
+.picture, .avatar, .page-header-image {
+	> a[href*="/user/"]:focus { outline-style: auto; } /* target based on url because there is no specific class */
+}
+a[id^="userpicture"]:focus { outline-style: auto; }
+
+// PROFILE PAGE
+// ----------------------------------------------------------------------
+#page-user-profile,
+#page-user-edit,
+#page-course-view-invisible {
+	.region-nav {
+		display: none;
+	}
+	#page-header {
+		position: relative;
+		margin: 0 -15px;
+		img.userpicture {
+			width: 70px;
+			height:70px;
+		}
+		a.edit-link {
+			display: block;
+			position: absolute;
+			top:0;
+			right:0;
+			width:60px;
+			margin-right:15px;
+			padding:35px 0;
+			text-align: center;
+			.font-size(@default-font-size * 2);
+			line-height:0;
+			background-color: @white;
+			span {
+				display:block;
+				text-indent:-999em;
+			}
+			.fa {
+				padding-bottom:1px;
+				color: @LinkDark;
+			}
+		}
+	}
+	.page-context-header {
+			.block-oua;
+
+			margin-bottom: -1px;
+			-webkit-border-radius:0;
+			-moz-border-radius:0;
+			border-radius:0;
+		.page-header-image {
+				.left;
+				margin-right: 5px;
+			img.userpicture {
+				.avatar(100px);
+			}
+		}
+		.page-header-headings {
+			h1 {
+				margin: 25px 0;
+				.font-size(@default-font-size + 4);
+			}
+		}
+		.btn-group.header-button-group {
+			position: absolute;;
+			bottom:0;
+			> a {
+				> span {
+					> img { display: none; }
+					.header-button-title {
+						&:before {
+							.fa;
+							content: @fa-var-envelope;
+							margin-right: 7px;
+							color:@white
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.userprofile {
+		.header-button-group {
+			.btn {
+				color: @white;
+				background-color: @LinkDark	;
+				border-color: @BasePrimary;
+			}
+		}
+		.profile_tree {
+			background-color: #fff;
+			-webkit-column-count: auto;
+			-moz-column-count: auto;
+			column-count: auto;
+			.profile-row {
+				margin: 0;
+				&:after {
+					display: table;
+					clear:both;
+					content: " ";
+
+				}
+				&:first-child {
+					section:first-child {
+						border-top: none
+					}
+				}
+				section {
+					margin-bottom: 0;
+					border-top: 1px solid #e3e4e6;
+				}
+				dl {
+					display: table;;
+					table-layout: fixed;
+					width: 100%;
+					dt {
+						display: table-cell;
+						margin-left: -15px;
+
+					}
+					dd {
+						display: table-cell;
+						padding-left: 10px;
+					}
+				}
+				h2 {
+					padding: 15px 0 30px;
+					font-weight:normal;
+					.font-size(@default-font-size + 6);
+					background: transparent;
+				}
+				ul {
+					margin: 0;
+					li {
+						list-style-type: none;
+						ul {
+							padding: 0
+						}
+					}
+					li.contentnode {
+						margin-left: -15px;
+					}
+					li:not(.contentnode){
+						margin-bottom: 10px;
+						line-height:1.5;
+						list-style: outside square none;
+					}
+				}
+			}
+		}
+		.description {
+			padding: 20px;
+			text-align: justify;
+			background-color: @white;
+		}
+	}
+}
+
+#page-course-view-invisible {
+	.userprofile {
+		margin: -20px -20px 0;
+		.page-context-header {
+			position: relative;
+			margin-bottom: 5px;
+			.btn-group.header-button-group {
+				margin-left: 82px;
+			}
+			.page-header-image {
+				img.userpicture {
+					width: 70px;
+					height: 70px;
+				}
+			}
+			.page-header-headings {
+				h2 {
+					margin: 25px 0;
+					padding: 0;
+					.font-size(@default-font-size + 4);
+					font-weight:bold;
+				}
+			}
+		}
+	}
+}
+
+//Right aligning checkbox for disclaimer messages
+#fitem_id_profile_field_Disclaimer {
+	display: table;
+	.fitemtitle {
+		float: right;
+		width: 75%;
+		label {
+			padding-top: 0;
+			text-align: left;
+		}
+	}
+	.felement {
+		padding-top: 0;
+		text-align: right;
+		width: 25%;
+	}
+}

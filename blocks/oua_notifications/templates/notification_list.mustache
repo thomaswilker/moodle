@@ -1,0 +1,62 @@
+<div class="panel-group accordion ouamsg" id="notification_accordion" role="tablist" data-count="{{unread_notifications_count}}">
+    <input name="notification_count" id="notification_count" value="{{unread_notifications_count}}" type="hidden"/>
+    {{#display_dismiss_all}}
+        <div class="panel-heading no-padding" role="tab" id="dismiss-all" data-dismissids="{{dismiss_all_notification_ids}}">
+            <h4 class="panel-title">
+                <a role="button" href="#dismissall" class="dismissall">
+                    <i class="fa fa-times-circle"></i>{{#str}}deleteall, block_oua_notifications{{/str}}</a>
+            </h4>
+        </div>
+    {{/display_dismiss_all}}
+
+{{#notification_list}}
+    <div class="panel" data-isconnectionrequest="{{isconnectionrequest}}">
+        <div class="panel-heading {{readstatus}}" role="tab" id="notification_heading{{notificationid}}" data-notificationid="{{notificationid}}">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#notification_collapse{{notificationid}}"
+                   class="collapsed"
+                   aria-expanded="false"
+                   aria-controls="notification_collapse{{notificationid}}">
+                   <span class="date-month">
+                       {{{formatted_date}}}
+                   </span>
+                   <span class="panel-subject">
+                       <div class="panel-subject-inner">
+                           <i class="fa {{iconclass}}"></i>
+                           <span class="subject">{{subject}}</span>
+                       </div>
+                   </span>
+                    <i class="fa fa-chevron-down expand-collapse"></i>
+                </a>
+            </h4>
+        </div>
+        <div id="notification_collapse{{notificationid}}" class="panel-collapse collapse" role="tabpanel"
+             aria-labelledby="notification_heading{{notificationid}}">
+            <div class="panel-body" data-messageid="{{notificationid}}">
+                <div class="message">
+                    {{{fullmessagehtml}}}
+                </div>
+                {{^isconnectionrequest}}
+                <div class="message-controls">
+                    <a class="notification-delete" role="button" data-fullname="{{userfromfullname}}" data-userid="{{useridfrom}}"  data-notificationid="{{notificationid}}" data-target="#confirm_delete_dialog"><i class="fa fa-trash"></i>{{#str}}delete, block_oua_notifications{{/str}}</a>
+                </div>
+                {{/isconnectionrequest}}
+            </div>
+        </div>
+    </div>
+{{/notification_list}}
+    {{^notification_list}}
+        <div class="nonotifications"><p>{{#str}}nonotifications,block_oua_notifications{{/str}}</p></div>
+    {{/notification_list}}
+</div>
+{{>block_oua_notifications/confirm_delete_modal}}
+{{>block_oua_notifications/confirm_delete_all_modal}}
+{{#js}}
+    require(['theme_ouaclean/chevron_slider', 'block_oua_notifications/manage_notifications', 'block_oua_connections/request_connect'], function(){}, function(err){
+        // Catch the error if block_oua_connections/request_connect is not installed.
+        var failedId = err.requireModules && err.requireModules[0];
+        if (failedId === 'block_oua_connections/request_connect') {
+            requirejs.undef(failedId);
+        }
+    });
+{{/js}}

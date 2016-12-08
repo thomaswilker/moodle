@@ -1,0 +1,93 @@
+// Wiki Pages
+// ==========================================================================
+
+.path-mod-wiki {
+	ul[role="tablist"] {
+		li[role="presentation"] {
+			a {
+				padding: 13px 5px; /* fix tabs breaking before collapsing */
+			}
+		}
+	}
+	table.wiki_editor.generalbox {
+		td {} /* style Alphabet Letters here when custom class is added */
+	}
+	// History Tab
+	form#diff {
+		width: 100%;
+		overflow-x: auto; /* prevent table from breaking layout on IOS */
+	}
+	table.generaltable.mdl-align {
+		text-align: left;
+		img.userpicture {
+			margin-right: 5px;
+		}
+	}
+	// Delete Comments Confirmation
+	.wiki-form-center {
+		width: auto; /* prevent breaking layout on IOS */
+	}
+	// COMMENTS
+	// ----------------------------------------------------------------------
+	// Wacky CSS styling hack to overcome troublesome DOM markup
+	// Remove this styling when markup for Comments is done in OO way
+	// Replace with styling similar to "Nested Replies" inside /pages/mobile/_forum.less
+	.no-overflow { /* each of this is a comment block */
+			margin: 0;
+		table.generaltable {
+				border: 1px solid @border;
+				//.font-default;
+			tr {
+				td {
+					border: none;
+				}
+				td.c0 {
+					width: 50px;
+				}
+				&:first-child { /* Head meta section */
+						background: @greyLight20;
+					td.c0 { /* avatar image block */
+						img { margin: 3px 0 5px 5px; }
+					}
+					td.lastcol { /* user meata block */
+						> a {
+							.clear-after;
+						}
+					}
+				}
+				&:nth-child(2) { /* Comment body section */
+						&:hover {
+							background: transparent;
+						}
+					td.c0 { /* empty block */ }
+					td.lastcol { /* Comment block */
+					}
+				}
+				&:last-child { /* Footer settings section */
+						background: transparent;
+					td {
+						padding-top: 0;
+						text-align: right;
+					}
+					td.c0 { /* empty block */ }
+					td.lastcol {
+					}
+				}
+			}
+		}
+	}
+	// Miscs
+	.alert.alert-block.alert-info {
+		.block-oua-alert;
+	}
+}
+#wiki_deletecommentform { /* prevent footer next and prev buttons from overflowing up */
+	> form {
+		float: none;
+		.inline-block;
+		&.wiki_deletecomment_no {
+			.clear-after;
+		}
+		> div { .inline-block; }
+	}
+}

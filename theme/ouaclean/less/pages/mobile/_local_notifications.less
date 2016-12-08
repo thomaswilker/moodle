@@ -1,0 +1,254 @@
+ul#profile-block {
+	.notification-counter {
+		position: static;
+	}
+}
+
+ul.notification-counter {
+	.notification-count {
+		.dropdown-menu {
+			.background-bubble-top(@right: 92px);
+		}
+	}
+}
+
+#allnotifications {
+	padding: 10px 0;
+	border: 0;
+	h1 {
+		padding: 10px 0;
+		margin: 0;
+		text-align: center;
+		font-weight: normal;
+		background-color: @StructureLight;
+	}
+	.wrapper {
+		position: relative;
+		.notification-actions {
+			position: absolute;;
+			top:12px;
+			right: 10px;
+			#notification-action-menu {
+				color: @greyDark50;
+				&:hover {
+					color: @LinkDark;
+				}
+				.v-ellipsis {
+					.v-ellipsis();
+				}
+			}
+			.dropdown-menu {
+				margin-top: 5px;
+				padding: 5px;
+				border: 0;
+				left: auto;
+				right: 0;
+				.background-bubble-top(@top: 0, @left: auto, @right: 10px, @borderColor: @white);
+				a {
+					color: @LinkDark;
+					background-color: transparent;
+					&:hover, &:active, &:visited, &:focus {
+						color: @LinkDark;
+					}
+				}
+			}
+		}
+	}
+	.notifications-list {
+		padding: 10px 0 ;
+		-webkit-box-shadow: inset 0 5px 6px -4px #ccc;
+		-moz-box-shadow: inset 0 5px 6px -4px #ccc;
+		box-shadow: inset 0 5px 6px -4px #ccc;
+		.panel {
+			&.unread {
+				.panel-heading {
+					.panel-title {
+						font-weight: bold;
+					}
+				}
+				&.simple {
+					.panel-body {
+						font-weight: bold;
+					}
+				}
+				.message-controls {
+					.marknotificationread {
+						display: inline;
+					}
+				}
+			}
+			border-top: 1px solid @Keyline;
+			.panel-heading {
+				background-color: transparent;
+				.panel-title {
+					> a {
+						display: table;
+						table-layout: fixed;
+						width: 100%;
+						.panel-subject {
+							display: table-cell;
+							padding-right: 10px;
+							.panel-subject-inner {
+								.fa {
+									display: table-cell;;
+									padding-right: 10px;
+									font-size: 30px;
+									vertical-align: top;
+								}
+								.subject {
+									display: table-cell;
+								}
+							}
+						}
+						.time {
+							display: table-cell;
+							width: 15%;
+							text-align: center;
+							color: @text-color;
+
+							.date-month {
+								white-space: nowrap;
+								.month:before {
+									content: " "
+								}
+							}
+							.fa {
+								padding: 5px;
+								color: inherit;
+								-webkit-transform: rotate(-180deg);
+								-moz-transform: rotate(-180deg);
+								-ms-transform: rotate(-180deg);
+								-o-transform: rotate(-180deg);
+								transform: rotate(-180deg);
+								-webkit-transition: all .2s;
+								-moz-transition: all .2s;
+								-ms-transition: all .2s;
+								-o-transition: all .2s;
+								transition: all .2s;
+							}
+						}
+						&:hover,
+						&:active,
+						&:visited {
+							text-decoration: none;
+							outline:0;
+						}
+						&.collapsed {
+							.time {
+								.fa {
+									-webkit-transform: rotate(0deg);
+									-moz-transform: rotate(0deg);
+									-ms-transform: rotate(0deg);
+									-o-transform: rotate(0deg);
+									transform: rotate(0deg);
+								}
+							}
+						}
+					}
+				}
+			}
+			.panel-body {
+				.message {
+					padding: 10px 20px 0;
+					display: table;
+					table-layout: fixed;
+					width:100%;
+					background-color: transparent;
+					.wrapper {
+						display: table-cell;
+						vertical-align: top;
+					}
+					.time {
+						display: table-cell;
+						width: 15%;
+						vertical-align: top;
+						text-align: right;
+						.month:before {
+							content: ' ';
+						}
+					}
+					.userpicturelink {
+						display: table-cell;
+						vertical-align: top;
+						& + p,
+						& + span,
+						& + .navbar {
+							display: table-cell;
+							vertical-align: top;
+						}
+					}
+					.userpicture {
+						float: left;
+						margin-right: 10px;
+						border-radius: 50%;
+					}
+					.navbar {
+						min-height: 0;
+						padding: 0 0 25px;
+						margin-bottom: 0;
+					}
+					.forumpost {
+						padding: 15px 10px;
+						background-color: fade(@LinkLight, 30%);
+						border: 0;
+						-webkit-box-shadow: inset 1px 1px 4px #ccc;
+						-moz-box-shadow: inset 1px 1px 4px #ccc;
+						box-shadow: inset 1px 1px 4px #ccc;
+						.picture {
+							width: 50px;
+							img {
+								margin: 0;
+								width: 100%;
+								height: 100%;
+								padding: 5px 10px 5px 5px;
+							}
+						}
+					}
+					.unsubscribelink {
+						a {
+							display: inline-block;
+							text-decoration: underline;
+							color: @LinkBright;
+						}
+					}
+					hr {
+						display: none;
+					}
+				}
+			}
+		}
+		.message-controls {
+			padding: 15px 0 10px;
+			text-align: center;
+			a {
+				padding: 0 5px;
+				& + a {
+					border-left: 1px solid @black;
+				}
+			}
+			.fa {
+				margin-right: 5px;
+			}
+			.marknotificationread {
+				display: none;
+			}
+		}
+	}
+
+	.modal-content {
+		.modal-footer {
+			border-top: none;
+			a {
+				.modal-buttons(@LinkDark, @white, @LinkBright, @white);
+				&.btn-confirm {
+					.modal-buttons(@white, @LinkDark, @white, @LinkBright);
+				}
+			}
+		}
+	}
+}
+
+//Default moodle unread override
+#page-mod-forum-view .notificationpopup li.unread {
+	background-color: inherit;
+}

@@ -1,0 +1,266 @@
+//  Mobile Header
+//  ==========================================================================
+
+// HEADER
+// ----------------------------------------------------------------------
+.navbar-default {
+		background: @Header;
+		border: none;
+		border-bottom: 5px solid @HeaderBorder;
+		.border-radius(0);
+	.navbar-header {
+			min-height: 50px;
+		.navbar-brand {
+				padding: 8px 25px;
+			.logo {
+				max-width: @logo-max-width;
+			}
+		}
+		.navbar-toggle {
+				margin: 5px;
+				.no-background;
+				.no-border;
+			.icon-bar {
+				height: 4px;
+				background: @LinkLightDefault;
+				.round-xxs;
+			}
+		}
+		.profile-pic {
+			float: right;
+			padding:5px 0;
+			img {
+				max-width:35px;
+				max-height:35px;
+				-webkit-border-radius:50%;
+				-moz-border-radius:50%;
+				border-radius:50%;
+
+			}
+		}
+		ul.message-counter {
+			margin-bottom: 0
+		}
+	}
+	.navbar-collapse {
+			padding: 0;
+			margin: 0px -15px;
+			.no-border;
+		.navbar-nav {
+				.no-margin;
+				text-align: center;
+			&.user-nav {
+				.fa-external-link {
+					padding-left: 13px;
+					color: inherit;
+				}
+			}
+			.dropdown-toggle, .dropdown-toggle:hover {
+				//color: @white;
+			}
+			.open {
+				.dropdown-toggle:focus {
+					color: @greyDark;
+				}
+			}
+			li {
+				background: @grey;
+				border-bottom: 2px solid @white;
+			}
+			a {
+				padding: 15px 0px;
+				color: @fg;
+				.font-size(@h1-font-size);
+			}
+		}
+	}
+	.message-count,
+	.notification-count {
+		padding: 13px 10px;
+		> a {
+			position: relative;
+			.badge {
+				position: absolute;
+				top: -5px;
+				left: -18px;
+				font-size: 10px;
+				color: @Header;
+				line-height: 12px;
+				background-color: @LinkLightDefault;
+				border-color:@Header;
+			}
+			.fa {
+				color: @LinkLightDefault;
+				&:before {
+					font-size: 20px;
+				}
+			}
+			&:hover {
+				.badge {
+					background-color: @LinkActive;
+				}
+				.fa {
+					color: @LinkActive;
+					&:before {
+
+					}
+				}
+			}
+		}
+	}
+}
+
+// PROFILE PICTURE
+// ----------------------------------------------------------------------
+ul#profile-block {
+	display: table;
+	table-layout: fixed;
+	width: 100%;
+	> li {
+		display: table-cell;
+		padding: 10px;
+		vertical-align: middle;
+		> p {
+			color:@LinkLightDefault;
+			text-align: left;
+			line-height: 1.2;
+			strong {
+				display: block;
+				color: @LinkLightDefault;
+			}
+		}
+		img {
+			max-width: 30px;
+			max-height: 30px;
+			border-radius: 50%;
+		}
+		&:last-child {
+			a {
+				padding: 0;
+				text-align: center;
+			}
+		}
+	}
+}
+
+// ACTIVE TABS
+// ----------------------------------------------------------------------
+
+// Dashboard
+body.pagelayout-mydashboard {
+	header.header .navbar-default .navbar-collapse {
+		.navbar-nav {
+			.dashboard  a {
+				color: @LinkBright;
+				&:active,
+				&:focus,
+				&:hover,
+				&:visited {
+					color: @LinkBright;
+				}
+			}
+		}
+	}
+}
+
+// Forums
+body.course-1.path-mod-forum {
+	header.header .navbar-default .navbar-collapse {
+		.navbar-nav {
+			.forums a {
+				color: @LinkBright;
+				&:active,
+				&:focus,
+				&:hover,
+				&:visited {
+					color: @LinkBright;
+				}
+			}
+		}
+	}
+}
+
+// Default HELP
+body.course-1.path-mod-page {
+	header.header .navbar-default .navbar-collapse {
+		.navbar-nav {
+			.help a {
+				color: @LinkBright;
+				&:active,
+				&:focus,
+				&:hover,
+				&:visited {
+					color: @LinkBright;
+				}
+			}
+		}
+	}
+}
+
+// Custom Help
+body.pagelayout-help {
+	header.header .navbar-default .navbar-collapse {
+		.navbar-nav {
+			.help-custom a {
+				color: @LinkBright;
+				&:active,
+				&:focus,
+				&:hover,
+				&:visited {
+					color: @LinkBright;
+				}
+			}
+		}
+	}
+}
+
+// Profile
+body#page-user-profile {
+	header.header .navbar-default .navbar-collapse {
+		.navbar-nav {
+			.profile a {
+				color: @LinkBright;
+				&:active,
+				&:focus,
+				&:hover,
+				&:visited {
+					color: @LinkBright;
+				}
+			}
+		}
+	}
+}
+
+// Links
+body.course-1.path-mod-page {
+	header.header .navbar-default .navbar-collapse {
+		.navbar-nav {
+			.links a {
+				color: @LinkBright;
+				&:active,
+				&:focus,
+				&:hover,
+				&:visited {
+					color: @LinkBright;
+				}
+			}
+		}
+	}
+}
+
+// Resources
+body.pagelayout-course {
+	header.header .navbar-default .navbar-collapse {
+		.navbar-nav {
+			.resources a {
+				color: @LinkBright;
+				&:active,
+				&:focus,
+				&:hover,
+				&:visited {
+					color: @LinkBright;
+				}
+			}
+		}
+	}
+}

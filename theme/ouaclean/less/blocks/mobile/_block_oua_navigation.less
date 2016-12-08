@@ -1,0 +1,82 @@
+// Activities Block
+// ==========================================================================
+
+.activities-resources-students {
+		.clearfix;
+        margin-bottom: 20px;
+	#navtabs {
+		.nav-tabs {
+			li { background: transparent; /* tab separator color - apply to li when tabs are justified (DO NOT apply this in _assets.less to keep it reusable) */ }
+		}
+	}
+	.block_oua_navigation,
+	.tab-pane.no-padding {
+			margin: 0;
+			border: none;
+			.no-shadow;
+		.content {
+				padding: 0;
+			.no-overflow { margin: 0; }
+			.panel {
+				border: none;
+			}
+		}
+	}
+	// Resources Tab
+	.tab-pane.no-padding {
+		.accordion {
+			.panel {
+				.panel-body {
+					li {
+						> .icon,
+						> a {
+							margin-right: 7px;
+							width: auto;
+						}
+						> .icon {
+							.inline-block;
+						}
+						> a {
+							.inline;
+						}
+					}
+				}
+			}
+		}
+	}
+	// Accordion
+	.accordion {
+		.panel {
+			margin-bottom: 2px;
+			.panel-collapse {
+				.panel-body {
+					ul {
+						li {
+							padding-left: 20px;
+							&:hover {
+								background: @white;
+							}
+							&.active {
+								padding-left: 15px;
+								border-left: 7px solid @LinkLight;
+							}
+							&.forum.sectiondiscussion {
+								letter-spacing: 1px;
+								font-variant: small-caps;
+								font-style: italic;
+								border-top:3px double #ccc;
+								border-bottom: 3px double #ccc;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	// My Connections
+	.tab-pane {
+		.block_oua_connections {
+			border-top: 1px solid @white;
+		}
+	}
+}

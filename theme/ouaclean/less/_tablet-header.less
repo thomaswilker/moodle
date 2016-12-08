@@ -1,0 +1,214 @@
+//  Tablet Header
+//  ==========================================================================
+
+
+// HEADER
+// ----------------------------------------------------------------------
+.navbar-default {
+	.navbar-header {
+		.navbar-brand {
+				padding: 8px 25px 10px 20px;
+			.logo {
+				max-width: @logo-max-width;
+			}
+		}
+	}
+	.navbar-collapse {
+		margin: 0;
+		.navbar-nav {
+			display: -webkit-flex;
+			display: -ms-flexbox;
+			display: flex;
+			-webkit-flex-direction: row;
+
+			-ms-flex-pack: justify;
+			flex-direction:row;
+			&.main-nav {
+				width: 48%
+			}
+			li {
+					.no-border;
+					.no-background;
+					-webkit-flex-grow: 1;
+					flex-grow:1;
+					text-align: center;
+				a {
+						position: relative;
+						padding: 15px 0;
+						color: @LinkLightDefault;
+						text-rendering: optimizeLegibility;
+						.font-smoothing();
+						letter-spacing: 1px;
+						-webkit-font-smoothing: antialiased;
+						-moz-osx-font-smoothing: grayscale;
+					&:before, &:after {
+						@menu-nav-separator-height: 44px;
+						position: absolute;
+						content:'';
+						width: 1px;
+						height: @menu-nav-separator-height;
+						top: 50%;
+						margin-top: -@menu-nav-separator-height / 2;
+					}
+				}
+				&:first-child a:before { display: none; }
+				&:last-child a:after { display: none; }
+				&:hover {
+					a {
+						color: @LinkActive;
+						&:before, &:after {
+							z-index: 2;
+						}
+					}
+				}
+			}
+
+			&.navbar-right {
+				> li {
+					&:hover {
+						a {
+							color: @LinkLightDefault;
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+// ACTIVE TABS
+// ----------------------------------------------------------------------
+.active-menu-tab(@background: @Highlight, @color: @black) {
+	background: @background;
+	color: @color;
+	a:before, a:after { visibility: hidden; /* hide separator line */ }
+}
+
+// Dashboard
+body.pagelayout-mydashboard {
+	header.header .navbar-default .navbar-collapse {
+		.navbar-nav {
+			.dashboard a {
+				color: @LinkActive;
+				&:active,
+				&:focus,
+				&:hover,
+				&:visited {
+					color: @LinkActive;
+				}
+			}
+		}
+	}
+}
+
+// Forums
+body.course-1.path-mod-forum {
+	header.header .navbar-default .navbar-collapse {
+		.navbar-nav {
+			.forums a {
+				color: @LinkActive;
+				&:active,
+				&:focus,
+				&:hover,
+				&:visited {
+					color: @LinkActive;
+				}
+			}
+		}
+	}
+}
+
+// Default HELP
+body.course-1.path-mod-page {
+	header.header .navbar-default .navbar-collapse {
+		.navbar-nav {
+			.help a {
+				color: @LinkActive;
+				&:active,
+				&:focus,
+				&:hover,
+				&:visited {
+					color: @LinkActive;
+				}
+			}
+		}
+	}
+}
+
+// Custom HELP
+body.course-1.pagelayout-help {
+	header.header .navbar-default .navbar-collapse {
+		.navbar-nav {
+			.help-custom a {
+				color: @LinkActive;
+				&:active,
+				&:focus,
+				&:hover,
+				&:visited {
+					color: @LinkActive;
+				}
+			}
+		}
+	}
+}
+
+// Links
+body.course-1.path-mod-page {
+	header.header .navbar-default .navbar-collapse {
+		.navbar-nav {
+			.links a {
+				color: @LinkActive;
+				&:active,
+				&:focus,
+				&:hover,
+				&:visited {
+					color: @LinkActive;
+				}
+			}
+		}
+	}
+}
+
+// Resources
+body.pagelayout-course {
+	header.header .navbar-default .navbar-collapse {
+		.navbar-nav {
+			.resources a {
+				color: @LinkActive;
+				&:active,
+				&:focus,
+				&:hover,
+				&:visited {
+					color: @LinkActive;
+				}
+			}
+		}
+	}
+}
+
+// PROFILE
+// ------------------------------------------------------------------------
+ul#profile-block {
+	table-layout:inherit;
+	width:auto;
+	> li {
+		a {
+			padding:0;
+		}
+		&:hover {
+			a {
+				color: @LinkActive;
+				text-decoration: none;
+			}
+		}
+		&:last-child {
+			padding:10px 10px 10px 0;
+		}
+	}
+	.message-count,
+	.notification-count {
+		> a, a:focus {
+			background-color: transparent;
+		}
+	}
+}

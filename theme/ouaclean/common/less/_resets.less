@@ -1,0 +1,42 @@
+//  Lego Project - Resets
+//  ==========================================================================
+
+html {
+  font-size: 100%;
+}
+body {
+  font-family: @default-font-family;
+  .font-size(@default-font-size);
+  .line-height(@default-line-height);
+}
+
+.no-margin { margin: 0px; }
+.no-padding { padding: 0px; }
+.no-bold { font-weight: normal; }
+.no-underline { text-decoration: none; }
+.no-display { display: none; }
+.no-background { background: none; }
+.no-border {
+  border-width: 0px;
+  border-radius: 0px;
+  border: 0px;
+}
+.no-font-style { font-style: normal; }
+.no-float{ float: none; }
+.no-repeat{background-repeat: no-repeat;}
+.no-shadow{box-shadow: none;}
+
+//Resetting font awesome icons based on theme.
+.fa {
+	color: @LinkDark;
+}
+.btn {
+	background: @LinkDark;
+	border-color: darken(@LinkDark, 7%);
+	&:hover,
+    &:focus,
+    &:active {
+		background: @LinkBright;
+		border-color: darken(@LinkBright, 7%);
+	}
+}

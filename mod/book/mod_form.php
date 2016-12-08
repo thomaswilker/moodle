@@ -93,6 +93,18 @@ class mod_book_mod_form extends moodleform_mod {
         $mform->addHelpButton('customtitles', 'customtitles', 'mod_book');
         $mform->setDefault('customtitles', 0);
 
+        /* OUA Custom: add settings for custom book display */
+        $mform->addElement('advcheckbox', 'useoldbookstyle', get_string('useoldbookstyle', 'mod_book'));
+        $mform->addHelpButton('useoldbookstyle', 'useoldbookstyle', 'mod_book');
+        $mform->setDefault('useoldbookstyle', 0);
+
+        $mform->addElement('advcheckbox', 'bookanimationspeed', get_string('usebookanimation', 'mod_book'), '', array(), array('1', '1000'));
+        $mform->addHelpButton('bookanimationspeed', 'usebookanimation', 'mod_book');
+        $mform->setDefault('bookanimationspeed', 0);
+        // Disable bookanimationspeed if useoldbookstyle checkbox is checked.
+        $mform->disabledIf('bookanimationspeed', 'useoldbookstyle', 'checked');
+        /* End OUA Custom */
+
         $this->standard_coursemodule_elements();
 
         $this->add_action_buttons();

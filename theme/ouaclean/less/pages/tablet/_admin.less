@@ -1,0 +1,18 @@
+/* Making Admin Upload page to full screen view
+dndsupported is a class appearing on the upload form
+page. We do not want this page to be full screen and
+so adding in the :not condition */
+body#page-admin-tool-uploaduser-index,
+body#page-admin-tool-extdata-index {
+	#region-main {
+		width:100%;
+		margin-bottom: 20px;
+		.mform .fitem .felement {
+			width: 50%
+		}
+	}
+	#region-side {
+		width:100%;
+		padding: 0
+	}
+}

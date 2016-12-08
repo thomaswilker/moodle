@@ -61,7 +61,11 @@ define ('BOOK_LINK_TEXT', '2');
  */
 function book_preload_chapters($book) {
     global $DB;
+    /* OUA Custom: add all fields to record retrieval as used in custom book.
     $chapters = $DB->get_records('book_chapters', array('bookid'=>$book->id), 'pagenum', 'id, pagenum, subchapter, title, hidden');
+    */
+    $chapters = $DB->get_records('book_chapters', array('bookid'=>$book->id), 'pagenum');
+    /* End OUA Custom */
     if (!$chapters) {
         return array();
     }

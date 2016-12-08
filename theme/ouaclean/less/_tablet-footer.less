@@ -1,0 +1,47 @@
+// Tablet footer
+footer.footer, #page-footer {
+	section.sydtafe {
+		font-size: smaller;
+		ul {
+			float: left;
+			margin-top: 30px;
+			li {
+				display: inline-block;
+				padding-right:5px;
+				line-height: 1;
+				overflow: hidden;
+				a {
+					padding-left: 10px;
+					.fa {
+						color: @white;
+					}
+				}
+				& + li {
+					a {
+						border-left: 1px solid #ddd;
+					}
+				}
+			}
+
+		}
+		.social {
+			float: right;
+			font-size: large;
+			ul {
+				float: right;
+				li {
+					padding:0 5px 0 0;
+					a {
+						padding-left: 0;
+						border:0;
+						span {
+							display: block;
+							text-indent: -999em;
+							word-break: break-all;
+						}
+					}
+				}
+			}
+		}
+	}
+}

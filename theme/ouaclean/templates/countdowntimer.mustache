@@ -1,0 +1,16 @@
+<div data-countdown="{{countdowntodate}}" class="cm-countdown" id="countdown"></div>
+{{#js}}
+require(['jquery', 'theme_ouaclean/jquery.countdown'], function($) {
+    $('[data-countdown]').each(function () {
+        var $this = $(this), finalDate = $(this).data('countdown');
+        $this.countdown(finalDate, function (event) {
+            $timestring  = ''
+            + '<div><span>%-D</span> <span class="cdlabel">%!D:{{#str}}day, theme_ouaclean{{/str}},{{#str}}days, theme_ouaclean{{/str}};</span></div>'
+            + '<span class="sep">:</span> <div><span>%-H</span> <span class="cdlabel">%!H:{{#str}}hour, theme_ouaclean{{/str}},{{#str}}hours, theme_ouaclean{{/str}};</span></div>'
+            + '<span class="sep">:</span> <div><span>%-M</span> <span class="cdlabel">%!M:{{#str}}min, theme_ouaclean{{/str}},{{#str}}mins, theme_ouaclean{{/str}};</span></div>'
+            + '<span class="sep">:</span> <div><span>%-S</span> <span class="cdlabel">%!S:{{#str}}sec, theme_ouaclean{{/str}},{{#str}}secs, theme_ouaclean{{/str}};</span></div>'
+            $this.html(event.strftime($timestring));
+        });
+    });
+});
+{{/js}}

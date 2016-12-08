@@ -1,0 +1,102 @@
+.video-js {
+  width: 100%;
+  height: 60vh;
+}
+
+.p3-transcript-bottombar-logo {
+  background: none !important;
+}
+
+.minimalist a.p3-transcript-button.collapse span,
+.minimalist a.p3-transcript-button.expand span {
+  display: inline-block !important;
+  margin-left: 5px;
+  background: #FFF;
+  height: 24px;
+  color: #015AAD;
+  font-family: tahoma, sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+
+}
+
+.minimalist a.collapse,
+.minimalist a.expand {
+  background: none !important;
+  width: 200px !important;
+}
+
+.minimalist .p3-transcript-button {
+  height: 23px !important;
+  width: 23px !important;
+}
+
+.minimalist.p3-transcript-container .p3-transcript-main p {
+  margin-bottom: 19px !important;
+}
+
+.minimalist input[type=text] {
+  border-radius: 0;
+  -moz-border-radius: 0;
+  height: auto;
+}
+
+.current_word {
+  background: #f90 !important;
+  padding: 1px 5px;
+  margin: 0 -5px;
+}
+
+.p3-transcript-main {
+  font-size: 19px;
+  height: 50vh;
+}
+
+.p3-transcript-mediabar {
+  display: none !important;
+}
+
+a.expand:before {
+  content: "\f078";
+}
+
+a.collapse:before {
+  content: "\f077";
+}
+
+a.collapse:before,
+a.expand:before {
+  font-family: FontAwesome;
+  font-weight: normal;
+  font-style: normal;
+  display: inline-block;
+  text-decoration: inherit;
+  width: 1.2857142857142858em;
+  text-align: center;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  font-size: 1em;
+  text-decoration: none;
+  color: #015AAD;
+}
+
+/* hack fix for brightcove which adds a css file for firefox which screws menu */
+.gecko .block_vetnavigation a span {
+  display: inline;
+}
+
+.gecko .p3-transcript-searchform .p3-transcript-search-inputs input[type="text"] {
+  background: white;
+  border: 1px solid #CCCCCC;
+  color: black;
+}
+
+.gecko .p3-transcript-search-submit, .gecko .p3-transcript-bottom-search-submit {
+  background: url("//p3.3playmedia.com/images/playlist/search.png") no-repeat scroll center center #555555 !important;
+}
+
+/* fix for IE9 */
+.minimalist input[type=text].p3-transcript-search.p3-nice-search {
+  height: 21px;
+}

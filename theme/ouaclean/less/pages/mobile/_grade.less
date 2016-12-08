@@ -1,0 +1,277 @@
+// Grade Pages
+// ==========================================================================
+
+// GENERAL
+// ----------------------------------------------------------------------
+.path-grade {
+	.page-context-header {
+		display: none;
+		margin-bottom: 20px;
+	}
+	.urlselect { /* Page Selection Dropdown */
+		display: block;
+		width: 100%;
+		max-width: 280px;
+		margin-bottom: 10px;
+	}
+	.singleselect {
+		form {
+			label {
+				display:block;
+				padding-left: 0;
+				& + select.singleselect {
+					margin-left: 0;
+					width: 100%;
+					max-width: 280px;
+				}
+			}
+		}
+	}
+	.userpicture {
+		border-radius: 50%
+	}
+	.user-grade {
+		.b1l {
+			width: 0;
+			min-width:0;
+		}
+		tbody {
+			.column-itemname {
+				padding-left: 25px;
+			}
+		}
+	}
+	.no-overflow { .clear; /* Clear the table wrapper from selection float */ }
+}
+
+
+// GRADER REPORT
+// ----------------------------------------------------------------------
+.path-grade-report-grader {
+	.initialbar {
+		> a { .inline-block; }
+	}
+	.gradeparent {
+			.table-responsive;
+		table.gradereport-grader-table {}
+	}
+}
+
+
+// OUTCOMES REPORT
+// ----------------------------------------------------------------------
+.path-grade-report-outcomes {
+	.region-main {
+		div[role="main"] {
+				.table-responsive;
+			table.generaltable {}
+		}
+	}
+	.generaltable {
+		display: block;
+		overflow: auto;
+	}
+}
+
+
+// OVERVIEW REPORT
+// ----------------------------------------------------------------------
+.path-grade-report-overview {
+	.region-main {
+		div[role="main"] {
+				.block-oua;
+			.no-overflow {
+					.table-responsive;
+				table.generaltable {}
+			}
+			.page-context-header {
+					margin-bottom: 15px;
+				> div {
+					.inline-block;
+					.v-middle;
+				}
+				.page-header-image {}
+				.page-header-headings {
+					padding: 0;
+				}
+				.header-button-group {
+					display: block;
+				}
+			}
+		}
+	}
+	.userpicture {
+		border-radius: 50%;
+	}
+
+
+}
+
+
+// SINGLE VIEW
+// ----------------------------------------------------------------------
+.path-grade-report-singleview {
+	.region-main {
+		div[role="main"] {
+			.itemnav {
+				&.previtem {
+					clear: left;
+					text-align: left;
+					margin-right: 15px;
+				}
+				&.nextitem {
+					clear: right;
+					text-align: right;
+					margin-left: 15px;
+				}
+			}
+		}
+	}
+
+
+
+	.reporttable {
+		.selectitems {
+				margin: 10px 0;
+			.singleselect {
+				form {
+					div {
+						text-align: left;
+						select.singleselect {
+							margin-left: 0;
+						}
+					}
+				}
+			}
+		}
+		> form {
+				.table-responsive;
+			table.generaltable {}
+		}
+	}
+	select.singleselect {
+		width: 100%;
+		max-width: 280px
+	}
+}
+
+
+// USER REPORT
+// ----------------------------------------------------------------------
+.path-grade-report-user {
+	.region-main {
+		div[role="main"] {
+				.table-responsive;
+			table.generaltable.user-grade {}
+		}
+	}
+	table.user-grade {
+		display: block;
+		margin-top:10px;
+		border: 1px solid #ecedee;
+		overflow: auto;
+	}
+	#graded_users_selector {
+		float:left;
+	}
+}
+
+	.user-table-wrapper {
+
+		table-layout: fixed;
+		width: 100%;
+
+		table.user-grade {
+			border: 0
+		}
+	}
+
+// CATEGORIES AND ITEMS
+// ----------------------------------------------------------------------
+.path-grade-edit-tree {
+	.region-main {
+		div[role="main"] {
+			.gradetreebox {
+					clear: right;
+				form {
+					> div {
+							.table-responsive;
+						table.generaltable.setup-grades {}
+					}
+				}
+			}
+			.buttons.mdl-align {
+					text-align: right;
+				.singlebutton {
+					.inline-block;
+				}
+			}
+		}
+	}
+}
+
+
+// COURSE GRADE SETTINGS
+// ----------------------------------------------------------------------
+.path-grade-edit-settings {
+	.generalbox.boxaligncenter.boxwidthnormal.centerpara {
+		.clear;
+		margin: 10px 0;
+		text-align: left;
+	}
+}
+
+
+// EDIT
+// ----------------------------------------------------------------------
+.path-grade-edit-letter {
+	.region-main {
+		div[role="main"] {
+			form.mform {
+				clear: right;
+				.table-responsive;
+			}
+		}
+	}
+}
+
+
+// PASTE FROM SPREADSHEET
+// ----------------------------------------------------------------------
+.path-grade-import-direct {
+	.region-main {
+		div[role="main"] {
+			textarea.gradeimport_data_area {
+				max-width: 100%;
+			}
+		}
+	}
+}
+
+// GRADE TOTAL
+// ----------------------------------------------------------------------
+.course-results-list .table-responsive table tr:last-child td,
+.path-grade-report-user table tr th.baggt  {
+	span {
+		img {
+			display: none;
+		}
+		&:before {
+			margin-right: 10px;
+			font-family: Symbol;
+			font-size:24px;
+			speak: none;
+			content: '\03a3';
+			vertical-align: middle;
+		}
+	}
+}
+
+// RUBRIC TABLE
+// ----------------------------------------------------------------------
+#rubric-rubric.gradingform_rubric {
+	max-width: 100%;
+	table#rubric-criteria {
+		width:100%;
+	}
+}

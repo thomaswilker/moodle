@@ -1,0 +1,25 @@
+// Blacboard Pages
+// ==========================================================================
+
+.path-mod-elluminate {
+	// Join Session Button
+	.elluminatejoinmeeting {
+			margin: 15px 0;
+		> a {
+			.btn;
+			.round;
+			.font-normal;
+			.font-size(@h3-font-size);
+			&:before {
+				margin-right: 7px;
+				content: @iconSignIn;
+				font-family: @icon-font-family; /* specify font family manually because using class does not work for this particular element */
+				.font-size(@h2-font-size);
+			}
+		}
+	}
+    // Tables
+    table.generaltable {
+        table-layout: fixed; /* prevent long words from breaking layout */
+    }
+}

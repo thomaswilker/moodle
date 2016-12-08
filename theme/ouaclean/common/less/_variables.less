@@ -1,0 +1,149 @@
+//  Lego Project - Variables
+//  ==========================================================================
+
+// COLORS
+// ----------------------------------------------------------------------
+
+// Style Guide
+@white: 				#ffffff;
+@black: 				#000000;
+@blueLight: 			#dff0fa; // Blue Background colour
+@blue: 					#0194d3; // icon/heading colour
+@blueDark20: 			#033862; // Header border colour
+@greyLight20: 			#F3F4F5; // Accordion, Tab icon background colour
+@greyLight10: 			#EAEDF0; // Body background
+@greyLight: 			#e6e6e4; // Progress bar colour 2
+@grey: 					#e4e5e7; // Sub nav/tab colour
+@greyDark: 				#808181; // Icon colour
+@orange: 				#ff9600; // Button colour
+@red: 					#fa5756; // Alert colour
+@green: 				rgb(145,175,35); // Progress bar colour
+@fg: 					#000; /* Text color */
+@bg: 					@white; /* Background color */
+@brand: 				@blue; /* Primary theme color */
+@comp: 					@orange; /* Secondary theme color */
+@link: 					@blue; /* Link color */
+@border: 				lighten(@grey, 3%); /* Border color */
+
+//Brand Colours
+
+// ***************** NEW THEMES - OUA ****************** //
+//// Links
+@LinkDark				:#0067ac;
+@LinkBright			:#f79440;
+@LinkLight			:#b9e0f7;
+@LinkLightDefault		:@white;
+@LinkActive			:@LinkLight;
+@LinkHover			:#00355f;
+
+//Structure
+@StructureLight		:#f7f7f7;
+@StructureDark		:#00355f;
+@PageBackground		:#f7f7fa;
+@Header				:#00355f;
+@HeaderBorder		:#002645;
+@Highlight			:@StructureLight;
+@Keyline			:#ebeced;
+
+
+	// ***************** NEW THEMES - SYDTFE ****************** //
+// Links
+//@LinkDark			:#8b0f04;
+//@LinkBright			:#cf102d;
+//@LinkLight			:#d0d3d4;
+//@LinkLightDefault	:@black;
+//@LinkActive			:@LinkBright;
+//@LinkHover			:@LinkBright;
+//
+////Structure
+//@StructureLight		:#f7f7f7;
+//@StructureDark		:#4b4c4d;
+//@PageBackground		:#f1f2f3;
+//@Header				:#fff;
+//@HeaderBorder			:@LinkBright;
+//@Highlight			:@StructureLight;
+//@Keyline				:#ebeced;
+//@GenericLinkHover		:@LinkBright;
+// ****************************************************** //
+
+// Resets
+//OUA
+@BasePrimary: @StructureDark;
+@BaseSecondary: @LinkDark;
+@Highlight: @Keyline;
+@Inactive: #808181;
+@BodyCopy: @black;
+@ProgressBar: #cce192;
+
+
+
+// Missing Colors from Style Guide
+@blueLight20:			lighten(@blueLight, 4%);
+@blueDark: 				darken(@blue, 25%);
+@redLight: 				lighten(@red, 20%);
+
+// Old OUA Styling Colors
+@blueLight40: 			lighten(desaturate(@blue, 25%), 45%);
+@blueLight15: 			lighten(desaturate(@blue, 50%), 25%);
+@blueLight10: 			lighten(@blueLight, 3%);
+@greyDark05:			darken(@grey, 5%);
+@greyDark10:			darken(@grey, 15%);
+@greyDark50: 			darken(@grey, 50%);
+@greyDark60: 			darken(@grey, 67%);
+@redDark05:				darken(desaturate(@red, 50%), 5%);
+@redDark20:				darken(desaturate(@red, 50%), 15%);
+@yellow:				#bf9758;
+@yellowH:				hue(@yellow) + 7;
+@yellowS:				saturation(@yellow) + 20;
+@yellowL:				lightness(@yellow) + 36;
+
+
+// FONTS
+// ----------------------------------------------------------------------
+
+@default-font-size: 	14;
+@default-font-family: 	Tahoma, Geneva, sans-serif;
+@h1-font-size: 			@default-font-size * 1.4;
+@h2-font-size: 			@default-font-size * 1.3;
+@h3-font-size: 			@default-font-size * 1.2;
+@font-sm: 				@default-font-size * 0.8;
+
+// Line Heights
+@default-line-height: 	22px;
+@h1-line-height: 		@default-line-height * 1.4;
+@h2-line-height: 		@default-line-height * 1.3;
+@h3-line-height: 		@default-line-height * 1.2;
+
+// Icons
+@icon-font-family: 		FontAwesome;
+@iconCheck: 			@fa-var-check;
+@iconEdit: 			    @fa-var-pencil-square-o;
+@iconStickMan: 			@fa-var-odnoklassniki; /* fa-odnoklassniki - Russian for classmates */
+@iconChild: 			@fa-var-child;
+@iconGroup: 			@fa-var-group;
+@iconSignIn: 			@fa-var-sign-in;
+@iconTimes: 			@fa-var-times;
+@iconCross:             @fa-var-times;
+@iconInfo:              @fa-var-info-circle;
+
+// BOX MODEL
+// ----------------------------------------------------------------------
+
+// Radius
+@round: 				3px;
+
+// Screen Widths
+@screen-tablet:			768px;
+@screen-desktop:		992px;
+@screen-large:			1200px;
+@screen-wide:			1366px;
+
+
+// STYLING
+// ----------------------------------------------------------------------
+
+// Logos
+@logo-max-width: 		120px;
+@logo-max-width-sm: 	@logo-max-width /2; /* for mobile devices */
+@logo-max-height: 		@logo-max-width * 5/8;
+@logo-max-height-sm: 	@logo-max-height /2; /* for mobile devices */

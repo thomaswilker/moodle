@@ -1,0 +1,243 @@
+// Course Units
+// ==========================================================================
+
+.dashboard_course_list {
+	&.block { .round !important; }
+	.content {
+			padding: 0;
+		> .nav-tabs {
+			padding: 0; /* overwrite moodle's padding */
+			//background: @greyLight10; /* match body background - only needed if tabs are not justified */
+			> li {
+				> a {
+					padding: 10px 40px;
+					.font-size(@default-font-size - 2);
+				}
+			}
+			&.nav-flat {
+				li {
+					a {
+						.fa {
+							.font-size(@default-font-size + 18);
+						}
+					}
+				}
+			}
+		}
+		> .tab-content {
+			padding: 20px;
+			background-color:@white;
+			border: 1px solid @Keyline;
+			.border-radius(5px);
+			border-top-left-radius: 0;
+		}
+		.course-content-header {
+				padding: 0px;
+				margin: 0 -13px; /* minus border-spacing for pointer */
+			.coursecol {
+					.clear;
+				&.collapsing,
+				&.collapse { margin: 0 13px; /* reset border-spacing for pointer */ }
+			}
+			.course-header {
+					padding: 0;
+					margin-bottom: 15px;
+				.course-header-content {
+						padding: 0;
+						.no-border;
+					.course-class-summary {
+							display: block;
+							padding: 0;
+						.completion_bar_wrapper { padding: 0; }
+						.progress-bar-show-weeks {
+								display: table;
+								table-layout: auto;
+								width: 100%;
+								border-spacing: 0;
+							.course-name-progress-bar {
+								display: table-cell;
+								padding: 10px 20px;
+								.v-middle;
+								> a {
+									.font-size(@default-font-size + 1);
+									font-weight: 700;
+									.simple-link(@LinkDark);
+								}
+								.whatsnext,
+								.download {
+									.font-size(@default-font-size - 2);
+									line-height:1.5;
+									strong {
+										display: block;
+									}
+									.fa {
+										margin-left:5px;
+										color: @blue;
+										.font-size(@default-font-size + 2)
+									}
+								}
+							}
+							.my-course-show-weeks {
+									display: table-cell;
+									.v-middle;
+									width: 11%;
+									background-color: @grey;
+								.btn {
+									display: block;
+									border: none;
+									.font-size(@default-font-size - 2);
+									text-align: center;
+									.text-shadow(0);
+									&:not(:last-child) { margin-bottom: 10px; }
+									&:active,
+									&:focus {
+										-webkit-box-shadow: none;
+										-moz-box-shadow: none;
+										box-shadow: none;
+									}
+									&.gotocourse {
+										display: none;
+										.fa {
+											color: @white;
+										}
+									}
+									&.more {
+										padding: 15px 0;
+										background: transparent;
+										.fa {
+											margin-right: 0;
+											&:before {
+												.font-size(@default-font-size * 2)
+											}
+										}
+										&.collapsed {
+											.fa-chevron-up {
+												-webkit-transform: rotate(-180deg);
+												-moz-transform: rotate(-180deg);
+												-ms-transform: rotate(-180deg);
+												-o-transform: rotate(-180deg);
+												transform: rotate(-180deg);
+											}
+										}
+									}
+									.weeks-label {
+										display: block;
+										margin: 0 10px;
+									}
+								}
+								&.blank {
+									background: transparent;
+								}
+								&.certificate {
+									.fa {
+										width: 100%;
+										color: @LinkDark;
+										font-family: Tahoma;
+										.font-size(@default-font-size - 4);
+										line-height:@default-line-height * 0.6;
+										text-align: center;
+										&:before {
+											display: block;
+											font-family: 'FontAwesome';
+											.font-size(@default-font-size * 2);
+											line-height:@default-line-height * 1.6;
+										}
+										&.no-certificate {
+											&:before {
+												color: #c6c6c6;
+											}
+										}
+									}
+								}
+
+							}
+							.course-certificate-wrapper {
+								.course-certificate {
+										margin: 5px 0px;
+										padding: 5px 10px;
+										background: @white;
+										.round;
+									a {
+										display: block;
+										> .fa {
+											margin-right: 7px;
+										}
+									}
+								}
+							}
+						}
+						&.results {
+							.progress-bar-show-weeks {
+								.my-course-show-weeks {
+									padding:25px 0;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	.btn-show-all {
+		display: table;
+		width: auto;
+		margin: 0 auto;
+		color: @black;
+		text-shadow: none;
+		border:none;
+		background-color: transparent;
+		.fa {
+			float: right;
+			margin:0 0 0 10px;
+			width: 20px;
+			height:18px;
+			color: @LinkDark;
+			line-height:.875;
+		}
+	}
+	.hidden-courses {
+		.coursecol.course-header {
+			margin: 0 0 15px 0;
+
+		}
+		&.collapse + .btn-show-all,
+		&.collapsing + .btn-show-all {
+			span {
+				&:before {
+					content: attr(data-stringshow)
+				}
+			}
+		}
+		&.collapse.in + .btn-show-all {
+			.fa {
+				-webkit-transform: rotate(180deg);
+				-moz-transform: rotate(180deg);
+				-ms-transform: rotate(180deg);
+				-o-transform: rotate(180deg);
+				transform: rotate(180deg);
+			}
+			span {
+				&:before {
+					content: attr(data-stringhide)
+				}
+			}
+		}
+	}
+}
+
+// MOBILE VIEW
+// ----------------------------------------------------------------------
+#region-main {
+	#block-region-content {
+		> .dashboard_course_list { display: none; }
+	}
+}
+.welcome-user {
+	.tab-content {
+		.dashboard_course_list {
+			.content {
+				> .nav-tabs { display: none; /* the extra tab on side navigation */ }
+			}
+		}
+	}
+}

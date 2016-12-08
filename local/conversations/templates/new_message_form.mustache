@@ -1,0 +1,18 @@
+<div id="new-message" class="hidden">
+    <div class="alert alert-warning hidden" role="alert"> </div>
+    <div role="document" class="form-new-message clearfix">
+    <form role="form" data-toggle="validator">
+        <div class="form-body">
+                <div class="form-group">
+                    <input type="hidden" name="useridto" value=""/>
+                    <div class="input-group">{{! Extra div for atto editor }}
+                    <textarea placeholder="{{#str}}newmessage, local_conversations{{/str}}" class="form-control custom-control" name="message" id="new-message-edit" rows="3" data-error="{{#str}}validationmessageempty, local_conversations{{/str}}" required="required"></textarea>
+                    <button type="button" title="{{#str}}send, local_conversations{{/str}}" class="input-group-addon btn btn-primary message-send-btn submit"><i class="fa fa-paper-plane" aria-hidden="true"></i><span class="message-send">{{#str}}send, local_conversations{{/str}}</span></button>
+                    </div>
+                    <div class="help-block with-errors"></div>
+                </div>
+        </div>
+    </form>
+    </div>
+</div>
+

@@ -1,0 +1,109 @@
+div.block_message_broadcast {
+    padding: 0;
+    border-width: 0;
+    background-color: transparent;
+    box-shadow: none;
+    border: 0;
+}
+div.block.block_message_broadcast {
+    margin-bottom: 0
+}
+
+div.block_message_broadcast .messagebody {
+    padding: 10px 15px;
+    white-space: pre-line;
+}
+
+div.block_message_broadcast .content {
+    padding: 0;
+
+}
+
+.broadcastmessagewrapper {
+    padding: 0;
+    border-width: 0;
+    background-color: transparent;
+    box-shadow: none;
+    color: #373737;
+    line-height: 1.5rem;
+    margin-bottom: 0;
+}
+
+.broadcastmessagewrapper .box-yellow-rounded {
+    display: block;
+}
+
+.broadcastmessagewrapper .box-yellow-rounded.collapsed {
+    height:0 !important;
+    overflow: hidden;
+    -webkit-transition: height .3s ease;
+    -moz-transition: height .3s ease ;
+    -ms-transition: height .3s ease ;
+    -o-transition: height .3s ease ;
+    transition: height .3s ease ;
+}
+
+.broadcastmessagewrapper .box-yellow-rounded .wrapper {
+    display: table;
+    margin-bottom: 20px;
+    background: #fff;
+    position: relative;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    float: left;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px 0px #cccccc;
+}
+
+.broadcastmessagewrapper .box-yellow-rounded i.fa-bullhorn {
+    display: table-cell;
+    padding: 20px 25px 25px;
+    width: 90px;
+    color: #373737;
+    font-family: sans-serif;
+    font-size: 12px;
+    background-color: #ffe8d6;
+    vertical-align: top;
+}
+
+.broadcastmessagewrapper .box-yellow-rounded i.fa-bullhorn:before {
+    display: block;
+    color: #ff9600;
+    font-family: 'FontAwesome';
+    font-size: 40px;
+}
+
+.broadcastmessagewrapper .box-yellow-rounded .messagetitle {
+    font-weight: bold;
+    font-size: auto;
+    padding: 5px 25px 5px 15px;
+    list-style-type: none;
+    border-bottom: 1px solid #e4e4e4;
+}
+
+.broadcastmessagewrapper .box-yellow-rounded .messagetitle:before {
+    content: "";
+    background-repeat: no-repeat;
+    background-position: 0px -2795px;
+}
+
+.broadcastmessagewrapper .box-yellow-rounded a.dismiss {
+    position: absolute;
+    top: 5px;
+    right: 10px;
+}
+
+.broadcastmessagewrapper .box-yellow-rounded a.dismiss i.fa {
+    color: #fa5756;
+    font-size: 20px;
+}
+.broadcastmessagewrapper .box-yellow-rounded img {
+    margin-right: 8px;
+    margin-bottom: 5px;
+}
+
+.broadcastmessagewrapper .box-yellow-rounded a {
+    font-family: "VerbMedium", Tahoma, sans-serif;
+}

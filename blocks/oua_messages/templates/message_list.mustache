@@ -1,0 +1,49 @@
+<div class="panel-group accordion ouamsg" id="message_accordion" role="tablist" data-count="{{message_count}}">
+    <input name="message_count" id="message_count" value="{{message_count}}" type="hidden"/>
+
+{{#message_list}}
+    <div class="panel">
+        <div class="panel-heading {{readstatus}}" role="tab" id="message_heading{{messageid}}" data-messageid="{{messageid}}">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#message_collapse{{messageid}}"
+                   class="collapsed"
+                   aria-expanded="false"
+                   aria-controls="message_collapse{{messageid}}">
+                    <span class="date-month">
+                        {{{formatted_date}}}
+                    </span>
+                    <span class="panel-subject">
+                        <span class="panel-subject-inner">
+                            <span class="avatar">{{{userfromavatar}}}</span>
+                            <span class="subject">{{subject}}</span>
+                        </span>
+                    </span>
+                    <i class="fa fa-chevron-down expand-collapse"></i>
+                </a>
+            </h4>
+        </div>
+        <div id="message_collapse{{messageid}}" class="panel-collapse collapse" role="tabpanel"
+             aria-labelledby="message_heading{{messageid}}">
+            <div class="panel-body">
+                <div class="message">
+                    {{{smallmessage}}}
+                </div>
+                <div class="message-controls">
+
+                    <a class="message-reply" data-trigger="core_message-messenger::sendmessage" data-fullname="{{userfromfullname}}" data-userid="{{useridfrom}}"><i class="fa fa-mail-reply"></i>{{#str}}reply, block_oua_messages{{/str}}</a>
+
+                    <a class="message-delete" data-fullname="{{userfromfullname}}" data-userid="{{useridfrom}}"  data-messageid="{{messageid}}" data-target="#confirm_delete_dialog"><i class="fa fa-trash"></i>{{#str}}delete, block_oua_messages{{/str}}</a>
+
+                </div>
+            </div>
+        </div>
+    </div>
+{{/message_list}}
+{{^message_list}}
+    <div class="nomessages"><p>{{#str}}nomessages,block_oua_messages{{/str}}</p></div>
+{{/message_list}}
+</div>
+{{>block_oua_messages/confirm_delete_modal}}
+{{#js}}
+    require(['theme_ouaclean/chevron_slider', 'block_oua_messages/manage_messages']);
+{{/js}}

@@ -1,0 +1,227 @@
+// Forum
+// ==========================================================================
+
+// Activity
+.path-mod-forum {
+
+	// FORUM TAB
+	// ----------------------------------------------------------------------
+	&.two-column {
+		#region-main {
+			div[role="main"] {
+					overflow-x: auto;
+					.block-oua;
+					margin-bottom:0;
+				.clearer { .hide; }
+				h2 {
+					font-weight:bold;
+				}
+				table.generaltable {
+					.singlebutton {
+						form {
+							input[type="submit"] {
+								margin: 0;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// TOPIC LISTINGS
+	// ----------------------------------------------------------------------
+	table.forumheaderlist {
+			background: @greyLight20;
+			border-width: 0 4px 18px;
+			border-color: @greyLight20;
+			border-style: solid;
+			.border-radius(3px);
+		thead {
+			tr {
+				th.header {
+						color: @fg;
+						.padding;
+					&.replies {}
+				}
+			}
+		}
+		tbody {
+			tr.discussion {
+					background: @white;
+				td {
+						.padding;
+						border-bottom: 3px solid @greyLight20;
+					&.author,
+					&.replies,
+					&.lastpost {
+						a { color: @fg; }
+					}
+					&.picture { padding-top: 11px; }
+					&.author { padding-left: 0; }
+					&.lastpost { min-width: 200px; }
+					&.topic.starter {
+						img {
+							float: left;
+							padding: 5px 5px 0 0;
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// MISCS
+	// ----------------------------------------------------------------------
+	form#newdiscussionform { /* New Discussion Button */
+		input[type="submit"] { margin: 0; }
+	}
+	.preload-subscribe, .preload-unsubscribe,
+	.discussionsubscription { .hide; /* Subscription Button */ }
+	.discussioncontrols {
+		.discussioncontrol {
+			&.nullcontrol,
+			&.displaymode {
+				.hide; /* Layout Options */
+			}
+			&.nullcontrol {}
+			&.displaymode {}
+			&.movediscussion {
+				form#forummenu {
+					select.urlselect {
+					}
+					input[type="submit"] {
+						margin: 0 5px;
+					}
+				}
+			}
+		}
+		.clearfloat { .hide; /* hide redundant space block */ }
+	}
+	h3.discussionname { /* Forum Topic Title */
+		color: @LinkDark;
+		&:before {
+			padding-left: 7px;
+			padding-right: 5px;
+			.fa;
+			content: '\f02d';
+		}
+	}
+	.discussion-nav {
+			display: none;
+			margin: 25px 0;
+		ul {
+			li {
+				.fa;
+				color: @link;
+				&.prev-discussion:before {
+					content: '\f053';
+					padding-right: 5px;
+				}
+				&.next-discussion:after {
+					content: '\f054';
+					padding-left: 5px;
+				}
+				a { font-family: @default-font-family; }
+			}
+		}
+	}
+	.alert {
+		&.alert-block.alert-info {
+			.block-oua-alert;
+		}
+		.errorcode { .hide; }
+	}
+
+	// TOPIC REPLIES
+	// ----------------------------------------------------------------------
+	.forumpost {
+			margin: 0;
+			padding: 0;
+			border: 1px solid @border;
+			.border-radius(0);
+		.row {
+				margin: 0;
+				padding: 15px 20px;
+			&.header {
+					background: @greyLight20;
+				.picture {
+						float: none;
+						.inline-block;
+						.v-middle;
+					a {
+						img.userpicture {
+							margin-right: 13px;
+						}
+					}
+				}
+				.topic {
+						.inline-block;
+						.v-middle;
+						margin: 5px 0;
+					.subject { .hide; /* hide topic title */ }
+					.author {
+						a {
+							.clear-after;
+						}
+					}
+				}
+			}
+			&.maincontent {
+				padding-bottom: 0;
+				.grouppictures { .hide; }
+				> .no-overflow {
+					margin: 0;
+				}
+			}
+			&.side {
+				padding-top: 0;
+			}
+		}
+		&.firstpost.starter { /* First Topic Starter */
+			.header {
+				padding: 10px;
+				background: @Highlight;
+				.picture {
+					a {
+						img.userpicture {
+							margin-right: 18px;
+							.avatar(auto);
+						}
+					}
+				}
+				.topic {}
+			}
+			.maincontent {
+				margin: 15px 0;
+			}
+		}
+	}
+}
+
+#page-mod-forum-discuss {
+	.discussioncontrols {
+		margin: 0;
+		.movediscussion {
+			padding-right: 0;
+			form#forummenu {
+				input[type=submit] {
+					float:right;
+					margin: 0 0 0 10px;
+				}
+			}
+		}
+		.pindiscussion {
+			.singlebutton {
+				div {
+					width: 100%;
+					margin: 0;
+				}
+			}
+			input[type=submit]{
+				width:100%;
+				margin: 10px 0 15px;
+			}
+		}
+	}
+}

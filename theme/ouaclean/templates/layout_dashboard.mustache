@@ -1,0 +1,60 @@
+{{> theme_ouaclean/partials_page_banner}}
+<div id="page" class="container-fluid {{{regionmain}}}">
+    {{{blocks_side_a}}}
+
+    <div id="page-content" class="row">
+        {{{html_heading}}}
+        <section class="col-xs-12 col-sm-4 region-nav" id="region-nav">
+            {{#user}}
+                <div class="welcome-user">
+                    <div class="welcome-header">
+                        <div class="welcome-message">
+                            {{{blocks_side_tabhead}}}
+                            <div id="navtabs" class="user-navigation">
+                                <ul class="nav nav-tabs nav-justified nav-flat no-collapse" role="tablist">
+                                    <li class="active units">
+                                        <a href="#navtabx" aria-controls="navtabx" role="tab" data-toggle="tab"><i class="fa fa-bank"></i>{{#str}}currentunits, block_oua_course_list{{/str}}</a>
+                                    </li>
+                                    {{#showtab1}}
+                                    <li class="block_oua_messages">
+                                        <a href="#navtab1" aria-controls="navtab1" role="tab" data-toggle="tab"><span class="badge"></span><i class="fa fa-envelope"></i>{{#str}}messages, theme_ouaclean{{/str}}</a>
+                                    </li>
+                                    {{/showtab1}}
+                                    {{#showtab2}}
+                                    <li class="block_oua_notifications">
+                                        <a href="#navtab2" aria-controls="navtab2" role="tab" data-toggle="tab"><span class="badge"></span><i class="fa fa-bell-o"></i>{{#str}}notifications, theme_ouaclean{{/str}}</a>
+                                    </li>
+                                    {{/showtab2}}
+                                    {{#showtab3}}
+                                    <li class="">
+                                        <a href="#navtab3" aria-controls="navtab3" role="tab" data-toggle="tab"><span class="badge"></span><i class="fa fa-calendar"></i>{{#str}}keydates, theme_ouaclean{{/str}}</a>
+                                    </li>
+                                    {{/showtab3}}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-content">
+                        <div id="navtabx" role="tabpanel" class="tab-pane active">{{{blocks_side_tabx}}}</div>
+                        {{#showtab1}}<div id="navtab1" role="tabpanel" class="tab-pane">{{{blocks_side_taba}}}</div>{{/showtab1}}
+                        {{#showtab2}}<div id="navtab2" role="tabpanel" class="tab-pane">{{{blocks_side_tabb}}}</div>{{/showtab2}}
+                        {{#showtab3}}<div id="navtab3" role="tabpanel" class="tab-pane">{{{blocks_side_tabc}}}</div>{{/showtab3}}
+                    </div>
+                </div>
+            {{/user}}
+        </section>
+        <section class="col-xs-12 col-sm-8 region-main" id="region-main">
+            {{{blocks_side_b}}}
+            {{{main_content}}}
+            {{{blocks_side_c}}}
+        </section>
+        <section class="col-xs-12 col-sm-4 region-side" id="region-side">
+            {{{blocks_side_tabfoot}}}
+        </section>
+    </div>
+    {{{blocks_side_d}}}
+</div>
+{{> theme_ouaclean/partials_page_footer}}
+{{#js}}
+    require(['theme_ouaclean/dashboard']);
+{{/js}}

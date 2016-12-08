@@ -1,0 +1,81 @@
+// Course Units
+// ==========================================================================
+
+// TABLET VIEW
+// ----------------------------------------------------------------------
+#region-main {
+	#block-region-content {
+		> .dashboard_course_list {
+			display: block;
+			background-color: transparent;
+			.content {
+				> .nav-tabs {
+					position: relative;
+					display: table;
+					margin-bottom: -1px;
+					> li {
+						float: left;
+						width:auto;
+						margin-right: 2px;
+						> a {
+							padding: 10px 20px;
+							border:1px solid @Keyline;
+							border-bottom: 0;
+						}
+						&.active {
+							a {
+								//border-right:1px solid @MainBackground; /* added to prevent the 1px jerk inherited from bootstrap */
+							}
+						}
+					}
+					&.nav-flat {
+						li {
+							&.active {
+								a {
+									&:active,
+									&.hover {
+										//border-right:1px solid @MainBackground; /* added to prevent the 1px jerk inherited from bootstrap */
+									}
+								}
+							}
+							a {
+								padding:15px 30px;
+								.fa {
+									float: left;
+									margin-right: 5px;
+									.font-size(@default-font-size * 1.2857);
+								}
+							}
+						}
+					}
+				}
+				.course-content-header {
+					.course-header {
+						.course-header-content {
+							.course-class-summary {
+								.progress-bar-show-weeks {
+									.course-name-progress-bar {
+										.whatsnext,
+										.download {
+											line-height:2;
+											strong {
+												display: inline;
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+.welcome-user {
+	.tab-content {
+		.dashboard_course_list {
+			.hide; /* only show on mobile */
+		}
+	}
+}

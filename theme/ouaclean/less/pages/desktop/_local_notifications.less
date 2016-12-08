@@ -1,0 +1,29 @@
+#allnotifications {
+	.notifications-list {
+		.panel {
+			.panel-heading {
+				.panel-title {
+					> a {
+						.time {
+							width: 5%;
+						}
+					}
+				}
+			}
+			.panel-body {
+				.message-controls {
+					padding: 0 0 10px;
+				}
+				.message {
+					&.connection-request {
+						padding-right: 0;
+						.time {
+							width: 5%;
+							text-align: center;
+						}
+					}
+				}
+			}
+		}
+	}
+}

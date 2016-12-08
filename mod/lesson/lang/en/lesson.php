@@ -525,5 +525,10 @@ $string['topscorestitle'] = 'Top {$a} high scores';
 $string['viewhighscores'] = 'View high scores list';
 $string['youmadehighscore'] = 'You made it on the top {$a} high scores list.';
 
+// OUA Custom:
+$string['progressbar_help'] = 'ONLY USE FOR LINEAR Lessons where activity book cannot be used. If enabled, a bar is displayed at the top of the lesson pages showing approximate percentage of completion. It is not accurate when there are loops and/or jumps in the lesson.';
+// End OUA Custom.
+
 // Deprecated since Moodle 3.1.
 $string['configactionaftercorrectanswer'] = 'The default action to take after a correct answer';
+

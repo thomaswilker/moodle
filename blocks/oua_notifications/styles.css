@@ -1,0 +1,10 @@
+#confirm_delete_notification_dialog,
+#confirm_delete_all_notification_dialog {
+  position: absolute;
+  overflow: hidden;
+  text-align: center;
+}
+#confirm_delete_notification_dialog .modal-dialog {
+  margin-top: 0;
+}
+

@@ -1,0 +1,27 @@
+{{> theme_ouaclean/partials_page_banner}}
+{{{course_content_header}}}
+<div id="page" class="container-fluid {{{regionmain}}}">
+    {{{blocks_side_a}}}
+    <header id="page-header" class="col-sm-8">
+        {{#editprofileurl}}
+        <a class="edit-link" href="{{{editprofileurl}}}"><span>Edit profile</span><i class="fa fa-pencil-square-o"></i></a>
+        {{/editprofileurl}}
+        {{{context_header}}}
+
+        {{{html_heading}}}
+        <div id="course-header">
+            {{{course_header}}}
+        </div>
+    </header>
+    <div id="page-content" class="row">
+        {{{html_heading}}}
+        <section class="col-xs-12 col-sm-8 region-main" id="region-main">
+            {{{blocks_side_b}}}
+            {{{main_content}}}
+            {{{blocks_side_c}}}
+        </section>
+
+    </div>
+    {{{blocks_side_d}}}
+</div>
+{{> theme_ouaclean/partials_page_footer}}

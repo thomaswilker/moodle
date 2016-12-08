@@ -1,0 +1,54 @@
+<div class="book-section">
+    <div class="book-header sticky">
+        <nav class="book-nav clearfix">
+            <div>
+                <div class="col-xs-9 clearfix">
+                    <div class="col-xs-3"><button id="bb-nav-prev" href="#" class="bb-btn prev pull-left"><i
+                            class="fa fa-chevron-left"></i><span>{{#str}}navprev, mod_book{{/str}}</span></button></div>
+                    <div class="col-xs-6">
+                        <div class="page-progress-top progress">
+                            <div class="progress-bar active" role="progressbar" aria-valuenow="70" aria-valuemin="0"
+                                 aria-valuemax="100">
+                                <span class="current-page"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="col-xs-3"><button id="bb-nav-next" href="#" class="bb-btn next pull-right"><span>{{#str}}navnext, mod_book{{/str}}</span><i
+                            class="fa fa-chevron-right"></i></button></div>
+                </div>
+                <div class="col-xs-3 clearfix">
+                    <div class="btn-group dropdown pull-right">
+                        <button class="toc-link btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="fa fa-bars"></i><span>{{#str}} toc, mod_book{{/str}}</span></button>
+                       <div class="dropdown-menu">
+                           {{>mod_book/table_of_contents}}
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <div class="book-content">
+        <div id="bb-bookblock" class="bb-bookblock" data-bookid="{{bookid}}">
+            <div class="generalbox book_content {{chapterdimmed}} bb-item" data-chapterid="false" data-chaptertitle="{{book_name}}">
+                <h4>{{#str}}
+                    toc, mod_book{{/str}}</h4>
+                {{>mod_book/table_of_contents}}
+                <span>{{#str}}totalpages, mod_book, {{total_pages}}{{/str}}</span>
+            </div>
+            {{#visiblechapters}}
+                <div class="generalbox book_content {{chapterdimmed}} bb-item" data-chapterid="{{id}}"
+                     data-chaptertitle="{{book_name}}: {{toc_title}}">
+                    <h3>{{toc_number}} {{title_formatted}}</h3>
+                    {{#subtitle_formatted}}
+                        <h4>{{sub_toc_number}} {{subtitle_formatted}}</h4>
+                    {{/subtitle_formatted}}
+                    {{{chaptertextformatted}}}
+                    <span class="page-progress-bottom">{{#str}}
+                        pagenumberx, mod_book, {"current_page_num": {{#quote}}{{displaypagenum}}{{/quote}}
+                        , "total_pages":{{#quote}}{{total_pages}}{{/quote}} } {{/str}}</span>
+                </div>
+            {{/visiblechapters}}
+        </div>
+    </div>
+</div>

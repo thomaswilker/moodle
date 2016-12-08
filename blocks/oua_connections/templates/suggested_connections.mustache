@@ -1,0 +1,13 @@
+<ul class="connection-list">
+    {{#suggestedconnections}}
+    <li class="col-xs-12 col-md-6 connection-item">
+        <div class="avatar">
+            {{{userpicturehtml}}}
+        </div>
+        <div class="user-info">
+            <span class="name">{{fullname}}</span>
+            <button class="btn-connect" data-userid="{{userid}}" autocomplete="off">Connect</button>
+        </div>
+    </li>
+    {{/suggestedconnections}}
+</ul>

@@ -1,0 +1,47 @@
+// Social Activities
+// ==========================================================================
+
+.block_oua_social_activity {
+		.block-oua;
+	.content {
+			padding: 5px;
+		> h2 {
+			margin-top: 0;
+			.fa {
+				margin-right: 7px;
+				color: @greyDark60;
+				.font-size(@h1-font-size);
+			}
+		}
+		> .panel-group {
+				margin-bottom: 0;
+			> .panel {
+				border: none;
+				+ .panel {
+					margin-top: 20px;
+				}
+				.date-time {
+					margin: -10px 0 !important;
+					color: @greyDark;
+					.font-size(@font-sm);
+					.text-right;
+					.italic;
+					.uppercase;
+				}
+			}
+			.panel-body,
+			.nosocialactivity {
+				.block-message;
+				text-align: left;
+			}
+		}
+	}
+}
+
+// MOBILE VIEW
+// ----------------------------------------------------------------------
+#region-main {
+	.block_oua_social_activity {
+		display: none; /* hide on mobile */
+	}
+}

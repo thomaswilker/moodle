@@ -1,0 +1,93 @@
+<ul class="nav nav-tabs nav-justified nav-flat no-collapse round-end" role="tablist">
+    <li role="presentation" class="active" data-count="{{courselistcount}}">
+        <a href="#" data-target=".current-units" aria-controls="current-units" role="tab" data-toggle="tab"><i
+                class="fa fa-bank"></i>{{#str}}currentunitswithnumber,
+            block_oua_course_list, {{courselistcount}}{{/str}}</a>
+    </li>
+    <li role="presentation" data-count="{{completedcourselistcount}}">
+        <a href="#" data-target=".completed-units" aria-controls="completed-units" role="tab" data-toggle="tab"><i
+                class="fa fa-check-square"></i>{{#str}}completedunitswithnumber,
+            block_oua_course_list, {{completedcourselistcount}}{{/str}}</a>
+    </li>
+    {{#displayresultstab}}
+    <li role="presentation" data-count="{{resultslistcount}}">
+        <a href="#" data-target=".course-results-list" aria-controls="completed-units" role="tab" data-toggle="tab"><i class="fa fa-bar-chart"></i>{{#str}}resultswithnumber, block_oua_course_list, {{courseresultlistlength}}{{/str}}</a>
+    </li>
+    {{/displayresultstab}}
+</ul>
+<div class="tab-content clearfix">
+
+    <div class="tab-pane active current-units" role="tabpanel">
+        <ul class="course-list course-content-header list-unstyled clearfix visible">
+            {{#courselist}}
+                {{>block_oua_course_list/current_course_list}}
+            {{/courselist}}
+        </ul>
+        <div class="collapse hidden-courses current clearfix">
+            <ul class="course-list course-content-header list-unstyled">
+                {{#courselisthidden}}
+                    {{>block_oua_course_list/current_course_list}}
+                {{/courselisthidden}}
+            </ul>
+        </div>
+        {{^courselist}}
+            <div class="block-message margin-h"><p>{{#str}}nocourses, block_oua_course_list{{/str}}</p></div>
+        {{/courselist}}
+        {{#courselistshowmorerequired}}
+            <button class="btn-show-all" data-toggle="collapse" data-target=".hidden-courses.current"><i
+                    class="fa fa-chevron-down"></i><span
+                    data-stringhide="{{#str}}hideall, block_oua_course_list{{/str}}"
+                    data-stringshow="{{#str}}showall, block_oua_course_list{{/str}}"></span></button>
+        {{/courselistshowmorerequired}}
+    </div>
+
+    <div class="tab-pane completed-units" role="tabpanel">
+        <ul class="course-list course-content-header list-unstyled clearfix visible">
+            {{#completedcourselist}}
+                {{>block_oua_course_list/completed_course_list}}
+            {{/completedcourselist}}
+        </ul>
+        <div class="collapse hidden-courses completed clearfix">
+            <ul class="course-list course-content-header list-unstyled">
+                {{#completedcourselisthidden}}
+                    {{>block_oua_course_list/completed_course_list}}
+                {{/completedcourselisthidden}}
+            </ul>
+        </div>
+        {{^completedcourselist}}
+            <div class="block-message margin-h"><p>{{#str}}nocompletedcourses, block_oua_course_list{{/str}}</p></div>
+        {{/completedcourselist}}
+        {{#completedcourselistshowmorerequired}}
+            <button class="btn-show-all" data-toggle="collapse" data-target=".hidden-courses.completed"><i
+                    class="fa fa-chevron-down"></i><span
+                    data-stringhide="{{#str}}hideall, block_oua_course_list{{/str}}"
+                    data-stringshow="{{#str}}showall, block_oua_course_list{{/str}}"></span></button>
+        {{/completedcourselistshowmorerequired}}
+    </div>
+    {{#displayresultstab}}
+    <div class="tab-pane course-results-list" role="tabpanel">
+        <ul class="course-list course-content-header clearfix list-unstyled visible">
+            {{#courseresultlist}}
+                {{>block_oua_course_list/course_result_list}}
+            {{/courseresultlist}}
+        </ul>
+        <div class="collapse hidden-courses results clearfix">
+            <ul class="course-list course-content-header list-unstyled">
+                {{#courseresultlisthidden}}
+                    {{>block_oua_course_list/course_result_list}}
+                {{/courseresultlisthidden}}
+            </ul>
+        </div>
+        {{^courseresultlist}}
+            <div class="block-message margin-h"><p>{{#str}}noresults, block_oua_course_list{{/str}}</p></div>
+        {{/courseresultlist}}
+        {{#courseresultlistshowmorerequired}}
+            <button class="btn-show-all" data-toggle="collapse" data-target=".hidden-courses.results"><i
+                    class="fa fa-chevron-down"></i><span
+                    data-stringhide="{{#str}}hideall, block_oua_course_list{{/str}}"
+                    data-stringshow="{{#str}}showall, block_oua_course_list{{/str}}"></span></button>
+        {{/courseresultlistshowmorerequired}}
+    </div>
+    {{/displayresultstab}}
+
+</div>

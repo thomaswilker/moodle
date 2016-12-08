@@ -27,6 +27,18 @@ defined('MOODLE_INTERNAL') || die();
 
 class mod_lesson_renderer extends plugin_renderer_base {
     /**
+     * OUA Custom renderer for oua lesson content,
+     * defers to mustache template.
+     *
+     * @param $page
+     * @return bool|string
+     * @throws moodle_exception
+     */
+    public function render_oua_lesson_content($page) {
+        $data = $page->export_for_template($this);
+        return parent::render_from_template('mod_lesson/oua_lesson_content', $data);
+    }
+    /**
      * Returns the header for the lesson module
      *
      * @param lesson $lesson a lesson object.

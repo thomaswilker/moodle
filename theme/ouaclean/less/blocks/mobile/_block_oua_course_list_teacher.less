@@ -1,0 +1,58 @@
+.block_oua_course_list_teacher.dashboard_course_list {
+	.course-content-header {
+		margin: 0;
+		.course-header {
+
+			.course-header-content {
+				padding: 10px;
+				background: #f3f4f5;
+				border-spacing: 0;
+				.course-class-summary {
+
+					margin-left: 15px;
+					background: transparent;
+					&:before {
+						display: none;
+					}
+					.course-name {
+						display: inline-block;
+						max-width: 50%;
+						a {
+							.font-size(@default-font-size + 1);
+							font-weight: 700;
+							.simple-link(@LinkDark);
+						}
+						.whatsnext {
+							color: @black;
+							.font-size(@default-font-size - 2);
+							line-height:1.5;
+							strong {
+								display: inline;
+							}
+							.fa {
+								margin-left:5px;
+								color: @LinkDark;
+								.font-size(@default-font-size + 2)
+							}
+						}
+					}
+					.my-course {
+						float: right;
+						.adminbuttons {
+							> a {
+								.btn-std-with-hover();
+								span {
+									display: none;
+								}
+								& + a {
+									margin-top: 10px;
+								}
+
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}

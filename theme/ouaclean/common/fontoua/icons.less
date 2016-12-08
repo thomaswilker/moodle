@@ -1,0 +1,384 @@
+[data-icon]:before {
+  font-family: "OUA" !important;
+  content: attr(data-icon);
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+[class^="icon-"]:before,
+[class*=" icon-"]:before,
+.block_navigation .block_tree .tree_item.hasicon > a:before,          /* Tree Navigation - Admin */
+.course-results-list .table-responsive table tr td > a:before,        /* Results Gradebook */
+.welcome-user .block.block_calendar_upcoming .event a:before,         /* Key Dates */
+.path-grade-report-user table tr th > a:before,                       /* Gradebook */
+.choosercontainer input[type=radio] + span.modicon:before,            /* Activity Chooser Container - Admin */
+.section li.activity .activityinstance > a:before,                    /* Course Dashboard - Admin */
+#help .activity-table th i:before,                                    /* Help content */
+.topic > span.icon:before {                                           /* Activities -Student */
+  color: @LinkDark;
+  font-family: "OUA" !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-variant: normal !important;
+  text-transform: none !important;
+  speak: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  vertical-align: middle;
+}
+
+/* Tree Navigation - Admin */
+.block_navigation .block_tree .tree_item.hasicon > a[title] {
+  img {
+    display: none;
+  }
+  &:before {
+    margin-right:10px;
+    font-size:18px;
+  }
+}
+/* Activity Chooser Container - Admin */
+.choosercontainer input[type=radio] + span.modicon {
+  img {
+    display: none;
+  }
+  &:before {
+    margin: 0 5px;
+    font-size:20px;
+    vertical-align: middle;
+    line-height:1.5;
+  }
+}
+
+/* Course Dashboard - Admin */
+.section li.activity .activityinstance > a {
+  img {
+    display: none;
+  }
+  &:before {
+    font-size: 24px;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+}
+
+/* Gradebook */
+.course-results-list .table-responsive table tr td > a,
+.path-grade-report-user table tr th > a {
+  img {
+    display: none;
+  }
+  &:before {
+    font-size: 24px;
+    margin-right: 10px;
+    vertical-align: middle;
+  }
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+/* Key Dates */
+.welcome-user .block.block_calendar_upcoming .event a:before {
+  margin-right: 5px;
+  .font-size(@default-font-size * 1.4);
+}
+
+/* Activities -Student */
+.accordion .panel .panel-body .list-unstyled li.topic .icon:first-child {
+  display: inline-block!important;
+  width:24px;
+  &:before {
+    margin-right:-10px;
+    font-size:20px;
+  }
+}
+
+/* Help activity table */
+#help .activity-table th i:before {
+  font-size: 20px;
+}
+
+  /* Font Character Assignments */
+.choosercontainer input#module_folder + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Folder]:before,
+.course-results-list .table-responsive table tr td a[title*=Folder]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=folder]:before,
+.path-grade-report-user table tr th > a[title*=Folder]:before,
+.section li.activity.modtype_folder .activityinstance > a:before,
+.topic.folder span.icon:before,
+#help .activity-table .folder:before,
+.icon-folder:before {
+  content: "\66";
+}
+
+.choosercontainer input#module_workshop + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Workshop]:before,
+.course-results-list .table-responsive table tr td a[title*=Workshop]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=workshop]:before,
+.path-grade-report-user table tr th > a[title*=Workshop]:before,
+.section li.activity.modtype_workshop .activityinstance > a:before,
+.topic.workshop span.icon:first-child:before,
+#help .activity-table .workshop:before,
+.icon-workshop:before {
+  content: "\62";
+}
+
+.choosercontainer input#module_data + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Data]:before,
+.course-results-list .table-responsive table tr td a[title*=Data]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=data]:before,
+.path-grade-report-user table tr th > a[title*=Data]:before,
+.section li.activity.modtype_data .activityinstance >  a:before,
+.topic.data span.icon:first-child:before,
+#help .activity-table .data:before,
+.icon-database:before {
+  content: "\64";
+}
+
+.choosercontainer input#module_choice + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Choice]:before,
+.course-results-list .table-responsive table tr td a[title*=Choice]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=choice]:before,
+.path-grade-report-user table tr th > a[title*=Choice]:before,
+.section li.activity.modtype_choice .activityinstance >  a:before,
+.topic.choice span.icon:first-child:before,
+#help .activity-table .choice:before,
+.icon-choice:before {
+  content: "\63";
+}
+
+.choosercontainer input#module_lti + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Lti]:before,
+.course-results-list .table-responsive table tr td a[title*="External tool"]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=lti]:before,
+.path-grade-report-user table tr th > a[title*="External tool"]:before,
+.section li.activity.modtype_lti .activityinstance >  a:before,
+.topic.lti span.icon:first-child:before,
+#help .activity-table .lti:before,
+.icon-external-tool:before {
+  content: "\61";
+}
+
+.choosercontainer input#module_forum + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Forum]:before,
+.course-results-list .table-responsive table tr td a[title*=Forum]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=forum]:before,
+.path-grade-report-user table tr th > a[title*=Forum]:before,
+.section li.activity.modtype_forum .activityinstance >  a:before,
+.topic.forum span.icon:first-child:before,
+#help .activity-table .forum:before,
+.icon-forum:before {
+  content: "\78";
+}
+
+.choosercontainer input#module_url + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Url]:before,
+.course-results-list .table-responsive table tr td a[title*=Url]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=url]:before,
+.path-grade-report-user table tr th > a[title*=Url]:before,
+.section li.activity.modtype_url .activityinstance >  a:before,
+.topic.url span.icon:first-child:before,
+#help .activity-table .url:before,
+.icon-url:before {
+  content: "\68";
+}
+
+.choosercontainer input#module_label + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Label]:before,
+.course-results-list .table-responsive table tr td a[title*=Label]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=label]:before,
+.path-grade-report-user table tr th > a[title*=Label]:before,
+.section li.activity.modtype_label .activityinstance >  a:before,
+.topic.label span.icon:first-child:before,
+#help .activity-table .label:before,
+.icon-label:before {
+  content: "\69";
+}
+
+.choosercontainer input#module_book + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Book]:before,
+.course-results-list .table-responsive table tr td a[title*=Book]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=book]:before,
+.path-grade-report-user table tr th > a[title*=Book]:before,
+.section li.activity.modtype_book .activityinstance >  a:before,
+.topic.book span.icon:first-child:before,
+#help .activity-table .book:before,
+.icon-book:before {
+  content: "\6b";
+}
+
+.choosercontainer input#module_quiz + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Quiz]:before,
+.course-results-list .table-responsive table tr td a[title*=Quiz]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=quiz]:before,
+.path-grade-report-user table tr th > a[title*=Quiz]:before,
+.section li.activity.modtype_quiz .activityinstance >  a:before,
+.topic.quiz span.icon:first-child:before,
+#help .activity-table .quiz:before,
+.icon-quiz:before {
+  content: "\6c";
+}
+
+.choosercontainer input#module_survey + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Survey]:before,
+.course-results-list .table-responsive table tr td a[title*=Survey]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=survey]:before,
+.path-grade-report-user table tr th > a[title*=Survey]:before,
+.section li.activity.modtype_survey .activityinstance >  a:before,
+.topic.survey span.icon:first-child:before,
+#help .activity-table .survey:before,
+.icon-survey:before {
+  content: "\6d";
+}
+
+.choosercontainer input#module_scorm + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Scorm]:before,
+.course-results-list .table-responsive table tr td a[title*=SCORM]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=scorm]:before,
+.path-grade-report-user table tr th > a[title*=SCORM]:before,
+.section li.activity.modtype_scorm .activityinstance >  a:before,
+.topic.scorm span.icon:first-child:before,
+#help .activity-table .scorm:before,
+.icon-scorm-package:before {
+  content: "\6e";
+}
+
+.choosercontainer input#module_page + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Page]:before,
+.course-results-list .table-responsive table tr td a[title*=Page]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=page]:before,
+.path-grade-report-user table tr th > a[title*=Page]:before,
+.section li.activity.modtype_page .activityinstance >  a:before,
+.topic.page span.icon:first-child:before,
+#help .activity-table .page:before,
+.icon-page:before {
+  content: "\6f";
+}
+
+.choosercontainer input#module_brightcove + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Brightcove]:before,
+.course-results-list .table-responsive table tr td a[title*=Brightcove]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=brightcove]:before,
+.path-grade-report-user table tr th > a[title*=Brightcove]:before,
+.section li.activity.modtype_brightcove .activityinstance >  a:before,
+.topic.brightcove span.icon:first-child:before,
+#help .activity-table .brightcove:before,
+.icon-video:before {
+  content: "\70";
+}
+
+.choosercontainer input#module_assign + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Assign]:before,
+.course-results-list .table-responsive table tr td a[title*=Assign]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=assign]:before,
+.path-grade-report-user table tr th > a[title*=Assign]:before,
+.section li.activity.modtype_assign .activityinstance >  a:before,
+.topic.assign span.icon:first-child:before,
+#help .activity-table .assign:before,
+.icon-assignment:before {
+  content: "\71";
+}
+
+.choosercontainer input#module_elluminate + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Elluminate]:before,
+.course-results-list .table-responsive table tr td a[title*=Blackboard]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=elluminate]:before,
+.path-grade-report-user table tr th > a[title*=Blackboard]:before,
+.section li.activity.modtype_elluminate .activityinstance >  a:before,
+.topic.elluminate span.icon:first-child:before,
+#help .activity-table .elluminate:before,
+.icon-black-board:before {
+  content: "\72";
+}
+
+.choosercontainer input#module_chat + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Chat]:before,
+.course-results-list .table-responsive table tr td a[title*=Chat]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=chat]:before,
+.path-grade-report-user table tr th > a[title*=Chat]:before,
+.section li.activity.modtype_chat .activityinstance >  a:before,
+.topic.chat span.icon:first-child:before,
+#help .activity-table .chat:before,
+.icon-chat:before {
+  content: "\73";
+}
+
+.choosercontainer input#module_glossary + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Glossary]:before,
+.course-results-list .table-responsive table tr td a[title*=Glossary]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=glossary]:before,
+.path-grade-report-user table tr th > a[title*=Glossary]:before,
+.section li.activity.modtype_glossary .activityinstance >  a:before,
+.topic.glossary span.icon:first-child:before,
+#help .activity-table .glossary:before,
+.icon-glossary:before {
+  content: "\74";
+}
+
+.choosercontainer input#module_lesson + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Lesson]:before,
+.course-results-list .table-responsive table tr td a[title*=Lesson]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=lesson]:before,
+.path-grade-report-user table tr th > a[title*=Lesson]:before,
+.section li.activity.modtype_lesson .activityinstance >  a:before,
+.topic.lesson span.icon:first-child:before,
+#help .activity-table .lesson:before,
+.icon-lesson:before {
+  content: "\75";
+}
+
+.choosercontainer input#module_imscp + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Imscp]:before,
+.course-results-list .table-responsive table tr td a[title*=Imscp]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=imscp]:before,
+.path-grade-report-user table tr th > a[title*=Imscp]:before,
+.section li.activity.modtype_imscp .activityinstance >  a:before,
+.topic.imscp span.icon:first-child:before,
+#help .activity-table .imscp:before,
+.icon-ims-lesson-package:before {
+  content: "\76";
+}
+
+.choosercontainer input#module_wiki + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Wiki]:before,
+.course-results-list .table-responsive table tr td a[title*=Wiki]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=wiki]:before,
+.path-grade-report-user table tr th > a[title*=Wiki]:before,
+.section li.activity.modtype_wiki .activityinstance >  a:before,
+.topic.wiki span.icon:first-child:before,
+#help .activity-table .wiki:before,
+.icon-wikipedia:before {
+  content: "\77";
+}
+
+.choosercontainer input#module_resource + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Resource]:before,
+.course-results-list .table-responsive table tr td a[title*=Resource]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=resource]:before,
+.path-grade-report-user table tr th > a[title*=Resource]:before,
+.section li.activity.modtype_resource .activityinstance >  a:before,
+.topic.resource span.icon:first-child:before,
+#help .activity-table .resource:before,
+.icon-file:before {
+  content: "\65";
+}
+
+.choosercontainer input#module_certificate + span.modicon:before,
+.block_navigation .block_tree .tree_item.hasicon > a[title=Certificate]:before,
+.course-results-list .table-responsive table tr td a[title*=Certificate]:before,
+.welcome-user .block.block_calendar_upcoming .event a[href*=certificate]:before,
+.path-grade-report-user table tr th > a[title*=Certificate]:before,
+.section li.activity.modtype_certificate .activityinstance >  a:before,
+.topic.certificate span.icon:first-child:before,
+#help .activity-table .certificate:before,
+.icon-certificate:before {
+  content: "\6a";
+}

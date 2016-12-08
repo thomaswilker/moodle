@@ -1,0 +1,24 @@
+{{#hasconnections}}
+<ul class="connection-list">
+    {{#myconnections}}
+    <li class="col-xs-12 col-md-6 connection-item">
+        <div class="avatar">
+            {{{userpicturehtml}}}
+        </div>
+        <div class="user-info">
+            <span class="name">{{fullname}}</span>
+            <button data-trigger="core_message-messenger::sendmessage" data-fullname="{{fullname}}" data-userid="{{userid}}" role="button" title="{{#str}}message, block_oua_connections{{/str}}" class="btn-connect">{{#str}}message, block_oua_connections{{/str}}</button>
+        </div>
+    </li>
+    {{/myconnections}}
+</ul>
+<div class="block-show-all">
+    <p><a href="{{viewconnectionslink}}">{{#str}}viewallconnections, block_oua_connections{{/str}}<i class="fa fa-chevron-right"></i></a></p>
+</div>
+{{/hasconnections}}
+{{^myconnections}}
+    <div class="nomyconnections">
+        <p><i class="fa fa-users"></i>{{#str}}nomyconnections, block_oua_connections{{/str}}</p>
+        <p>{{#str}}seesuggestedconnectionstab, block_oua_connections{{/str}}</p>
+    </div>
+{{/myconnections}}

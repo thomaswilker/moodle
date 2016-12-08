@@ -1,0 +1,1005 @@
+// --------------------------------------------------
+// MEDIA QUERIES
+// --------------------------------------------------
+
+@tablet-max-width: (@screen-desktop - 1);
+@tablet2Min: ~"screen and (min-width: @{screen-desktop})"; /* Fix for Activity bar */
+@tablet2: ~"screen and (max-width: @{tablet-max-width})"; /* Fix for Activity bar */
+@mobile568-2: @tablet2; /* Fix for Activity bar */
+
+.oua-submissionstatus {
+	div&.submissiongraded, div&.submissionnotgraded {
+		background-color: #fff;
+	}
+	@media @tablet2Min {
+		border: 1px solid @greyDark05;
+	}
+	.submissionheader,
+	.submissioninfo {
+		color: darken(@greyLight20, 55);
+		.clearfix;
+		.remaining,
+		.progress,
+		.result {
+			width: 40%;
+			float: right;
+			@media @tablet2 {
+				width: 100%;
+				float: none;
+			}
+		}
+		.status {
+			width: 30%;
+			float: left;
+			text-indent: 10px;
+			@media @tablet2 {
+				width: 100%;
+				float: none;
+				text-indent: 0px;
+			}
+		}
+		.questionreview {
+			width: 60%;
+			float: left;
+			text-indent: 10px;
+			@media @tablet2 {
+				width: 100%;
+				float: none;
+				text-indent: 0px;
+			}
+		}
+		.date,
+		.question {
+			width: 30%;
+			float: left;
+			@media @tablet2 {
+				width: 100%;
+				float: none;
+				text-indent: 0px;
+			}
+		}
+	}
+	.submissionheader {
+		background: @greyLight20;
+		@media @tablet2 {
+			display: none;
+		}
+		> div {
+			font-size: 1.214em;
+			font-weight: bold;
+			height: 34px;
+			line-height: 34px;
+		}
+		.remaining {
+			text-indent: 10px;
+		}
+	}
+	.submissioninfo {
+		@media @tablet2 {
+			margin-top: 5px;
+		}
+		.status,
+		.questionreview {
+			.font-size(@h1-font-size);
+			vertical-align: middle;
+			font-weight: bold;
+			line-height: 70px;
+		}
+		.date {
+			font-style: italic;
+			line-height: 70px;
+		}
+		.remaining {
+			line-height: 2;
+			.submitted&,
+			&.grade,
+			.overdue& {
+				margin-top: 0;
+				line-height: 70px;
+				font-weight: bold;
+				@media @tablet2Min {
+					text-indent: 10px;
+				}
+				span {
+					font-weight: normal;
+				}
+			}
+			.overdue& {
+
+				color: lighten(@redDark20, 20);
+			}
+		}
+		@media @tablet2 {
+			.status,
+			.question {
+				.font-size(@h2-font-size);
+			}
+
+			.status,
+			.questionreview,
+			.result,
+			.date,
+			.remaining {
+				position: relative;
+				padding-left: 35%;
+				border-left: 1px solid @greyDark05;
+				border-right: 1px solid @greyDark05;
+				margin-bottom:-1px;
+				.box-sizing(border-box);
+				&:before {
+					position: absolute;
+					top: 0px;
+					left: 0;
+					width: 31%;
+					padding-right: 10px;
+					padding-left: 10px;
+					white-space: nowrap;
+					color: @greyDark50;
+					.font-size(@default-font-size);
+					font-weight: bold;
+					font-style: normal;
+					background: @greyLight20;
+					.box-sizing(border-box);
+					@media @mobile568-2 {
+						font-size: 14px;
+					}
+				}
+				.due2days& {
+					border-left: 1px solid @yellow;
+					border-right: 1px solid @yellow;
+					&:before {
+						background: hsl(@yellowH,@yellowS,@yellowL);
+						color: @yellow;
+					}
+				}
+				.due1day& {
+					border-left: 1px solid @redDark20;
+					border-right: 1px solid @redDark20;
+					border: 1px solid @redDark20;
+					&:before {
+						background: lighten(@redDark20, 40);
+					}
+				}
+			}
+
+			.status {
+				border-top: 1px solid @greyDark05;
+				border-bottom: 1px solid @greyDark05;
+				&:before {
+					content: attr(data-header);
+				}
+				.due2days& {
+					border-top: 1px solid @yellow;
+					border-bottom: 1px solid @yellow;
+				}
+				.due1day& {
+					border-top: 1px solid @redDark20;
+					border-bottom: 1px solid @redDark20;
+				}
+			}
+
+			.questionreview {
+				border-top: 1px solid @greyDark05;
+				border-bottom: 1px solid @greyDark05;
+				&:before {
+					content: "Assessment:";
+				}
+				.due2days& {
+					border-top: 1px solid @yellow;
+					border-bottom: 1px solid @yellow;
+				}
+				.due1day& {
+					border-top: 1px solid @redDark20;
+					border-bottom: 1px solid @redDark20;
+				}
+			}
+
+			.result {
+				border-bottom: 1px solid @greyDark05;
+				margin-top: 0;
+				height: 70px;
+				&.cross {
+					&:before {
+						content: "Incorrect:";
+						line-height: 69px;
+					}
+				}
+				&.tick {
+					&:before {
+						content: "Correct:";
+						line-height: 69px;
+					}
+				}
+				.due2days& {
+					border-bottom: 1px solid @yellow;
+				}
+				.due1day& {
+					border-bottom: 1px solid @redDark20;
+				}
+				&.grade {
+					&:before {
+						content: "Grade:";
+						line-height: 69px;
+					}
+				}
+			}
+
+			.date {
+				border-bottom: 1px solid @greyDark05;
+				&:before {
+					content: attr(data-header);
+				}
+				.due2days& {
+					border-bottom: 1px solid @yellow;
+				}
+				.due1day& {
+					border-bottom: 1px solid @redDark20;
+				}
+			}
+
+			.remaining {
+				margin-top: 0;
+				border-bottom: 1px solid @greyDark05;
+				&:before {
+					content: attr(data-header);
+					height: 100%;
+				}
+				&.grade {
+					&:before {
+						content: "Grade:";
+					}
+				}
+				.due2days& {
+					border-bottom: 1px solid @yellow;
+				}
+				.due1day& {
+					border-bottom: 1px solid @redDark20;
+				}
+			}
+		}
+		@media @mobile568-2 {
+			.status,
+			.question {
+				.font-size(@default-font-size);
+			}
+
+			.status,
+			.questionreview,
+			.result,
+			.date,
+			.remaining {
+				position: relative;
+				padding-left: 21%;
+				border-bottom: 1px solid darken(@greyDark05, 10);
+				&:before {
+					position: absolute;
+					top: 0px;
+					left: 0;
+					width: 18%;
+					padding-right: 5px;
+					padding-left: 5px;
+					white-space: nowrap;
+					color: @greyDark50;
+					.font-size(@default-font-size - 2);
+					font-weight: bold;
+					font-style: normal;
+					background: @greyLight20;
+					.box-sizing(border-box);
+				}
+			}
+
+			.questionreview,
+			.result {
+				#page-mod-quiz-review & {
+					padding-left: 26%;
+					&:before {
+						width: 25%;
+					}
+				}
+			}
+
+			.status:before {
+				content: attr(data-header-short);
+			}
+
+			.questionreview:before {
+				content: "Answers:";
+			}
+
+			.result {
+				&.cross {
+					&:before {
+						content: "Incorrect:";
+					}
+				}
+				&.tick {
+					&:before {
+						content: "Correct:";
+					}
+				}
+			}
+
+			.date:before {
+				content: attr(data-header-short);
+			}
+
+			.remaining {
+				&:before {
+					content: attr(data-header-short);
+				}
+			}
+		}
+		.result.grade {
+			line-height: 70px;
+			font-weight: bold;
+		}
+		.result.cross:after {
+			line-height: 70px;
+			width: 30px;
+			font-family: FontAwesome;
+			font-weight: normal;
+			font-style: normal;
+			display: inline-block;
+			text-decoration: none;
+			box-sizing: border-box;
+			text-align: left;
+			font-size: 3em;
+			content: @iconTimes;
+			color: lighten(@redDark20, 20);
+		}
+		.result.tick:after {
+			line-height: 70px;
+			width: 30px;
+			font-family: FontAwesome;
+			font-weight: normal;
+			font-style: normal;
+			display: inline-block;
+			text-decoration: none;
+			box-sizing: border-box;
+			text-align: left;
+			font-size: 3em;
+			content: @iconCheck;
+			color: @green;
+		}
+		.question {
+			font-size: 1.929em;
+			font-weight: bold;
+			padding-left: 10px;
+			line-height: 70px;
+			width: 65%;
+			@media @tablet2 {
+				padding: 0;
+				line-height: 1.3em;
+				width: 100%;
+			}
+		}
+
+	}
+}
+
+.oua-submissionstatus {
+	@media @tablet2Min {
+		&.due2days {
+			border: 1px solid @yellow;
+			.submissionheader {
+				background: hsl(@yellowH,@yellowS,@yellowL);
+				> div {
+					color: @yellow;
+				}
+			}
+		}
+
+		&.due1day {
+			border: 1px solid @redDark20;
+			.submissionheader {
+				background: lighten(@redDark20, 40);
+				> div {
+					color: @redDark20;
+				}
+			}
+		}
+	}
+	&.submitted {
+		.submissioninfo {
+			.status {
+				color: @green;
+			}
+		}
+	}
+	&.new, &.notsubmitted {
+		.submissioninfo {
+			.status {
+				color: @redDark20;
+			}
+		}
+	}
+	&.draft {
+		.submissioninfo {
+			.status {
+				color: @orange;
+			}
+		}
+	}
+}
+
+.assess-wrapper {
+	@media @tablet2Min {
+		border: 1px solid @greyDark05;
+	}
+	margin-top: 15px;
+	padding: 10px 10px 80px 10px;
+	margin-bottom: 20px;
+	position: relative;
+	.clearfix;
+	.intro-text {
+		@media @tablet2 {
+			min-height: 300px;
+		}
+		p {
+			margin-top: 0;
+		}
+	}
+	.mform {
+		.clearfix;
+		padding-top: 20px;
+		fieldset {
+			float: left;
+			border: none;
+			div {
+				display: inline-block;
+				&.fdescription {
+					display: none;
+				}
+			}
+		}
+		.fitem {
+			display: inline-block;
+			width: auto;
+			overflow: visible;
+			> div {
+				display: inline-block;
+				&.fitemtitle {
+					display: none;
+				}
+			}
+			.felement {
+				margin-left: 0;
+				&.fstatic {
+					width: 540px;
+					//padding-right: 90px;
+				}
+				&.fcheckbox {
+					input {
+						float: left;
+					}
+					label {
+						margin-left: 20px;
+						display: block;
+					}
+				}
+			}
+		}
+	}
+	.ouaclean_question_number {
+		display: none;
+	}
+	.submission-file {
+		border: 1px solid @greyDark05;
+		background-color: lighten(@greyLight20, 2);
+		display: inline-block;
+		min-width: 50%;
+		.box-sizing(border-box);
+		.border-radius(@round + 2);
+		margin-bottom: 10px;
+		.clearfix;
+		.file-image {
+			float: left;
+			img.icon {
+				margin-top: 10px;
+				padding: 0 15px;
+			}
+		}
+		.file-text {
+			float: left;
+			font-size: 12px;
+			color: darken(@greyDark10, 10);
+			border-left: 1px solid @greyDark05;
+			padding: 5px 15px 5px 15px;
+			a {
+				display: block;
+				font-size: 18px;
+				color: darken(@greyDark10, 30);
+				font-weight: bold;
+				white-space: nowrap;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				max-width: 695px;
+			}
+		}
+	}
+	.btn-container {
+		.clearfix;
+		@media @tablet2Min {
+			position: absolute;
+			bottom: 20px;
+			right: 20px;
+			width: 96%;
+		}
+		&.action {
+			float: none;
+		}
+		.submissionaction {
+			float: right;
+			margin-left: 20px;
+			@media @tablet2 {
+				float: none;
+				margin-left: 0;
+				margin: 10px 0;
+				a {
+					width: 100%;
+					text-align: center;
+					.box-sizing(border-box);
+				}
+			}
+		}
+		.submission-action {
+			fieldset {
+				@media @tablet2Min {
+					width: 70%;
+				}
+			}
+			fieldset:last-child {
+				float: right;
+				width: 20%;
+				@media @tablet2 {
+					float: none;
+					width: 100%;
+					div {
+						width: 100%;
+					}
+				}
+			}
+			.primary_btn {
+				//.primBtnRightArrow();
+				.ie9 & {
+					padding: 0.7em 1.8em 0.6em 0.9em;
+				}
+			}
+		}
+		@media @tablet2 {
+			.mform .fitem {
+				width: 95%;
+				#page-mod-quiz-view & {
+					&.fitem_fcheckbox {
+						width: 5%;
+					}
+				}
+				.felement.fstatic {
+					width: 90%;
+				}
+			}
+		}
+	}
+	.submissiontext {
+		padding: 5px 15px;
+		background-color: @greyLight20;
+		border: 1px solid @greyDark05;
+		color: @greyDark60;
+	}
+}
+
+.editsubmissionform {
+	fieldset {
+		border: none;
+		legend {
+			display: none;
+		}
+		textarea {
+			width: 100%;
+		}
+	}
+	@media @tablet2 {
+		padding: 0 10px;
+		.box-sizing(border-box);
+	}
+}
+
+.tutorfeedback {
+	.submission-file {
+		.assess-wrapper > .submission-file;
+		margin-left: 55px;
+	}
+}
+
+.submitconfirm {
+	background-color: @blueLight10;
+	min-height: 575px;
+	.box-sizing(border-box);
+	padding: 50px;
+	text-align: center;
+	@media @tablet2 {
+		padding: 10px;
+		min-height: 200px;
+	}
+	h4 {
+		font-size: 2.000em;
+		color: lighten(@greyDark60, 25);
+		text-transform: uppercase;
+		@media @tablet2 {
+			margin: 15px 0;
+		}
+	}
+	h5 {
+		font-size: 1.500em;
+		text-transform: uppercase;
+		color: lighten(@greyDark60, 25);
+	}
+	.submit-text {
+		color: lighten(@greyDark60, 25);
+		width: 300px;
+		margin: 0 auto;
+	}
+	.confirm-submit {
+		width: 340px;
+		font-size: 1.714em;
+		white-space: normal;
+		text-align: center;
+		line-height: 1.500em;
+		text-transform: none;
+		margin: 20px 0 0 0;
+		@media @tablet2 {
+			width: 100%;
+		}
+	}
+	.confirm-message {
+		display: inline-block;
+		width: 265px;
+		margin-bottom: 10px;
+		color: @greyDark;
+		@media @tablet2 {
+			width: 100%;
+		}
+	}
+	a {
+		display: inline-block;
+		width: 230px;
+	}
+}
+
+.block_student_list {
+	h2 {
+		font-family: @default-font-family;
+	}
+	&.block {
+		.student {
+			width: 49%;
+		}
+	}
+	span.enrolled_student_block {
+		&.name {
+			font-family: @default-font-family;
+		}
+	}
+	.enrolled_student_block_nav {
+		padding: 15px;
+		text-align: right;
+	}
+}
+
+.enrollments {
+	&:before,
+	&:after {
+		height: 8px;
+		//#gradient > .vertical(@ouaTabStripBlueTop, @ouaTabStripBlueBottom);;
+		display: block;
+		content: "";
+	}
+	&:before {
+		.border-radius(@round + 2 @round + 2 0 0);
+	}
+	&:after {
+		.border-radius(0 0 @round + 2 @round + 2);
+	}
+	.enrollments_block {
+		.clearfix;
+		padding: 20px;
+	}
+	div {
+		div {
+			float: left;
+		}
+	}
+	.enrollments_img {
+
+	}
+}
+
+div.feedback {
+	margin: 10px !important;
+	border: 1px solid darken(@blueLight10, 15);
+	background-color: @blueLight10;
+	padding: 10px;
+	.expandsummaryicon,
+	.spacer,
+	.summary_assignfeedback_comments_4 {
+		display: none;
+	}
+	.full_assignfeedback_comments_4 {
+		display: block !important;
+	}
+	.tutor_img {
+		float: left;
+	}
+	.tutor_response,
+	.tutor_date,
+	.tutor_name {
+		display: block;
+		margin-left: 55px;
+	}
+	.tutor_response {
+		font-size: 110%;
+		color: @blue;
+		font-weight: bold;
+		margin-bottom: 10px;
+	}
+	.tutor_date,
+	.tutor_name {
+		color: darken(@greyDark10, 25);
+	}
+	p {
+		padding-left: 55px;
+	}
+}
+
+/* Commented out as this is overriding Quiz styles.
+.que {
+  .content {
+    margin: 0;
+  }
+  .formulation {
+    background: none;
+    padding: 0;
+    margin: 0;
+  }
+  &.shortanswer {
+    .answer {
+      padding: 0;
+      display: block;
+    }
+  }
+  .incorrect,
+  .correct {
+    background-color: transparent;
+  }
+}
+*/
+.ablock {
+	.question-container {
+		float: left;
+		width: 100%;
+		div {
+			.box-sizing(border-box);
+		}
+		.clearfix;
+		.q-col {
+			padding: 10px 0;
+			.clearfix;
+			div {
+				float: left;
+
+			}
+			.text {
+				width: 30%;
+				padding-top: 10px;
+				@media @tablet2 {
+					padding-top: 18px;
+				}
+			}
+			.control {
+				width: 25%;
+				padding-top: 5px;
+				&.multichoice {
+					width: 55%;
+					@media @tablet2 {
+						width: 100%;
+						float: none;
+					}
+					input {
+						float: left;
+						display: block;
+						margin-top: 5px;
+					}
+					label {
+						display: block;
+						float: left;
+						width: 90%;
+					}
+				}
+				&.shortanswer {
+					width: 55%;
+					@media @tablet2 {
+						width: 100%;
+					}
+					input[type=text] {
+						width: 97%;
+						@media @tablet2 {
+							width: 100%;
+						}
+					}
+					&.placeholder input[type=text] {
+						min-width: 0;
+						width: auto;
+					}
+				}
+				&.essay {
+					width: 100%;
+					textarea {
+						border: 1px solid @greyDark05;
+						.border-radius(@round + 2);
+						padding: 5px;
+						&[readonly=readonly] {
+							color: @greyDark10;
+							background-color: @greyLight10;
+						}
+						&.review {
+							color: @black;
+							background-color: @white;
+						}
+						&:focus {
+							outline: none;
+						}
+					}
+				}
+			}
+			select {
+				border: 1px solid @greyDark05;
+				@media @tablet2Min {
+					height: 30px;
+				}
+				min-width: 200px;
+				.border-radius(@round + 2);
+			}
+			input[type=text] {
+				border: 1px solid @greyDark05;
+				height: 30px;
+				min-width: 200px;
+				.border-radius(@round + 2);
+				padding-left: 10px;
+				.box-sizing(border-box);
+			}
+		}
+		.a-col {
+			float: right;
+			width: 45%;
+			padding-left: 15px;
+			border-left: 1px dashed @greyLight10;
+			margin-bottom: -10px; //fix for alignment of divs
+			@media @tablet2 {
+				float: none;
+				width: 100%;
+				border-left: none;
+				margin-top: 10px;
+				padding-left: 0;
+			}
+		}
+		.answer {
+			.border-radius(@round + 2);
+			border-width: 1px;
+			border-style: solid;
+			padding: 10px 10px;
+			width: 100%;
+			@media @tablet2 {
+				position: relative;
+				&:before,
+				&:after {
+					bottom: 100%;
+					left: 48%;
+					border: solid transparent;
+					content: " ";
+					height: 0;
+					width: 0;
+					position: absolute;
+					pointer-events: none;
+				}
+
+				&:after {
+					border-color: rgba(136, 183, 213, 0);
+					border-bottom-color: @blueLight15;
+					border-width: 10px;
+					margin-left: -10px;
+				}
+
+				&:before {
+					border-color: rgba(194, 225, 245, 0);
+					border-bottom-color: @blueLight40;
+					border-width: 11px;
+					margin-left: -11px;
+				}
+			}
+			&.incorrect {
+				background-color: lighten(@redDark20, 40);
+				border-color: lighten(@redDark20, 25);
+				color: @redDark20;
+				&:after {
+					border-color: rgba(241, 221, 221, 0);
+					border-bottom-color: lighten(@redDark20, 40);
+				}
+				&:before {
+					border-color: rgba(219, 166, 166, 0);
+					border-bottom-color: lighten(@redDark20, 25);
+				}
+			}
+			&.correct {
+				background-color: lighten(@green, 45);
+				border-color: lighten(@green, 25);
+				color: @green;
+				font-weight: bold;
+				&:after {
+					border-color: rgba(239, 249, 233, 0);
+					border-bottom-color: lighten(@green, 45);
+				}
+				&:before {
+					border-color: rgba(181, 226, 154, 0);
+					border-bottom-color: lighten(@green, 25);
+				}
+			}
+		}
+	}
+}
+
+.oua-submissionstatus.session {
+	.submissionheader, .submissioninfo {
+		div {
+			float: left;
+			width: 222px;
+			&:first-child {
+				padding-left: 5px;
+			}
+		}
+	}
+	.submissioninfo {
+		padding: 15px 0 30px 0;
+		div {
+			font-style: italic;
+		}
+		.status {
+			line-height: 0.9em;
+			font-style: normal;
+			text-indent: 0;
+			.open& {
+				color: @green;
+			}
+			.not-open& {
+				color: @greyDark;
+			}
+			.completed& {
+				color: @redDark05;
+			}
+
+		}
+	}
+}
+
+.assess-alert {
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	line-height: 50px;
+	padding: 0 10px;
+	font-weight: bold;
+	margin-bottom: 20px;
+	@media screen and (max-width: 768px) {
+		margin: 10px 10px 0 10px;
+		padding: 10px 10px;
+		text-align: center;
+		line-height: 20px;
+	}
+	&.closed {
+		border: 1px solid #e3b8b8;
+		background-color: #f1dddd;
+		color: #b74b4b;
+	}
+}
+
+
+

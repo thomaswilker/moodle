@@ -1,0 +1,20 @@
+<ul class="toc {{toc_class}} scroll-limit-top"> {{! open ul }}
+    {{#visiblechapters}}
+        {{^subchapter}}
+        <li> {{! open li for each new chapter }}
+            <a href="#{{displaypagenum}}">{{toc_number}} {{title_formatted}}</a> {{>mod_book/toc_edit_actions}}
+            {{^has_children}}
+            </li><!-- not has children -->
+            {{/has_children}}
+            {{#has_children}}
+            <ul><!-- has children -->
+            {{/has_children}}
+        {{/subchapter}}
+        {{#subchapter}}
+            <li><a href="#{{displaypagenum}}">{{sub_toc_number}} {{subtitle_formatted}}</a> {{>mod_book/toc_edit_actions}}</li>
+            {{#last_child}}
+            </ul></li><!-- last child children -->
+            {{/last_child}}
+        {{/subchapter}}
+    {{/visiblechapters}}
+</ul>

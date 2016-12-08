@@ -1,0 +1,9 @@
+<li class="message-count dropdown {{$mobileview}}hidden-xs{{/mobileview}}">
+    <a id="{{$labelid}}messagenotification{{/labelid}}" href="{{{all_conversations_link}}}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" >
+        <span class="total-count badge">{{#unread_conversation_count}}{{unread_conversation_count}}{{! the # is required as we don't show '0'}}{{/unread_conversation_count}}</span>
+        <i class="fa fa-envelope"></i>
+    </a>
+    {{>local_conversations/partials_message_alert_preview}}
+</li>
+
+

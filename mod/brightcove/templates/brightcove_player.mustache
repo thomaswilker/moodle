@@ -1,0 +1,55 @@
+<h2>{{title}}</h2>
+<video
+        id="{{videoid}}"
+        data-account="{{accountid}}"
+        data-player="{{playerid}}"
+        data-embed="default"
+        data-video-id="{{videoid}}"
+        class="video-js" preload controls>
+</video>
+
+<!-- End of Brightcove Player -->
+<div id="transcript_{{videoid}}"></div>
+
+{{#js}}
+    requirejs.config({
+        paths: {
+             // The 'bc' define name is hardcoded in the brightcove javascript file.
+             "bc": '{{bcurl}}'
+    },
+    });
+    require(['bc'], function(bc){
+    /*
+    See this doc for settings, even though we are using video_js
+    BrightCove support have other suggested methods that dont quite work or require the brightcove file id.
+    This method works fine.
+    http://support.3playmedia.com/entries/21522287-Advanced-Interactive-Transcript-Settings
+    */
+        window.p3_async_init = function(){
+            // This function will load 3Play asynchronously, so load order of 3play js does not matter.
+            P3.init({
+                "{{videoid}}" : {
+                    player_type: "video_js",
+                    file_id: "{{videoid}}", /* THIS SHOULD MATCH YOUR 3PLAY FILE ID */
+                    api_version: "simple",
+                    project_id: "{{threeplayprojectid}}", /* THIS SHOULD MATCH YOUR 3PLAY PROJECT ID */
+                    platform_integration: true,
+                    transcript: {
+                        // OPTIONS
+                        target: "transcript_{{videoid}}",
+                        skin: "minimalist",
+                        template: "default",
+                        progressive_tracking: false,
+                        width: "100%",
+                        can_collapse: true,
+                        collapse_onload: true,
+                        can_print: true,
+                        can_download: true,
+                        scan_view: false
+                        }
+                      }
+            },"");
+        }
+    });
+
+{{/js}}

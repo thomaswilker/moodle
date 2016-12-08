@@ -1,0 +1,125 @@
+#page-content .completion_bar_wrapper .course_completion_bar,
+.block_oua_course_progress_bar .completion_bar_wrapper .course_completion_bar {
+   background: #e4e5e7;
+   padding: 0px;
+   text-align: center;
+   height: 15px;
+   width: 100%;
+   float: left;
+   overflow: hidden;
+ }
+#page-content .completion_bar_wrapper .course_completion_bar_internal,
+.block_oua_course_progress_bar .completion_bar_wrapper .course_completion_bar_internal {
+   display: inline-block;
+   float: left;
+   line-height: 25px;
+   margin: 0px;
+   background-color: #cde293;
+ }
+#page-content .completion_bar_wrapper .completition_bar_dates,
+.block_oua_course_progress_bar .completion_bar_wrapper .completition_bar_dates {
+   clear: both;
+   padding-top: 0px;
+   color: #595a5c;
+   text-transform: uppercase;
+   font-size: 0.714em;
+   *zoom: 1;
+ }
+#page-content .completion_bar_wrapper .completition_bar_dates:before,
+.block_oua_course_progress_bar .completion_bar_wrapper .completition_bar_dates:before,
+#page-content .completion_bar_wrapper .completition_bar_dates:after,
+.block_oua_course_progress_bar .completion_bar_wrapper .completition_bar_dates:after {
+   display: table;
+   content: "";
+   line-height: 0;
+ }
+#page-content .completion_bar_wrapper .completition_bar_dates:after,
+.block_oua_course_progress_bar .completion_bar_wrapper .completition_bar_dates:after {
+   clear: both;
+ }
+#page-content .completion_bar_wrapper .completition_bar_dates span,
+.block_oua_course_progress_bar .completion_bar_wrapper .completition_bar_dates span {
+   margin-top: 5px;
+ }
+#page-content .completion_bar_wrapper .completition_bar_dates .startdate,
+.block_oua_course_progress_bar .completion_bar_wrapper .completition_bar_dates .startdate {
+   float: left;
+ }
+#page-content .completion_bar_wrapper .completition_bar_dates .enddate,
+.block_oua_course_progress_bar .completion_bar_wrapper .completition_bar_dates .enddate {
+   float: right;
+ }
+#page-content .completion_bar_wrapper a,
+.block_oua_course_progress_bar .completion_bar_wrapper a {
+   color: #015aad;
+ }
+#page-content .completion_bar_wrapper a .show_modules,
+.block_oua_course_progress_bar .completion_bar_wrapper a .show_modules {
+   padding-left: 0;
+   background: none;
+ }
+#page-content .completion_bar_wrapper a .show_modules:before,
+.block_oua_course_progress_bar .completion_bar_wrapper a .show_modules:before {
+   font-family: FontAwesome;
+   font-weight: normal;
+   font-style: normal;
+   display: inline-block;
+   text-decoration: inherit;
+   width: 1.2857142857142858em;
+   text-align: center;
+   content: "\f078";
+   font-size: 1em;
+   text-decoration: none;
+   color: #015aad;
+ }
+#page-content .completion_bar_wrapper a .show_modules.showing,
+.block_oua_course_progress_bar .completion_bar_wrapper a .show_modules.showing {
+   background: none;
+ }
+#page-content .completion_bar_wrapper a .show_modules.showing:before,
+.block_oua_course_progress_bar .completion_bar_wrapper a .show_modules.showing:before {
+   font-family: FontAwesome;
+   font-weight: normal;
+   font-style: normal;
+   display: inline-block;
+   text-decoration: inherit;
+   width: 1.2857142857142858em;
+   text-align: center;
+   content: "\f077";
+   font-size: 1em;
+   text-decoration: none;
+   color: #015aad;
+ }
+@media screen and (max-width: 768px) {
+  #page-content .completion_bar_wrapper,
+  .block_oua_course_progress_bar .completion_bar_wrapper {
+       width: 100%;
+     }
+}
+#page-content .completion_bar_wrapper > .progress,
+.block_oua_course_progress_bar .completion_bar_wrapper > .progress {
+   display: none;
+ }
+.course_completion_bar_keylines {
+   display: none;
+ }
+.progressbar-container {
+   background: #f1f2f2;
+   padding: 0px;
+   text-align: center;
+   height: 20px;
+   width: 90%;
+   overflow: hidden;
+   margin-bottom: 15px;
+ }
+@media screen and (max-width: 768px) {
+  .progressbar-container {
+        width: 100%;
+      }
+}
+.progress {
+   font-size: 0.857em;
+   font-style: italic;
+   line-height: 1px;
+   margin-top: 16px;
+ }

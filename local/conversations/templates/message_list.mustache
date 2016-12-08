@@ -1,0 +1,42 @@
+<div class="panel-group accordion ouamsg" id="message_accordion" role="tablist" data-count="{{message_count}}">
+    <input name="message_count" id="message_count" value="{{message_count}}" type="hidden"/>
+
+{{#message_list}}
+    <div class="panel">
+        <div class="panel-heading {{readstatus}}" role="tab" id="message_heading{{messageid}}" data-messageid="{{messageid}}">
+            <h4 class="panel-title">
+                <a role="button" data-toggle="collapse" data-parent="#accordion" href="#message_collapse{{messageid}}"
+                   class="collapsed"
+                   aria-expanded="false"
+                   aria-controls="message_collapse{{messageid}}">
+                    <span class="date-month">
+                        {{{formatted_date}}}
+                    </span>
+                    <span class="panel-subject">
+                        <span class="panel-subject-inner">
+                            <span class="avatar">{{{userfromavatar}}}</span>
+                            <span class="subject">{{subject}}</span>
+                        </span>
+                    </span>
+                    <i class="fa fa-chevron-down expand-collapse"></i>
+                </a>
+            </h4>
+        </div>
+        <div id="message_collapse{{messageid}}" class="panel-collapse collapse" role="tabpanel"
+             aria-labelledby="message_heading{{messageid}}">
+            <div class="panel-body">
+                <div class="message">
+                    {{{smallmessage}}}
+                </div>
+                <div class="message-controls">
+                    <button class="btn btn-orange message-reply" data-trigger="core_message-messenger::sendmessage" data-fullname="{{userfromfullname}}" data-userid="{{useridfrom}}"><i class="fa fa-mail-reply"></i>{{#str}}reply, local_conversations{{/str}}</button>
+                    <button class="btn btn-red message-delete" data-fullname="{{userfromfullname}}" data-userid="{{useridfrom}}"  data-messageid="{{messageid}}" data-target="#confirm_delete_dialog"><i class="fa fa-trash"></i>{{#str}}delete, local_conversations{{/str}}</button>
+                </div>
+            </div>
+        </div>
+    </div>
+{{/message_list}}
+{{^message_list}}
+    <div class="nomessages"><p>{{#str}}nomessages,local_conversations{{/str}}</p></div>
+{{/message_list}}
+</div>

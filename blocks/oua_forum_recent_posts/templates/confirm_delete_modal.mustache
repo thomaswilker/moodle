@@ -1,0 +1,13 @@
+<div id="confirm_delete_post_dialog" class="modal post-delete-dialog-sm" tabindex="-1" role="dialog" aria-labelledby="confirm_delete_post_dialog_header">
+<div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header" id="confirm_delete_post_dialog_header">
+            {{#str}}deletepostconfirm, block_oua_forum_recent_posts{{/str}}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn cancel-delete" data-dismiss="modal"><i class="fa fa-times"></i>{{#str}}cancel{{/str}}</button>
+            <button type="button" class="btn confirm-delete" data-postid=""><i class="fa fa-trash"></i>{{#str}}delete, block_oua_forum_recent_posts{{/str}}</button>
+        </div>
+    </div>{{! /.modal-content }}
+</div>{{! /.modal-dialog }}
+</div>{{! /.modal }}

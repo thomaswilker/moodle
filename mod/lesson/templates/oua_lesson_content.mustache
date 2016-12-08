@@ -1,0 +1,53 @@
+<div class="lesson-section">
+   {{#show_header}}
+    <div class="lesson-header sticky">
+        <nav class="lesson-nav clearfix">
+            <div>
+                <div class="col-xs-9">
+                    {{#show_progress_bar}}
+                        {{#is_teacher}}
+                            <div class="alert alert-info" role="alert"> {{#str}}progressbarteacherwarning2, mod_lesson{{/str}}</div>
+                        {{/is_teacher}}
+                        {{^is_teacher}}
+                            <div class="page-progress-top progress">
+                                <div class="progress-bar active" role="progressbar" aria-valuenow="{{current_progress}}" aria-valuemin="0"
+                                     aria-valuemax="100" style="width:{{current_progress}}%">
+                                    <span class="current-page">{{#str}}progresscompleted, mod_lesson, {{current_progress}}{{/str}}</span>
+                                </div>
+                            </div>
+                        {{/is_teacher}}
+                    {{/show_progress_bar}}
+
+                </div>
+            <div class="col-xs-3">
+                {{#show_menu}}
+
+                    <div class="btn-group dropdown pull-right">
+                        <button type="button" class="toc-link btn btn-default dropdown-toggle" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                            <i class="fa fa-bars"></i><span>{{#str}}lessonmenu, mod_lesson{{/str}}</span></button>
+                        <div class="dropdown-menu">
+                            <ul class="toc scroll-limit-top">
+                                {{#menu_pages}}
+                                    <li class="{{#current_page}}active{{/current_page}}">
+                                        <a href="{{{page_url}}}">{{{page_title_formatted}}}</a>
+                                    </li>
+                                {{/menu_pages}}
+                            </ul>
+                        </div>
+                    </div>
+                {{/show_menu}}
+            </div>
+            </div>
+        </nav>
+    </div>
+    {{/show_header}}
+    <div class="lesson-content">
+        <div>
+            {{{oldcontent}}}
+        </div>
+    </div>
+</div>
+{{#js}}
+    require(['mod_lesson/lesson_content']);
+{{/js}}

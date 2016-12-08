@@ -1,0 +1,113 @@
+// Workshop Page
+// ==========================================================================
+
+.path-mod-workshop {
+
+	// PROGRESS SUMMARY
+	// ----------------------------------------------------------------------
+	.userplan {
+			display: table; /* prevent gap to thr right of nav */
+			margin: 0 0 30px 0;
+			.border;
+			.font-size; /* overwrite Moodle styling */
+		ul.phase-progress {
+			li {
+
+			}
+		}
+		.phase-tasks {
+			.tab-pane {
+				h3 {
+						padding: 0 20px;
+						.font-size(@default-font-size * 2);
+						.line-height(@default-line-height * 2);
+						.text-center;
+						text-transform: capitalize;
+					.actions {
+						.action-icon {
+							img { .v-middle; }
+						}
+					}
+				}
+				.tasks-wrapper {
+						.display(flex);
+						.justify-content(center);
+					ul.tasks {
+							padding: 10px 0;
+							.list-unstyled;
+						li {
+								padding: 0 20px 10px 40px;
+							div.title {
+								.inline;
+							}
+							div.details {
+								padding-left: 10px;
+								color: @greyDark;
+								.font-size(@font-sm);
+							}
+							&:before {
+								.relative;
+								.icon;
+								color: @link;
+								content: @iconEdit;
+								margin-left: -20px;
+								width: 20px;
+							}
+							&.completed:before {
+								color: @green;
+								content: @iconCheck;
+							}
+							&.fail:before {
+								color: @red;
+								content: @iconCross;
+							}
+							&.info:before {
+								color: @greyDark;
+								content: @iconInfo;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	// GRADE REPORT
+	// ----------------------------------------------------------------------
+	.table-responsive {
+			margin: 10px 0 20px;
+		table.grading-report {
+				margin: 0;
+				.font-size();
+			thead {
+				tr {
+					th {
+						.v-top;
+					}
+				}
+			}
+			tbody {
+				tr:nth-child(odd) { background: @greyLight10; /* overwrite Moodle styling */ }
+				tr:nth-child(even) { background: @white; /* overwrite Moodle styling */ }
+				tr {
+					td {
+						border: none;
+						&.participant {
+							> a {
+								> img {
+									margin-right: 10px;
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+
+
+// MOBILE VIEW
+// ----------------------------------------------------------------------

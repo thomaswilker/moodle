@@ -1,0 +1,63 @@
+<li class="coursecol course-header col-xs-12">
+    <div class="course-header-content {{coursenameclass}} ">
+        <div class="course-class-logo {{brandlogoclass}} {{cobrandingname}}">
+            {{#cobrandinglogo}}
+                <span class="logo-course"><img class="logo img-responsive" src="{{{cobrandinglogo}}}" alt="{{cobrandingname}}"/></span>
+            {{/cobrandinglogo}}
+        </div>
+        <div class="course-class-summary">
+            <div class="progress-bar-show-weeks">
+                <div class="course-name-progress-bar">
+
+                    <a href="{{courseviewurl}}">{{{coursename}}}</a>
+
+                    <div class="course-certificate-wrapper">
+
+                        <div class="download">
+
+                            {{#hascertificatemodule}}
+                                {{^certificates}}
+                                    {{#str}}nocertificates, block_oua_course_list{{/str}}
+                                {{/certificates}}
+
+                                {{#certificates}}
+                                    <a href="{{{downloadlink}}}" target="_blank">{{#str}}downloadcertificate, block_oua_course_list{{/str}}<i class="fa fa-cloud-download"></i></a>
+                                {{/certificates}}
+                            {{/hascertificatemodule}}
+
+                        </div>
+                    </div>
+
+                    {{{courseprogressbar}}}
+                </div>
+
+                <div class="my-course-show-weeks hidden-sm hidden-xs certificate viewgrade">
+                    <a href="{{{finalgradelink}}}"><span class="fa fa-book">{{#str}}viewgrade, block_oua_course_list{{/str}}</span></a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</li>
+<li class="coursecol collapse weeks_for_{{courseid}}">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Weeks</th>
+                <!--<th class="course-status">Complete</th>-->
+            </tr>
+            </thead>
+            <tbody>
+            {{#coursesections}}
+                {{#url}}
+                    <tr>
+                        <td><a href="{{url}}">{{name}} </a></td>
+                        <!--<td class="course-status"><span class="icon completedstate complete"></span></td>-->
+                    </tr>
+                {{/url}}
+            {{/coursesections}}
+            </tbody>
+        </table>
+    </div>
+</li>

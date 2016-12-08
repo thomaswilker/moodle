@@ -1,0 +1,365 @@
+// GENERAL GLOBAL STYLING
+// ----------------------------------------------------------------------
+html, body {
+	height:100%;
+}
+body {
+	padding: 0;
+	.font-default;
+	background: @PageBackground;
+}
+a {
+	.link-without-icon();
+}
+p {
+	.font-size(@default-font-size);
+	.line-height(@default-line-height);
+	margin: 0 0 20px 0;
+    &:last-child { margin-bottom: 0 }
+}
+h1, .h1 {
+	.font-size(@h1-font-size);
+	.line-height(@h1-line-height);
+	.font-bold;
+	color: @black;
+}
+h2, .h2 {
+	.font-size(@h2-font-size);
+	.line-height(@h2-line-height);
+	.font-normal;
+	color: @black;
+}
+h3, .h3 {
+	.font-size(@h3-font-size);
+	.line-height(@h3-line-height);
+	.font-normal;
+	color: @black;
+}
+h4, .h4 {}
+h5, .h5 {}
+h6, .h6 {}
+*, div, a, input, button, textarea {
+	&:focus { outline: dotted 1px @BasePrimary; }
+}
+
+
+// LAYOUT
+// ----------------------------------------------------------------------
+.container-fluid {
+	max-width: 1400px;
+}
+
+#page-content {
+	margin-bottom: 20px;
+}
+section.region-nav,
+section.region-side {
+	clear: right;
+	.right;
+}
+
+@media screen and (min-width: @screen-tablet) {
+	section.region-main {
+		display: table; /* prevent tabs from having extra line to the right because "table" display only increments in whole pixels */
+        table-layout: fixed;
+	}
+}
+
+// BOOTSRAP ELEMENTS
+// ----------------------------------------------------------------------
+
+// Modals
+.modal {
+	.modal-dialog {
+		.modal-content {
+				.border-radius(@round + 1);
+				border-color: @Keyline;
+			.modal-header {
+				.border-top-radius(@round);
+				background: @StructureLight;
+			}
+			.modal-body {}
+			.modal-footer {}
+		}
+	}
+}
+
+
+// Tooltips
+.tooltip {
+		.font-default;
+	.tooltip-inner {
+		max-width: 400px !important;
+		padding: 7px 11px;
+	}
+}
+
+//Badges
+.badge {
+	background-color: @LinkDark;
+}
+
+
+// OUA CUSTOM STYLES
+// ==========================================================================
+
+
+// BUTTONS
+// ----------------------------------------------------------------------
+
+// Inputs
+form {
+	input[type="submit"] {
+		.margin-v;
+		.btn-color(@LinkDark, @white) !important;
+		.text-shadow;
+	}
+}
+
+
+// BLOCKS
+// ----------------------------------------------------------------------
+
+// General Blocks
+.block-region {
+	.block {
+			.no-border;
+			.no-shadow;
+			.clearfix();
+			.round;
+			overflow: hidden; /* make border round - will hide out-of-flow text -> overwrite at custom styling level */
+		&.no-header { .border-radius(0); }
+		.header { background: @Highlight; /* Main Course Header */ }
+		&.block_message_broadcast {
+			overflow: visible;
+		}
+		&.action-menu-shown {
+			overflow: visible;
+		}
+	}
+	.tab-pane & {
+		.block,
+		.block .header {
+			.border-top-radius(0);
+		}
+	}
+}
+
+// Admin style for performance info in footer
+.adminfooter { background-color: @white; }
+
+// Admin Footer Button
+#customise-button {
+		.absolute;
+		z-index: 2;
+		right: 15px;
+		text-align: right;
+	.singlebutton {
+		form {
+			> div {
+					margin: 0;
+				input[type="submit"] { margin: 15px 0 0 15px; }
+			}
+		}
+	}
+}
+
+// Help Icon for Admin Editing
+.helptooltip {
+	margin-right: 10px;
+}
+.fitemtitle,
+.fstaticlabel,
+.fgrouplabel {
+	> .helptooltip {
+		position: absolute;
+		margin-top: 5px;
+		margin-left: 3px;
+	}
+}
+.fstaticlabel {
+	> .helptooltip { margin-top: 0; }
+}
+.fitem.fitem_fgroup  {
+	.fgroup {
+		> span, > span label { .inline-block; }
+		> span { padding-right: 30px; }
+	}
+}
+
+// Override font size and set it to default font size on Blackboard collaborate
+.elluminatesessioninfotablename,
+.elluminatesessiontabletitle,
+.elluminatejoinmeeting {
+	.font-size(@default-font-size);
+}
+
+// Progress bar
+.progressbar_container {
+	.progress {
+		.bar {
+			height: 20px;
+			line-height: 20px;
+			color: @white;
+			background: @green; /* requires default color to show */
+			.text-shadow;
+			.text-center;
+		}
+	}
+	&.progress-success .progress .bar { background: @green; }
+	&.progress-info .progress .bar { background: @blue; }
+	&.progress-warning .progress .bar { background: @orange; }
+	&.progress-danger .progress .bar { background: @red; }
+}
+#page-content .completion_bar_wrapper .course_completion_bar_internal,
+.block_oua_course_progress_bar .completion_bar_wrapper .course_completion_bar_internal {
+	background: @ProgressBar;
+}
+
+// Scorm module overrides
+#page-mod-scorm-player #tocbox { .font-size(@default-font-size); }
+
+
+
+// FORMS
+// ----------------------------------------------------------------------
+label + select.singleselect {
+	margin-left: 10px; /* prevent text from touching the input inappropriately */
+}
+
+
+// USER PROFILE
+// ----------------------------------------------------------------------
+.userprofile {
+	.profile_tree section {
+		padding-bottom: 20px;
+		margin-bottom: 20px;
+		background: @white;
+	}
+	h3 {
+		padding: 10px 15px;
+		margin: 0;
+		border-bottom: 1px solid transparent;
+		background: @blueLight;
+		.font-size(@default-font-size + 2);
+	}
+	ul { margin: 10px 10px 0px 10px; }
+} // end .userprofile
+
+#page-user-edit,
+.path-user,
+.path-blog {
+	div[role='main'] {
+		.userprofile {
+			.page-context-header { margin-bottom: 20px; }
+		}
+		h2 {
+			margin: 0;
+			padding: 10px 15px;
+			background: @Highlight;
+			border-bottom: 1px solid transparent;
+			.font-size(@default-font-size + 2);
+		}
+		.page-header-headings h2 { background: transparent; }
+		.generaltable, .addbloglink {
+			padding: 15px;
+			background: @white;
+		}
+		.mform {
+				padding: 15px;
+				background: @white;
+			fieldset.collapsible {
+				legend {
+					padding-bottom: 10px;
+					a.fheader { margin: 0; }
+				}
+			}
+		}
+		.addbloglink {
+			a {
+				.btn;
+				.round;
+			}
+		}
+		.forumpost {
+				padding: 15px;
+				.no-border;
+				.no-shadow;
+			.commands { margin: 15px 0px; }
+			.picture {
+				img {
+				.border-radius(50%);
+				border: 1px solid @greyLight;
+				}
+			}
+			.comment-area {
+					max-width: 100%;
+				.fd {
+						margin-top: 15px;
+					a {
+						.btn;
+						.btn-color(@orange);
+						.round;
+						.font-size(@default-font-size);
+					}
+				}
+			}
+			&.blog_entry { .round; }
+		}
+		#notice {
+			.round;
+			background: @white;
+			padding: 15px;
+		}
+	}
+} // end #path-user-edit
+
+.path-mod-lesson,
+.path-grade {
+	h3 { .font-size(@default-font-size); }
+	.generalbox { margin-bottom: 20px; }
+	.lessonbutton {
+		a {
+			.btn;
+			.round;
+			margin-right: 5px;
+		}
+	}
+	.answeroption {
+		label { .no-bold; }
+	}
+	.label, .statusok, .statuswarning, .statusserious, .statuscritical, #plugins-control-panel .statusmsg {
+		color: @fg;
+		.font-size(@default-font-size);
+	}
+	.labelcorrect { .font-bold; }
+	.mform {
+			background: @white;
+		fieldset.collapsible {
+			legend {
+					padding-bottom: 10px;
+				a.fheader { margin: 0; }
+			}
+		}
+	}
+}
+
+// GENERAL TABLES
+// ----------------------------------------------------------------------
+.generaltable tbody tr:nth-child(odd) {
+	background: @StructureLight;
+}
+
+// WYSIWYG EDITOR
+// ----------------------------------------------------------------------
+.fitem_feditor {
+	.feditor {
+		.editor_atto_wrap {
+			.editor_atto {
+				+ textarea {
+					width: 100%; /* Fix code editor breaking on HTML mode- does not currently work because of Moodle's bug */
+				}
+			}
+		}
+	}
+}

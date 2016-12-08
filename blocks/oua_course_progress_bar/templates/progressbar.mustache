@@ -1,0 +1,15 @@
+<div class="completion_bar_wrapper" title="{{#str}}xcomplete, block_oua_course_progress_bar, {{progress}}{{/str}}">
+    <h2 class="progress">{{progress}}%</h2>
+    <div class="course_completion_bar">
+        <div class="course_completion_bar_keylines">&nbsp;</div>
+        <div class="course_completion_bar_internal" style="width: {{progress}}%">&nbsp;</div>
+    </div>
+    {{#startdate}}
+        <div class="completition_bar_dates">
+            <span class="startdate custom_2">{{startdate}}</span>
+            {{#enddate}}
+            <span class="enddate custom_2">{{enddate}}</span>
+            {{/enddate}}
+        </div>
+    {{/startdate}}
+</div>

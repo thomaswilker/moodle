@@ -1,0 +1,34 @@
+// Comments
+// ==========================================================================
+// Wacky CSS styling hack to overcome troublesome DOM markup
+// Remove this styling when markup for Comments is done in OO way
+// Replace with styling similar to "Nested Replies" inside /pages/mobile/_forum.less
+.comment-ctrl {
+	ul.comment-list {
+		margin: 15px 0;
+		padding: 0;
+		> li { /* each of this is a comment block */
+				margin: 0;
+				padding: 0;
+				border: 1px solid @border;
+			.comment-message {
+				.comment-message-meta {
+						.padding;
+						padding-right: 30px;
+						background: @greyLight20;
+					.picture { margin-right: 5px; }
+					.user {}
+				}
+				.text {
+						.padding;
+					.comment-delete {
+						margin: 5px 10px;
+					}
+					.no-overflow {
+						/* comment text */
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,143 @@
+// Assignment Page
+// ==========================================================================
+
+.submissionstatustable {
+	.assess-wrapper {
+			padding:  15px 0;
+			border: none;
+		.submission-file {
+			.file-image,
+			.file-text {
+				display: inline-block;
+    			vertical-align: middle;
+			}
+			.file-image {
+					padding: 15px;
+				img.icon {
+					margin: 0;
+					padding: 0;
+				}
+			}
+		}
+
+		// Submission Buttons
+		.submissionaction { /* wrapper for each button */
+			.right;
+			.inline-block;
+			.singlebutton { .inline-block; }
+			.submithelp { .hide; } /* hide redundant messages */
+            i.fa-question-circle {
+                .inline-block;
+                .v-middle;
+                color: @greyDark;
+                .font-size(@default-font-size * 24 / 14);
+                .pointer;
+            }
+		}
+	}
+
+    // Team Submission
+	.submission-group-container {
+            display: table;
+            table-layout: fixed;
+            width: 100%;
+            border: 1px solid @grey;
+		.submission-group-label {
+			display: table-cell;
+			width: 18%;
+			margin-top:-1px;
+			color: darken(@greyLight20, 55);
+			font-weight: bold;
+			.font-size(@default-font-size * 13 / 16);
+			padding: 0 5px;
+			background-color: @greyLight20;
+			vertical-align: middle;
+			&::after {
+				content: ":";
+			}
+		}
+		.submission-group-message {
+			display: table-cell;
+			padding: 10px 0 10px 20px;
+			min-height: 70px;
+			.no-team {
+				color: @red;
+			}
+		}
+	}
+
+    // Multiple Attempts
+    .attempts-number {
+        padding: 10px 15px;
+        border: 1px solid @grey;
+        background: @greyLight20;
+        color: @green;
+        text-align: center;
+        .current-attempt {
+            .clear-after;
+        }
+    }
+    .newattempt,
+    .reattempt {
+            padding-bottom: 20px;
+            color: @greyDark;
+            .text-center;
+        .singlebutton {
+            > form {
+                > div {
+                        margin-bottom: 0;
+                    > input[type="submit"] { margin-bottom: 5px; }
+                }
+            }
+        }
+    }
+    .feedback {
+        &:empty { .hide; }
+    }
+}
+
+
+// GRADE MARKING GUIDE
+// ----------------------------------------------------------------------
+.submissionstatustable,
+.mod-assign-history-panel {
+    .advancedgrade {
+        .grade-marking-guide;
+    }
+}
+.grade-marking-guide {
+    padding-right: 5%;
+    .font-normal;
+    .font-size(@default-font-size);
+    .line-height(@default-line-height); /* Overwrite OLD oua-submission styling */
+    .gradingform_guide-description {
+        padding: 25px 0;
+        border-bottom: 1px solid @grey;
+        &:empty { .hide; }
+    }
+    .gradingform_guide {
+        table.criteria { /* We overwrite table markup display for this particular view only */
+            display: block;
+            thead, tbody, tr, th, td { display: block; }
+            tr {
+                padding: 15px 0;
+                .no-border;
+                border-bottom: 1px solid @grey;
+                background: transparent;
+                td {
+                    &.score {
+                        color: @green;
+                        .font-bold;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+// COMMENTS
+// ----------------------------------------------------------------------
+.commentscontainer {
+		margin: 35px 0 25px;
+}

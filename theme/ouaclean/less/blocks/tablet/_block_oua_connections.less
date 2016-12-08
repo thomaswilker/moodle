@@ -1,0 +1,17 @@
+// Connections
+// ==========================================================================
+
+.block_oua_connections {
+    display: table; /* prevent tabs from having extra line to the right because "table" display only increments in whole pixels */
+    table-layout: fixed; /* prevent it breaking when the tab content is too long */
+    width: 100%; /* needs width specified to work */
+  .content {
+    .tab-content {
+      .connection-item {
+        .user-info {
+          max-width: 70%;
+        }
+      }
+    }
+  }
+}

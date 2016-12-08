@@ -1,0 +1,536 @@
+//  Standard Accessibility Mixins
+@import "_prefixer.less";
+
+//  Web Strategy Project - Mixins
+//  ==========================================================================
+
+
+// BOX MODEL
+// ----------------------------------------------------------------------
+
+.margin-h(@value: 15px;) {
+	margin-left: @value;
+	margin-right: @value;
+}
+.margin-v(@value: 15px;) {
+	margin-top: @value;
+	margin-bottom: @value;
+}
+.padding-h(@value: 15px;) {
+	padding-left: @value;
+	padding-right: @value;
+}
+.padding-v(@value: 15px;) {
+	padding-top: @value;
+	padding-bottom: @value;
+}
+
+// FONTS
+// ----------------------------------------------------------------------
+
+// Font Sizes (REMs with PX fallback for older browsers)
+.font-size (@sizeValue: @default-font-size) {
+	@remValue: @sizeValue / 16;
+	@pxValue: (@sizeValue);
+	font-size: ~"@{pxValue}px";
+	font-size: ~"@{remValue}rem";
+}
+.font-color(@color){
+	color:@color;
+}
+// Line Height Sizes (REMs with PX fallback for older browsers)
+.line-height (@sizeValue: @default-line-height) {
+	@remValue: @sizeValue / 16;
+	@pxValue: (@sizeValue);
+	line-height: ~"@{pxValue}px";
+	line-height: ~"@{remValue}rem";
+}
+.text-shadow(@opacity: 0.5; @x: 0px; @y: 1px; @blur: 1px;) {
+	text-shadow: @x @y @blur rgba(0,0,0,@opacity);
+}
+.text-highlight(@opacity: 0.5; @x: 0px; @y: -1px; @blur: 1px;) {
+	text-shadow: @x @y @blur rgba(255,255,255,@opacity);
+}
+.text-truncate(@maxWidth: 100%) {
+	max-width: @maxWidth;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.font-smoothing(){
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+
+
+// BUTTONS
+// ----------------------------------------------------------------------
+
+.btn-color(@background: @LinkDark; @color: @bg;) {
+	color: @color;
+	background: @background;
+	border-color: darken(@background, 7%);
+	&:hover,
+	&:focus,
+	&:active {
+		color: darken(@color, 3%);
+		background: @LinkBright;
+		border-color: darken(@LinkBright, 7%);
+	}
+}
+
+.btn-std-with-hover(){
+	display: block;
+	padding: 10px 10px 10px 15px;
+	color:@black;
+	background: @white;
+	border:1px solid #ccc;
+	border-radius: 3px;
+	.fa {
+		margin-right: 5px;
+		color: @LinkDark;
+	}
+	&:hover {
+		.generic-normal-btn-hover();
+	}
+}
+
+.btn-bold(){
+	.btn-std-with-hover();
+	background: @LinkDark;
+	border: 1px solid @LinkDark;
+}
+.generic-normal-btn-hover(){
+	color: @white;
+	text-decoration: none;
+	background-color: @LinkBright;
+	border: 1px solid transparent;
+	.fa {
+		color: @white;
+	}
+}
+.modal-buttons(@color: @LinkDark, @background: @white, @hoverColor: @LinkBright, @hoverBackground: @white){
+	color: @color;
+	background-color: @background;
+	text-shadow: none;
+	&:hover {
+		color: @hoverColor;
+		text-decoration: none;
+		background-color: @hoverBackground;
+	}
+	.fa,
+	.fa:hover {
+		color: inherit
+	}
+}
+
+// LINKS
+// ----------------------------------------------------------------------
+.simple-link (@color: inherit){
+	color: @color;
+	&:hover {
+		color: @color;
+		text-decoration: underline;
+	}
+}
+.link-with-icon(@color: #000, @padding: 0 10px) {
+	color: @color;
+	padding: @padding;
+	cursor: pointer;
+	.fa {
+		margin: 0 5px;
+		color: @LinkDark;
+	}
+	&:hover {
+		text-decoration: underline;
+	}
+}
+.link-without-icon(@color: @LinkDark, @hoverColor: @LinkHover){
+	color: @color;
+	-webkit-font-smoothing: antialiased;
+	&:hover {
+		color: @hoverColor;
+		text-decoration: underline;
+	}
+}
+
+
+// COLORS
+// ----------------------------------------------------------------------
+
+// Button Interaction
+.color-click( @color: @brand; @hover: @comp; @click: darken(@comp, 7%) ) {
+	color: @color;
+	.pointer;
+	&:hover, &:focus {
+		color: @hover;
+	}
+	&:active {
+		color: @click;
+		.box-shadow(inset 0 3px 5px rgba(0, 0, 0, .125));
+	}
+}
+
+
+// STYLING
+// ----------------------------------------------------------------------
+
+// Avatar
+.avatar(@size: 60px, @radius: 50%, @border: 1px solid @greyLight) {
+	.square(@size);
+	.border-radius(@radius);
+	border: @border;
+}
+
+// Background Opacity
+.background-rgba(@color, @opacity) {
+	background: fade(@color, @opacity);
+}
+
+// Border
+.border (@width: 1px, @style: solid, @color: @border) {
+	border: @width @style @color;
+}
+
+// Rounded Corners
+.border-radius (@radius: 2px) {
+	-webkit-border-radius: @radius;
+	-moz-border-radius: @radius;
+	border-radius: @radius;
+}
+
+// Box Shadow
+.box-shadow(@x: 0, @y: 0, @b: 4px, @spread: 0, @color: #000, @opacity: 30%) {
+	box-shadow: @x @y @b @spread fade(@color, @opacity);
+	-moz-box-shadow: @x @y @b @spread fade(@color, @opacity);
+	-webkit-box-shadow: @x @y @b @spread fade(@color, @opacity);
+}
+
+.rotate(@degree) {
+	-ms-transform: rotate(~"@{degree}deg");
+	-webkit-transform: rotate(~"@{degree}deg");
+	transform: rotate(~"@{degree}deg");
+}
+.rotateY(@degree) {
+	-ms-transform: rotateY(~"@{degree}deg");
+	-webkit-transform: rotateY(~"@{degree}deg");
+	transform: rotateY(~"@{degree}deg");
+}
+// SVG Fallback Mixin
+.svg-background-img(@name, @xPos, @yPos) {
+	@png: ~"@{image-path}@{name}";
+	@convertToSvg: ~`"@{name}".replace(/.png$/, '.svg')`;
+	@svg: ~"@{image-path}@{convertToSvg}";
+	background-image: url(~"@{svg}");
+	background-position: @xPos @yPos;
+	background-repeat: no-repeat;
+	.no-svg & {
+		background-image: url(~"@{png}");
+		background-position: @xPos @yPos;
+		background-repeat: no-repeat;
+	}
+}
+
+// Background Image Mixin
+.background-img(@name) {
+	@image: ~"@{image-path}@{name}";
+	background-image: url(~"@{image}");
+}
+
+// Circular Box Shadow
+.circular-box-shadow {
+	position:relative;
+	margin-bottom: 20px;
+	&:after {
+		content: "";
+		position: absolute;
+		//z-index:-1;
+		top: 100%;
+		bottom: 0;
+		width: 85%;
+		height: 15px;
+		left: 10%;
+		right: 10%;
+		background: -webkit-radial-gradient(50% -50%, ellipse cover, rgba(00, 00, 00, 0.3), rgba(97, 97, 97, 0.0) 60%);
+		background: radial-gradient(ellipse at 50% -50%, rgba(00, 00, 00, 0.3), rgba(97, 97, 97, 0.0) 60%);
+	}
+}
+
+
+// EFFECTS
+// ----------------------------------------------------------------------
+
+// Horizontal Gradient
+.horizontal-gradient(@startColor, @endColor, @startX, @endX) {
+	background: @startColor; /* Old browsers */
+	background: -moz-linear-gradient(left,  @startColor @startX, @endColor @endX); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(@startX,@startColor), color-stop(@endX,@endColor)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left,  @startColor @startX,@endColor @endX); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left,  @startColor @startX,@endColor @endX); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left,  @startColor @startX,@endColor @endX); /* IE10+ */
+	background: linear-gradient(to right,  @startColor @startX,@endColor @endX); /* W3C */
+	filter: ~"progid:DXImageTransform.Microsoft.gradient( startColorstr='@{startColor}', endColorstr='@{endColor}',GradientType=1 )"; /* IE6-9 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(enabled=false)" !important; /* Reset all CSS filters for IE */
+}
+
+// 2 Step Colour Gradient
+.two-step-gradient(@startColor, @endColor) {
+	background: @startColor; /* Old browsers */
+	background: -moz-linear-gradient(top,  @startColor 0%, @startColor 50%, @endColor 51%, @endColor 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,@startColor), color-stop(50%,@startColor), color-stop(51%,@endColor), color-stop(100%,@endColor)); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  @startColor 0%,@startColor 50%,@endColor 51%,@endColor 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  @startColor 0%,@startColor 50%,@endColor 51%,@endColor 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  @startColor 0%,@startColor 50%,@endColor 51%,@endColor 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  @startColor 0%,@startColor 50%,@endColor 51%,@endColor 100%); /* W3C */
+	filter: ~"progid:DXImageTransform.Microsoft.gradient( startColorstr='@{startColor}', endColorstr='@{endColor}',GradientType=0 )"; /* IE6-9 */
+	-ms-filter: "progid:DXImageTransform.Microsoft.gradient(enabled=false)" !important; /* Reset all CSS filters for IE */
+}
+
+.faded-vertical {
+	background: #fffcfc; /* Old browsers */
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2IwYjFiMyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(top,  rgba(255,255,255,0) 0%, rgba(176,177,179,1) 50%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgba(255,255,255,0)), color-stop(50%,rgba(176,177,179,1)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(176,177,179,1) 50%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(176,177,179,1) 50%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(top,  rgba(255,255,255,0) 0%,rgba(176,177,179,1) 50%,rgba(255,255,255,0) 100%); /* IE10+ */
+	background: linear-gradient(to bottom,  rgba(255,255,255,0) 0%,rgba(176,177,179,1) 50%,rgba(255,255,255,0) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#00ffffff',GradientType=0 ); /* IE6-8 */
+}
+
+.faded-horizontal {
+	background: #fffcfc; /* Old browsers */
+	/* IE9 SVG, needs conditional override of 'filter' to 'none' */
+	background: url(data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiA/Pgo8c3ZnIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgdmlld0JveD0iMCAwIDEgMSIgcHJlc2VydmVBc3BlY3RSYXRpbz0ibm9uZSI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJncmFkLXVjZ2ctZ2VuZXJhdGVkIiBncmFkaWVudFVuaXRzPSJ1c2VyU3BhY2VPblVzZSIgeDE9IjAlIiB5MT0iMCUiIHgyPSIxMDAlIiB5Mj0iMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwJSIgc3RvcC1jb2xvcj0iI2ZmZmZmZiIgc3RvcC1vcGFjaXR5PSIwIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjI1JSIgc3RvcC1jb2xvcj0iI2Q4ZDhkOSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjUwJSIgc3RvcC1jb2xvcj0iI2IwYjFiMyIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9Ijc1JSIgc3RvcC1jb2xvcj0iI2Q4ZDhkOSIgc3RvcC1vcGFjaXR5PSIxIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNmZmZmZmYiIHN0b3Atb3BhY2l0eT0iMCIvPgogIDwvbGluZWFyR3JhZGllbnQ+CiAgPHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEiIGhlaWdodD0iMSIgZmlsbD0idXJsKCNncmFkLXVjZ2ctZ2VuZXJhdGVkKSIgLz4KPC9zdmc+);
+	background: -moz-linear-gradient(left,  rgba(255,255,255,0) 0%, rgba(216,216,217,1) 25%, rgba(176,177,179,1) 50%, rgba(216,216,217,1) 75%, rgba(255,255,255,0) 100%); /* FF3.6+ */
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%,rgba(255,255,255,0)), color-stop(25%,rgba(216,216,217,1)), color-stop(50%,rgba(176,177,179,1)), color-stop(75%,rgba(216,216,217,1)), color-stop(100%,rgba(255,255,255,0))); /* Chrome,Safari4+ */
+	background: -webkit-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(216,216,217,1) 25%,rgba(176,177,179,1) 50%,rgba(216,216,217,1) 75%,rgba(255,255,255,0) 100%); /* Chrome10+,Safari5.1+ */
+	background: -o-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(216,216,217,1) 25%,rgba(176,177,179,1) 50%,rgba(216,216,217,1) 75%,rgba(255,255,255,0) 100%); /* Opera 11.10+ */
+	background: -ms-linear-gradient(left,  rgba(255,255,255,0) 0%,rgba(216,216,217,1) 25%,rgba(176,177,179,1) 50%,rgba(216,216,217,1) 75%,rgba(255,255,255,0) 100%); /* IE10+ */
+	background: linear-gradient(to right,  rgba(255,255,255,0) 0%,rgba(216,216,217,1) 25%,rgba(176,177,179,1) 50%,rgba(216,216,217,1) 75%,rgba(255,255,255,0) 100%); /* W3C */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00ffffff', endColorstr='#00ffffff',GradientType=1 ); /* IE6-8 */
+}
+
+.row(@paddingTop: 0, @paddingBottom: 0) {
+	padding-top: @paddingTop;
+	padding-bottom: @paddingBottom;
+}
+
+// Background with bubble/pointer, pointing to left
+.background-bubble(@backgroundColor) {
+	background: @StructureLight;
+	position: relative;
+	padding: 10px 0px;
+	&:before {
+		content: '';
+		width: 0;
+		height: 0;
+		border-style: solid;
+		border-width: 8px 13px 8px 0;
+		border-color: transparent @Keyline transparent transparent;
+		left: -13px;
+		top:40%;
+		position: absolute;
+	}
+}
+
+// Background with bubble/pointer, pointing to top e.g messages
+.background-bubble-top(@top: -4px, @left: auto, @right: 52px, @marginTop: -8.66666667px, @borderColor: @StructureLight ){
+	&:before {
+		content: "";
+		position: absolute;
+		top: @top;
+		left: @left;
+		right: @right;
+		margin-top: @marginTop;
+		width: 0;
+		height: 0;
+		border-style: solid;
+		border-width: 0 10px 13px 10px;
+		border-color: transparent transparent @borderColor transparent;
+	}
+}
+
+// OBJECTS
+// ----------------------------------------------------------------------
+
+// General
+.object(@display: block, @content: ''){
+	display: @display;
+	content: @content;
+}
+
+// Triangles
+.triangle-up(@height: @default-font-size, @color: @brand) {
+	@size: (@height / 2);
+	.object;
+	width: 0;
+	height: 0;
+	border-left: ~'@{size}px' solid transparent;
+	border-right: ~'@{size}px' solid transparent;
+	border-bottom-style: solid;
+	border-bottom-width: ~'@{size}px';
+	border-bottom-color: @color; /* to use inherit border color must be declared separately */
+}
+.triangle-down(@height: @default-font-size, @color: @brand) {
+	@size: (@height / 2);
+	.object;
+	width: 0;
+	height: 0;
+	border-left: ~'@{size}px' solid transparent;
+	border-right: ~'@{size}px' solid transparent;
+	border-top-style: solid;
+	border-top-width: ~'@{size}px';
+	border-top-color: @color; /* to use inherit border color must be declared separately */
+}
+.triangle-left(@height: @default-font-size, @color: inherit) {
+	@size: (@height / 2);
+	.object;
+	width: 0;
+	height: 0;
+	border-top: ~'@{size}px' solid transparent;
+	border-bottom: ~'@{size}px' solid transparent;
+	border-right-style: solid;
+	border-right-width: ~'@{size}px';
+	border-right-color: @color; /* to use inherit border color must be declared separately */
+}
+.triangle-right(@height: @default-font-size, @color: inherit) {
+	@size: (@height / 2);
+	.object;
+	width: 0;
+	height: 0;
+	border-top: ~'@{size}px' solid transparent;
+	border-bottom: ~'@{size}px' solid transparent;
+	border-left-style: solid;
+	border-left-width: ~'@{size}px';
+	border-left-color: @color; /* to use inherit border color must be declared separately */
+}
+
+// Button Blocks
+.btn-block(@size: 22px, @radius: 2px) { /* Used for :before and :after */
+	content: '';
+	position: absolute;
+	top: 50%; /* move it down to center */
+	margin-top: -(@size / 2); /* align block in the middle */
+	width: @size; /* same as height */
+	height: @size; /* button_outer_height / sqrt(2) */
+	background: inherit; /* use parent background */
+	border: inherit; /* use parent border */
+	border-left-color: transparent; /* hide left border */
+	border-bottom-color: transparent; /* hide bottom border */
+	.border-radius(0px @radius 0px 0px); /* round arrow corner, the shorthand property doesn't accept "inherit" so it is set to 4px */
+}
+
+.btn-arrow(@direction: right, @size: 22px, @radius: 2px, @background: @bg) {
+	/* Variables */
+	@align: @size / 2 * -1;
+	@padding: sqrt(2) * @size / 2; /* this padding is the width of pointer */
+	@padding2: sqrt(2) * @size;
+
+	position: relative;
+	padding-left: @padding;
+	padding-right: @padding;
+
+	/* Specific to direction */
+	& when (@direction = right) { padding-left: @padding2; }
+	& when (@direction = left) { padding-right: @padding2; }
+
+	&:before, &:after { /* make two squares (before and after), looking similar to the button */
+		.btn-block(@size, @radius);
+		/* rotate right arrow squares 45 deg for right, 225 for left */
+		& when (@direction = right) { .rotate(45); }
+		& when (@direction = left) { .rotate(225); }
+	}
+
+	&:before {
+		left: @align; /* align the "before" square to the left */
+		& when (@direction = right) { background-color: @background } /* hide arrow tails background */
+		& when (@direction = left) { z-index: 1; } /* bring arrow pointers to front */
+	}
+	&:after {
+		right: @align; /* align the "after" square to the right */
+		& when (@direction = left) { background-color: @background } /* hide arrow tails background */
+		& when (@direction = right) { z-index: 1; } /* bring arrow pointers to front */
+	}
+}
+
+.btn-pointer(@direction: right, @size: 22px, @radius: 2px, @background: @bg) {
+	/* Variables */
+	@align: @size / 2 * -1;
+	@padding: sqrt(2) * @size / 2; /* this padding is the width of pointer */
+	@padding2: sqrt(2) * @size;
+
+	position: relative;
+	padding-left: @padding;
+	padding-right: @padding;
+
+	/* Specific to direction */
+	& when (@direction = right) { margin-right: @padding2; }
+	& when (@direction = left) { margin-left: @padding2; }
+
+	&:before, &:after { /* make two squares (before and after), looking similar to the button */
+		.btn-block(@size, @radius);
+		/* rotate right arrow squares 45 deg for right, 225 for left */
+		& when (@direction = right) { .rotate(45); }
+		& when (@direction = left) { .rotate(225); }
+	}
+
+	&:before {
+		left: @align; /* align the "before" square to the left */
+		& when (@direction = right) { display: none; } /* hide arrow tails background */
+	}
+	&:after {
+		right: @align; /* align the "after" square to the right */
+		& when (@direction = left) { display: none; } /* hide arrow tails background */
+	}
+}
+
+// Background with bubble/pointer, pointing to left
+.background-bubble(@background: @greyLight20, @pointerSize: 13px) {
+	background: @StructureLight;
+	position: relative;
+	margin-left: @pointerSize; /* neutralize the extra space taken by pointer */
+	.round;
+	&:before {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: -@pointerSize;
+		margin-top: -(@pointerSize * 2/3);
+		width: 0;
+		height: 0;
+		border-style: solid;
+		border-width: (@pointerSize * 2/3) @pointerSize (@pointerSize * 2/3) 0;
+		border-color: transparent @background transparent transparent;
+	}
+}
+
+// Logo for Specific Courses
+.logo-wrap (@maxWidth: @logo-max-width, @maxHeight: @logo-max-height, @background: @bg) { /* effective width/height is minus borders and paddings */
+	/* apply to immediate wrapper for <img class="logo img-responsive" /> tag */
+	width: @maxWidth;
+	min-width: @maxWidth; /* Firefox fix */
+	max-width: @maxWidth; /* Firefox fix */
+	padding: @maxWidth / 20;
+	background: @background;
+	.border-radius(@maxWidth / 40);
+	border: 1px solid darken(@background, 20%);
+	> img {
+		max-height: @maxHeight - (@maxWidth / 20)*2 - 2; /* max img height is maxHeight minus padding and borders */
+	}
+}
+
+//Vertical Ellipses links
+.v-ellipsis(){
+	&:after {
+		display: inline-block;
+		padding: 7px 0;
+		content: '\2807';
+		font-size: 40px;
+		font-style: normal;
+		line-height: 0;
+	}
+}
+
+

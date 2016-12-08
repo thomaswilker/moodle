@@ -1,0 +1,71 @@
+// Forum Recent Posts
+// ==========================================================================
+
+.block_oua_forum_recent_posts {
+	.disucssion-list-head {
+		display: block;
+	}
+	.form-new-post,
+	.form-reply-post {
+		padding: 10px;
+	}
+	.panel-group {
+		.panel-heading {
+			.panel-title {
+				span {
+					display: inline;
+					&.subject {
+						padding: 0 15px 0 5px;
+						max-width: none;
+						.fa {
+							position: static;
+						}
+					}
+					&.replies {
+						position: relative;
+						top: inherit;
+						right: inherit;
+						background-color: transparent;
+						border-radius: none;
+						line-height: inherit;
+						font-size: inherit;
+						max-width: inherit;
+						max-height: inherit;
+						white-space: normal;
+						text-align: left;
+						color: inherit;
+						display: block;
+						width: 16.66667%;
+						height: auto;
+						padding: 0 15px;
+					}
+					&.name {
+						display: inline;
+						font-size: initial;
+						line-height: inherit;
+					}
+					&.date {
+						position: static;
+						max-width: 20%;
+						&:before {
+							content: "";
+						}
+					}
+				}
+			}
+
+			.wrapper {
+				.fa {
+					display: inline;
+					text-align: left;
+				}
+			}
+		;
+		}
+		.panel-collapse {
+			.col-md-12 {
+				padding-left: 15px;
+			}
+		}
+	}
+}

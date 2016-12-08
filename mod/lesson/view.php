@@ -428,7 +428,11 @@ if ($pageid != LESSON_EOL) {
         ob_end_clean();
     }
 
+    // OUA Custom: Remove fake blocks
+    /*
     lesson_add_fake_blocks($PAGE, $cm, $lesson, $timer);
+    */
+    // End OUA Custom.
     echo $lessonoutput->header($lesson, $cm, $currenttab, $extraeditbuttons, $lessonpageid, $extrapagetitle);
     if ($attemptflag) {
         // We are using level 3 header because attempt heading is a sub-heading of lesson title (MDL-30911).
@@ -441,8 +445,15 @@ if ($pageid != LESSON_EOL) {
     if ($lesson->displayleft) {
         echo '<a name="maincontent" id="maincontent" title="' . get_string('anchortitle', 'lesson') . '"></a>';
     }
+    // OUA Custom: use renderable + mustache renderer to output lesson contents.
+    // Remove progress bars.
+    /*
     echo $lessoncontent;
     echo $lessonoutput->progress_bar($lesson);
+    */
+    $oualessoncontent = new \mod_lesson\output\oua_lesson_content($cm, $lesson, $lessoncontent);
+    echo $lessonoutput->render($oualessoncontent);
+    // End OUA Custom.
     echo $lessonoutput->footer();
 
 } else {
@@ -483,7 +494,10 @@ if ($pageid != LESSON_EOL) {
     if (!$canmanage) {
         if ($gradelesson) {
             // Store this now before any modifications to pages viewed.
+            // OUA Custom: Remove progress bars.
+            /*
             $progressbar = $lessonoutput->progress_bar($lesson);
+            */
             // Update the clock / get time information for this user.
             $lesson->stop_timer();
 
@@ -576,7 +590,10 @@ if ($pageid != LESSON_EOL) {
 
             // update central gradebook
             lesson_update_grades($lesson, $USER->id);
+            // OUA Custom: Remove progress bars.
+            /*
             $lessoncontent .= $progressbar;
+            */
         }
     } else {
         // display for teacher
@@ -614,6 +631,10 @@ if ($pageid != LESSON_EOL) {
         $lessoncontent .= $lesson->link_for_activitylink();
     }
 
+    // OUA Custom: Remove links from completion page.
+    // Remove fake blocks.
+    // Custom lesson content renderer.
+    /*
     $url = new moodle_url('/course/view.php', array('id'=>$course->id));
     $lessoncontent .= html_writer::link($url, get_string('returnto', 'lesson', format_string($course->fullname, true)),
             array('class' => 'centerpadded lessonbutton standardbutton p-r-1'));
@@ -628,5 +649,10 @@ if ($pageid != LESSON_EOL) {
     lesson_add_fake_blocks($PAGE, $cm, $lesson, $timer);
     echo $lessonoutput->header($lesson, $cm, $currenttab, $extraeditbuttons, $lessonpageid, get_string("congratulations", "lesson"));
     echo $lessoncontent;
+    */
+    $oualessoncontent = new \mod_lesson\output\oua_lesson_content($cm, $lesson, $lessoncontent);
+    echo $lessonoutput->header($lesson, $cm, $currenttab, $extraeditbuttons, $lessonpageid, get_string("congratulations", "lesson"));
+    echo $lessonoutput->render($oualessoncontent);
+    // End OUA Custom.
     echo $lessonoutput->footer();
 }

@@ -420,9 +420,20 @@ function lesson_displayleftif($lesson) {
 function lesson_add_fake_blocks($page, $cm, $lesson, $timer = null) {
     $bc = lesson_menu_block_contents($cm->id, $lesson);
     if (!empty($bc)) {
+        /* OUA Custom: Hardcoded the lesson activity to region side-c to minimise dependencies and ensure attention when updated
         $regions = $page->blocks->get_regions();
         $firstregion = reset($regions);
         $page->blocks->add_fake_block($bc, $firstregion);
+        */
+        $regions = $page->blocks->get_regions();
+        if (in_array('side-c', $regions)){
+            $page->blocks->add_fake_block($bc, 'side-c');
+        }
+        else {
+            $firstregion = reset($regions);
+            $page->blocks->add_fake_block($bc, $firstregion);
+        }
+        // End OUA Custom
     }
 
     $bc = lesson_mediafile_block_contents($cm->id, $lesson);

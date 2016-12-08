@@ -1,0 +1,17 @@
+<ul class="nav nav-tabs nav-justified nav-flat no-collapse round-end" role="tablist">
+    <li class="{{#myconnectionsactive}}active{{/myconnectionsactive}}">
+    	<a href="#myconnections" aria-controls="myconnections" role="tab" data-toggle="tab">{{#str}}my_connections, block_oua_connections{{/str}}</a>
+    </li>
+    <li class="{{^myconnectionsactive}}active{{/myconnectionsactive}}">
+    	<a href="#suggestedconnections" aria-controls="suggestedconnections" role="tab" data-toggle="tab">{{#str}}suggested_connections, block_oua_connections{{/str}}</a>
+    </li>
+</ul>
+<div class="tab-content">
+    <div id="myconnections" role="tabpanel" class="tab-pane {{#myconnectionsactive}}active{{/myconnectionsactive}}">
+        {{{myconnections}}}
+    </div>
+    <div id="suggestedconnections" role="tabpanel" class="tab-pane {{^myconnectionsactive}}active{{/myconnectionsactive}}">{{{suggestedconnections}}}</div>
+</div>
+{{#js}}
+    require(['block_oua_connections/request_connect']);
+{{/js}}

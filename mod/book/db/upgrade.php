@@ -61,5 +61,25 @@ function xmldb_book_upgrade($oldversion) {
     // Moodle v3.1.0 release upgrade line.
     // Put any upgrade step following this.
 
+    if ($oldversion < 2016120800) {
+        // Define field useoldbookstyle to be added to book.
+        $table = new xmldb_table('book');
+        $field = new xmldb_field('useoldbookstyle', XMLDB_TYPE_INTEGER, '2', null, XMLDB_NOTNULL, null, '0', 'customtitles');
+
+        // Conditionally launch add field useoldbookstyle.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        $field = new xmldb_field('bookanimationspeed', XMLDB_TYPE_INTEGER, '6', null, XMLDB_NOTNULL, null, '1',
+                                 'bookanimationspeed');
+
+        // Conditionally launch add field useoldbookstyle.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+        // Book savepoint reached.
+        upgrade_mod_savepoint(true, 2016120800, 'book');
+    }
+
     return true;
 }

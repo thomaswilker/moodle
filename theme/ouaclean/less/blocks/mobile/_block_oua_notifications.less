@@ -1,0 +1,41 @@
+// Notifications
+// ==========================================================================
+
+.block_oua_notifications {
+	.accordion {
+		.panel {
+			.modal {
+				.modal-content {
+					.modal-footer {
+						border-top: none;
+						a {
+							.modal-buttons(@LinkDark, @white, @LinkBright, @white);
+							&.confirm-delete {
+								.modal-buttons(@white, @LinkDark, @white, @LinkBright);
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	.dismissall {
+			display: block;
+			padding: 11px 11px 10px;
+			border-top: 1px solid @grey;
+			color: @fg;
+			text-decoration: none;
+			.text-center;
+		> i.fa {
+			.v-middle;
+			color: @LinkBright;
+			margin-right: 7px;
+			margin-bottom: 2px;
+			.font-size(28);
+		}
+	}
+	.nonotifications {
+		.block-message;
+		margin: 20px;
+	}
+}

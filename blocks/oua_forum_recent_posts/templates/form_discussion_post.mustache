@@ -1,0 +1,29 @@
+<div id="{{$formid}}new-post{{/formid}}" class="collapse">
+    <div role="document" class="form-{{$formid}}new-post{{/formid}} clearfix">
+    <form role="form" data-toggle="validator">
+        <div class="form-header">
+<h4 class="modal-title" id="new-post-title"><i class="fa fa-comments-o"></i>{{$formtitle}}{{#str}}yournewtopic, mod_forum{{/str}}{{/formtitle}}</h4>
+        </div>
+        <div class="form-body">
+                <div class="form-group {{$hidesubject}}{{/hidesubject}}">
+                    <label for="subject" class="control-label">{{#str}}subject, mod_forum{{/str}}</label>
+                    <input type="text" class="form-control" name="subject" id="{{$formid}}new-post{{/formid}}-edit-subject" data-error="{{#str}}validationsubjectlength, block_oua_forum_recent_posts{{/str}}" required="required" maxlength="255"/>
+                    <div class="help-block with-errors"></div>
+                </div>
+                <div class="form-group">
+                    <div>{{! Extra div for atto editor }}
+                    <label for="message" class="control-label">{{#str}}message, mod_forum{{/str}}</label>
+                    <textarea class="form-control" name="message" id="{{$formid}}new-post{{/formid}}-edit-message" rows="10" cols="80" data-error="{{#str}}validationmessageempty, block_oua_forum_recent_posts{{/str}}" required="required"></textarea>
+                    </div>
+                    <div class="help-block with-errors"></div>
+                </div>
+        </div>
+        <div class="form-footer">
+            <input type="hidden" name="inlineattachmentsid" value="{{$inlineattachmentsid}}{{newpostitemid}}{{/inlineattachmentsid}}"/>
+            <button type="button" class="btn btn-default cancel" data-toggle="collapse" data-target="#{{$formid}}new-post{{/formid}}" aria-controls="{{$formid}}new-post{{/formid}}">{{#str}}cancel{{/str}}</button>
+            <button type="button" class="btn btn-primary submit">{{$action}}{{#str}}posttoforum, mod_forum{{/str}}{{/action}}</button>
+        </div>
+    </form>
+    </div>
+</div>
+

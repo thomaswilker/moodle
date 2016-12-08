@@ -1,0 +1,42 @@
+<div class="notificationpopup dropdown-menu" aria-labelledby="{{$labelid}}notificationalert{{/labelid}}">
+    <h3>{{#str}}unreadnotifications, local_conversations{{/str}}</h3>
+    <ul>
+        {{#unread_notification_preview}}
+            <li class="unread">
+                <a href="/local/conversations/notifications.php#notification-{{notificationid}}">
+                    <div class="userpicture">
+                        {{#userpictureurl}}
+                            <img src="{{userpictureurl}}" alt="{{userfullname}}"/>
+                        {{/userpictureurl}}
+                        {{^userpictureurl}}
+                            <i class="fa fa-bell"></i>
+                        {{/userpictureurl}}
+                    </div>
+
+                    <div class="message">
+
+                    <p class="message-snippet">
+                        {{#simplenotification}}{{{smallmessage}}}{{/simplenotification}}
+                        {{^simplenotification}}{{subject}}{{/simplenotification}}
+                    </p>
+
+                        {{#otheruserpictureurl}}
+                        <p class="fullname">{{userfullname}}</p>
+                        {{/otheruserpictureurl}}
+                    </div>
+
+                    <div class="date">
+                        <p>{{{timecreated_formatted}}}</p>
+                    </div>
+                </a>
+                {{<local_conversations/notification_controls}}
+                {{$popupcontrols}}{{!No Delete for popup}}{{/popupcontrols}}
+                {{/local_conversations/notification_controls}}
+            </li>
+        {{/unread_notification_preview}}
+        {{^unread_notification_preview}}
+            <li class="no-unread">{{#str}}nounreadnotifications, local_conversations{{/str}}</li>
+        {{/unread_notification_preview}}
+        <li class="view-messages"><a href="{{{all_notifications_link}}}">{{#str}}viewallnotifications, local_conversations{{/str}}<i class="fa fa-chevron-right"></i></a></li>
+    </ul>
+</div>

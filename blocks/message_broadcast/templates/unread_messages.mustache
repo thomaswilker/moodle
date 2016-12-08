@@ -1,0 +1,15 @@
+<div class="broadcastmessagewrapper clearfix">
+        {{#messagelist}}
+        <div class="message-notification clearfix box-yellow-rounded" role="alert">
+            <div class="wrapper">
+                <i class="fa fa-bullhorn">{{#str}}notice, block_message_broadcast{{/str}}</i>
+                <div class="messagetitle">{{headingtitle}}</div>
+                <a class="dismiss"
+                   href="{{urlbase}}/blocks/message_broadcast/managemessages.php?dismissmessage={{id}}" title="{{#str}}dismissmessage, block_message_broadcast{{/str}}"><i class="fa fa-times"></i></a>
+                <span class="messageid hidden">{{id}}</span>
+                <div class="messagebody">{{messagebody}}</div>
+                <ul class="attachments-list">{{#attachments}}<li><a href="{{fileurl}}">{{{pix_url_html}}} {{filename}}</a></li>{{/attachments}}</ul>
+            </div>
+        </div>
+        {{/messagelist}}
+</div>

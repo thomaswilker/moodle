@@ -1,0 +1,26 @@
+<div class="conversation" id="conversation-{{id}}">
+{{#messages}}
+    <div class="message-item clearfix">
+        <blockquote class="message {{#fromme}}blockquote-reverse{{/fromme}} {{#unread}}unread{{/unread}}" data-messageid="{{id}}">
+            <div class="avatar col-xs-2 col-md-1">
+
+                {{^fromme}}<a href="{{userprofileurl}}">{{/fromme}}
+                <img src="{{userpictureurl}}" alt="userpicture" title="" class="userpicture"/>
+                {{^fromme}}</a>{{/fromme}}
+
+            </div>
+            <div class="col-xs-10 col-md-11 small-message">
+                <p>{{smallmessage}}</p>
+                <p class="message-time">{{formatted_timecreated}}</p>
+            </div>
+        </blockquote>
+    </div>
+{{/messages}}
+{{^messages}}
+    <div class="nomessages">
+    <div class="userpicture"><img src="{{otheruserpictureurl}}" alt="user picture" title="user picture" /></div>
+    <p class="userfullname">{{otheruserfullname}}</p>
+    <p class="helpmessage">{{#str}}conversationhelp, local_conversations, {{otheruserfullname}}{{/str}}</p>
+    </div>
+{{/messages}}
+</div>

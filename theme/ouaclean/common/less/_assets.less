@@ -1,0 +1,640 @@
+//  Lego Project - Assets and Modules
+//  ==========================================================================
+
+// Modal
+.modal-backdrop {
+    position: fixed;
+    z-index: 1;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	// Fade for backdrop
+	&.fade { .opacity(0); }
+	&.in { .opacity(0.5); }
+}
+
+// Table
+.table-responsive {
+	overflow-x: auto;
+	min-height: 0.01%; // Workaround for IE9 bug (see https://github.com/twbs/bootstrap/issues/14837)
+
+	@media screen and (max-width: @screen-xs-max) {
+		width: 100%;
+		margin-bottom: (@line-height-computed * 0.75);
+		overflow-y: hidden;
+		-ms-overflow-style: -ms-autohiding-scrollbar;
+		border: 1px solid @table-border-color;
+
+		// Tighten up spacing
+		> .table {
+			margin-bottom: 0;
+
+			// Ensure the content doesn't wrap
+			> thead,
+			> tbody,
+			> tfoot {
+				> tr {
+					> th,
+					> td { white-space: nowrap; }
+				}
+			}
+		}
+
+		// Special overrides for the bordered tables
+		> .table-bordered {
+			border: 0;
+
+			// Nuke the appropriate borders so that the parent can handle them
+			> thead,
+			> tbody,
+			> tfoot {
+				> tr {
+					> th:first-child,
+					> td:first-child { border-left: 0; }
+					> th:last-child,
+					> td:last-child { border-right: 0; }
+				}
+			}
+
+			// Only nuke the last row's bottom-border in `tbody` and `tfoot` since
+			// chances are there will be only one `tr` in a `thead` and that would
+			// remove the border altogether.
+			> tbody,
+			> tfoot {
+				> tr:last-child {
+					> th,
+					> td { border-bottom: 0; }
+				}
+			}
+
+		}
+	}
+}
+
+// BOX MODEL
+// ----------------------------------------------------------------------
+
+// Alignment
+.left { float: left; }
+.right { float: right; }
+.center { float:none; margin-left: auto; margin-right: auto; }
+.v-middle { vertical-align: middle; }
+.v-top { vertical-align: top; }
+.v-bottom { vertical-align: bottom; }
+.v-baseline { vertical-align: baseline; }
+.v-text-bottom { vertical-align: text-bottom; }
+.v-text-top { vertical-align: text-top; }
+.text-left { text-align: left; }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.text-justify { text-align: justify; }
+
+// Clear
+.clear { clear: both; }
+.clear-before {
+	&:before {
+		content: '\A';
+		white-space: pre; /* or pre-wrap */
+	}
+}
+.clear-after {
+	&:after {
+		content: '\A';
+		white-space: pre; /* or pre-wrap */
+	}
+}
+
+// Border Radius
+.border { .border(); }
+.round { .border-radius(@round); } /* Default Round corner, usually 3px */
+.round-xxs { .border-radius(@round - 3); }
+.round-xs { .border-radius(@round - 2); }
+.round-sm { .border-radius(@round - 1); }
+.round-md { .border-radius(@round + 1); }
+.round-lg { .border-radius(@round + 3); }
+.round-xl { .border-radius(@round + 7); }
+.round-xxl { .border-radius(@round + 17); }
+.round-circle { .border-radius(50%); }
+
+// Display
+.inline { display: inline; }
+.inline-block { display: inline-block; }
+.element-block { .row(15px, 15px); }
+.display-table { display: table; }
+.display-table-cell { display: table-cell; }
+
+// Positions
+.relative { position: relative; }
+.static { position: static; }
+.absolute { position: absolute; }
+.fixed { position: fixed; }
+
+// Spacing
+.margin-h { .margin-h(); }
+.margin-v { .margin-v(); }
+.margin { margin:15px; }
+.padding-h { .padding-h(); }
+.padding-v { .padding-v(); }
+.padding { padding: 7px 13px; }
+.padding-md { padding: 15px 20px; }
+
+
+// BUTTONS
+// ----------------------------------------------------------------------
+
+.btn {
+		line-height: normal;
+		text-decoration: none;
+		padding: 7px 13px 9px; /* change this acording to Font style and default size */
+		.text-shadow; /* shadow on light text and dark background */
+		.btn-color();
+	.fa {
+		.font-size(20);
+		margin-right:10px;
+	}
+	&.btn-orange { .btn-color(@orange); }
+	&.btn-red { .btn-color(@red); }
+	&.btn-white {
+			.btn-color(@white, @black);
+			.text-highlight; /* highlight on dark text and light background */
+		.fa { color: @LinkDark; }
+	}
+	&.btn-default,
+	&.btn-red {
+		.fa {
+			color: @white
+		}
+	}
+}
+.btn-transparent {
+	.btn-color(transparent, @link);
+	.text-shadow(0);
+}
+
+// FONTS
+// ----------------------------------------------------------------------
+
+// Styles
+.font-normal { font-weight: normal; }
+.font-bold { font-weight: bold; }
+.em, .italic { font-style: italic; }
+.uppercase { text-transform: uppercase; }
+.text-truncate { .text-truncate(); }
+.font-default {
+	color: @BodyCopy;
+	font-family: @default-font-family;
+	.font-size(@default-font-size);
+	.line-height(@default-line-height);
+}
+
+.icon {
+	.fa;
+}
+
+
+// INTERACTION
+// ----------------------------------------------------------------------
+
+.pointer { cursor: pointer; }
+.disabled-link {
+	color: @fg;
+	text-decoration: none;
+	pointer-events: none;
+	cursor: default;
+}
+
+// Notification Number
+.badge {
+	border: 2px solid @white;
+	.round-circle;
+	color: @white;
+	background: @LinkBright;
+	.font-normal;
+	.font-size(@default-font-size * 1.2);
+}
+
+// Scroll to Top
+#scroll-top {
+	position: fixed;
+	bottom: 15px;
+	right: 20px;
+	.opacity(0.5);
+	.pointer;
+	.font-size(40);
+	z-index:999;
+	color: @greyDark;
+	&:hover { .opacity(1); }
+	.fa {
+		text-shadow: -1px 0 #fff, 0 1px #fff, 1px 0 #fff, 0 -1px #fff;
+	}
+}
+
+
+// STYLING
+// ----------------------------------------------------------------------
+
+// Blocks
+.block-oua {
+	margin-bottom: 25px;
+	padding: 15px;
+	background: @bg;
+	.round;
+}
+.block-oua-alert {
+	max-width: 300px;
+	padding: 15px 20px;
+	margin: 25px auto;
+}
+
+// List Overrides
+.list-unstyled {
+	padding-left: 0;
+	list-style: none;
+}
+
+// Message Container
+.block-message {
+	padding: 15px 20px;
+	background: @greyLight20;
+	text-align: center;
+	p {
+		margin-bottom: 15px;
+		&:last-child { margin-bottom: 0; }
+	}
+}
+
+// Show All
+.block-show-all {
+	.clear;
+	padding: 15px 20px;
+	border-top: 1px solid @border;
+	.text-center;
+	> p {
+		margin-bottom: 15px;
+		> a {
+			.fa {
+				.v-middle;
+				margin-left: 7px;
+				.font-size(@h3-font-size);
+			}
+		}
+	}
+}
+
+// TABLES
+// ----------------------------------------------------------------------
+
+// Tables, table-striped, table-bordered
+.table-bordered {
+	.clear;
+	thead {
+			background: @blueLight;
+		tr th { border-bottom: 1px solid @greyDark; }
+	}
+	tbody {
+		tr:last-child {
+			td { border-bottom: 1px solid @greyDark; }
+		}
+	}
+	.course-status {
+			width: 25%;
+			text-align: center;
+		.completedstate {
+			display: inline-block;
+			.no-float;
+		}
+	}
+}
+.table-striped {
+	tbody {
+		tr:nth-child(odd) { background: @greyLight10; }
+	}
+}
+
+
+// XTRAS - Custom Assets for this Project
+// ==========================================================================================
+
+// ACCORDIONS
+// ----------------------------------------------------------------------
+.accordion {
+		margin: 0;
+		border: 1px solid @Keyline;
+	.panel {
+
+			.no-shadow;
+		.panel-heading {
+				padding: 0;
+				margin: 0;
+				background: @greyLight20;
+				.border-radius(0);
+			.panel-title {
+				> a {
+					display: block;
+					padding: 15px 20px;
+					color: @LinkDark;
+					.font-size();
+					.line-height();
+					.link-without-icon();
+				}
+			}
+		}
+
+		.panel-body {
+				padding: 0;
+			.list-unstyled {
+					margin: 0;
+				li {
+						display: table;
+						width: 100%;
+						padding: 10px 25px 10px 10px;
+					a {
+						display: table-cell;
+						width: 90%;
+						.link-with-icon();
+						.font-size(14);
+					}
+					&:not(:last-child) {
+						border-bottom: 1px solid @greyLight;
+					}
+					&:hover {
+							background: @Highlight;
+						a {
+							color: @black;
+						}
+					}
+					.icon {
+							display: table-cell;
+						img {
+							display: none;
+							width: 16px;
+							height: 16px;
+						}
+					}
+				}
+			}
+		}
+	}
+	.panel + .panel { margin: 0 }
+	.panel-heading + .panel-collapse > .panel-body{ border: none; }
+}
+
+
+// COURSE STATES: Complete, incomplete
+// ----------------------------------------------------------------------
+.completedstate {
+		position: relative;
+		.right;
+		top: 5px;
+		width: 20px;
+		height: 20px;
+		.border-radius(50%);
+	&.complete {
+		background: @green;
+		border: 1px solid @greyDark;
+		&:hover,
+		&:focus {
+			border-width: 2px;
+		}
+	}
+	&.incomplete{
+		border: none;
+	}
+	&.inprogress {
+		border: 1px solid @greyDark;
+		&:hover,
+		&:focus {
+			border-width: 2px;
+		}
+	}
+}
+
+
+// Glyphicon spinning animation
+// ----------------------------------------------------------------------
+.glyphicon.spinning {
+	animation: spin 1s infinite linear;
+	-webkit-animation: spin2 1s infinite linear;
+}
+
+@keyframes spin {
+	from { transform: scale(1) rotate(0deg); }
+	to { transform: scale(1) rotate(360deg); }
+}
+
+@-webkit-keyframes spin2 {
+	from { -webkit-transform: rotate(0deg); }
+	to { -webkit-transform: rotate(360deg); }
+}
+
+
+// Hide "View conversation" link in the moodle message popup
+// ----------------------------------------------------------------------
+div.core_message-messenger-sendmessage-content .message-actions a.message-history { .hide; }
+
+
+// Override message popup styles, originally inherited from Moodle & YUI
+// ----------------------------------------------------------------------
+.moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialogue-hd, .moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialogue-hd.yui3-widget-hd {
+	padding: 5px;
+	text-shadow: none;
+	background: @blueLight;
+	border-bottom: 0px;
+}
+.moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialogue-hd h1 {
+	.font-size(@default-font-size);
+	.font-normal;
+}
+.moodle-dialogue-base .moodle-dialogue-wrap .moodle-dialogue-hd .yui3-widget-buttons { padding: 10px; }
+
+
+// TABS
+// ----------------------------------------------------------------------
+.nav-tabs { /* Do not apply styling to .nav-tabs by default because it creates extra code complexity and redundancy */
+		border: 0;
+	li {
+			.font-size(@h1-font-size - 3);
+		a {
+			padding: 15px;
+			color: @fg;
+			background: @StructureLight;
+		}
+		&.active,
+		&:hover,
+		&:focus {
+			a {
+				color: @LinkDark;
+				background: @white;
+				border:1px solid @Keyline;
+			}
+		}
+	}
+	// Justified Tabs
+	&.nav-justified {
+			padding: 0;
+		li {
+			&:last-child {
+				a { margin-right: 0; /* align last tab to the end */ }
+			}
+		}
+	}
+	// Flat Design Tabs
+	&.nav-flat {
+			padding: 0;
+			//background: @white; /* tab separator color - apply to ul when tabs collapse (DO NOT apply this in _assets.less to keep it reusable) */
+		li {
+				//background: @white; /* tab separator color - apply to li when tabs are justified (DO NOT apply this in _assets.less to keep it reusable) */
+				margin-bottom: 0px;
+				text-align: center;
+			a {
+				padding: 10px;
+					.no-margin;
+					.font-size(@default-font-size - 3);
+				border: 1px solid @Keyline;
+				border-bottom: 0;
+				.fa {
+					display: block;
+					margin-bottom: 5px;
+					color: @Inactive;
+					.font-size(@default-font-size + 22);
+				}
+			}
+			&.active {
+				a {
+					color: @fg;
+					background: @white;
+					border-bottom: 0;
+					&:hover, &:focus { border-bottom:0 }
+					.fa { color: @LinkDark; }
+				}
+			}
+			&:not(:last-child) {
+				a {
+						margin-bottom: 1px; /* tab separator */
+					@media screen and (min-width: @screen-desktop) {
+						margin-bottom: 0;
+						margin-right: 1px; /* tab separator */
+					}
+				}
+			}
+		}
+	}
+	// Progress Design Tabs
+	&.nav-progress {
+		@heightVariable: round(@default-font-size * 1.7); /* tab list font size must be declared dynamically so triangles can scale correctly */
+		@tabFontSize: @heightVariable - mod(@heightVariable, 2); /* height must be even number so triangles can align perfectly */
+		@tabLineHeight: @tabFontSize;
+		@tabHeight: @tabLineHeight + 20; /* include padding */
+		@triangeWidth: @tabHeight / 2 * 1px;
+		padding: 0;
+		li {
+			text-align: center;
+			a {
+				.relative;
+				margin-left: 2px;
+				padding: 10px;
+				padding-left: @triangeWidth + 10px;
+				border-color: @grey; /* for triangles to inherit */
+				color: @greyDark;
+				.font-size(@tabFontSize);
+				.line-height(@tabLineHeight);
+				&:hover {
+					outline: none;
+					background: @grey;
+				}
+				&:before, &:after {
+					position: absolute;
+					top: 0;
+				}
+				&:before {
+					.triangle-right(@tabHeight, @white);
+					left: 0;
+				}
+				&:after {
+					.triangle-right(@tabHeight, inherit);
+					z-index: 2;
+					right: 0;
+					margin-right: -@triangeWidth;
+				}
+			}
+			&.completed {
+				a {
+					border-color: @green; /* for triangles to inherit */
+					background: @green;
+					color: @white;
+					.text-shadow;
+				}
+			}
+			&.current { /* currently active stage */
+				a {
+					border-color: @blue; /* for triangles to inherit */
+					background: @blue;
+					color: @white;
+					.text-shadow;
+				}
+			}
+			&.active {
+				a {
+					border-color: @white; /* for triangles to inherit */
+					background: @white;
+					color: @link;
+					.text-shadow(0);
+					&:after {
+						.triangle-right(@tabHeight, @white);
+					}
+					&:focus {
+						outline: none;
+					}
+				}
+			}
+			&:first-child {
+				a {
+					margin-left: 0;
+					padding-left: 15px;
+					padding-right: 5px;
+					&:before { .hide; }
+				}
+			}
+			&:last-child {
+				a {
+					padding-right: 15px;
+					&:after { .hide; }
+				}
+			}
+		}
+	}
+	&.nav-justified {
+		margin-bottom: -1px;
+		.active {
+			a {
+				border:1px solid @Keyline;
+				border-bottom: 0;
+			}
+		}
+	}
+	// Non-collapsing Tabs
+	&.no-collapse {
+		li {
+			&:not(:last-child) {
+				a {
+					margin-bottom: 0;
+					margin-right: 0; /* tab separator */;
+					border-right: 1px solid @Keyline;
+				}
+			}
+		}
+		&.nav-justified li {
+			display: table-cell; /* prevent tabs from collapsing */
+			width: 1%;
+		}
+	}
+	// Round End Corners
+	&.round-end {
+		li {
+			overflow: hidden;
+			&:first-child { border-top-left-radius: @round; }
+			&:last-child { border-top-right-radius: @round; }
+		}
+	}
+} // end .nav-tabs

@@ -1,0 +1,8 @@
+#confirm_delete_dialog {
+  position: absolute;
+  overflow: hidden;
+}
+#confirm_delete_dialog .modal-dialog {
+ margin-top: 0;
+}
+

@@ -1,0 +1,37 @@
+<div class="panel-group accordion" id="subject_navigation_accordion" role="tablist">
+    {{#sections_for_display}}
+        <div class="panel">
+            <div class="panel-heading" role="tab" id="heading{{sectionnum}}">
+                <h4 class="panel-title">
+                    <a role="button" data-toggle="collapse" data-parent="#subject_navigation_accordion" href="#collapse{{sectionnum}}"
+                       class="section {{^active}}collapsed{{/active}} {{#sectioncomplete}}complete{{/sectioncomplete}} {{#sectioncssclasses}}{{.}} {{/sectioncssclasses}} "
+                       {{#active}}aria-expanded="true"{{/active}}
+                        {{^active}}aria-expanded="false"{{/active}}
+                       aria-controls="collapse{{sectionnum}}">
+                        {{{section_title}}}
+                    </a>
+                </h4>
+            </div>
+            <div id="collapse{{sectionnum}}" class="panel-collapse collapse {{#active}}in{{/active}}" role="tabpanel"
+                 aria-labelledby="heading{{sectionnum}}">
+                <div class="panel-body">
+                    <ul role="region classnav" class="list-unstyled">
+                        {{#modules}}
+                            <li class="topic indent-{{indent}} {{modcompletionstateclass}} {{#modulecssclasses}}{{.}} {{/modulecssclasses}}">
+                                <span class="icon">
+                                    <img src="{{{activityiconurl}}}" alt="{{{modfullname}}}" />
+                                </span>
+                                <a href="{{modurl}}">
+                                    <span class="topicname">{{{modname}}}{{#duedate}} ({{#str}}
+                                        due, block_oua_navigation{{/str}}{{duedate}}){{/duedate}}</span>
+                                </a>
+                                <span class="icon completedstate {{modcompletionstateclass}}"></span>
+                            </li>
+                        {{/modules}}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    {{/sections_for_display}}
+</div>
+

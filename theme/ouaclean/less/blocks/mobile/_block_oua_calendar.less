@@ -1,0 +1,59 @@
+// Calendar
+// ==========================================================================
+
+.block.block_calendar_month {
+	.content {
+			padding: 15px 15px 25px;
+	}
+}
+.minicalendarblock {
+	margin-bottom: 15px;
+}
+
+// KEY DATES
+// ----------------------------------------------------------------------
+.block_calendar_upcoming {
+	.content {
+			padding: 0;
+		.event {
+				background: @greyLight20;
+			+ hr + .event {
+				display: table;
+				table-layout:fixed;
+				width: 100%;
+				border-top: 1px solid @greyDark05;
+			}
+			+ hr { .hide; }
+			> .icon {
+				padding-left: 20px;
+			}
+			> .icon + a {
+				.inline-block;
+				padding: 10px 20px 10px 3px;
+				.font-size(@h3-font-size);
+				.clear-after;
+			}
+			.wrapper {
+				display: table;
+				table-layout: fixed;
+				width: 100%;
+			}
+			.course,
+			.date {
+				display: table-cell;
+				width: 50%;
+				padding: 10px 20px;
+				background: white;
+			}
+			.course {
+			}
+			.date {
+				border-left: 1px dashed @greyDark05;
+				a { .disabled-link; } /* disable link to calendar */
+			}
+		}
+	}
+	.footer {
+		.hide; /* Hide Links to Calendar and Event */
+	}
+}

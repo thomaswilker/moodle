@@ -1,0 +1,13 @@
+<div id="confirm_delete_connection_dialog" class="modal message-delete-dialog-sm" tabindex="-1" role="dialog" aria-labelledby="confirm_delete_connection_dialog_header">
+<div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header" id="confirm_delete_message_dialog_header">
+            {{#str}}deleteconnectionconfirm, block_oua_connections{{/str}}
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal"><i class="fa fa-times"></i>{{#str}}cancel{{/str}}</button>
+            <button type="button" class="btn btn-red confirm-delete" data-messageid=""><i class="fa fa-trash"></i>{{#str}}delete{{/str}}</button>
+        </div>
+    </div>{{! /.modal-content }}
+</div>{{! /.modal-dialog }}
+</div>{{! /.modal }}

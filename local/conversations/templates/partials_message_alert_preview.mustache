@@ -1,0 +1,26 @@
+<div class="dropdown-menu" aria-labelledby="{{$labelid}}messagenotification{{/labelid}}">
+    <h3>{{#str}}unreadmessages, local_conversations{{/str}}</h3>
+    <ul>
+        {{#unread_conversation_preview}}
+          <li class="unread">
+              <a href="/local/conversations/index.php#user-{{id}}">
+                  <div class="userpicture">
+                      <img src="{{otheruserpictureurl}}" alt="{{otheruserfullname}}" title="{{otheruserfullname}}"/>
+                  </div>
+                  <div class="message">
+                      <p class="fullname">{{otheruserfullname}} ({{unreadcount}})</p>
+                      <p class="message-snippet">{{lastmessagesnippet}}</p>
+                  </div>
+                  <div class="date">
+                      <p>{{lastmessagetimeformatted}}</p>
+                  </div>
+              </a>
+          </li>
+        {{/unread_conversation_preview}}
+        {{^unread_conversation_preview}}
+          <li class="no-unread">{{#str}}nounreadmessages, local_conversations{{/str}}</li>
+        {{/unread_conversation_preview}}
+        <li class="view-messages"><a href="{{{all_conversations_link}}}">{{#str}}viewallmessages, local_conversations{{/str}}<i class="fa fa-chevron-right"></i></a></li>
+    </ul>
+</div>
+

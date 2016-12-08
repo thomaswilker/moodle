@@ -1,0 +1,50 @@
+// Mobile footer
+footer.footer, #page-footer {
+	background: @StructureDark;
+	padding: 0px 10px 25px 10px;
+	.no-border;
+	ul {
+		.no-padding;
+		.no-margin;
+		text-align: left;
+	}
+	.footer-links {
+		.font-size(@default-font-size);
+		header {
+			padding: 20px 0px 0px 0px;
+			color: @blueLight;
+			text-align: left;
+			h2 {
+				.font-size(18);
+				.line-height(20);
+				.font-normal;
+				color: @LinkLight;
+			}
+		}
+		nav {
+			li {
+				padding: 0px 0px 5px 0px;
+				a {
+					color: @white;
+				}
+			}
+		}
+	}
+	section.sydtafe {
+		padding-top: 20px;
+		ul {
+			margin-top: 20px;
+			li {
+				color: #ddd;
+				display: block;
+				list-style-type: none;
+				a {
+					.fa {
+						margin-right: 5px;
+						color: @white;
+					}
+				}
+			}
+		}
+	}
+}

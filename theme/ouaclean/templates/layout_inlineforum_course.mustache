@@ -1,0 +1,44 @@
+{{> theme_ouaclean/partials_page_banner}}
+<div id="page" class="container-fluid">
+    {{{blocks_side_a}}}
+    <div id="page-content" class="row">
+        <section class="col-xs-12 col-sm-4 region-nav" id="region-nav">
+            {{{blocks_side_tabhead}}}
+        </section>
+        <section class="col-xs-12 col-sm-8 region-main" id="region-main">
+            {{{blocks_side_b}}}
+            {{{course_content_header}}}
+            {{{main_content}}}            {{{blocks_side_c}}}
+
+
+
+        </section>
+        <section class="col-xs-12 col-sm-4 region-side" id="region-side">
+            {{#showtabs}}
+                <div class="activities-resources-students">
+                    <div class="navtabs" id="navtabs">
+                        <ul class="nav nav-tabs nav-justified nav-flat no-collapse" role="tablist">
+                            {{#showtab1}}
+                                <li class="active"><a href="#navtab1" aria-controls="navtab1" role="tab" data-toggle="tab"><i class="fa fa-list"></i>{{#str}}activities, theme_ouaclean{{/str}}</a></li>
+                            {{/showtab1}}
+                            {{#showtab2}}
+                                <li><a href="#navtab2" aria-controls="navtab2" role="tab" data-toggle="tab"><i class="fa fa-copy"></i>{{#str}}resources, theme_ouaclean{{/str}}</a></li>
+                            {{/showtab2}}
+                            {{#showtab3}}
+                                <li><a href="#navtab3" aria-controls="navtab3" role="tab" data-toggle="tab"><i class="fa fa-users"></i>{{#str}}students, theme_ouaclean{{/str}}</a></li>
+                            {{/showtab3}}
+                        </ul>
+                        <div class="tab-content no-padding">
+                            {{#showtab1}}<div id="navtab1" role="tabpanel" class="tab-pane active">{{{blocks_side_taba}}}</div>{{/showtab1}}
+                            {{#showtab2}}<div id="navtab2" role="tabpanel" class="tab-pane no-padding">{{{blocks_side_tabb}}}</div>{{/showtab2}}
+                            {{#showtab3}}<div id="navtab3" role="tabpanel" class="tab-pane">{{{blocks_side_tabc}}}</div>{{/showtab3}}
+                        </div>
+                    </div>
+                </div>
+            {{/showtabs}}
+            {{{blocks_side_tabfoot}}}
+        </section>
+    </div>
+    {{{blocks_side_d}}}
+</div>
+{{> theme_ouaclean/partials_page_footer}}

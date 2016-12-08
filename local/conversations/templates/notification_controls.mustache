@@ -1,0 +1,18 @@
+<div class="message-controls">
+    {{#isconnectionrequest}}
+        <a href="#" class="connectaccept" data-userid="{{useridfrom}}" data-messageid="{{notificationid}}">{{#str}}connect, local_conversations{{/str}}</a>
+        <a href="{{userprofileurl}}" class="">{{#str}}viewprofile, local_conversations{{/str}}</a>
+        <a href="#" class="connectignore" data-userid="{{useridfrom}}" data-messageid="{{notificationid}}">{{#str}}ignore, local_conversations{{/str}}</a>
+    {{/isconnectionrequest}}
+    {{^isconnectionrequest}}
+        {{$popupcontrols}}
+        {{!No Delete for popup}}
+        <a class="notification-delete" href="#" role="button" data-fullname="{{userfromfullname}}"
+           data-userid="{{useridfrom}}" data-messageid="{{notificationid}}"
+           data-target="#confirm_delete_dialog"><i class="fa fa-trash"></i>{{#str}}delete, local_conversations{{/str}}</a>
+        {{/popupcontrols}}
+    {{/isconnectionrequest}}
+    {{#unread}}
+        <a href="#" class="marknotificationread" data-userid="{{useridfrom}}" data-messageid="{{notificationid}}">{{#str}}markasread, local_conversations{{/str}}</a>
+    {{/unread}}
+</div>

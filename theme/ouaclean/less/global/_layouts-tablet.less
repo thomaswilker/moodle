@@ -1,0 +1,66 @@
+//Backgrounds
+body.pagelayout-base,
+body.pagelayout-standard,
+body.pagelayout-sitecourse,
+body.pagelayout-course,
+body.pagelayout-coursecategory,
+body.pagelayout-inlineforum,
+body.pagelayout-frontpage,
+body.pagelayout-admin,
+body.pagelayout-mypublic,
+body.pagelayout-report,
+body.pagelayout-secure {
+	.region-main {
+		border-radius: 5px;
+		border:1px solid @Keyline;
+	}
+	.region-side {
+		.block-region {
+			.block {
+				border: 1px solid @Keyline;
+				border-radius: 5px;
+			}
+		}
+	}
+}
+
+
+body.pagelayout-incourse {
+	[role="main"]{
+		border:1px solid @Keyline;
+
+	}
+	.course-content-header {
+		.course-header {
+			-webkit-border-radius:5px 5px 0 0;
+			-moz-border-radius:5px 5px 0 0;
+			border-radius:5px 5px 0 0;
+			border:1px solid @Keyline;
+			border-bottom: 0;
+		}
+	}
+	.course-content-footer,
+	.block_oua_forum_recent_posts {
+		-webkit-border-radius:0 0 5px 5px;
+		-moz-border-radius:0 0 5px 5px;
+		border-radius:0 0 5px 5px;
+		border:1px solid @Keyline;
+		border-top: 0;
+	}
+	.region-side {
+		.block-region {
+			.block {
+				border: 1px solid @Keyline;
+				border-radius: 5px;
+			}
+		}
+	}
+}
+
+body.pagelayout-ouaprofile {
+	.region-main {
+		border-radius: 0 0 5px 5px;
+		border:1px solid @Keyline;
+		border-top: 0;
+	}
+}

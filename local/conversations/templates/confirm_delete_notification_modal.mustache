@@ -1,0 +1,13 @@
+<div id="confirm_delete_notification_dialog" class="modal notification-delete-dialog-sm" tabindex="-1" role="dialog" aria-labelledby="confirm_delete_notification_dialog_header">
+<div class="modal-dialog modal-sm">
+    <div class="modal-content">
+        <div class="modal-header" id="confirm_delete_notification_dialog_header">
+            {{#str}}deleteconfirmnotificationtitle, local_conversations{{/str}}
+        </div>
+        <div class="modal-footer">
+            <a type="button" class="btn cancel-delete" data-dismiss="modal"><i class="fa fa-times"></i>{{#str}}cancel{{/str}}</a>
+            <a type="button" class="btn btn-confirm confirm-delete-one" data-messageid=""  data-dismiss="modal"><i class="fa fa-trash"></i>{{#str}}delete, local_conversations{{/str}}</a>
+        </div>
+    </div>{{! /.modal-content }}
+</div>{{! /.modal-dialog }}
+</div>{{! /.modal }}

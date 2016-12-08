@@ -1,0 +1,429 @@
+// CLASSROOM
+// ==========================================================================
+
+// Course Classroom
+.region-main {
+	.course-content-header + div[role="main"] { // use sibling selector to avoid targeting dashboard pages
+			h2 { margin-top: 0; }
+	}
+}
+
+.sticky {
+	-moz-transition: -moz-transform .5s ease-in-out;
+	-o-transition: -o-transform .5s ease-in-out;
+	-webkit-transition: -webkit-transform .5s ease-in-out;
+	transition: transform .5s ease-in-out;
+
+	-moz-transform-origin: top;
+	-ms-transform-origin: top;
+	-o-transform-origin: top;
+	-webkit-transform-origin: top;
+	transform-origin: top;
+
+	-webkit-transition-delay: 0.1s; /* Safari */
+	transition-delay: 0.1s;
+
+	will-change: transform;
+}
+
+.sticky-pinned-hide {
+	-moz-transform: scaleY(0);
+	-ms-transform: scaleY(0);
+	-o-transform: scaleY(0);
+	-webkit-transform: scaleY(0);
+	transform: scaleY(0);
+}
+
+
+// Course Content
+.course-content-header {
+	.course-header { /* apply background to parent div because the 'table' div will change width in whole pixels and misalign */
+			background: @bg;
+		.course-header-content {
+				display: table;
+				width: 100%;
+				padding: 0 2px 10px;
+				background: transparent; /* overwrite old oua styling */
+				border-spacing: 13px 0px; /* Spacing for pointer */
+				.no-border;
+				border-bottom: 1px solid @grey;
+				.border-top-radius(@round);
+			.course-class-logo,
+			.course-class-summary {
+				display: table-cell;
+				.v-middle;
+			}
+			.course-class-logo { /* Set fixed width to align logos */
+				.logo-wrap(@logo-max-width-sm, @logo-max-height-sm);
+				.logo-course {
+					.v-middle;
+					img { .center; }
+				}
+			}
+			.course-class-summary {
+				padding: 7px 13px;
+					.background-bubble;
+				margin-left: 5px;
+				.course-nav-scroll {
+                    .pointer;
+                    .right;
+                    margin: 2px 0 2px 15px;
+                    color: @link;
+					.font-size(@default-font-size * 24 / 14);
+				}
+				.course-name {
+					color: @LinkDark;
+					.font-size(@h3-font-size);
+				}
+			}
+			.toggle { display: none; }
+		}
+		.classroom-activity-nav {
+			position: relative;
+			top: 0;
+			padding: 5px 10px;
+			background-color: @white;
+			border-bottom: 1px solid @grey;
+			.font-size(@default-font-size * 1.142);
+			z-index: 999;
+			.fa {
+				margin: 0 5px;
+				color: inherit;
+			}
+		}
+	}
+}
+.course-content-footer {
+		min-height: 80px;
+		margin-bottom: 25px; // margin needed when expanded
+		background: @white;
+		.border-bottom-radius(@round);
+
+	// Prev and Next Buttons
+	a.prev,
+	a.next {
+		min-width: 85px; /* fixed width as requested */
+		margin: 25px;
+		.btn;
+		//.btn-color(@Action, @white);
+		.border-radius(2px);
+		.text-shadow(0);
+		.text-center;
+		border: none;
+	}
+	a.prev {
+		.left;
+		.btn-pointer(left);
+	}
+	a.next {
+		.right;
+		.btn-pointer(right);
+	}
+}
+
+// Page activity
+.path-mod-page {
+	.region-main {
+		.course-content-header + div[role="main"] { // use sibling selector to avoid targeting dashboard pages
+			> .modified {
+				.hide; /* hide last modified date */
+			}
+		}
+	}
+}
+
+
+
+
+//Books and Lessons
+
+
+.book-section {
+	margin: 0 -20px;
+	-webkit-border-image: 20 stretch url('/theme/ouaclean/pix/border-bg.png');
+	-moz-border-image: 20 stretch url('/theme/ouaclean/pix/border-bg.png');
+	-o-border-image: 20 stretch url('/theme/ouaclean/pix/border-bg.png');
+	border-image: 20 stretch url('/theme/ouaclean/pix/border-bg.png');
+	border-width: 20px;
+}
+.lesson-section {
+	margin: 20px -20px;
+	border: 15px solid transparent;
+	border-top: 0;
+	-webkit-box-shadow: 0px 2px 8px #ddd;
+	-moz-box-shadow: 0px 2px 8px #dd ;
+	box-shadow: 0px 2px 8px #ddd ;
+}
+.book-section,
+.lesson-section {
+
+	.is-sticky {
+		.book-header {
+			box-shadow: 0px 3px 8px 0px #ccc;
+		}
+	}
+	.action-list {
+		display: inline-block;
+	}
+	.book-header,
+	.lesson-header {
+
+		margin: -3px -15px 0;
+		[class^=col-]{
+			padding-left:0;
+			padding-right:0;
+			text-align: center;
+		}
+
+		nav.book-nav,
+		nav.lesson-nav {
+			position: relative;
+			padding: 15px 10px;
+			background-color: #ebebeb;
+			[class*=col-xs-]{
+				float: left;
+				display: block;
+			}
+			.col-xs-3 {
+				width: 25%
+			}
+			.col-xs-6 {
+				width: 50%
+			}
+			.col-xs-9 {
+				width: 75%
+			}
+			.left {
+				position: relative;
+				left: 0;
+			}
+			.right {
+				position: relative;
+				right: 0;
+			}
+			.bb-btn,
+			.toc-link {
+				margin:0;
+				padding: 7px 10px;
+				color: @black;
+				background-color: @white;
+				-webkit-border-radius: 5px;
+				-moz-border-radius: 5px;
+				border-radius: 5px;
+				text-shadow: none;
+				border:none;
+				span {
+					display: none;
+				}
+				.fa {
+					margin: 0 1px;
+					color: @LinkDark;
+					vertical-align: middle;
+				}
+				.bb-start& {
+					&.prev {
+						.btn.disabled;
+					}
+				}
+				.bb-end& {
+					&.next {
+						.btn.disabled;
+					}
+				}
+				&:hover {
+					.fa {
+						color: @LinkBright
+					}
+				}
+			}
+			.btn-group.open {
+				.toc-link {
+					border:1px solid #bbb;
+					margin-bottom: -2px;
+					padding-top: 8px;
+					.fa {
+						color: @LinkBright
+					}
+				}
+			}
+			.dropdown-menu {
+				.dropdown-menu-right;
+			}
+			.page-progress-top
+			 {
+				position: relative;
+				background-color: @grey;
+				margin: 7px 0;
+				.current,
+				.total {
+					font-weight: bold;
+				}
+				.progress-bar {
+					background-color: @LinkDark;
+				}
+				.current-page {
+					position: absolute;
+					color: @white;
+					display: block;
+					width: 100%;
+					letter-spacing: 2px;
+					font-style: normal;
+				}
+			}
+			.wrapper {
+				position: relative;
+				display: block;
+			}
+			button.toc-link {
+				float: none;
+				display: inline;
+				width:100%;
+				white-space: nowrap;
+				text-shadow: none;
+				line-height: 0;
+				border:none;
+				.fa {
+					vertical-align: middle;
+				}
+				&.active {
+					& + .toc {
+						display: block;
+					}
+				}
+			}
+			ul {
+				padding-top: 5px;
+			}
+			.dropdown-menu {
+				padding:15px 2px 15px 15px;
+				min-width: 200px;
+				.toc {
+					margin-bottom: 0;
+					padding: 0;
+					max-height: 200px;
+					overflow: auto;
+					li {
+						margin-bottom: 5px;
+						a {
+							body.editing & {
+								display: inline;
+							}
+						}
+					}
+
+					&.book_toc_none {
+						li {
+							list-style-type: none;
+						}
+					}
+					&.book_toc_numbered {
+						li {
+							list-style-type: none;
+						}
+					}
+					&.book_toc_bullets {
+						li {
+							list-style-position: inside;
+						}
+					}
+					&.book_toc_indented {
+						li {
+							list-style-position: inside;
+							list-style-type: none;
+						}
+					}
+					&.scroll-limit-top {
+						&:before {
+							background: none;
+						}
+					}
+					&.scroll-limit-bottom {
+						&:after {
+							background: none;
+						}
+					}
+					&:before {
+						position:absolute;
+						pointer-events: none;
+						top: 0;
+						left: 0;
+						height: 50px;
+						width: 100%;
+						content: " ";
+						background-image: -moz-linear-gradient(rgba(238,238,238, 0), rgba(255, 255, 255,1));
+						background-image: -webkit-linear-gradient(rgba(238,238,238, 0), rgba(255, 255, 255,1));
+						background-image: linear-gradient(rgba(238,238,238, 1), rgba(255, 255, 255,0));
+					}
+					&:after {
+						position:absolute;
+						pointer-events: none;
+						bottom: 0;
+						left: 0;
+						height: 50px;
+						width: 100%;
+						content: " ";
+						background-image: -moz-linear-gradient(rgba(255, 255, 255, 0), rgba(238,238,238,1));
+						background-image: -webkit-linear-gradient(rgba(255, 255, 255, 0), rgba(238,238,238,1));
+						background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(238,238,238,1));
+					}
+				}
+			}
+		}
+		&.sticky {
+			position: relative;
+			opacity: 1;
+			transition: opacity 0.5s 0s ease-in-out;
+			will-change: opacity;
+			z-index: 999;
+		}
+		&.sticky-pinned-hide {
+			opacity: 0;
+			transform: none !important;
+		}
+	}
+}
+
+.book-content,
+.lesson-content {
+	.toc {
+		padding: 15px;
+		text-align: left;
+		border-radius: 2px;
+		li {
+			white-space: nowrap;
+		}
+		&.book_toc_none {
+			li {
+				list-style-type: none;
+			}
+		}
+		&.book_toc_numbered {
+			li {
+				list-style-type: none;
+			}
+		}
+		&.book_toc_bullets {
+			li {
+				list-style-position: inside;
+			}
+		}
+		&.book_toc_indented {
+			li {
+				list-style-position: inside;
+				list-style-type: none;
+			}
+		}
+	}
+}
+.dropdown-menu li {
+	a {
+		.link-without-icon()
+	}
+	&.active {
+		> a {
+			background-color: transparent;
+			color: @LinkDark;
+			font-weight: bold;
+		}
+	}
+}

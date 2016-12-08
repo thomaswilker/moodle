@@ -1,0 +1,29 @@
+<a class="button primary_btn" href="{{newmessageurl}}">{{#str}}newmessage, block_message_broadcast{{/str}}</a>
+<br/>
+<br/>
+
+<div><table class="generaltable">
+    <thead>
+    <tr>
+        <th class="header c0" style="" scope="col">{{#str}}tablemsgtitle, block_message_broadcast{{/str}}</th>
+        <th class="header c1" style="" scope="col">{{#str}}tablestartdate, block_message_broadcast{{/str}}</th>
+        <th class="header c1" style="" scope="col">{{#str}}tableenddate, block_message_broadcast{{/str}}</th>
+        <th class="header c2" style="" scope="col">{{#str}}tablemsgcontext, block_message_broadcast{{/str}}</th>
+        <th class="header c3 lastcol" style="" scope="col">{{#str}}tableactions, block_message_broadcast{{/str}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#messagelist}}
+        <tr class="">
+            <td class="cell c0" style="">{{headingtitle}}</td>
+            <td class="cell c1 text-center" style="">{{messagestartdate}}</td>
+            <td class="cell c1 text-center" style="">{{messageenddate}}</td>
+            <td class="cell c2" style="">{{#contextname}}{{.}}{{/contextname}}{{^contextname}}{{#str}}contextsystemwide, block_message_broadcast{{/str}}{{/contextname}}</td>
+            <td class="cell c3 lastcol" style="">
+                <a class="button" href="{{{editmessageurl}}}">Edit</a>  <a class="button" href="{{{deletemessageurl}}}">Delete</a>
+            </td>
+        </tr>
+    {{/messagelist}}
+    </tbody>
+</table>
+</div>

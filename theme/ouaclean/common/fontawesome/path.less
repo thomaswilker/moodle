@@ -1,0 +1,30 @@
+/* FONT PATH
+ * -------------------------- */
+@font-face {
+  font-family: 'FontAwesome';
+  // Version numbers on urls are for caching purposes between upgrades of fonts
+  // Moodle doesnt play nice with them, so we will let moodle handle our caching for us.
+  src: url('[[font:theme|fontawesome-webfont.eot]]');
+  src: url('[[font:theme|fontawesome-webfont.eot]]#iefix') format('embedded-opentype'),
+    url('[[font:theme|fontawesome-webfont.woff2]]') format('woff2'),
+    url('[[font:theme|fontawesome-webfont.woff]]') format('woff'),
+    url('[[font:theme|fontawesome-webfont.ttf]]') format('truetype'),
+    url('[[font:theme|fontawesome-webfont.svg]]#fontawesomeregular') format('svg');
+//  src: url('@{fa-font-path}/FontAwesome.otf') format('opentype'); // used when developing fonts
+  font-weight: normal;
+  font-style: normal;
+}
+
+
+@font-face {
+  font-family: 'OUA';
+  src: url('[[font:theme|oua.eot]]');
+  src: url('[[font:theme|oua.eot]]#iefix') format('embedded-opentype'),
+  //url('[[font:theme|fontawesome-webfont.woff2]]') format('woff2'),
+  url('[[font:theme|oua.woff]]') format('woff'),
+  url('[[font:theme|oua.ttf]]') format('truetype'),
+  url('[[font:theme|oua.svg]]#fontawesomeregular') format('svg');
+  //  src: url('@{fa-font-path}/FontAwesome.otf') format('opentype'); // used when developing fonts
+  font-weight: normal;
+  font-style: normal;
+}

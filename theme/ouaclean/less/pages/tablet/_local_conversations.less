@@ -1,0 +1,100 @@
+// Messages
+// ==========================================================================
+
+body.modal-open-mobile {
+	overflow: visible;
+	position: static;
+}
+
+ul.message-counter,
+ul.notification-counter,
+ul#profile-block {
+	.message-count,
+	.notification-count {
+		position: static;
+		.dropdown-menu {
+			.background-bubble-top(@right: 96px);
+			width: 400px;
+			top:46px;
+			left: auto;
+		}
+	}
+}
+
+#allmessages {
+	padding: 10px 20px;
+	h1.visible-sm {
+		margin: 0;
+		padding: 0 0 10px 0;
+		font-weight: normal;
+	}
+	h1 {
+		padding: 0 0 15px;
+	}
+	.bar {
+		margin-bottom: 1px;
+		#new-message-search {
+			text-align: left;
+		}
+	}
+	.tab-content {
+		padding-right: 0;
+		.panel-default {
+			margin-bottom: 0;
+			border-left: 0;
+			.panel-heading {
+				text-align: center;
+				.fa {
+					display: none;
+				}
+			}
+			.panel-body {
+				/* normal height (100% - header?) > reset for tablet */
+				height: calc(~"100vh - 176px");
+				.conversation {
+					max-height: calc(~"100% - 102px");
+					.message-item {
+						blockquote {
+							padding: 10px 0;
+							.small-message {
+								padding:0;
+							}
+						}
+					}
+				}
+				#new-message {
+					.form-new-message {
+						.input-group {
+							.message-send-btn {
+								height: 100%;
+							}
+						}
+					}
+				}
+			}
+		}
+		> .tab-pane {
+			position: absolute; /* removes from flow */
+			width: auto;
+			box-shadow: none;
+			&.active {
+				position: relative;
+			}
+		}
+	}
+
+	.message-contact-list {
+		height: calc(~"100vh - 180px");
+		ul.nav-tabs {
+			li {
+				.userpicture {
+					display: table;
+					padding: 0;
+				}
+				.col-xs-10 {
+					padding: 0 15px 0 45px;
+				}
+			}
+		}
+	}
+}

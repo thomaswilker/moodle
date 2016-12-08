@@ -1,0 +1,128 @@
+// Brightcove Videos
+// ==========================================================================
+
+// Transcript
+.p3-transcript-container {
+	.p3-transcript-bottombar {
+			border: 1px solid @border !important;
+			border-top: none !important;
+			background: @blueLight !important;
+			.border-bottom-radius(3px);
+		.p3-transcript-bottombar-content {
+				height: 20px;
+			a.p3-transcript-button { /* Expand /collapse button */
+				&:before {
+					color: @brand;
+				}
+				&.expand {
+
+				}
+				&.collapse {
+					visibility: visible;
+				}
+				> span { display: none !important; }
+			}
+		}
+	}
+	.p3-transcript-controller { /* Control Icons bar */
+			display: table;
+			padding: 10px 5px 10px 10px !important;
+			border: 1px solid @border !important;
+			border-top: none !important;
+			background: @blueLight !important;
+		> * {
+			display: table-cell;
+			.v-middle;
+		}
+		form.p3-transcript-searchform {
+			.p3-transcript-search-inputs {
+				input.p3-transcript-search {
+					max-width: 100px;
+					height: 23px !important;
+					padding-top: 1px !important;
+					.round;
+					.border-right-radius(0);
+					border-right: none;
+				}
+				button.p3-transcript-search-submit {
+						margin: 0;
+						padding: 0;
+						width: 30px;
+						height: 23px;
+						color: @bg;
+						.text-shadow;
+						background: @brand !important; /* remove stock icons, and replace with font icons */
+						border-width: 1px 1px 1px 0;
+						border-style: solid;
+						border-color: darken(@brand, 7%);
+						.round;
+						.border-left-radius(0);
+						.fa;
+					&:before {
+						content: '\f002';
+					}
+				}
+				.p3-transcript-search-reset { /* Search cancel icon */
+					top: 1px;
+					left: 100px;
+				}
+			}
+		}
+		.p3-transcript-buttons {
+			a.p3-transcript-button { /* Icon buttons */
+					margin-left: 11px;
+					background: none; /* remove stock icons, and replace with font icons */
+					.fa;
+					.color-click(@brand, darken(@brand, 3%), darken(@brand, 7%));
+					.font-size(@default-font-size * 1.5);
+				&:before {
+					.relative;
+					.v-middle;
+				}
+				&.print {
+					&:before {
+						content: '\f02f';
+					}
+				}
+				&.download {
+					&:before {
+						content: '\f019';
+					}
+				}
+				&.locked {
+					&:before {
+						content: '\f023';
+					}
+				}
+				&.unlocked {
+					&:before {
+						content: '\f13e';
+					}
+				}
+			}
+		}
+	}
+	.p3-transcript-main {
+			border: 1px solid @border;
+			border-top: none;
+			border-bottom: none;
+		p {
+				color: @fg !important;
+				.font-size(@default-font-size * 1.3) !important;
+				.line-height(@default-line-height * 1.3) !important;
+			> span {
+				padding: 0 5px;
+				margin: 0 -5px;
+			}
+			&.current_paragraph .tracked_word,
+			.tracked_word {
+				.opacity(100) !important;
+			}
+			&.current_paragraph .tracked_word,
+			&.current_paragraph .current_word {
+				color: @white;
+				background: @comp;
+			}
+		}
+	}
+}

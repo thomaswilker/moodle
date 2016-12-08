@@ -1,0 +1,62 @@
+//Overrides
+.que {
+  .info{
+    background: @greyLight20;
+    h3, div{
+      .font-size(@default-font-size);
+    }
+  }
+  .content{
+    .formulation{
+      .no-margin;
+      background: @blueLight;
+    }
+  }
+  .outcome{
+    .no-margin;
+    border-radius:4px;
+    .feedback{
+      .no-margin;
+      border-radius:4px;
+      p{
+        .no-padding;
+      }
+    }
+  }
+}
+.qn_buttons{
+  .qnbutton{
+    padding: 5px 10px;
+    height: auto;
+    width: auto;
+    border-radius: 2px;
+    &.thispage{
+      border-color: @greyLight;
+      .thispageholder{
+        .no-border;
+      }
+    }
+  }
+}
+// Override CSS from quiz mod to fix the layout
+
+#page-mod-quiz-attempt .submitbtns,
+#page-mod-quiz-review .submitbtns {
+  text-align: right;
+}
+.path-mod-quiz .qnbutton{
+  padding: 5px 10px;
+  height: auto;
+  width: auto;
+  border-radius: 2px;
+}
+table.quizreviewsummary{
+   th.cell, td.cell{
+     padding: 8px;
+   }
+}
+
+
+.jsenabled #quiznojsconfirmclose {
+  display: none;
+}

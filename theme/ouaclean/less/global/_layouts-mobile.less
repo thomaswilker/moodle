@@ -1,0 +1,72 @@
+//BACKGROUNDS
+/* 	Applying backgrounds to the region-main div in selected layouts
+	This excludes the mydashboard layout as it has a different structure.
+*/
+body.pagelayout-base,
+body.pagelayout-standard,
+body.pagelayout-sitecourse,
+body.pagelayout-course,
+body.pagelayout-coursecategory,
+body.pagelayout-inlineforum,
+body.pagelayout-frontpage,
+body.pagelayout-admin,
+body.pagelayout-mypublic,
+body.pagelayout-ouaprofile,
+body.pagelayout-report,
+body.pagelayout-secure {
+	.region-main {
+		padding: 10px 15px;
+		background: @bg;
+	}
+}
+/* 	On certain layouts, the horizontal paddings are being overridden by a generic padding:0
+	which is gettting applied to all bootstrap based blocks. Adding extra padding to the div[role=main]
+	to overcome this.
+*/
+body.pagelayout-standard,
+body.pagelayout-sitecourse,
+body.pagelayout-course,
+body.pagelayout-coursecategory,
+body.pagelayout-incourse,
+body.pagelayout-frontpage,
+body.pagelayout-admin,
+body.pagelayout-report {
+	.region-main {
+		[role="main"]{
+			padding:20px
+		}
+	}
+}
+body.pagelayout-incourse {
+	.course-content-header {
+		.course-header {
+			background: @bg;
+			.course-header-content {
+				padding-top: 10px;
+				padding-bottom: 10px;
+			}
+		}
+	}
+	.region-main {
+		[role="main"]{
+			background: @bg
+		}
+	}
+}
+
+/* Maintenance Pages */
+body.pagelayout-maintenance {
+	.region-main {
+		[role="main"]{
+			margin-top: 20px;
+			padding:20px;
+			background: @bg;
+			border-radius: 5px;
+		}
+	}
+}
+
+/* Admin */
+body.pagelayout-admin {
+
+}

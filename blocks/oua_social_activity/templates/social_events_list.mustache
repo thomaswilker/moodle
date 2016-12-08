@@ -1,0 +1,14 @@
+<h2><i class="fa fa-rss"></i>{{#str}}oua_social_activity, block_oua_social_activity{{/str}}</h2>
+<div class="panel-group" data-count="{{social_activity_count}}">
+{{#social_events}}
+    <div class="panel">
+        <div class="panel-body" data-eventid="{{id}}">
+            <p>{{{message}}}</p>
+            <p class="date-time">{{{event_date_formatted}}}</p>
+        </div>
+    </div>
+{{/social_events}}
+    {{^social_events}}
+        <div class="nosocialactivity"><p>{{#str}}nosocialactivity, block_oua_social_activity{{/str}}</p></div>
+    {{/social_events}}
+</div>

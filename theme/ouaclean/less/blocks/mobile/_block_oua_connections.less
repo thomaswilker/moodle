@@ -1,0 +1,123 @@
+// Connections
+// ==========================================================================
+
+// GENERAL CONNECTIONS STYLING
+// ----------------------------------------------------------------------
+ul.connection-list {
+        padding: 0;
+        .clear-after;
+        &:empty { display: none; }
+    li.connection-item {
+            display: table;
+            table-layout: fixed; /* to allow text truncation */
+            margin-bottom: 20px;
+            .list-unstyled;
+        .avatar { /* specify width on implementation to include image's width, margin, padding and border */
+                display: table-cell;
+                .v-middle;
+                .relative;
+                .text-right;
+            button.btn-remove {
+                .absolute;
+                right: 5px;
+                bottom: 0px;
+                padding: 2px 7px;
+                line-height: inherit;
+                background-color: @LinkDark;
+                border-width:0;
+                .round-circle;
+                .fa {
+                  font-size: inherit;
+                  margin: 0;
+                  color: @white;
+                  text-shadow: none;
+              }
+            }
+            img.userpicture { /* image size can be restricted with .square() mixin */
+                margin: 5px 10px 5px 0px;
+                border: 1px solid @greyLight;
+                .round-circle;
+            }
+            .connection-delete {
+
+            }
+        }
+        .user-info {
+                display: table-cell;
+                .v-middle;
+                .text-truncate(80%);
+            .name {
+                .clear;
+                color: @BodyCopy;
+            }
+            button.btn-connect {
+                display: block;
+                text-shadow: none;
+                .no-margin;
+                .no-padding;
+                .no-border;
+                .no-background;
+                &:not(.requested) {
+                    color: @LinkDark;
+                    &:hover {
+                        color: @LinkBright
+                    }
+                }
+            }
+        }
+    }
+}
+
+// CONNECTIONS BLOCK
+// ----------------------------------------------------------------------
+.block_oua_connections {
+    &.block {
+        overflow: visible; /* to show tooltips */
+        .round !important;
+    }
+    .content {
+            padding: 0;
+        > .nav-tabs {
+            li {
+                a {
+                    padding: 10px 5px; /* custom padding to prevent tabs breaking */
+                }
+            }
+        }
+        > .tab-content {
+                padding: 20px;
+                border:1px solid @Keyline;
+                .round;
+                .border-top-radius(0);
+            &:after {
+                display: table;
+                content: " ";
+                clear: both;
+            }
+            .connection-item {
+                .avatar {
+                        width: 50px;
+                    img.userpicture {
+                        .square(40px);
+                    }
+                }
+            }
+            .block-show-all { margin-bottom: -20px; }
+        }
+    }
+}
+
+// No Connection Message
+.nomyconnections {
+        .block-message;
+    > p {
+        > i.fa {
+            padding: 7px 7px;
+            margin-right: 7px;
+            color: @greyDark;
+            background: @grey;
+            .round-circle;
+            .font-size(@h1-font-size);
+        }
+    }
+}

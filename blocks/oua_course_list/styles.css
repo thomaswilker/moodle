@@ -1,0 +1,7 @@
+.my-course-show-weeks a.btn .weeks-label:before {
+  content: attr(data-stringhide);
+}
+
+.my-course-show-weeks a.btn.collapsed .weeks-label:before {
+  content: attr(data-stringshow);
+}

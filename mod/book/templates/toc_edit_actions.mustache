@@ -1,0 +1,19 @@
+{{#edit}}
+<div class="action-list">
+    {{^first_item}}
+    <a title='{{#str}}movechapterup, mod_book, {{{title}}}{{/str}}' href="{{{move_url}}}&amp;up=1&amp;chapterid={{id}}">{{#pix}}t/up,core,{{#str}}movechapterup,mod_book,{{title}}{{/str}}{{/pix}}</a>
+    {{/first_item}}
+    {{^last_item}}
+        <a title='{{#str}}movechapterdown, mod_book, {{title}}{{/str}}' href="{{{move_url}}}&amp;up=0&amp;chapterid={{id}}">{{#pix}}t/down,core,{{#str}}movechapterdown,mod_book,{{title}}{{/str}}{{/pix}}</a>
+    {{/last_item}}
+    <a title='{{#str}}editchapter, mod_book, {{title}}{{/str}}' href="{{{edit_url}}}&amp;id={{id}}">{{#pix}}t/editstring,core,{{#str}}editchapter,mod_book,{{title}}{{/str}}{{/pix}}</a>
+    <a title='{{#str}}deletechapter, mod_book, {{title}}{{/str}}' href="{{{delete_url}}}&amp;chapterid={{id}}">{{#pix}}t/delete,core,{{#str}}deletechapter,mod_book,{{title}}{{/str}}{{/pix}}</a>
+{{#hidden}}
+    <a title='{{#str}}showchapter, mod_book, {{title}}{{/str}}' href="{{{show_url}}}&amp;chapterid={{id}}">{{#pix}}t/show,core,{{#str}}showchapter,mod_book,{{title}}{{/str}}{{/pix}}</a>
+{{/hidden}}
+{{^hidden}}
+    <a title='{{#str}}hidechapter, mod_book, {{title}}{{/str}}' href="{{{show_url}}}&amp;chapterid={{id}}">{{#pix}}t/hide,core,{{#str}}hidechapter,mod_book,{{title}}{{/str}}{{/pix}}</a>
+{{/hidden}}
+    <a title='{{#str}}addafter, mod_book, {{title}}{{/str}}' href="{{{edit_url}}}&amp;pagenum={{pagenum}}&amp;subchapter={{subchapter}}">{{#pix}}t/add,core,{{#str}}addafter,mod_book,{{title}}{{/str}}{{/pix}}</a>
+</div>
+{{/edit}}

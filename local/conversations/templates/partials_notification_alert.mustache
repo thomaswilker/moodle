@@ -1,0 +1,7 @@
+<li class="notification-count dropdown {{$mobileview}}hidden-xs{{/mobileview}}">
+        <a id="{{$labelid}}notificationalert{{/labelid}}" href="{{{all_notifications_link}}}" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" >
+    <span class="total-count badge">{{#unread_notification_count}}{{unread_notification_count}}{{! the # is required as we don't show '0'}}{{/unread_notification_count}}</span>
+    <i class="fa fa-bell"></i>
+</a>
+{{>local_conversations/partials_notification_alert_preview}}
+</li>

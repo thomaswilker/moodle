@@ -1,0 +1,205 @@
+@import "../../bootstrap/less/moodle";
+// Global Imports
+@import "../common/less/_common.less";
+@import "./global/_global.less";
+@import "_mobile-header.less";
+@import "_mobile-footer.less";
+
+// OLD OUA STYLES (refactor later)
+// ----------------------------------------------------------------------
+@import "./_ouasubmission.less";
+@import "./_ouacountdown.less";
+
+// LAYOUTS
+// ----------------------------------------------------------------------
+@import "./global/_layouts-mobile.less";
+
+// BLOCKS
+// ----------------------------------------------------------------------
+@import "./blocks/mobile/_block_oua_calendar.less";
+@import "./blocks/mobile/_block_oua_comments.less";
+@import "./blocks/mobile/_block_oua_connections.less";
+@import "./blocks/mobile/_block_oua_course_list.less";
+@import "./blocks/mobile/_block_oua_course_progress_bar.less";
+@import "./blocks/mobile/_block_oua_forum-recent_posts.less";
+@import "./blocks/mobile/_block_oua_navigation.less";
+@import "./blocks/mobile/_block_oua_notifications.less";
+@import "./blocks/mobile/_block_oua_social_activity.less";
+@import "./blocks/mobile/_welcome_user.less";
+@import "./blocks/mobile/_block_oua_resources.less";
+@import "./blocks/mobile/_block_oua_tour.less";
+@import "./blocks/mobile/_block_oua_course_list_teacher.less";
+
+// PAGES
+// ----------------------------------------------------------------------
+@import "pages/mobile/_admin.less";
+@import "pages/mobile/_assignment.less";
+@import "pages/mobile/_blackboard.less";
+@import "pages/mobile/_brightcove.less";
+@import "pages/mobile/_calendar.less";
+@import "pages/mobile/_classroom.less";
+@import "pages/mobile/_connection.less";
+@import "pages/mobile/_forum.less";
+@import "pages/mobile/_grade.less";
+@import "pages/mobile/_glossary.less";
+@import "pages/mobile/_profile.less";
+@import "pages/mobile/_submission.less";
+@import "pages/mobile/_quiz.less";
+@import "pages/mobile/_wiki.less";
+@import "pages/mobile/_workshop.less";
+@import "pages/mobile/_links.less";
+@import "pages/mobile/_local_conversations.less";
+@import "pages/mobile/_local_notifications.less";
+@import "pages/mobile/_broadcast_messages.less";
+@import "pages/mobile/_blogs.less";
+
+// MEDIA QUERY IMPORTS
+// ----------------------------------------------------------------------
+@media (min-width: 768px) {
+	@import "./global/_layouts-tablet.less";
+	@import "_tablet-header.less";
+	@import "_tablet-footer.less";
+	@import "pages/tablet/_admin.less";
+	@import "pages/tablet/_classroom.less";
+	@import "pages/tablet/_profile.less";
+	@import "pages/tablet/_local_conversations.less";
+	@import "pages/tablet/_local_notifications.less";
+		@import "./blocks/tablet/_block_oua_connections.less";
+		@import "./blocks/tablet/_block_oua_course_list.less";
+		@import "./blocks/tablet/_block_oua_social_activity.less";
+		@import "./blocks/tablet/_welcome_user.less";
+		@import "./blocks/tablet/_block_oua_tour.less";
+		@import "./blocks/tablet/_block_oua_course_list_teacher.less";
+
+	@import "pages/tablet/_forum.less";
+}
+@media (min-width: 992px) {
+	@import "_desktop-header.less";
+	@import "./pages/desktop/_grade.less";
+	@import "./pages/desktop/_classroom.less";
+	@import "./pages/desktop/_local_conversations.less";
+	@import "./pages/desktop/_local_notifications.less";
+		@import "./blocks/desktop/_block_oua_connections.less";
+		@import "./blocks/desktop/_block_oua_course_list.less";
+		@import "./blocks/desktop/_welcome_user.less";
+		@import "./blocks/desktop/_block_oua_forum-recent_posts.less";
+		@import "./blocks/desktop/_block_oua_course_list_teacher.less";
+}
+@media (min-width: 1200px) {
+    @import "pages/large/_assignment.less";
+	@import "pages/large/_classroom.less";
+	@import "pages/large/_local_conversations.less";
+		@import "./blocks/large/_block_oua_connections.less";
+		@import "./blocks/large/_welcome_user.less";
+}
+
+
+// CUSTOM STYLES
+// ----------------------------------------------------------------------
+
+body.editing aside.block-region.yui3-dd-drop-active-valid {
+	min-height: 50px;
+	border: 3px dashed #c8c8c8; /* give a solid border when drag and drop moving blocks */
+}
+
+aside.block-region span.region-name { display: none; }
+
+aside.block-region.yui3-dd-drop-active-valid > span.region-name { display: block; }
+
+
+// Make Mobile View Expand Full Width
+#page.container-fluid {
+	.padding-h(0);
+	> .row {
+		position: relative;;
+		z-index: 0;
+		.margin-h(0);
+		> *[class*="col-"] {
+			.padding-h(0);
+		}
+	}
+}
+body.modal-open #page.container-fluid {
+	> .row {
+		z-index: auto;
+	}
+}
+header.header {
+	nav.navbar { margin-bottom: 0; }
+} // end mobile view
+
+
+// CUSTOM MEDIA QUERY STYLES
+// ----------------------------------------------------------------------
+@media (max-width: 320px){
+	footer.footer, #page-footer {
+		.col-xs-6 {
+			width:100%;;
+		}
+	}
+}
+@media (min-width: 768px) {
+	// Reset Box Model for Tablet View or Bigger Screens
+	#page.container-fluid {
+		.padding-h(15px);
+		//Sticky footer styles
+		min-height:~"calc(100% - 230px)";
+		&:after {
+			content: " ";
+			display: block;
+		}
+		> .row {
+
+			> *[class*="col-"]:not(.region-main) {
+				.padding-h(20px);
+				padding-right: 0;
+			}
+		}
+		&.fullwidth {
+			-webkit-transition: all .5s ease;
+			-moz-transition: all .5s ease;
+			transition: all .5s ease;
+			max-width: 100%;
+		}
+
+	}
+	header.header {
+		nav.navbar { margin-bottom: 20px; }
+	} // end reset box model
+}
+
+// IE10 SPECIFIC STYLES
+// ----------------------------------------------------------------------
+@media screen and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+	/* IE10+ CSS here */
+	.navbar-default .navbar-collapse .navbar-nav li a {
+		padding: 25px;
+	}
+
+}
+
+
+
+// OLD OUA STYLING (refactor later)
+// ----------------------------------------------------------------------
+
+// Alerts
+.alert {
+	&.alert-error {
+		color: rgb(183, 75, 75);
+		background: rgb(241, 221, 221);
+	}
+}
+/*
+@BasePrimary: @customBasePrimary;
+@BaseSecondary: @customBaseSecondary;
+@MainBackground: @customMainBackground;
+@Tab: @customTab;
+@PanelBackground: @customPanelBackground;
+@Action: @customAction;
+@Alert: @customAlert;
+@Inactive: @customInactive;
+@BodyCopy: @customBodyCopy;
+@ProgressBar: @customProgressBar;
+@Link: @customLink;
+*/

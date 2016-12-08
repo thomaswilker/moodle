@@ -1,0 +1,30 @@
+<div id="allmyconnections">
+    <h1><i class="fa fa-users"></i>{{#str}}my_connections, block_oua_connections{{/str}}</h1>
+    {{#hasconnections}}
+    <ul class="connection-list">
+        {{#myconnections}}
+        <li class="col-xs-12 col-sm-6 col-md-4 col-lg-3 connection-item">
+            <div class="avatar">
+                {{{userpicturehtml}}}
+                <button class="btn-remove connection-delete" data-userid="{{userid}}" data-fullname="{{fullname}}" role="button" title="{{#str}}deleteconnection, block_oua_connections{{/str}}"><i class="fa fa-trash"></i></button>
+            </div>
+            <div class="user-info">
+                <span class="name">{{fullname}}</span>
+                <button class="btn-connect" data-trigger="core_message-messenger::sendmessage" data-fullname="{{fullname}}" data-userid="{{userid}}" role="button" title="{{#str}}message, block_oua_connections{{/str}}">{{#str}}message, block_oua_connections{{/str}}</button>
+            </div>
+        </li>
+        {{/myconnections}}
+    </ul>
+    {{/hasconnections}}
+    <div class="clearfix"></div>
+    {{^myconnections}}
+        <div class="nomyconnections">
+            <p><i class="fa fa-users"></i>{{#str}}nomyconnections, block_oua_connections{{/str}}</p>
+            <p>{{#str}}seesuggestedconnectionstabdashboard, block_oua_connections, {{dashboardlink}}{{/str}}</p>
+        </div>
+    {{/myconnections}}
+    {{>block_oua_connections/confirm_delete_connection_modal}}
+</div>
+{{#js}}
+    require(['block_oua_connections/manage_connections']);
+{{/js}}

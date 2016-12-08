@@ -1,0 +1,105 @@
+#page-user-profile,
+#page-user-edit,
+#page-course-view-invisible {
+	.region-nav {
+		display: block;
+	}
+	#page-header {
+		margin: 0 0 -5px 0;
+		padding: 0 10px;
+		background: #fff;
+		border-radius: 5px 5px 0 0;
+		border:1px solid @Keyline;
+		border-bottom: 0;
+		img.userpicture {
+			width: auto;
+			height: auto;
+			margin: 20px;
+		}
+		a.edit-link {
+			position: relative;
+			float: right;
+			margin-right:0;
+			padding: 30px 0;
+			.fa {
+				padding:0;
+			}
+		}
+	}
+	.page-context-header {
+		.page-header-headings {
+			h1 {
+				line-height: 90px;
+			}
+		}
+		.btn-group.header-button-group {
+			right: 20px;
+			bottom: 50%;
+			margin-bottom: -20px
+		}
+	}
+	#page {
+		&.container-fluid {
+			> .row {
+
+			}
+		}
+	}
+	.userprofile {
+		.profile_tree {
+			padding:0 40px;
+			.profile-row {
+				//border-top: 1px solid #e3e4e6;
+				h2 {
+					.font-size(@default-font-size + 4);
+					padding: 20px 0 30px;
+				}
+				section {
+					float: left;
+					width: 50%;
+					border: 0;
+				}
+				dl {
+					dt {
+						display: block;
+						width: 100px;
+						margin-left: 0;
+					}
+				}
+			}
+		}
+	}
+}
+
+#page-course-view-invisible {
+	.userprofile {
+		margin: 0;
+		.profile_tree {
+			padding: 0 20px;
+			.profile-row {
+				margin-top: 1px;
+			}
+		}
+		.page-context-header {
+			position: relative;
+			margin-bottom: 20PX;
+			.btn-group.header-button-group {
+				left:auto;
+				right: 20px;
+				margin-left: 0
+			}
+			.page-header-image {
+				img.userpicture {
+					width: 100px;
+					height: 100px;
+				}
+			}
+			.page-header-headings {
+				h2 {
+					margin-left: 20px;
+					line-height: 50px;
+				}
+			}
+		}
+	}
+}

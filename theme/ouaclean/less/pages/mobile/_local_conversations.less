@@ -1,0 +1,661 @@
+// Messages
+// ==========================================================================
+.apple-scroll {
+
+	&::-webkit-scrollbar {
+		-webkit-appearance: none;
+	}
+
+	&::-webkit-scrollbar:vertical {
+		width: 11px;
+	}
+
+	&::-webkit-scrollbar:horizontal {
+		height: 11px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+		border-radius: 8px;
+		border: 2px solid white; /* should match background, can't be transparent */
+		background-color: rgba(0, 0, 0, .5);
+	}
+
+	&::-webkit-scrollbar-track {
+		background-color: @white;
+		border-radius: 8px;
+	}
+}
+
+input::-webkit-input-placeholder, textarea::-webkit-input-placeholder {
+	.font-size(@default-font-size);
+}
+input:-moz-placeholder, textarea:-moz-placeholder {
+	.font-size(@default-font-size);
+}
+input:-ms-input-placeholder, textarea:-ms-input-placeholder {
+	.font-size(@default-font-size);
+}
+
+
+#allmessages {
+	.panel {
+		.modal {
+			.modal-content {
+				.modal-footer {
+					border-top: none;
+					a {
+						.modal-buttons(@LinkDark, @white, @LinkBright, @white);
+						&.btn-confirm {
+							.modal-buttons(@white, @LinkDark, @white, @LinkBright);
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+
+body.modal-open-mobile {
+	overflow: hidden;
+	position: fixed;
+}
+ul.message-counter,
+ul.notification-counter,
+ul#profile-block {
+	.message-count,
+	.notification-count {
+		position: static;
+		.dropdown-menu {
+			.background-bubble-top();
+			position: absolute;
+			top: 40px;
+			left: auto;
+			right: 10px;
+			padding: 0;
+			border: 0;
+			max-width: 300px;
+			h3 {
+				margin: 0;
+				padding: 10px 10px 15px;
+				.font-size(@default-font-size);
+				background-color: @StructureLight;
+				border-radius: 4px 4px 0 0;
+			}
+			ul {
+				li {
+					display: table;
+					table-layout: fixed;
+					width: 100%;
+					padding: 8px 5px;
+					border-bottom: 1px solid @Keyline;
+					text-align: center;
+					&.unread {
+						> a {
+							display: table;
+							table-layout: fixed;
+							width: 100%;
+							color: @black;
+							font-weight: bold;
+							border-spacing: 10px;
+							&:hover {
+								.message {
+									text-decoration: underline;
+								}
+							}
+							> div {
+								display: table-cell;
+								vertical-align: top;
+								text-align: left;
+							}
+							.userpicture {
+								margin: 0;
+								width: 10%;
+								img {
+									border-radius: 50%;
+								}
+							}
+							.message {
+								width: 70%;
+								p {
+									margin: 0;
+									line-height: 1.2;
+									letter-spacing: 0;
+									white-space: nowrap;
+									overflow: hidden;
+									text-overflow: ellipsis;
+									&.fullname {
+										font-weight: bold;
+									}
+								}
+							}
+							.date {
+								width: 20%;
+								text-align: right;
+								.month:before {
+									content: " ";
+								}
+							}
+						}
+					}
+					&.view-messages {
+						color: @LinkDark;
+						text-align: center;
+						a {
+							color: inherit;
+							.font-size(@default-font-size);
+							letter-spacing: 0;
+							&:hover {
+								text-decoration: underline;
+							}
+						}
+						.fa {
+							margin: 0 0 0 5px;
+							&:before {
+								vertical-align: middle;
+							}
+						}
+					}
+					.message-controls {
+						display: table;
+						padding: 10px 0;
+						margin: auto;
+						a {
+							float: left;
+							display: inline-block;
+							padding: 0 4px;
+							color: @LinkDark;
+							.font-size(@default-font-size);
+							text-align: center;
+							line-height: 1;
+							letter-spacing:0;
+							& + a {
+								border-left: 1px solid @black;
+							}
+							&:hover {
+								text-decoration: underline;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	.notification-count {
+		.dropdown-menu {
+			ul {
+				li.unread {
+					> a {
+						.message {
+							p.message-snippet {
+								white-space: normal;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+}
+
+#allmessages {
+	.conversationbar {
+		padding: 0 5px;
+		h1 {
+			margin: 0;
+			padding: 5px 0;
+			.font-size(@default-font-size * 1.1429);
+			font-weight: normal;
+		}
+		button.newmessage {
+			padding:5px 10px;
+			margin: 0;
+			color: @black;
+			background: @white;
+			border: 1px solid @Keyline;
+			text-shadow: none;
+			&:hover {
+				border-color: @greyDark10;
+			}
+			.fa {
+				color: @LinkDark;
+				font-size: 14px;
+			}
+		}
+	}
+	.leftcol {
+		border: 1px solid @Keyline;
+	}
+	ul {
+		padding: 0;
+		&.nav-tabs {
+			li {
+				margin: 0;
+				border-bottom: 1px solid @Keyline;
+				background: @white;
+				border-left: 5px solid @white;
+				&:focus, &:active, &:hover, &:visited {
+					outline: 0;
+				}
+				a {
+					margin-right: 0;
+					padding: 10px;
+					background: none;
+					border-radius:0;
+					border: 0;
+					&:focus, &:active, &:hover, &:visited {
+						background: none;
+						color: inherit;
+					}
+				}
+				[class*=col-xs-]{
+					padding: 0;
+				}
+				.col-xs-10 {
+					padding-left: 35px;
+				}
+				.badge {
+					visibility: hidden;
+				}
+				.userpicture {
+					max-width: 50px;
+				}
+				&:hover {
+					border-left-color: @LinkDark;
+				}
+				&.unread {
+					a {
+						font-weight: bold;
+					}
+					.badge {
+						visibility: visible;
+					}
+				}
+				&.active {
+					background-color: @StructureLight;
+					border-left-color: @LinkDark;
+					a {
+						padding-left: 10px;
+						color: inherit;
+						cursor: pointer;
+					}
+				}
+				&:last-child {
+					margin-bottom: 0;
+					border-bottom: 0;
+				}
+			}
+		}
+	}
+
+	.userpicture {
+		border-radius:50%;;
+	}
+
+	.message-snippet {
+		max-width: 200px;
+		white-space: nowrap;
+		overflow: hidden;
+		.font-size(@default-font-size - 2);
+		text-overflow: ellipsis;
+	}
+
+	.message-contact-list {
+		padding-right: 0;
+		padding-left: 0;
+		height:100vh;
+		-webkit-overflow-scrolling: touch !important;
+		overflow: auto;
+		.searchhelp,
+		.nocontactsormessages {
+			padding: 20px;
+			opacity: .3;
+			text-align: center;
+			.font-size(@default-font-size);
+			font-weight: normal;
+		}
+		.searchlist {
+
+		}
+	}
+	.bar {
+		padding:5px;
+		background-color: @StructureLight;
+		#new-message-search {
+			padding:5px;
+			text-align: right;
+			label {
+				margin-right: 10px;
+				&:after {
+					content: ":"
+				}
+			}
+			input {
+				padding: 5px;
+				border-radius: 5px;
+			}
+		}
+	}
+	.newmessagebar {
+		margin: -12px -10px -10px;
+		padding: 0 5px;
+		.top {
+			position: relative;
+			padding: 10px 10px 12px;
+			text-align: center;
+			border-bottom: 1px solid @Keyline;
+			h1 {
+				margin: 0;
+				padding: 0;
+				.font-size(@default-font-size * 1.14286);
+				font-weight: normal;
+			}
+			button.cancelnewmessage {
+				position: absolute;;
+				top:8px;
+				left:10px;
+				padding: 0;
+				margin: 0;
+				color: @black;
+				text-shadow: none;
+				background: none;
+				border:none;
+				.fa {
+					margin-right: 3px;
+					color: @black;
+				}
+			}
+		}
+		.bottom {
+			background-color: @white;
+			border-bottom: 1px solid @Keyline;
+			.wrapper {
+				display: -webkit-box;
+				display: -moz-box;
+				display: -ms-flexbox;
+				display: -webkit-flex;
+				display: flex;
+				-webkit-flex-direction: row;
+				flex-direction: row;
+				align-items: center;
+				justify-content: center;
+				padding: 5px;
+			}
+			label {
+				display: block;
+				margin: 0;
+				text-align: center;
+				flex-grow:1;
+				font-weight:normal;
+			}
+			input {
+				display: block;
+				flex-grow:10;
+				border: 0;
+			}
+			button.searchall {
+				display: block;
+				margin: 0;
+				padding: 5px 2px;
+				flex-grow:1;
+				background-color: @StructureLight;
+				border:1px solid @Keyline;
+				text-shadow: none;
+				.fa {
+					margin: 0;
+					color:#777;
+				}
+				span {
+					display: inline-block;
+					text-indent: -999em;
+				}
+			}
+		}
+	}
+	blockquote.message {
+		width: 90%;
+	}
+	blockquote div.avatar {
+		.pull-left;
+	}
+	blockquote.blockquote-reverse div.avatar {
+		.pull-right;
+		text-align: center;
+	}
+	blockquote {
+		.pull-left;
+		a {
+			display: table;
+			margin: auto;
+		}
+		.avatar {
+			padding: 0;
+		}
+	}
+	blockquote.blockquote-reverse {
+		text-align: right;
+		.pull-right;
+	}
+
+	.tab-content {
+		padding-left: 0;
+		overflow: hidden; /* firefox and safari display overflow with transformed element */
+		.panel-default {
+			border: 1px solid @Keyline;
+			border-radius: 0;
+			&::-webkit-scrollbar-track {
+				background-color: @white;
+				border-radius: 8px;
+			}
+			.panel-heading {
+				position: relative;
+				padding: 8px 10px;
+				background-color: @StructureLight;
+				border: 0;
+				.fa {
+					margin-right: 10px;
+				}
+				.conversation-actions {
+					right:0;
+					a {
+						color: @greyDark50;
+						&:hover {
+							color: @LinkDark
+						}
+						.v-ellipsis {
+							.v-ellipsis();
+						}
+					}
+					.dropdown-menu {
+						margin-top: 5px;
+						padding: 5px;
+						border: 0;
+						.background-bubble-top(@top: 0, @left: auto, @right: 10px, @borderColor: @white);
+						a {
+							color: @LinkDark;
+							background-color: transparent;
+							&:hover, &:active, &:visited, &:focus {
+								color: @LinkDark;
+							}
+						}
+					}
+				}
+			}
+			.panel-body {
+				padding: 0;
+				/* smaller height for mobile, this is to fix issue with ios */
+				height: calc(~"100vh - 100px");
+				-webkit-box-shadow: inset 0 5px 6px -4px #ccc;
+				-moz-box-shadow: inset 0 5px 6px -4px #ccc    ;
+				box-shadow: inset 0 5px 6px -4px #ccc    ;
+				.conversation {
+					max-height: calc(~"100% - 85px");
+					-webkit-overflow-scrolling: touch !important;
+					overflow: auto;
+					border-bottom: 1px solid @Keyline;
+					.message-item {
+						blockquote {
+							margin: 0;
+							padding: 10px;
+							font-size: 14px;
+							border: 0;
+							.userpicture {
+								max-width: 40px;
+							}
+							&.unread {
+								font-weight: bold;
+							}
+							.small-message {
+								display: table-cell;
+								p {
+									margin-bottom: 10px;
+									&.message-time {
+										.font-size(@default-font-size * .8571);
+									}
+									&:last-child {
+										margin-bottom: 0;
+									}
+								}
+							}
+						}
+						& + .message-item {
+							border-top: 1px solid @Keyline;
+						}
+						.message-time {
+							color: #a7a7a7;
+						}
+					}
+					.nomessages {
+						padding: 40px 20px;
+						text-align: center;
+						p {
+							padding: 0;
+							margin: 0 0 20px;
+						}
+						.userpicture {
+							position: relative;
+							width: 100%;
+							height: 100px;
+							img {
+								position: absolute;;
+								top:50%;
+								left:50%;
+								margin: -17px 0 0 -17px;
+								border-radius: 50%;
+							}
+						}
+						.userfullname {
+							color: @LinkDark;
+							.font-size(@default-font-size + 2);
+						}
+						.helpmessage {
+							opacity: .3;
+							text-align: center;
+							.font-size(@default-font-size);
+							font-weight: normal;
+						}
+					}
+					.modal {
+						.modal-header {
+							h4 {
+								margin: 0;
+							}
+						}
+					}
+				}
+				#new-message {
+					background: @StructureLight;
+					.form-new-message {
+						.form-group {
+							margin-bottom: 0;
+						}
+						.help-block {
+							margin: 0;
+						}
+						.input-group {
+							position: relative;
+							table-layout: fixed;
+							width: 100%;
+							font-size:17px;
+							textarea {
+								padding-right: 50px;
+								height:100%;
+								font-size: 17px;
+								&:focus {
+									font-size:17px;
+								}
+							}
+							.message-send-btn {
+								position: absolute;
+								right: 0;
+								display: block;
+								height:50px;
+								padding:0 20px;
+								background: transparent;
+								border: 0;
+								z-index:999;
+								width:auto;
+								.message-send {
+									display: inline-block;
+									text-indent: -999em;
+								}
+								.fa {
+									color: @BaseSecondary;
+									&:hover {
+										color: @StructureDark;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+
+	.tab-content > .tab-pane {
+		/* mobile defaults */
+		position: fixed;
+		width: 100%;
+		background: white;
+		margin: 0;
+		top: 0;
+		left: 0;
+		z-index: 2;
+		opacity: 0;
+
+		-webkit-transform-origin: right;
+		transform-origin: right;
+		-webkit-transition: transform 0.2s ease, visibility 0s linear 0.2s;
+		transition: transform 0.2s ease, visibility 0s linear 0.2s;
+		will-change: transform;
+
+		/* Override bootstrap hidden, and hide using transform instead */
+		display: block;
+
+		/* slide out at full screen and mobile, only after doc loaded */
+		.transform-enabled & {
+			-webkit-transform: translateX(100vw);
+			transform: translateX(100vw);
+		}
+
+		&.active {
+			opacity: 1;
+			transition-delay: 0s;
+			.transform-enabled & {
+				-webkit-transform: translateX(0);
+				transform: translateX(0);
+			}
+		}
+	}
+
+	p.fullname {
+		margin: 0;
+	}
+
+}
+#allmessages {
+	.modal-backdrop {
+		z-index: 1010;
+	}
+}

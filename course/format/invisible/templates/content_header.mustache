@@ -1,0 +1,27 @@
+<div class="course-header">
+    <div class="course-header-content">
+        <div class="course-class-logo">
+            {{#cobrandinglogo}}
+                <span class="logo-course"><img class="logo img-responsive" src="{{{cobrandinglogo}}}" alt="{{cobrandingname}}"/></span>
+            {{/cobrandinglogo}}
+        </div>
+        <div class="course-class-summary">
+            <span class="course-nav-scroll" id="course-nav-scroll" data-target="#navtabs" title="{{#str}} scroll, format_invisible {{/str}}"><i class="fa fa-chevron-circle-down"></i></span>
+            <span class="course-name">{{fullname}}</span>
+        </div>
+        <span class="toggle">
+            <span class="expand"><i class="fa fa-expand"></i>{{#str}} expand, format_invisible {{/str}}</span>
+            <span class="expanded"><i class="fa fa-compress"></i>{{#str}} collapse, format_invisible {{/str}}</span>
+        </span>
+    </div>
+    {{#displaydiv}}
+        <div class="classroom-activity-nav sticky clearfix">
+            {{#previousurl}}
+                <a class="prev pull-left" href="{{{previousurl}}}" {{#previousname}}title="{{previousname}}"{{/previousname}}><i class="fa fa-chevron-left" aria-hidden="true"></i>{{#str}} previous, format_invisible{{/str}}</a>
+            {{/previousurl}}
+            {{#nexturl}}
+                <a class="next pull-right" href="{{{nexturl}}}" {{#nextname}}title="{{nextname}}"{{/nextname}}>{{#str}} next, format_invisible{{/str}}<i class="fa fa-chevron-right" aria-hidden="true"></i></a>
+            {{/nexturl}}
+        </div>
+    {{/displaydiv}}
+</div>

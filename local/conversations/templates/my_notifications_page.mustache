@@ -1,0 +1,32 @@
+<div class="panel-group accordion notifications" id="allnotifications" role="tablist" data-count="{{unread_notifications_count}}">
+    <div class="wrapper">
+        <h1>{{#str}}mynotifications, local_conversations{{/str}}</h1>
+        <div class="notification-actions dropdown">
+            <a href="#" id="notification-action-menu" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="sr-only">{{#str}}notificationactions, local_conversations{{/str}}</span>
+                <i class="v-ellipsis"></i>
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="notification-action-menu">
+                <li><a href="#" class="mark-all-as-read"><span>{{#str}}markallnotificationsasread, local_conversations{{/str}}</span></a></li>
+                <li><a href="#" class="delete-all-notification"><span>{{#str}}deleteall, local_conversations{{/str}}</span></a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="notifications-list">
+    {{>local_conversations/notification_list}}
+    {{>local_conversations/confirm_delete_notification_modal}}
+    {{>local_conversations/confirm_delete_all_notifications_modal}}
+    {{>local_conversations/confirm_mark_all_notifications_as_read_modal}}
+    </div>
+
+</div>
+
+{{#js}}
+    require(['local_conversations/manage_notifications', 'block_oua_connections/request_connect'], function(){}, function(err){
+    // Catch the error if block_oua_connections/request_connect is not installed.
+    var failedId = err.requireModules && err.requireModules[0];
+    if (failedId === 'block_oua_connections/request_connect') {
+    requirejs.undef(failedId);
+    }
+    });
+{{/js}}

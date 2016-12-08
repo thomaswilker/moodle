@@ -1,0 +1,55 @@
+// Submission Verification
+// ==========================================================================
+
+.submitforgrading {
+	border:1px solid @LinkDark;
+	border-radius: 5px;
+	h3 {
+		.no-margin;
+		padding: 13px 15px 15px;
+		color: @blueDark;
+		.font-size(@h2-font-size);
+		background: @Highlight;
+		border-radius: 5px 5px 0 0;
+	}
+	.submitconfirm { /* Inner Submission Box */
+		background-color: @white;
+			.padding-h;
+			padding-bottom: 30px;
+		h4 {
+			margin: 35px 15px;
+			color: darken(@greyDark, 10%);
+		}
+		a {
+			display: initial;
+			width: auto;
+		}
+		.confirm-message { width: 100%; }
+		form.mform {
+			margin: auto;
+			.fitem {
+				.fitemtitle {
+					.hide; /* Hide redundant field that breaks layout */
+				}
+				.felement {
+					width: 100%;
+					&.fcheckbox {
+						label {
+							display: inline;
+						}
+					}
+				}
+				button[type="submit"] {
+					width: auto;
+					.btn-color(@LinkDark, @white);
+					.text-shadow(1);
+					&[name="submitbutton"] { padding: 10px 20px 15px; }
+					.font-size(@default-font-size * 1.5)
+				}
+			}
+			.fdescription.required { /* Hide unecessary required message */
+				.hide;
+			}
+		}
+	}
+}

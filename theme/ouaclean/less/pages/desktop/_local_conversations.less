@@ -1,0 +1,62 @@
+body.path-local-conversations {
+	.region-main {
+		padding: 0;
+		#maincontent {
+			height:0;
+		}
+	}
+}
+ul.message-counter,
+ul#profile-block {
+	.message-count {
+		.dropdown-menu {
+			.background-bubble-top(@left: 100px, @right: auto);
+			left:-50px;
+			right:auto;
+		}
+	}
+	.notification-count {
+		.dropdown-menu {
+			.background-bubble-top(@left: 60px, @right: auto);
+			left:-50px;
+			right:auto;
+		}
+	}
+}
+#allmessages {
+	padding: 0;
+	.bar {
+		#new-message-search {
+			text-align: right;
+		}
+	}
+	.leftcol {
+		min-width: 350px;
+	}
+	.tab-content {
+		max-width: calc(~"100% - 350px");
+		.panel-default {
+			.panel-body {
+				.conversation {
+					.message-item {
+						blockquote {
+							padding: 10px;
+							.small-message {
+								padding: 0 10px;
+							}
+						}
+					}
+				}
+			}
+		}
+	}
+	.message-contact-list {
+		ul.nav-tabs {
+			li {
+				.col-xs-10 {
+					padding-left: 35px;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,20 @@
+<table class="generaltable quizsummaryofattempt boxaligncenter">
+    <thead>
+    <tr>
+        <th class="header c0" scope="col">{{#str}}quiz:summaryheadernum, theme_ouaclean{{/str}}</th>
+        <th class="header c1" scope="col">{{#str}}quiz:summaryheaderquestion, theme_ouaclean{{/str}}</th>
+        <th class="header c2" scope="col">{{#str}}quiz:summaryheaderstatus, theme_ouaclean{{/str}}</th>
+        <th class="header c3 lastcol" scope="col">{{#str}}quiz:summaryheadermark, theme_ouaclean{{/str}}</th>
+    </tr>
+    </thead>
+    <tbody>
+    {{#quizquestions}}
+        <tr class="">
+            <td class="cell c0">{{num}}</td>
+            <td class="cell c1">{{name}}</td>
+            <td class="cell c2">{{status}}</td>
+            <td class="cell c3 lastcol">{{mark}}</td>
+        </tr>
+    {{/quizquestions}}
+    </tbody>
+</table>

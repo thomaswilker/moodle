@@ -1,0 +1,38 @@
+<div id="allmessages">
+    <h1 class="visible-sm">{{#str}}mymessages, local_conversations{{/str}}</h1>
+    <div class="leftcol col-sm-4">
+        <div class="bar row">
+            <div class="conversationbar">
+                <h1 class="pull-left hidden-sm">{{#str}}mymessages, local_conversations{{/str}}</h1>
+                <button class="newmessage pull-right"><i class="fa fa-envelope-o"></i>{{#str}}newmessage, local_conversations{{/str}}</button>
+            </div>
+            <div id="new-message-search" class="newmessagebar hidden">
+                <div class="top clearfix">
+                    <button class="cancelnewmessage pull-left"><i class="fa fa-times"></i><span class="hidden-sm">{{#str}}cancelmessage, local_conversations{{/str}}</span></button>
+                    <h1>{{#str}}newmessage, local_conversations{{/str}}</h1>
+                </div>
+                <div class="bottom clearfix">
+                    <div class="wrapper">
+                        <label for="contact-search">{{#str}}newmessagesearch, local_conversations{{/str}}</label>
+                        <input id="contact-search" class="typeahead" type="text" placeholder="{{#str}}searchcontacts, local_conversations{{/str}}" />
+                        <button class="searchall"><i class="fa fa-plus"></i><span>{{#str}}searchcontacts, local_conversations{{/str}}</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="message-contact-list row">
+            {{>local_conversations/contact_list}}
+            <div class="searchhelp hidden">{{#str}}searchhelp, local_conversations{{/str}}</div>
+            <div class="searchlist hidden"></div>
+
+        </div>
+    </div>
+    <div class="tab-content col-sm-8">
+        {{#mycontactswithmessages}}
+            {{>local_conversations/conversation_panel}}
+        {{/mycontactswithmessages}}
+
+        {{>local_conversations/new_message_form}}
+    </div>
+    {{>local_conversations/confirm_delete_conversation_modal}}
+</div>

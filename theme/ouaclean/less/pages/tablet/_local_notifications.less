@@ -1,0 +1,57 @@
+
+ul#profile-block {
+	.notification-count {
+		.dropdown-menu {
+			max-width: 335px;
+			.background-bubble-top(@right: 136px);
+		}
+	}
+}
+
+#allnotifications {
+	padding: 10px 20px;
+	.notifications-list {
+		.panel {
+			.panel-heading {
+				.panel-title {
+					> a {
+						padding-right: 0;
+						.time {
+							width: 10%;
+						}
+						.fa {
+							display: block;
+						}
+					}
+				}
+			}
+			.panel-body {
+				.message {
+					.userpicturelink {
+						display: table-cell;
+						vertical-align: top;
+						& + p,
+						& + span,
+						& + .navbar {
+							display: table-cell;
+							vertical-align: top;
+						}
+					}
+					.navbar {
+						padding: 0 0 25px;
+					}
+					&.connection-request {
+						padding-right: 15px;
+						.time {
+							width: 10%;
+						}
+					}
+				}
+			}
+		}
+		.message-controls {
+			padding: 5px;
+			text-align: right;
+		}
+	}
+}

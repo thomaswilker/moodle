@@ -1,0 +1,178 @@
+body.pagelayout-base,
+body.pagelayout-frontpage,
+body.pagelayout-admin
+{
+	.mform {
+		padding: 15px;
+		fieldset.collapsible legend a.fheader {
+			margin-left: 0;
+		}
+	}
+	.page-context-header {
+		.page-header-headings {
+			h1 {
+				margin-bottom: 20px;
+			}
+		}
+	}
+	form#searchcohortquery {
+		padding: 20px
+	}
+}
+
+body.path-cohort {
+	.region-main {
+		//background-color: #fff;
+		//padding: 15px;
+	}
+	.mform {
+		padding: 20px;
+		background-color: @white;
+	}
+}
+body.path-admin-tool,
+body.path-admin-report {
+	div[role=main] {
+		overflow: auto
+	}
+}
+body.path-admin-tag {
+	span.editinstructions {
+		position: relative;
+	}
+}
+body.path-user {
+	.preferences-group {
+		li {
+			list-style-type: square;
+			img.smallicon {
+				display: none;
+			}
+		}
+	}
+}
+body.path-admin-roles {
+	.groupmanagementtable #buttonscell p.arrow_button input {
+		position: relative;
+		padding: 5px 20px;
+		height: 100%;
+		margin-bottom: 5px;
+	}
+}
+body.path-admin-roles,
+body.path-enrol-manual {
+	#buttonscell {
+		vertical-align: top;
+		#addcontrols ,
+		#removecontrols {
+			input {
+				position: relative;
+				width: 100%;
+				max-width: 100px;
+				height:inherit;
+				margin: auto;
+			}
+		}
+	}
+}
+
+body.pagelayout-maintenance {
+	#adminsettings {
+		> div:after {
+			clear: both;
+			display: table;
+			content: ' ';
+		}
+	}
+	div[role="main"]{
+		&:after {
+			display: table;
+			clear: both;
+			content: " ";
+		}
+	}
+}
+
+//Choice View
+.path-mod-choice {
+	.horizontal {
+		.choices {
+			display: table;
+			table-layout: fixed;
+			width:100%;
+			.option {
+				display: table-cell;
+				width:100%;
+				input {
+					float: left;
+					margin-top: 2px;
+				}
+				label {
+					display: block;
+					padding-left: 25px;
+				}
+			}
+		}
+		input[type="submit"]{
+			margin-right: 10px;
+		}
+	}
+	.vertical {
+		.choices {
+			.option {
+				display: table;
+				padding: 10px;
+				input {
+					display: table-cell;
+				}
+				label {
+					display: table-cell;
+					padding-left: 10px;
+				}
+			}
+		}
+		input[type="submit"]{
+			margin-right: 10px;
+		}
+	}
+	.results,
+	.results.anonymous {
+		display: table;
+		table-layout: fixed;
+		width: 100%;
+		thead {
+			tr {
+				th.header {
+					padding: 10px;
+					text-align: left;
+					background-color: @grey;
+				}
+			}
+		}
+		tbody {
+			tr {
+				th.header {
+					padding-top: 10px;
+					text-align: left;
+				}
+				th, td {
+					padding: 5px 10px;
+					border-bottom:1px solid @grey;
+					width: 25%;
+				}
+			}
+		}
+		.graph.horizontal {
+			img {
+				max-width: 100%;
+			}
+		}
+	}
+}
+//General Tables in Admin
+body.pagelayout-admin {
+	table.roleassigntable {
+		display: table;
+		table-layout: fixed;
+	}
+}

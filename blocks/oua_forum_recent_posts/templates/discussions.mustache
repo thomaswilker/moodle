@@ -1,0 +1,20 @@
+{{#discussions}}
+    <div class="panel panel-default discussion-topic" data-discussionid="{{discussion}}">
+        <div class="panel-heading collapsed" role="tab" id="heading_{{id}}" data-toggle="collapse" data-parent="#accordion" href="#collapse_{{id}}" {{^expanded}}aria-expanded="false" {{/expanded}} aria-controls="collapse_{{id}}">
+            <div class="wrapper">
+                <div class="panel-title clearfix">
+                    <span class="col-md-5 subject">{{#pinned}}<i class="fa fa-thumb-tack"></i>{{/pinned}}{{subject}}</span>
+                    <span class="col-md-2 replies">{{numreplies}}</span>
+                    <span class="col-md-2 name"> <a href="{{discussionuserprofileurl}}"><img src="{{userpictureurl}}" alt="" title="" class="userpicture" /></a>{{userfullname}}</span>
+                    <span class="col-md-2 date" data-header="{{#str}}lastpost, forum{{/str}}"><span class="usermodified username">{{usermodifiedfullname}}</span><span class="usermodified time">{{formatted_discussion_modified_date}}</span></span>
+                    <i class="col-md-1 fa fa-chevron-down"></i>
+                </div>
+            </div>
+        </div>
+        <div id="collapse_{{id}}" class="panel-collapse {{^expanded}}collapse{{/expanded}}" role="tabpanel" aria-labeledby="heading_{{id}}">
+            <div class="panel-body">
+                {{>block_oua_forum_recent_posts/postsr}}
+            </div>
+        </div>
+    </div>
+{{/discussions}}
