@@ -554,6 +554,16 @@ class pix_icon implements renderable, templatable {
     var $attributes = array();
 
     /**
+     * @var bool True if this is a font-awesome icon.
+     */
+    protected $fontawesome;
+
+    /**
+     * @var array Array of icon mappings.
+     */
+    protected $iconmap = null;
+
+    /**
      * Constructor
      *
      * @param string $pix short icon name
@@ -562,9 +572,16 @@ class pix_icon implements renderable, templatable {
      * @param array $attributes html attributes
      */
     public function __construct($pix, $alt, $component='moodle', array $attributes = null) {
-        $this->pix        = $pix;
+        global $PAGE;
+
+        // Allow the theme to remap the icon.
+        $this->pix = theme_remap_fontawesome_icon($pix, $component);
+        if (empty($this->pix)) {
+            $this->pix = $pix;
+        }
         $this->component  = $component;
         $this->attributes = (array)$attributes;
+        $this->fontawesome = strpos($this->pix, 'fa-') === 0;
 
         if (empty($this->attributes['class'])) {
             $this->attributes['class'] = 'smallicon';
@@ -602,7 +619,18 @@ class pix_icon implements renderable, templatable {
         foreach ($attributes as $name => $value) {
             $templatecontext[] = array('name' => $name, 'value' => $value);
         }
-        $data = array('attributes' => $templatecontext);
+        $title = isset($attributes['title']) ? $attributes['title'] : '';
+        $data = array(
+            'attributes' => $templatecontext,
+            'fontawesome' => $this->fontawesome,
+            'title' => $title,
+            'pix' => $this->pix,
+        );
+        $stacked = explode('+', $this->pix);
+        if ($this->fontawesome && !empty($stacked) && count($stacked) > 1) {
+            $data->stacked = true;
+            $data->pixlist = $stacked;
+        }
 
         return $data;
     }

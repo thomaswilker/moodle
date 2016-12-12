@@ -39,4 +39,19 @@
     }
 
 }}
+{{#fontawesome}}
+{{#stacked}}
+<span class="fa-stack">
+  {{#pixlist}}
+  <i class="fa {{.}} fa-stack-1x" aria-hidden="true" title="{{title}}"></i>
+  {{/pixlist}}
+  <span class="sr-only">{{title}}</span>
+</span>
+{{/stacked}}
+{{^stacked}}
+<i class="icon fa {{pix}} {{extraclasses}}" aria-hidden="true" title="{{title}}"></i><span class="sr-only">{{title}}</span>
+{{/stacked}}
+{{/fontawesome}}
+{{^fontawesome}}
 <img class="icon {{extraclasses}}" {{#attributes}}{{name}}="{{value}}" {{/attributes}}/>
+{{/fontawesome}}

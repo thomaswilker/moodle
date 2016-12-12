@@ -39,4 +39,9 @@
     }
 
 }}
+{{#fontawesome}}
+<i class="icon fa {{pix}}" aria-hidden="true" title="{{title}}"></i><span class="sr-only">{{title}}</span>
+{{/fontawesome}}
+{{^fontawesome}}
 <img {{#attributes}}{{name}}="{{value}}" {{/attributes}}/>
+{{/fontawesome}}
