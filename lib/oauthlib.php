@@ -501,8 +501,12 @@ abstract class oauth2_client extends curl {
         if ($this->use_http_get()) {
             $response = $this->get($this->token_url(), $params);
         } else {
-            $response = $this->post($this->token_url(), $params);
+            // Need to set content type header to application/x-www-form-urlencoded
+            $response = $this->post($this->token_url(), http_build_query($params));
         }
+
+        var_dump($this->token_url());
+        var_dump($response);
 
         if (!$this->info['http_code'] === 200) {
             throw new moodle_exception('Could not upgrade oauth token');
