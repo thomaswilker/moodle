@@ -483,6 +483,20 @@ abstract class oauth2_client extends curl {
     }
 
     /**
+     * Given an array of name value pairs - build a valid HTTP POST application/x-www-form-urlencoded string.
+     *
+     * @param array $params Name / value pairs.
+     * @return string POST data.
+     */
+    public function build_post_data($params) {
+        $result = [];
+        foreach ($params as $name => $value) {
+            $result[] = str_replace('&', '%26', $name) . '=' . str_replace('&', '%26', $value);
+        }
+        return implode('&', $result);
+    }
+
+    /**
      * Upgrade a authorization token from oauth 2.0 to an access token
      *
      * @param string $code the code returned from the oauth authenticaiton
@@ -490,10 +504,10 @@ abstract class oauth2_client extends curl {
      */
     public function upgrade_token($code) {
         $callbackurl = self::callback_url();
-        $params = array('client_id' => $this->clientid,
+        $params = array('code' => $code,
+            'client_id' => $this->clientid,
             'client_secret' => $this->clientsecret,
             'grant_type' => 'authorization_code',
-            'code' => $code,
             'redirect_uri' => $callbackurl->out(false),
         );
 
@@ -501,8 +515,11 @@ abstract class oauth2_client extends curl {
         if ($this->use_http_get()) {
             $response = $this->get($this->token_url(), $params);
         } else {
-            $response = $this->post($this->token_url(), $params);
+            $response = $this->post($this->token_url(), $this->build_post_data($params));
         }
+
+        var_dump($this->token_url());
+        var_dump($response);
 
         if (!$this->info['http_code'] === 200) {
             throw new moodle_exception('Could not upgrade oauth token');

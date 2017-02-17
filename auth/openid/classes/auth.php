@@ -1,0 +1,348 @@
+<?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Anobody can login with any password.
+ *
+ * @package auth_openid
+ * @copyright 2017 Damyon Wiese
+ * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ */
+
+namespace auth_openid;
+
+defined('MOODLE_INTERNAL') || die();
+
+use pix_icon;
+use moodle_url;
+use stdClass;
+
+require_once($CFG->libdir.'/authlib.php');
+
+/**
+ * Plugin for openid authentication.
+ *
+ * @package auth_openid
+ * @copyright 2017 Damyon Wiese
+ * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ */
+class auth extends \auth_plugin_base {
+
+    /**
+     * @var stdClass $userinfo The set of user info returned from the oauth handshake
+     */
+    private static $userinfo;
+
+    /**
+     * Constructor.
+     */
+    public function __construct() {
+        $this->authtype = 'openid';
+        $this->config = get_config('auth/openid');
+    }
+
+    /**
+     * Returns a mapping of openid properties to moodle properties.
+     *
+     * @return array
+     */
+    private function get_mapping() {
+        return [
+            'given_name' => 'firstname',
+            'middle_name' => 'middlename',
+            'family_name' => 'lastname',
+            'email' => 'email',
+            'website' => 'url',
+            'nickname' => 'alternatename',
+            'address' => 'address',
+            'phone' => 'phone',
+            'preferred_username' => 'username',
+            'locale' => 'lang'
+        ];
+    }
+
+    /**
+     * Returns true if the username and password work or don't exist and false
+     * if the user exists and the password is wrong.
+     *
+     * @param string $username The username
+     * @param string $password The password
+     * @return bool Authentication success or failure.
+     */
+    public function user_login($username, $password) {
+        var_dump('user_login::' . $username);
+        $cached = $this->get_static_user_info();
+        if ($cached->preferred_username == $username) {
+            return true;
+        }
+    }
+
+    /**
+     * We don't want to allow users setting an internal password.
+     *
+     * @return bool
+     */
+    public function prevent_local_passwords() {
+        return true;
+    }
+
+    /**
+     * Returns true if this authentication plugin is 'internal'.
+     *
+     * @return bool
+     */
+    public function is_internal() {
+        return false;
+    }
+
+    /**
+     * Indicates if moodle should automatically update internal user
+     * records with data from external sources using the information
+     * from auth_plugin_base::get_userinfo().
+     *
+     * @return bool true means automatically copy data from ext to user table
+     */
+    public function is_synchronised_with_external() {
+        return true;
+    }
+
+    /**
+     * Returns true if this authentication plugin can change the user's
+     * password.
+     *
+     * @return bool
+     */
+    public function can_change_password() {
+        return false;
+    }
+
+    /**
+     * Returns the URL for changing the user's pw, or empty if the default can
+     * be used.
+     *
+     * @return moodle_url
+     */
+    public function change_password_url() {
+        return null;
+    }
+
+    /**
+     * Returns true if plugin allows resetting of internal password.
+     *
+     * @return bool
+     */
+    public function can_reset_password() {
+        return true;
+    }
+
+    /**
+     * Returns true if plugin can be manually set.
+     *
+     * @return bool
+     */
+    public function can_be_manually_set() {
+        return true;
+    }
+
+    /**
+     * Prints a form for configuring this authentication plugin.
+     *
+     * This function is called from admin/auth.php, and outputs a full page with
+     * a form for configuring this plugin.
+     *
+     * @param array $page An object containing all the data for this page.
+     */
+    public function config_form($config, $err, $userfields) {
+        $providers = identity_provider::get_records();
+
+        foreach ($providers as $provider) {
+            
+        }
+        
+        return;
+    }
+
+    /**
+     * Processes and stores configuration data for this authentication plugin.
+     */
+    public function process_config($config) {
+        $mapping = $this->get_mapping();
+        foreach ($mapping as $openid => $moodle) {
+            set_config('field_updatelocal_' . $moodle, true, 'auth_openid');
+            set_config('field_lock_' . $moodle, false, 'auth_openid');
+        }
+        return true;
+    }
+
+    /**
+     * Return the userinfo from the oauth handshake. Will only be valid
+     * for the logged in user.
+     */
+    public function get_userinfo($username) {
+        $map = $this->get_mapping();
+        $cached = $this->get_static_user_info();
+        if (!empty($cached) && $cached->preferred_username == $username) {
+            $user = new stdClass();
+            foreach ($map as $openidproperty => $moodleproperty) {
+                if (!empty($cached->$openidproperty)) {
+                    $user->$moodleproperty = $cached->$openidproperty;
+                }
+            }
+            return (array)$user;
+        }
+        return false;
+    }
+
+    /**
+     * Return a list of identity providers to display on the login page.
+     */
+    public function loginpage_idp_list($wantsurl) {
+        $providers = identity_provider::get_records();
+        $result = [];
+        if (empty($wantsurl)) {
+            $wantsurl = '/';
+        }
+        foreach ($providers as $idp) {
+            $params = ['id' => $idp->get('id'), 'wantsurl' => $wantsurl, 'sesskey' => sesskey()];
+            $url = new moodle_url('/auth/openid/login.php', $params);
+            $icon = $idp->get('image');
+            $result[] = ['url' => $url, 'iconurl' => $icon, 'name' => $idp->get('name')];
+        }
+        return $result;
+    }
+
+    /**
+     * Statically cache the user info from the oauth handshake
+     * @param stdClass $userinfo
+     */
+    private function set_static_user_info($userinfo) {
+        self::$userinfo = $userinfo;
+    }
+
+    /**
+     * Get the static cached user info
+     * @return stdClass
+     */
+    private function get_static_user_info() {
+        return self::$userinfo;
+    }
+
+    /**
+     * If this user has no picture - but we got one from oauth - set it.
+     * @return boolean True if the image was updated.
+     */
+    private function update_picture($user) {
+        global $CFG, $DB, $USER;
+
+        require_once($CFG->libdir . '/filelib.php');
+        require_once($CFG->libdir . '/gdlib.php');
+
+        $fs = get_file_storage();
+        $userid = $user->id;
+        if (!empty($user->picture)) {
+            return false;
+        }
+        $cached = $this->get_static_user_info();
+        if (empty($cached->picture)) {
+            return false;
+        }
+
+        $context = \context_user::instance($userid, MUST_EXIST);
+        $fs->delete_area_files($context->id, 'user', 'newicon');
+
+        $filerecord = array(
+            'contextid' => $context->id,
+            'component' => 'user',
+            'filearea' => 'newicon',
+            'itemid' => 0,
+            'filepath' => '/'
+        );
+
+        $urlparams = array(
+            'calctimeout' => false,
+            'timeout' => 5,
+            'skipcertverify' => true,
+            'connecttimeout' => 5
+        );
+
+        try {
+            $fs->create_file_from_url($filerecord, $cached->picture, $urlparams);
+        } catch (\file_exception $e) {
+            return get_string($e->errorcode, $e->module, $e->a);
+        }
+
+        $iconfile = $fs->get_area_files($context->id, 'user', 'newicon', false, 'itemid', false);
+
+        // There should only be one.
+        $iconfile = reset($iconfile);
+
+        // Something went wrong while creating temp file - remove the uploaded file.
+        if (!$iconfile = $iconfile->copy_content_to_temp()) {
+            $fs->delete_area_files($context->id, 'user', 'newicon');
+            return false;
+        }
+
+        // Copy file to temporary location and the send it for processing icon.
+        $newpicture = (int) process_new_icon($context, 'user', 'icon', 0, $iconfile);
+        // Delete temporary file.
+        @unlink($iconfile);
+        // Remove uploaded file.
+        $fs->delete_area_files($context->id, 'user', 'newicon');
+        // Set the user's picture.
+        $updateuser = new stdClass();
+        $updateuser->id = $userid;
+        $updateuser->picture = $newpicture;
+        $USER->picture = $newpicture;
+        user_update_user($updateuser);
+        return true;
+    }
+
+    /**
+     * Complete the login process after oauth handshake is complete.
+     * @param \auth_openid\oauth2_client $client
+     * @param string $redirecturl
+     * @return none Either redirects or throws an exception
+     */
+    public function complete_login(oauth2_client $client, $redirecturl) {
+        global $CFG;
+
+        $userinfo = $client->get_user_info();
+
+        if (empty($userinfo->email_verified)) {
+            $errormsg = get_string('emailnotverfied', 'auth_openid');
+            $SESSION->loginerrormsg = $errormsg;
+            redirect(new moodle_url($CFG->httpswwwroot . '/login/index.php'));
+        }
+
+        if (empty($userinfo->preferred_username) && !empty($userinfo->email)) {
+            $userinfo->preferred_username = $userinfo->email;
+        }
+        $this->set_static_user_info($userinfo);
+
+        $user = authenticate_user_login($userinfo->preferred_username, '');
+
+        if ($user) {
+            complete_user_login($user);
+            $this->update_picture($user);
+            redirect($redirecturl);
+        }
+        $errormsg = get_string('notloggedin', 'auth_openid');
+        $SESSION->loginerrormsg = $errormsg;
+        redirect(new moodle_url($CFG->httpswwwroot . '/login/index.php'));
+    }
+}
+
+
