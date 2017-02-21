@@ -15,15 +15,26 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version information
+ * Open ID authentication.
  *
- * @package    auth_openid
- * @copyright  2017 Damyon Wiese
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package auth_oauth2
+ * @copyright 2017 Damyon Wiese
+ * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016120500;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2016112900;        // Requires this Moodle version
-$plugin->component = 'auth_openid';       // Full name of the plugin (used for diagnostics)
+require_once($CFG->libdir.'/authlib.php');
+
+/**
+ * Plugin for oauth2 authentication.
+ *
+ * @package auth_oauth2
+ * @copyright 2017 Damyon Wiese
+ * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
+ */
+class auth_plugin_oauth2 extends \auth_oauth2\auth {
+
+}
+
+

@@ -17,28 +17,29 @@
 /**
  * Open ID authentication.
  *
- * @package auth_openid
+ * @package auth_oauth2
  * @copyright 2017 Damyon Wiese
  * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
  */
 
 require_once('../../config.php');
 
-$idpid = required_param('id', PARAM_INT);
+$issuerid = required_param('id', PARAM_INT);
 $wantsurl = new moodle_url(optional_param('wantsurl', '/', PARAM_URL));
 
 require_sesskey();
 
-$idp = new \auth_openid\identity_provider($idpid);
+$issuer = new \core\oauth2\issuer($issuerid);
 
-$returnparams = ['wantsurl' => $wantsurl, 'sesskey' => sesskey(), 'id' => $idpid];
-$returnurl = new moodle_url('/auth/openid/login.php', $returnparams);
+$returnparams = ['wantsurl' => $wantsurl, 'sesskey' => sesskey(), 'id' => $issuerid];
+$returnurl = new moodle_url('/auth/oauth2/login.php', $returnparams);
 
-$client = new \auth_openid\oauth2_client($idp, $returnurl);
+$client = \core\oauth2\api::get_user_oauth_client($issuer, $returnurl);
 
-if (!$client->is_logged_in()) {
-    redirect($client->get_login_url());
-} else {
-    $auth = new \auth_openid\auth();
+if ($client) {
+    $auth = new \auth_oauth2\auth();
     $auth->complete_login($client, $wantsurl);
+} else {
+    throw new moodle_exception('Could not get an OAuth client.');
 }
+

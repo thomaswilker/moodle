@@ -15,15 +15,16 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Strings for component 'auth_openid', language 'en'.
+ * Plugin version info
  *
- * @package   auth_openid
- * @copyright 1999 onwards Martin Dougiamas  {@link http://moodle.com}
- * @license   http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ * @package    tool_oauth2
+ * @copyright  2017 Damyon Wiese
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$string['auth_openiddescription'] = 'Open ID is a generic identity solution for the internet.';
-$string['auth_openidsettings'] = 'Open ID Connect authentication settings.';
-$string['pluginname'] = 'Open ID Connect';
-$string['emailnotverified'] = 'You must verify your email before you can login.';
-$string['notloggedin'] = 'The login attempt failed.';
+defined('MOODLE_INTERNAL') || die();
+
+$plugin->version   = 2016120500; // The current plugin version (Date: YYYYMMDDXX)
+$plugin->requires  = 2016112900; // Requires this Moodle version
+$plugin->component = 'tool_oauth2'; // Full name of the plugin (used for diagnostics)
+
