@@ -2764,9 +2764,9 @@ class curl {
 
         // All settings of this class should be init here.
         $this->resetopt();
-        //if (!empty($settings['debug'])) {
+        if (!empty($settings['debug'])) {
             $this->debug = true;
-        //}
+        }
         if (!empty($settings['cookie'])) {
             if($settings['cookie'] === true) {
                 $this->cookie = $CFG->dataroot.'/curl_cookie.txt';
