@@ -313,7 +313,14 @@ class auth extends \auth_plugin_base {
 
         $userinfo = $client->get_userinfo();
 
+        var_dump($userinfo);
+
         if (!$userinfo) {
+            $errormsg = get_string('notloggedin', 'auth_oauth2');
+            $SESSION->loginerrormsg = $errormsg;
+            redirect(new moodle_url($CFG->httpswwwroot . '/login/index.php'));
+        }
+        if (empty($userinfo['username'])) {
             $errormsg = get_string('notloggedin', 'auth_oauth2');
             $SESSION->loginerrormsg = $errormsg;
             redirect(new moodle_url($CFG->httpswwwroot . '/login/index.php'));
