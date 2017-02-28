@@ -2557,7 +2557,7 @@ function xmldb_main_upgrade($oldversion) {
 
     if ($oldversion < 2017030300.01) {
 
-         // Define table oauth2_issuer to be created.
+        // Define table oauth2_issuer to be created.
         $table = new xmldb_table('oauth2_issuer');
 
         // Adding fields to table oauth2_issuer.
@@ -2646,7 +2646,7 @@ function xmldb_main_upgrade($oldversion) {
 
     if ($oldversion < 2017030300.04) {
 
-         // Define table oauth2_user_field_mapping to be created.
+        // Define table oauth2_user_field_mapping to be created.
         $table = new xmldb_table('oauth2_user_field_mapping');
 
         // Adding fields to table oauth2_user_field_mapping.
