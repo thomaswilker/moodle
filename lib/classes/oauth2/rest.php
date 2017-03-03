@@ -73,6 +73,7 @@ abstract class rest {
 
         $method = $functions[$functionname]['method'];
         $endpoint = $functions[$functionname]['endpoint'];
+
         $responsetype = $functions[$functionname]['response'];
         if (!in_array($method, $supportedmethods)) {
             throw new coding_exception('unsupported api method: ' . $method);
@@ -83,6 +84,15 @@ abstract class rest {
         foreach ($args as $argname => $argtype) {
             if (isset($functionargs[$argname])) {
                 $callargs[$argname] = clean_param($functionargs[$argname], $argtype);
+            }
+        }
+
+        // Allow params in the URL path like /me/{parent}/children.
+        foreach ($callargs as $argname => $value) {
+            $newendpoint = str_replace('{' . $argname . '}', $value, $endpoint);
+            if ($newendpoint != $endpoint) {
+                $endpoint = $newendpoint;
+                unset($callargs[$argname]);
             }
         }
 
