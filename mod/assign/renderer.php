@@ -1421,7 +1421,7 @@ class mod_assign_renderer extends plugin_renderer_base {
             $result .= '<li yuiConfig=\'' . json_encode($yuiconfig) . '\'>' .
                        '<div>' . $image . ' ' .
                                  $file->fileurl . ' ' .
-                                 $plagiarismlinks .
+                                 $plagiarismlinks . ' ' .
                                  $file->portfoliobutton . '</div>' .
                        '</li>';
         }
