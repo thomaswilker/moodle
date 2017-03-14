@@ -74,6 +74,7 @@ abstract class rest {
 
         $method = $functions[$functionname]['method'];
         $endpoint = $functions[$functionname]['endpoint'];
+
         $responsetype = $functions[$functionname]['response'];
         if (!in_array($method, $supportedmethods)) {
             throw new coding_exception('unsupported api method: ' . $method);
@@ -104,15 +105,18 @@ abstract class rest {
             $callargs = $rawpost;
         }
 
+        error_log('CURL: ' . $endpoint);
+        error_log('ARGS: ' . json_encode($callargs));
         $this->curl->setHeader('Content-type: application/json');
         $response = $this->curl->$method($endpoint, $callargs);
+        error_log('RESPONSE: ' . $response);
 
         if ($this->curl->errno == 0) {
             if ($responsetype == 'json') {
                 $json = json_decode($response);
 
                 if (!empty($json->error)) {
-                    throw new rest_exception($json->error->message, $json->error->code);
+                    throw new rest_exception($json->error->code . ': ' . $json->error->message);
                 }
                 return $json;
             }
