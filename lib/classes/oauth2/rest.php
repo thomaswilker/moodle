@@ -39,7 +39,7 @@ require_once($CFG->libdir . '/filelib.php');
 abstract class rest {
 
     /** @var curl $curl */
-    private $curl;
+    protected $curl;
 
     /**
      * Constructor.
@@ -65,7 +65,7 @@ abstract class rest {
      * @param array $functionargs
      * @param string $rawpost Optional param to include in the body of a post.
      */
-    public function call($functionname, $functionargs, $rawpost = false) {
+    public function call($functionname, $functionargs, $rawpost = false, $contenttype = false) {
         $functions = $this->get_api_functions();
         $supportedmethods = [ 'get', 'put', 'post', 'patch', 'head', 'delete' ];
         if (empty($functions[$functionname])) {
@@ -105,7 +105,11 @@ abstract class rest {
             $callargs = $rawpost;
         }
 
-        $this->curl->setHeader('Content-type: application/json');
+        if (empty($contenttype)) {
+            $this->curl->setHeader('Content-type: application/json');
+        } else {
+            $this->curl->setHeader('Content-type: ' . $contenttype);
+        }
         $response = $this->curl->$method($endpoint, $callargs);
 
         if ($this->curl->errno == 0) {
@@ -116,6 +120,8 @@ abstract class rest {
                     throw new rest_exception($json->error->code . ': ' . $json->error->message);
                 }
                 return $json;
+            } else if ($responsetype == 'headers') {
+                $response = $this->curl->get_raw_response();
             }
             return $response;
         } else {
