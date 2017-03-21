@@ -3854,9 +3854,11 @@ class curl_cache {
  * @param string $relativepath
  * @param bool $forcedownload
  * @param null|string $preview the preview mode, defaults to serving the original file
+ * @param boolean $offline If offline is requested - don't serve a redirect to an external file, return a file suitable for viewing
+ *                         offline (e.g. mobile app).
  * @todo MDL-31088 file serving improments
  */
-function file_pluginfile($relativepath, $forcedownload, $preview = null) {
+function file_pluginfile($relativepath, $forcedownload, $preview = null, $offline = false) {
     global $DB, $CFG, $USER;
     // relative path must start with '/'
     if (!$relativepath) {
@@ -3879,6 +3881,8 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
     list($context, $course, $cm) = get_context_info_array($contextid);
 
     $fs = get_file_storage();
+
+    $sendfileoptions = ['preview' => $preview, 'offline' => $offline];
 
     // ========================================================================================================================
     if ($component === 'blog') {
@@ -3932,7 +3936,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             send_file_not_found();
         }
 
-        send_stored_file($file, 10*60, 0, true, array('preview' => $preview)); // download MUST be forced - security!
+        send_stored_file($file, 10*60, 0, true, $sendfileoptions); // download MUST be forced - security!
 
     // ========================================================================================================================
     } else if ($component === 'grade') {
@@ -3949,7 +3953,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
 
         } else if ($filearea === 'feedback' and $context->contextlevel == CONTEXT_COURSE) {
             //TODO: nobody implemented this yet in grade edit form!!
@@ -3966,7 +3970,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
         } else {
             send_file_not_found();
         }
@@ -3987,7 +3991,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, true, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, true, $sendfileoptions);
 
         } else {
             send_file_not_found();
@@ -4009,14 +4013,14 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close();
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
         } else if ($filearea === 'userbadge'  and $context->contextlevel == CONTEXT_USER) {
             if (!$file = $fs->get_file($context->id, 'badges', 'userbadge', $badge->id, '/', $filename.'.png')) {
                 send_file_not_found();
             }
 
             \core\session\manager::write_close();
-            send_stored_file($file, 60*60, 0, true, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, true, $sendfileoptions);
         }
     // ========================================================================================================================
     } else if ($component === 'calendar') {
@@ -4043,7 +4047,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
 
         } else if ($filearea === 'event_description' and $context->contextlevel == CONTEXT_USER) {
 
@@ -4071,7 +4075,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 0, 0, true, array('preview' => $preview));
+            send_stored_file($file, 0, 0, true, $sendfileoptions);
 
         } else if ($filearea === 'event_description' and $context->contextlevel == CONTEXT_COURSE) {
 
@@ -4118,7 +4122,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
 
         } else {
             send_file_not_found();
@@ -4172,7 +4176,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
                 send_file($imagefile, basename($imagefile), 60*60*24*14);
             }
 
-            $options = array('preview' => $preview);
+            $options = $sendfileoptions;
             if (empty($CFG->forcelogin) && empty($CFG->forceloginforprofileimage)) {
                 // Profile images should be cache-able by both browsers and proxies according
                 // to $CFG->forcelogin and $CFG->forceloginforprofileimage.
@@ -4198,7 +4202,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 0, 0, true, array('preview' => $preview)); // must force download - security!
+            send_stored_file($file, 0, 0, true, $sendfileoptions); // must force download - security!
 
         } else if ($filearea === 'profile' and $context->contextlevel == CONTEXT_USER) {
 
@@ -4245,7 +4249,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 0, 0, true, array('preview' => $preview)); // must force download - security!
+            send_stored_file($file, 0, 0, true, $sendfileoptions); // must force download - security!
 
         } else if ($filearea === 'profile' and $context->contextlevel == CONTEXT_COURSE) {
             $userid = (int)array_shift($args);
@@ -4283,7 +4287,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 0, 0, true, array('preview' => $preview)); // must force download - security!
+            send_stored_file($file, 0, 0, true, $sendfileoptions); // must force download - security!
 
         } else if ($filearea === 'backup' and $context->contextlevel == CONTEXT_USER) {
             require_login();
@@ -4304,7 +4308,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 0, 0, true, array('preview' => $preview)); // must force download - security!
+            send_stored_file($file, 0, 0, true, $sendfileoptions); // must force download - security!
 
         } else {
             send_file_not_found();
@@ -4337,7 +4341,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
         } else {
             send_file_not_found();
         }
@@ -4360,7 +4364,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
 
         } else if ($filearea === 'section') {
             if ($CFG->forcelogin) {
@@ -4382,7 +4386,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
 
         } else {
             send_file_not_found();
@@ -4411,7 +4415,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             if (($file = $fs->get_file($cohortcontext->id, 'cohort', 'description', $cohort->id, $filepath, $filename))
                     && !$file->is_directory()) {
                 \core\session\manager::write_close(); // Unlock session during file serving.
-                send_stored_file($file, 60 * 60, 0, $forcedownload, array('preview' => $preview));
+                send_stored_file($file, 60 * 60, 0, $forcedownload, $sendfileoptions);
             }
         }
 
@@ -4443,7 +4447,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
 
         } else if ($filearea === 'icon') {
             $filename = array_pop($args);
@@ -4458,7 +4462,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, false, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, false, $sendfileoptions);
 
         } else {
             send_file_not_found();
@@ -4483,7 +4487,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
 
         } else {
             send_file_not_found();
@@ -4502,7 +4506,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 0, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 0, 0, $forcedownload, $sendfileoptions);
 
         } else if ($filearea === 'section' and $context->contextlevel == CONTEXT_COURSE) {
             require_login($course);
@@ -4517,7 +4521,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close();
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
 
         } else if ($filearea === 'activity' and $context->contextlevel == CONTEXT_MODULE) {
             require_login($course, false, $cm);
@@ -4530,7 +4534,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close();
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
 
         } else if ($filearea === 'automated' and $context->contextlevel == CONTEXT_COURSE) {
             // Backup files that were generated by the automated backup systems.
@@ -4545,7 +4549,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 0, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 0, 0, $forcedownload, $sendfileoptions);
 
         } else {
             send_file_not_found();
@@ -4554,7 +4558,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
     // ========================================================================================================================
     } else if ($component === 'question') {
         require_once($CFG->libdir . '/questionlib.php');
-        question_pluginfile($course, $context, 'question', $filearea, $args, $forcedownload);
+        question_pluginfile($course, $context, 'question', $filearea, $args, $forcedownload, $sendfileoptions);
         send_file_not_found();
 
     // ========================================================================================================================
@@ -4591,7 +4595,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             \core\session\manager::write_close(); // Unlock session during file serving.
-            send_stored_file($file, 60*60, 0, $forcedownload, array('preview' => $preview));
+            send_stored_file($file, 60*60, 0, $forcedownload, $sendfileoptions);
         }
 
         // ========================================================================================================================
@@ -4623,17 +4627,17 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
             }
 
             // finally send the file
-            send_stored_file($file, null, 0, false, array('preview' => $preview));
+            send_stored_file($file, null, 0, false, $sendfileoptions);
         }
 
         $filefunction = $component.'_pluginfile';
         $filefunctionold = $modname.'_pluginfile';
         if (function_exists($filefunction)) {
             // if the function exists, it must send the file and terminate. Whatever it returns leads to "not found"
-            $filefunction($course, $cm, $context, $filearea, $args, $forcedownload, array('preview' => $preview));
+            $filefunction($course, $cm, $context, $filearea, $args, $forcedownload, $sendfileoptions);
         } else if (function_exists($filefunctionold)) {
             // if the function exists, it must send the file and terminate. Whatever it returns leads to "not found"
-            $filefunctionold($course, $cm, $context, $filearea, $args, $forcedownload, array('preview' => $preview));
+            $filefunctionold($course, $cm, $context, $filearea, $args, $forcedownload, $sendfileoptions);
         }
 
         send_file_not_found();
@@ -4674,7 +4678,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
         $filefunction = $component.'_pluginfile';
         if (function_exists($filefunction)) {
             // if the function exists, it must send the file and terminate. Whatever it returns leads to "not found"
-            $filefunction($course, $birecord, $context, $filearea, $args, $forcedownload, array('preview' => $preview));
+            $filefunction($course, $birecord, $context, $filearea, $args, $forcedownload, $sendfileoptions);
         }
 
         send_file_not_found();
@@ -4695,7 +4699,7 @@ function file_pluginfile($relativepath, $forcedownload, $preview = null) {
         $filefunction = $component.'_pluginfile';
         if (function_exists($filefunction)) {
             // if the function exists, it must send the file and terminate. Whatever it returns leads to "not found"
-            $filefunction($course, $cm, $context, $filearea, $args, $forcedownload, array('preview' => $preview));
+            $filefunction($course, $cm, $context, $filearea, $args, $forcedownload, $sendfileoptions);
         }
 
         send_file_not_found();
