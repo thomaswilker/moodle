@@ -741,14 +741,16 @@ class repository_onedrive extends repository {
      * Upload a file to onedrive.
      *
      * @param \repository_onedrive\rest $service Authenticated client.
-     * @param \curl $curl Curl client to perform the put operation.
+     * @param \curl $curl Curl client to perform the put operation (with no auth headers).
+     * @param \curl $authcurl Curl client that will send authentication headers
      * @param string $filepath The local path to the file to upload
      * @param string $mimetype The new mimetype
      * @param string $parentid The folder to put it.
      * @param string $filename The name of the new file
      * @return string $fileid
      */
-    protected function upload_file(\repository_onedrive\rest $service, \curl $curl, $filepath, $mimetype, $parentid, $filename) {
+    protected function upload_file(\repository_onedrive\rest $service, \curl $curl, \curl $authcurl,
+                                   $filepath, $mimetype, $parentid, $filename) {
         // Start an upload session.
         // Docs https://developer.microsoft.com/en-us/graph/docs/api-reference/v1.0/api/item_createuploadsession link.
 
@@ -770,8 +772,20 @@ class repository_onedrive extends repository {
         }
 
         if (empty($response->id)) {
-            $details = 'File not created';
-            throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            // Try again sending the correct auth headers. This is because personal accounts do not like the auth header, but work
+            // accounts require it.
+            $authcurl->setHeader('Content-type: ' . $mimetype);
+            $size = filesize($filepath);
+            $authcurl->setHeader('Content-Range: bytes 0-' . ($size - 1) . '/' . $size);
+            $response = $authcurl->put($created->uploadUrl, $options);
+            if ($curl->errno == 0) {
+                $response = json_decode($response);
+            }
+
+            if (empty($response->id)) {
+                $details = 'File not created';
+                throw new repository_exception('errorwhilecommunicatingwith', 'repository', '', $details);
+            }
         }
 
         return $response->id;
@@ -882,7 +896,7 @@ class repository_onedrive extends repository {
         $mimetype = $this->get_mimetype_from_filename($safefilename);
         // We cannot send authorization headers in the upload or personal microsoft accounts will fail (what a joke!).
         $curl = new \curl();
-        $fileid = $this->upload_file($systemservice, $curl, $temppath, $mimetype, $parentid, $safefilename);
+        $fileid = $this->upload_file($systemservice, $curl, $systemauth, $temppath, $mimetype, $parentid, $safefilename);
 
         // Read with link.
         $link = $this->set_file_sharing_anyone_with_link_can_read($systemservice, $fileid);
