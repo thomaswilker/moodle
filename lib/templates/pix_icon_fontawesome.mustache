@@ -43,7 +43,7 @@
 
 }}
 {{^unmappedIcon}}
-<i class="icon fa {{key}} fa-fw {{extraclasses}}" aria-hidden="true" title="{{title}}" aria-label="{{alt}}"></i>
+<span class="icon" title="{{title}}"><i class="fa {{key}} fa-fw {{extraclasses}}" aria-hidden="true"></i><span class="sr-only">{{alt}}</span></span>
 {{/unmappedIcon}}
 {{#unmappedIcon}}
 {{! We cannot include the pix_icon template directly here because we don't have all the mustache helpers loaded. }}

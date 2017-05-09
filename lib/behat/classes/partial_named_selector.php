@@ -117,11 +117,11 @@ class behat_partial_named_selector extends \Behat\Mink\Selector\PartialNamedSele
      */
     protected static $moodleselectors = array(
         'activity' => <<<XPATH
-.//li[contains(concat(' ', normalize-space(@class), ' '), ' activity ')][normalize-space(.) = %locator% ]
+.//li[contains(concat(' ', normalize-space(@class), ' '), ' activity ')][contains(normalize-space(.), %locator%)]
 XPATH
         , 'block' => <<<XPATH
 .//*[@data-block][contains(concat(' ', normalize-space(@class), ' '), concat(' ', %locator%, ' ')) or
-     descendant::*[self::h2|self::h3][normalize-space(.) = %locator%]  or
+     descendant::*[self::h2|self::h3][contains(normalize-space(.), %locator%)]  or
      @aria-label = %locator%]
 XPATH
         , 'dialogue' => <<<XPATH
@@ -147,10 +147,10 @@ XPATH
 XPATH
         , 'section' => <<<XPATH
 .//li[contains(concat(' ', normalize-space(@class), ' '), ' section ')][./descendant::*[self::h3]
-    [normalize-space(.) = %locator%][contains(concat(' ', normalize-space(@class), ' '), ' sectionname ') or
+    [contains(normalize-space(.), %locator%)][contains(concat(' ', normalize-space(@class), ' '), ' sectionname ') or
     contains(concat(' ', normalize-space(@class), ' '), ' section-title ')]] |
 .//div[contains(concat(' ', normalize-space(@class), ' '), ' sitetopic ')]
-    [./descendant::*[self::h2][normalize-space(.) = %locator%] or %locator% = 'frontpage']
+    [./descendant::*[self::h2][contains(normalize-space(.), %locator%)] or %locator% = 'frontpage']
 XPATH
         , 'table' => <<<XPATH
 .//table[(./@id = %locator% or contains(.//caption, %locator%) or contains(.//th, %locator%) or contains(concat(' ', normalize-space(@class), ' '), %locator% ))]
