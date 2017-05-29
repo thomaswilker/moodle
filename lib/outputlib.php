@@ -1207,6 +1207,12 @@ class theme_config {
             throw new coding_exception('The theme did not define a SCSS file, or it is not readable.');
         }
 
+        $cache = cache::make_from_params(cache_store::MODE_APPLICATION, 'core', 'themedesigner', array('theme' => $this->name));
+
+        if ($compiled = $cache->get(self::SCSS_KEY)) {
+            return $compiled;
+        }
+
         // We might need more memory/time to do this, so let's play safe.
         raise_memory_limit(MEMORY_EXTRA);
         core_php_time_limit::raise(300);
@@ -1225,6 +1231,9 @@ class theme_config {
         try {
             // Compile!
             $compiled = $compiler->to_css();
+
+            // Success - lets cache it!
+            $cache->set(self::SCSS_KEY, $compiled);
 
         } catch (\Leafo\ScssPhp\Exception $e) {
             $compiled = false;
