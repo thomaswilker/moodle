@@ -437,8 +437,18 @@ class navigation_node implements renderable {
             $flat->set_showdivider($showdivider);
             $nodes->add($flat);
         }
+        $first = true;
+        $lastchild = null;
         foreach ($this->children as $child) {
+            $lastchild = $child;
+            if ($first && $this->isexpandable) {
+                $child->openexpandable = true;
+            }
+            $first = false;
             $child->build_flat_navigation_list($nodes, false);
+        }
+        if ($this->isexpandable && $lastchild) {
+            $lastchild->closeexpandable = true;
         }
     }
 
@@ -3701,7 +3711,6 @@ class flat_navigation_node extends navigation_node {
     public function set_indent($val) {
         $this->indent = $val;
     }
-
 }
 
 /**
