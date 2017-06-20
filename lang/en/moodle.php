@@ -1016,6 +1016,7 @@ $string['includesitefiles'] = 'Include site files used in this course';
 $string['includeuserfiles'] = 'Include user files';
 $string['increasesections'] = 'Increase the number of sections';
 $string['indicator:noteacher'] = 'There are no teachers';
+$string['indicator:mental'] = 'Course is mental';
 $string['info'] = 'Information';
 $string['institution'] = 'Institution';
 $string['instudentview'] = 'in student view';
