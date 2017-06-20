@@ -78,8 +78,7 @@ class mental extends \core_analytics\local\target\binary {
      * @return array
      */
     protected function ignored_predicted_classes() {
-        // No need to list the course if there is teaching activity.
-        return array(0);
+        return array();
     }
 
     public function get_analyser_class() {
@@ -112,11 +111,11 @@ class mental extends \core_analytics\local\target\binary {
      */
     protected function calculate_sample($sampleid, \core_analytics\analysable $analysable, $starttime = false, $endtime = false) {
 
-        $ismentalindicator = $this->retrieve('\core_course\analytics\indicator\mental', $sampleid);
-        if ($ismentalindicator) {
+        $ismentalindicator = $this->retrieve('core_course\analytics\indicator\mental', $sampleid);
+        if ($ismentalindicator > 0) {
             // It is mental.
-            return 1;
+            return 0;
         }
-        return 0;
+        return 1;
     }
 }
