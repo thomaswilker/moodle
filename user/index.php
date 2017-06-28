@@ -26,6 +26,7 @@ require_once('../config.php');
 require_once($CFG->dirroot.'/user/lib.php');
 require_once($CFG->libdir.'/tablelib.php');
 require_once($CFG->libdir.'/filelib.php');
+require_once($CFG->dirroot.'/enrol/locallib.php');
 
 define('USER_SMALL_CLASS', 20);   // Below this is considered small.
 define('USER_LARGE_CLASS', 200);  // Above this is considered large.
@@ -137,6 +138,10 @@ if ($mode !== null) {
     $mode = MODE_BRIEF;
 }
 
+// Manage enrolments.
+$manager = new course_enrolment_manager($PAGE, $course);
+$enrolbuttons = $manager->get_manual_enrol_buttons();
+
 // Check to see if groups are being used in this course
 // and if so, set $currentgroup to reflect the current group.
 
@@ -157,6 +162,13 @@ $PAGE->set_other_editing_capability('moodle/course:manageactivities');
 
 echo $OUTPUT->header();
 echo $OUTPUT->heading(get_string('participants'));
+
+$enrolrenderer = $PAGE->get_renderer('core_enrol');
+echo '<div class="pull-right">';
+foreach ($enrolbuttons as $enrolbutton) {
+    echo $enrolrenderer->render($enrolbutton);
+}
+echo '</div>';
 
 echo '<div class="userlist">';
 
@@ -841,6 +853,13 @@ if ($totalcount > $perpage) {
 }
 
 echo '</div>';  // Userlist.
+
+$enrolrenderer = $PAGE->get_renderer('core_enrol');
+echo '<div class="pull-right">';
+foreach ($enrolbuttons as $enrolbutton) {
+    echo $enrolrenderer->render($enrolbutton);
+}
+echo '</div>';
 
 echo $OUTPUT->footer();
 
