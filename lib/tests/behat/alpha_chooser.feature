@@ -198,7 +198,6 @@ Feature: Initials bar
     And I log in as "teacher"
     And I am on "Course 1" course homepage
     And I follow "Participants"
-    And I select "Brief" from the "mode" singleselect
     And ".initialbarall.letter.active" "css_element" should exist in the ".initialbar.firstinitial" "css_element"
     And ".initialbarall.letter.active" "css_element" should exist in the ".initialbar.lastinitial" "css_element"
     And ".letter.active.B" "css_element" should not exist in the ".initialbar.firstinitial" "css_element"
@@ -224,7 +223,6 @@ Feature: Initials bar
     And I should not see "Cstudent Cstudent"
     And I am on "Course 1" course homepage
     And I follow "Participants"
-    And I select "Brief" from the "mode" singleselect
     And ".initialbarall.letter.active" "css_element" should not exist in the ".initialbar.firstinitial" "css_element"
     And ".initialbarall.letter.active" "css_element" should not exist in the ".initialbar.lastinitial" "css_element"
     And ".letter.active.B" "css_element" should exist in the ".initialbar.firstinitial" "css_element"
@@ -257,7 +255,6 @@ Feature: Initials bar
     And I log in as "teacher"
     And I am on "Course 1" course homepage
     And I follow "Participants"
-    And I select "User details" from the "mode" singleselect
     And ".initialbarall.letter.active" "css_element" should exist in the ".initialbar.firstinitial" "css_element"
     And ".initialbarall.letter.active" "css_element" should exist in the ".initialbar.lastinitial" "css_element"
     And ".letter.active.B" "css_element" should not exist in the ".initialbar.firstinitial" "css_element"
@@ -283,7 +280,6 @@ Feature: Initials bar
     And I should not see "Cstudent Cstudent"
     And I am on "Course 1" course homepage
     And I follow "Participants"
-    And I select "User details" from the "mode" singleselect
     And ".initialbarall.letter.active" "css_element" should not exist in the ".initialbar.firstinitial" "css_element"
     And ".initialbarall.letter.active" "css_element" should not exist in the ".initialbar.lastinitial" "css_element"
     And ".letter.active.B" "css_element" should exist in the ".initialbar.firstinitial" "css_element"
