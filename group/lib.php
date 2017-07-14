@@ -1096,3 +1096,55 @@ function groups_sync_with_enrolment($enrolname, $courseid = 0, $gidfield = 'cust
 
     return $affectedusers;
 }
+
+/**
+ * Serve the new group form as a fragment.
+ *
+ * @param array $args List of named arguments for the fragment loader.
+ * @return string
+ */
+function core_group_output_fragment_new_group_form($args) {
+    global $CFG;
+
+    require_once($CFG->dirroot . '/group/group_form.php');
+    $args = (object) $args;
+    $context = $args->context;
+    $o = '';
+
+    $formdata = [];
+    if (!empty($args->jsonformdata)) {
+        $serialiseddata = json_decode($args->jsonformdata);
+        parse_str($serialiseddata, $formdata);
+    }
+
+    list($ignored, $course) = get_context_info_array($context->id);
+    $group = new stdClass();
+    $group->courseid = $course->id;
+
+    require_capability('moodle/course:managegroups', $context);
+    $editoroptions = [
+        'maxfiles' => EDITOR_UNLIMITED_FILES,
+        'maxbytes' => $course->maxbytes,
+        'trust' => false,
+        'context' => $context,
+        'noclean' => true,
+        'subdirs' => false
+    ];
+    $group = file_prepare_standard_editor($group, 'description', $editoroptions, $context, 'group', 'description', null);
+
+    $mform = new group_form(null, array('editoroptions' => $editoroptions), 'post', '', null, true, $formdata);
+    // Used to set the courseid.
+    $mform->set_data($group);
+
+    if (!empty($args->jsonformdata)) {
+        // If we were passed non-empty form data we want the mform to call validation functions and show errors.
+        $mform->is_validated();
+    }
+
+    ob_start();
+    $mform->display();
+    $o .= ob_get_contents();
+    ob_end_clean();
+
+    return $o;
+}
