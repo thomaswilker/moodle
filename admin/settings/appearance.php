@@ -178,6 +178,7 @@ preferences,moodle|/user/preferences.php|preferences',
         'shortname' => new lang_string('sort_shortname', 'admin'),
         'idnumber' => new lang_string('sort_idnumber', 'admin'),
     );
+    $temp->add(new admin_setting_configcheckbox('navshowturneditingon', new lang_string('navshowturneditingon', 'admin'), new lang_string('confignavshowturneditingon', 'admin'), 0));
     $temp->add(new admin_setting_configselect('navsortmycoursessort', new lang_string('navsortmycoursessort', 'admin'), new lang_string('navsortmycoursessort_help', 'admin'), 'sortorder', $sortoptions));
     $temp->add(new admin_setting_configtext('navcourselimit', new lang_string('navcourselimit', 'admin'),
         new lang_string('confignavcourselimit', 'admin'), 10, PARAM_INT));

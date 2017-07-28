@@ -4282,15 +4282,17 @@ class settings_navigation extends navigation_node {
                 $baseurl = new moodle_url('/course/view.php', array('id'=>$course->id, 'return'=>$this->page->url->out_as_local_url(false), 'sesskey'=>sesskey()));
             }
 
-            $editurl = clone($baseurl);
-            if ($this->page->user_is_editing()) {
-                $editurl->param('edit', 'off');
-                $editstring = get_string('turneditingoff');
-            } else {
-                $editurl->param('edit', 'on');
-                $editstring = get_string('turneditingon');
+            if ($CFG->navshowturneditingon) {
+                $editurl = clone($baseurl);
+                if ($this->page->user_is_editing()) {
+                    $editurl->param('edit', 'off');
+                    $editstring = get_string('turneditingoff');
+                } else {
+                    $editurl->param('edit', 'on');
+                    $editstring = get_string('turneditingon');
+                }
+                $coursenode->add($editstring, $editurl, self::TYPE_SETTING, null, 'turneditingonoff', new pix_icon('i/edit', ''));
             }
-            $coursenode->add($editstring, $editurl, self::TYPE_SETTING, null, 'turneditingonoff', new pix_icon('i/edit', ''));
         }
 
         if ($adminoptions->editcompletion) {
@@ -5194,8 +5196,13 @@ class settings_navigation extends navigation_node {
         }
         $frontpage->id = 'frontpagesettings';
 
-        if ($this->page->user_allowed_editing()) {
+        if ($adminoptions->update) {
+            // Add the course settings link
+            $url = new moodle_url('/admin/settings.php', array('section'=>'frontpagesettings'));
+            $frontpage->add(get_string('editsettings'), $url, self::TYPE_SETTING, null, null, new pix_icon('i/settings', ''));
+        }
 
+        if ($this->page->user_allowed_editing() && $CFG->navshowturneditingon) {
             // Add the turn on/off settings
             $url = new moodle_url('/course/view.php', array('id'=>$course->id, 'sesskey'=>sesskey()));
             if ($this->page->user_is_editing()) {
@@ -5208,11 +5215,6 @@ class settings_navigation extends navigation_node {
             $frontpage->add($editstring, $url, self::TYPE_SETTING, null, null, new pix_icon('i/edit', ''));
         }
 
-        if ($adminoptions->update) {
-            // Add the course settings link
-            $url = new moodle_url('/admin/settings.php', array('section'=>'frontpagesettings'));
-            $frontpage->add(get_string('editsettings'), $url, self::TYPE_SETTING, null, null, new pix_icon('i/settings', ''));
-        }
 
         // add enrol nodes
         enrol_add_course_navigation($frontpage, $course);
