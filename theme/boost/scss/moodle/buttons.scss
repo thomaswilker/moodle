@@ -6,6 +6,20 @@
     }
 }
 
+.btn-secondary a .icon,
+.btn-secondary a,
+a.btn-secondary .icon,
+a.btn-secondary {
+    color: $body-color;
+}
+
+.btn-primary a .icon,
+.btn-primary a,
+a.btn-primary .icon,
+a.btn-primary {
+    color: $btn-primary-color;
+}
+
 .continuebutton {
     text-align: center;
 }
