@@ -947,21 +947,11 @@ function badges_add_course_navigation(navigation_node $coursenode, stdClass $cou
                                           'moodle/badges:deletebadge'), $coursecontext);
 
     if (!empty($CFG->enablebadges) && !empty($CFG->badges_allowcoursebadges) && !$isfrontpage && $canmanage) {
-        $coursenode->add(get_string('coursebadges', 'badges'), null,
-                navigation_node::TYPE_CONTAINER, null, 'coursebadges',
-                new pix_icon('i/badge', get_string('coursebadges', 'badges')));
 
         $url = new moodle_url('/badges/index.php', array('type' => BADGE_TYPE_COURSE, 'id' => $course->id));
 
-        $coursenode->get('coursebadges')->add(get_string('managebadges', 'badges'), $url,
+        $coursenode->add(get_string('managebadges', 'badges'), $url,
             navigation_node::TYPE_SETTING, null, 'coursebadges');
-
-        if (has_capability('moodle/badges:createbadge', $coursecontext)) {
-            $url = new moodle_url('/badges/newbadge.php', array('type' => BADGE_TYPE_COURSE, 'id' => $course->id));
-
-            $coursenode->get('coursebadges')->add(get_string('newbadge', 'badges'), $url,
-                    navigation_node::TYPE_SETTING, null, 'newbadge');
-        }
     }
 }
 
