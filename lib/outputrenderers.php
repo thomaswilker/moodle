@@ -2617,7 +2617,9 @@ EOD;
             $editstring = get_string('turneditingon');
         }
 
-        return $this->single_button($url, $editstring);
+        $editstring = $this->pix_icon('i/edit', '') . ' ' . $editstring;
+
+        return $this->action_link($url, $editstring, null, ['class' => 'btn btn-primary']);
     }
 
     /**

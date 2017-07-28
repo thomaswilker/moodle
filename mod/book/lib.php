@@ -302,7 +302,7 @@ function book_supports($feature) {
  * @return void
  */
 function book_extend_settings_navigation(settings_navigation $settingsnav, navigation_node $booknode) {
-    global $USER, $PAGE, $OUTPUT;
+    global $USER, $PAGE, $OUTPUT, $CFG;
 
     if ($booknode->children->count() > 0) {
         $firstkey = $booknode->children->get_key_list()[0];
@@ -323,8 +323,12 @@ function book_extend_settings_navigation(settings_navigation $settingsnav, navig
         }
         $url = new moodle_url('/mod/book/view.php', array('id'=>$params['id'], 'chapterid'=>$params['chapterid'], 'edit'=>$edit, 'sesskey'=>sesskey()));
         $editnode = navigation_node::create($string, $url, navigation_node::TYPE_SETTING);
-        $booknode->add_node($editnode, $firstkey);
-        $PAGE->set_button($OUTPUT->single_button($url, $string));
+        if ($CFG->navshowturneditingon) {
+            $booknode->add_node($editnode, null);
+        }
+
+        $string = $OUTPUT->pix_icon('i/edit', '') . ' ' . $string;
+        $PAGE->set_button($OUTPUT->action_link($url, $string, null, ['class' => 'btn btn-primary']));
     }
 
     $plugins = core_component::get_plugin_list('booktool');

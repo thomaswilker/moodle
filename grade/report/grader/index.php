@@ -101,8 +101,11 @@ if (has_capability('moodle/grade:edit', $context)) {
         $options['edit'] = 1;
         $string = get_string('turneditingon');
     }
+    $string = $OUTPUT->pix_icon('i/edit', '') . ' ' . $string;
+    $url = new moodle_url('/grade/report/grader/index.php', $options);
 
-    $buttons = new single_button(new moodle_url('index.php', $options), $string, 'get');
+    $buttons = $OUTPUT->action_link($url, $string, null, ['class' => 'btn btn-primary']);
+
 } else {
     $USER->gradeediting[$course->id] = 0;
     $buttons = '';
