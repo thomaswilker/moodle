@@ -585,6 +585,8 @@ class core_renderer extends \core_renderer {
             }
         }
 
+        $menu->set_showasbuttons(true);
+
         return $this->render($menu);
     }
 
@@ -649,6 +651,7 @@ class core_renderer extends \core_renderer {
 
             }
         }
+        $menu->set_showasbuttons(true);
         return $this->render($menu);
     }
 

@@ -4127,6 +4127,12 @@ class action_menu implements renderable, templatable {
     public $menutrigger = '';
 
     /**
+     * Show primary links as buttons.
+     * @var showasbuttons
+     */
+    public $showasbuttons = false;
+
+    /**
      * Place the action menu before all other actions.
      * @var prioritise
      */
@@ -4167,6 +4173,17 @@ class action_menu implements renderable, templatable {
 
     public function set_menu_trigger($trigger) {
         $this->menutrigger = $trigger;
+    }
+
+    public function set_showasbuttons($showasbuttons) {
+        $this->showasbuttons = $showasbuttons;
+        if (strpos('btn-group', $this->attributesprimary['class']) === false) {
+            $this->attributesprimary['class'] .= ' btn-group';
+        }
+
+        foreach ($this->primaryactions as $action) {
+            $action->add_class('btn btn-secondary');
+        }
     }
 
     /**
@@ -4495,6 +4512,7 @@ class action_menu implements renderable, templatable {
             return $data;
         }, $this->secondaryactions);
 
+        $data->showasbuttons = $this->showasbuttons;
         $data->primary = $primary;
         $data->secondary = $secondary;
 
