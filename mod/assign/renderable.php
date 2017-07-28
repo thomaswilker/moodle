@@ -692,6 +692,7 @@ class assign_header implements renderable {
         $this->assign = $assign;
         $this->context = $context;
         $this->showintro = $showintro;
+        $this->cangrade = has_capability('mod/assign:grade', $context);
         $this->coursemoduleid = $coursemoduleid;
         $this->subpage = $subpage;
         $this->preface = $preface;

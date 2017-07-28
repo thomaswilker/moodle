@@ -53,6 +53,7 @@ span:first-of-type > .icon {
 .pull-xs-right {
     // Now we need to override the .action-menu .dropdown a:first-of-type > .icon
     // rule above for when actions menus are in the pull-xs-right class.
+    .btn .icon,
     .dropdown a .icon {
         margin-left: 0;
         margin-right: 0.5rem;

@@ -1783,7 +1783,7 @@ function quiz_get_extra_capabilities() {
  * @return void
  */
 function quiz_extend_settings_navigation($settings, $quiznode) {
-    global $PAGE, $CFG;
+    global $PAGE, $CFG, $OUTPUT;
 
     // Require {@link questionlib.php}
     // Included here as we only ever want to include this file if we really need to.
@@ -1793,7 +1793,7 @@ function quiz_extend_settings_navigation($settings, $quiznode) {
     // Locally assigned roles node. Of course, both of those are controlled by capabilities.
     $keys = $quiznode->get_children_key_list();
     $beforekey = null;
-    $i = array_search('modedit', $keys);
+    $i = array_search('activitybackup', $keys);
     if ($i === false and array_key_exists(0, $keys)) {
         $beforekey = $keys[0];
     } else if (array_key_exists($i + 1, $keys)) {
@@ -1814,11 +1814,15 @@ function quiz_extend_settings_navigation($settings, $quiznode) {
     }
 
     if (has_capability('mod/quiz:manage', $PAGE->cm->context)) {
-        $node = navigation_node::create(get_string('editquiz', 'quiz'),
-                new moodle_url('/mod/quiz/edit.php', array('cmid'=>$PAGE->cm->id)),
+        $url = new moodle_url('/mod/quiz/edit.php', array('cmid'=>$PAGE->cm->id));
+        $str = get_string('editquiz', 'quiz');
+        $node = navigation_node::create($str,
+                $url,
                 navigation_node::TYPE_SETTING, null, 'mod_quiz_edit',
                 new pix_icon('t/edit', ''));
         $quiznode->add_node($node, $beforekey);
+
+        $PAGE->set_button($OUTPUT->single_button($url, $str, 'get', ['primary' => true, 'icon' => new pix_icon('t/edit', '')]));
     }
 
     if (has_capability('mod/quiz:preview', $PAGE->cm->context)) {

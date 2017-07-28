@@ -39,6 +39,7 @@ $strplural = get_string("modulenameplural", "assign");
 $PAGE->navbar->add($strplural);
 $PAGE->set_title($strplural);
 $PAGE->set_heading($course->fullname);
+
 echo $OUTPUT->header();
 echo $OUTPUT->heading(format_string($strplural));
 

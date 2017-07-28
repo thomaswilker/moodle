@@ -35,11 +35,11 @@
 
         <div class="{{classes}}"{{#attributes}} {{name}}="{{value}}"{{/attributes}}>
 
-            {{#prioritise}}{{> core/action_menu_trigger }}{{/prioritise}}{{!
+            {{#prioritise}}{{#hassecondary}}{{> core/action_menu_trigger }}{{/hassecondary}}{{/prioritise}}{{!
 
             }}{{#items}}{{> core/action_menu_item }}{{/items}}{{!
 
-            }}{{^prioritise}}{{> core/action_menu_trigger }}{{/prioritise}}
+            }}{{^prioritise}}{{#hassecondary}}{{> core/action_menu_trigger }}{{/hassecondary}}{{/prioritise}}
 
         </div>
 

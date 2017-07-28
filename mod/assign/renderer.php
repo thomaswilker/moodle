@@ -219,6 +219,7 @@ class mod_assign_renderer extends plugin_renderer_base {
      * @return string
      */
     public function render_assign_header(assign_header $header) {
+        global $PAGE;
         $o = '';
 
         if ($header->subpage) {
@@ -227,6 +228,13 @@ class mod_assign_renderer extends plugin_renderer_base {
 
         $this->page->set_title(get_string('pluginname', 'assign'));
         $this->page->set_heading($this->page->course->fullname);
+
+        if ($header->cangrade) {
+            $urlparams = array('id' => $header->coursemoduleid, 'action' => 'grader');
+            $url = new moodle_url('/mod/assign/view.php', $urlparams);
+            $btn = '<a href="' . $url . '" class="btn btn-primary">' . get_string('grade') . '</a>';
+            $PAGE->set_button($btn);
+        }
 
         $o .= $this->output->header();
         $heading = format_string($header->assign->name, false, array('context' => $header->context));
@@ -263,6 +271,8 @@ class mod_assign_renderer extends plugin_renderer_base {
      * @return string
      */
     public function render_assign_grading_summary(assign_grading_summary $summary) {
+        global $PAGE;
+
         // Create a table for the data.
         $o = '';
         $o .= $this->output->container_start('gradingsummary');

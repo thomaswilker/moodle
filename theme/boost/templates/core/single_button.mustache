@@ -36,6 +36,7 @@
     * tooltip - tooltip text for the button
     * disabled - true if this element is disabled
     * label - text to show on the button
+    * icon - icon to show before the label
 
     Example context (json):
     { "method" : "get",
@@ -53,7 +54,7 @@
         <button type="submit" class="btn {{#primary}}btn-primary{{/primary}}{{^primary}}btn-secondary{{/primary}}"
             id="{{id}}"
             title={{#quote}}{{tooltip}}{{/quote}}
-            {{#disabled}}disabled{{/disabled}}>{{label}}</button>
+            {{#disabled}}disabled{{/disabled}}>{{#icon}}{{{.}}}{{/icon}}{{label}}</button>
     </form>
 </div>
 {{#hasactions}}

@@ -79,17 +79,25 @@ class core_renderer extends \core_renderer {
         $html .= html_writer::start_div('pull-xs-left');
         $html .= $this->context_header();
         $html .= html_writer::end_div();
+
         if (empty($PAGE->layout_options['nonavbar'])) {
             $html .= html_writer::start_div('clearfix w-100 pull-xs-left', array('id' => 'page-navbar'));
+            $html .= html_writer::start_div('pull-xs-right', array('id' => 'first-settings-submenu'));
+            $html .= $this->context_header_first_subnav_menu();
+            $html .= html_writer::end_div();
             $html .= html_writer::tag('div', $this->navbar(), array('class' => 'breadcrumb-nav'));
+            $html .= html_writer::end_div();
+        } else {
+            $html .= html_writer::start_div('pull-xs-right m-t-1', array('id' => 'first-settings-submenu'));
+            $html .= $this->context_header_first_subnav_menu();
             $html .= html_writer::end_div();
         }
         $html .= html_writer::tag('div', $this->course_header(), array('id' => 'course-header'));
         $html .= html_writer::end_div();
         $pagenavigationheader = $this->page_navigation_header();
         if (!empty($pagenavigationheader)) {
-            $html .= html_writer::start_div('card m-t-1 m-b-0', array('id' => 'page-navigation-header'));
-            $html .= html_writer::start_div('card-block');
+            $html .= html_writer::start_div('card m-y-0', array('id' => 'page-navigation-header'));
+            $html .= html_writer::start_div('card-block', ['style' => 'padding-top: 0.5rem; padding-bottom: 0.5rem;']);
             $html .= $this->page_navigation_header();
             $html .= html_writer::end_div();
             $html .= html_writer::end_div();
@@ -102,17 +110,21 @@ class core_renderer extends \core_renderer {
     public function page_navigation_header() {
         // First is primary actions.
         $html = '';
-
-        $html .= $this->page_heading_button();
+        $actions = $this->page_heading_button();
+        if (!empty($actions)) {
+            $html .= html_writer::start_div('d-inline-block m-r-1');
+            $html .= $actions;
+            $html .= html_writer::end_div();
+        }
 
         $settingsmenu = $this->context_header_settings_menu();
 
         if (!empty($settingsmenu)) {
-            $html .= html_writer::start_div('d-inline-block m-x-1');
+            $html .= html_writer::start_div('d-inline-block m-r-1');
             $html .= $settingsmenu;
             $html .= html_writer::end_div();
         }
-        $settingssubmenus = $this->context_header_settings_submenus();
+        $settingssubmenus = $this->context_header_settings_submenus(true, false);
         if (!empty($settingsmenu)) {
             $html .= html_writer::start_div('d-inline-block pull-xs-right', ['style' => 'padding-top: 5px;']);
             $html .= $settingssubmenus;
@@ -147,6 +159,8 @@ class core_renderer extends \core_renderer {
      * Uses bootstrap compatible html.
      */
     public function navbar() {
+        $navbar = $this->page->navbar;
+
         return $this->render_from_template('core/navbar', $this->page->navbar);
     }
 
@@ -505,11 +519,25 @@ class core_renderer extends \core_renderer {
     }
 
     /**
-     * This is an optional set of sub-menus that can be added to a layout by a theme.
+     * Randomly pull a sub menu out of the settings menu.
      *
      * @return string
      */
-    public function context_header_settings_submenus() {
+    public function context_header_first_subnav_menu() {
+        return $this->context_header_settings_submenus(false, true, 3, get_string('morenavigationlinks'), "buttons");
+    }
+
+    /**
+     * This is an optional set of sub-menus that can be added to a layout by a theme.
+     *
+     * @param bool $skipfirst - Skip the first menu found
+     * @param bool $firstonly - Stop processing after the first menu
+     * @param int $primary - Force the first X links to be primary actions, not secondary.
+     * @param string $primarydisplaystyle - Force primary navigation elements to display as buttons or grouped buttons.
+     * @return string
+     */
+    public function context_header_settings_submenus($skipfirst, $firstonly, $primary = 0,
+                                                     $triggertext = '', $primarydisplaystyle = 'links') {
         $context = $this->page->context;
 
         $items = $this->page->navbar->get_items();
@@ -560,38 +588,39 @@ class core_renderer extends \core_renderer {
             $settingsnode = $this->page->settingsnav->find('frontpage', navigation_node::TYPE_SETTING);
             if ($settingsnode) {
                 // Build an action menu based on the visible nodes with children from this navigation tree.
-                $menus = $this->build_action_menus_from_navigation_submenus($settingsnode);
+                $menus = $this->build_action_menus_from_navigation_submenus($settingsnode, $skipfirst, $firstonly, $primary, $triggertext);
             }
         } else if ($showcoursemenu) {
             $settingsnode = $this->page->settingsnav->find('courseadmin', navigation_node::TYPE_COURSE);
             if ($settingsnode) {
                 // Build an action menu based on the visible nodes with children from this navigation tree.
-                $menus = $this->build_action_menus_from_navigation_submenus($settingsnode);
+                $menus = $this->build_action_menus_from_navigation_submenus($settingsnode, $skipfirst, $firstonly, $primary, $triggertext);
             }
         } else if ($showusermenu) {
             // Get the course admin node from the settings navigation.
             $settingsnode = $this->page->settingsnav->find('useraccount', navigation_node::TYPE_CONTAINER);
             if ($settingsnode) {
                 // Build an action menu based on the visible nodes with children from this navigation tree.
-                $menus = $this->build_action_menus_from_navigation_submenus($settingsnode);
+                $menus = $this->build_action_menus_from_navigation_submenus($settingsnode, $skipfirst, $firstonly, $primary, $triggertext);
             }
         } else if ($showactivitymenu) {
             $settingsnode = $this->page->settingsnav->find('modulesettings', navigation_node::TYPE_SETTING);
             if ($settingsnode) {
                 // Build an action menu based on the visible nodes from this navigation tree.
-                $menus = $this->build_action_menus_from_navigation_submenus($settingsnode);
+                $menus = $this->build_action_menus_from_navigation_submenus($settingsnode, $skipfirst, $firstonly, $primary, $triggertext);
             }
         } else if ($showcoursecatmenu) {
             $settingsnode = $this->page->settingsnav->find('categorysettings', navigation_node::TYPE_CONTAINER);
             if ($settingsnode) {
                 // Build an action menu based on the visible nodes from this navigation tree.
-                $menus = $this->build_action_menus_from_navigation_submenus($settingsnode);
+                $menus = $this->build_action_menus_from_navigation_submenus($settingsnode, $skipfirst, $firstonly, $primary, $triggertext);
             }
         }
 
         $html = '';
         foreach ($menus as $menu) {
             $html .= '<div class="d-inline-block m-x-2 text-left">';
+            $menu->set_primarydisplaystyle($primarydisplaystyle);
             $html .= $this->render($menu);
             $html .= '</div>';
         }
@@ -672,10 +701,10 @@ class core_renderer extends \core_renderer {
                 $this->build_action_menu_from_navigation($menu, $settingsnode);
             }
         } else {
-            return $this->region_main_settings_menu();
+            return $this->region_main_settings_menu(false);
         }
 
-        $menu->set_showasbuttons(true);
+        $menu->set_primarydisplaystyle("buttonsgrouped");
 
         return $this->render($menu);
     }
@@ -684,9 +713,11 @@ class core_renderer extends \core_renderer {
      * This is an optional menu that can be added to a layout by a theme. It contains the
      * menu for the most specific thing from the settings block. E.g. Module administration.
      *
+     * @param $includebranches - Include branches from the nav tree as a flat list of entries in this menu.
      * @return string
      */
-    public function region_main_settings_menu() {
+    public function region_main_settings_menu($includebranches = true) {
+
         $context = $this->page->context;
         $menu = new action_menu();
 
@@ -697,7 +728,7 @@ class core_renderer extends \core_renderer {
             $node = $this->page->settingsnav->find('modulesettings', navigation_node::TYPE_SETTING);
             if ($node) {
                 // Build an action menu based on the visible nodes from this navigation tree.
-                $this->build_action_menu_from_navigation($menu, $node);
+                $this->build_action_menu_from_navigation($menu, $node, false, !$includebranches, 1, false);
             }
 
         } else if ($context->contextlevel == CONTEXT_COURSECAT) {
@@ -705,10 +736,10 @@ class core_renderer extends \core_renderer {
             $node = $this->page->settingsnav->find('categorysettings', navigation_node::TYPE_CONTAINER);
             if ($node) {
                 // Build an action menu based on the visible nodes from this navigation tree.
-                $this->build_action_menu_from_navigation($menu, $node);
+                $this->build_action_menu_from_navigation($menu, $node, false, !$includebranches, 1, false);
             }
         }
-        $menu->set_showasbuttons(true);
+        $menu->set_primarydisplaystyle("buttonsgrouped");
         return $this->render($menu);
     }
 
@@ -718,11 +749,13 @@ class core_renderer extends \core_renderer {
      *
      * @param action_menu $menu
      * @param navigation_node $node
-     * @param boolean $indent
-     * @param boolean $onlytopleafnodes
+     * @param boolean $skipfirst $skip the first menu found
+     * @param boolean $firstonly Stop processing after the first menu
+     * @param int $primary Force first X links to be primary items and not secondary.
+     * @param string $triggertext Force the text to open the menu.
      * @return action_menu[] - Array of action menus.
      */
-    protected function build_action_menus_from_navigation_submenus(navigation_node $node) {
+    protected function build_action_menus_from_navigation_submenus(navigation_node $node, $skipfirst, $firstonly, $primary, $triggertext = '') {
         $menus = [];
 
         $skipped = false;
@@ -733,15 +766,22 @@ class core_renderer extends \core_renderer {
                     $skipped = true;
                     continue;
                 }
+
+                if ($skipfirst) {
+                    $skipfirst = false;
+                    continue;
+                }
                 $linktext = $menuitem->text;
                 $menu = new action_menu();
                 $menus[] = $menu;
 
-                $primary = false;
                 $trigger = $linktext;
                 $menu->set_menu_trigger($trigger);
 
-                $this->build_action_menu_from_navigation($menu, $menuitem, false, false, $primary);
+                $this->build_action_menu_from_navigation($menu, $menuitem, false, false, $primary, false, $triggertext);
+                if ($firstonly) {
+                    break;
+                }
             }
         }
         return $menus;
@@ -755,12 +795,18 @@ class core_renderer extends \core_renderer {
      * @param navigation_node $node
      * @param boolean $indent
      * @param boolean $onlytopleafnodes
+     * @param int $primary Force X nodes as primary links, not secondary
+     * @param boolean $showicons
+     * @param string $triggertext
      * @return boolean nodesskipped - True if nodes were skipped in building the menu
      */
     protected function build_action_menu_from_navigation(action_menu $menu,
                                                        navigation_node $node,
                                                        $indent = false,
-                                                       $onlytopleafnodes = false, $primary = true) {
+                                                       $onlytopleafnodes = false,
+                                                       $primary = 1,
+                                                       $showicons = true,
+                                                       $triggertext = '') {
         $skipped = false;
         // Build an action menu based on the visible nodes from this navigation tree.
         foreach ($node->children as $menuitem) {
@@ -789,19 +835,24 @@ class core_renderer extends \core_renderer {
                 if ($indent) {
                     $link->add_class('m-l-1');
                 }
+                if (!$showicons && !$primary) {
+                    $link->icon = null;
+                }
                 if (!empty($menuitem->classes)) {
                     $link->add_class(implode(" ", $menuitem->classes));
                 }
 
-                if ($primary) {
+                if ($menu->count_primary_actions() < $primary) {
                     $menu->add_primary_action($link);
-                    $primary = false;
-                    $trigger = '<span class="sr-only">' . get_string('openmenu') . '</span>';
-                    $menu->set_menu_trigger($trigger);
+                    if (empty($triggertext)) {
+                        $triggertext = '<span class="sr-only">' . get_string('openmenu') . '</span>';
+                    }
+                    $menu->set_menu_trigger($triggertext);
                 } else {
                     $menu->add_secondary_action($link);
                 }
-                $skipped = $skipped || $this->build_action_menu_from_navigation($menu, $menuitem, true, false, $primary);
+                $skipped = $skipped || $this->build_action_menu_from_navigation($menu, $menuitem, false, false,
+                                                                                $primary, $showicons, $triggertext);
             }
         }
         return $skipped;

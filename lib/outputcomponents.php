@@ -850,16 +850,23 @@ class single_button implements renderable {
     public $actionid;
 
     /**
+     * @var pix_icon Icon to show next to the label.
+     */
+    public $icon;
+
+    /**
      * Constructor
      * @param moodle_url $url
      * @param string $label button text
      * @param string $method get or post submit method
+     * @param pix_icon $icon Optional icon
      */
-    public function __construct(moodle_url $url, $label, $method='post', $primary=false) {
+    public function __construct(moodle_url $url, $label, $method='post', $primary=false, $icon=false) {
         $this->url    = clone($url);
         $this->label  = $label;
         $this->method = $method;
         $this->primary = $primary;
+        $this->icon = $icon;
     }
 
     /**
@@ -899,6 +906,9 @@ class single_button implements renderable {
         $data->disabled = $this->disabled;
         $data->tooltip = $this->tooltip;
         $data->primary = $this->primary;
+        if (!empty($this->icon)) {
+            $data->icon = $output->render($this->icon);
+        }
 
         // Form parameters.
         $params = $this->url->params();
@@ -4127,10 +4137,10 @@ class action_menu implements renderable, templatable {
     public $menutrigger = '';
 
     /**
-     * Show primary links as buttons.
-     * @var showasbuttons
+     * Display style for primary actions. One of links, buttons or buttons grouped.
+     * @var primarydisplaystyle
      */
-    public $showasbuttons = false;
+    public $primarydisplaystyle = 'links';
 
     /**
      * Place the action menu before all other actions.
@@ -4175,14 +4185,28 @@ class action_menu implements renderable, templatable {
         $this->menutrigger = $trigger;
     }
 
-    public function set_showasbuttons($showasbuttons) {
-        $this->showasbuttons = $showasbuttons;
-        if (strpos('btn-group', $this->attributesprimary['class']) === false) {
-            $this->attributesprimary['class'] .= ' btn-group';
+    /**
+     * Control the display style for the primary actions.
+     *
+     * @param $style One of 'links', 'buttons', or 'buttonsgrouped'
+     */
+    public function set_primarydisplaystyle($style) {
+        if ($style != 'links' && $style != 'buttons' && $style != 'buttonsgrouped') {
+            throw new coding_exception("Invalid display style for primary actions");
         }
+        $this->primarydisplaystyle = $style;
+        if ($style == 'buttonsgrouped') {
+            if (strpos('btn-group', $this->attributesprimary['class']) === false) {
+                $this->attributesprimary['class'] .= ' btn-group';
+            }
 
-        foreach ($this->primaryactions as $action) {
-            $action->add_class('btn btn-secondary');
+            foreach ($this->primaryactions as $action) {
+                $action->add_class('btn btn-secondary');
+            }
+        } else if ($style == 'buttons') {
+            foreach ($this->primaryactions as $action) {
+                $action->add_class('btn btn-secondary');
+            }
         }
     }
 
@@ -4193,6 +4217,15 @@ class action_menu implements renderable, templatable {
      */
     public function is_empty() {
         return !count($this->primaryactions) && !count($this->secondaryactions);
+    }
+
+    /**
+     * Return the number of primary actions in this menu.
+     *
+     * @return int
+     */
+    public function count_primary_actions() {
+        return count($this->primaryactions);
     }
 
     /**
@@ -4512,7 +4545,10 @@ class action_menu implements renderable, templatable {
             return $data;
         }, $this->secondaryactions);
 
-        $data->showasbuttons = $this->showasbuttons;
+        $data->showaslinks = $this->primarydisplaystyle == 'links';
+        $data->showasbuttons = $this->primarydisplaystyle == 'buttons';
+        $data->showasbuttonsgrouped = $this->primarydisplaystyle == 'buttonsgrouped';
+        $data->hassecondary = count($secondary->items);
         $data->primary = $primary;
         $data->secondary = $secondary;
 
