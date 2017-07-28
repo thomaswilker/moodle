@@ -1419,6 +1419,7 @@ $string['numyears'] = '{$a} years';
 $string['ok'] = 'OK';
 $string['oldpassword'] = 'Current password';
 $string['olduserdirectory'] = 'This is the OLD users directory, and is no longer needed. You may safely delete it. The files it contains have been copied to the NEW user directory.';
+$string['openmenu'] = 'Open menu';
 $string['optional'] = 'optional';
 $string['options'] = 'options';
 $string['order'] = 'Order';
