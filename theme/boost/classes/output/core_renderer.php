@@ -685,20 +685,20 @@ class core_renderer extends \core_renderer {
             $settingsnode = $this->page->settingsnav->find('frontpage', navigation_node::TYPE_SETTING);
             if ($settingsnode) {
                 // Build an action menu based on the visible nodes from this navigation tree.
-                $this->build_action_menu_from_navigation($menu, $settingsnode, false, true);
+                $this->build_action_menu_from_navigation($menu, $settingsnode, false, true, 1, false);
             }
         } else if ($showcoursemenu) {
             $settingsnode = $this->page->settingsnav->find('courseadmin', navigation_node::TYPE_COURSE);
             if ($settingsnode) {
                 // Build an action menu based on the visible nodes from this navigation tree.
-                $this->build_action_menu_from_navigation($menu, $settingsnode, false, true);
+                $this->build_action_menu_from_navigation($menu, $settingsnode, false, true, 1, false);
             }
         } else if ($showusermenu) {
             // Get the course admin node from the settings navigation.
             $settingsnode = $this->page->settingsnav->find('useraccount', navigation_node::TYPE_CONTAINER);
             if ($settingsnode) {
                 // Build an action menu based on the visible nodes from this navigation tree.
-                $this->build_action_menu_from_navigation($menu, $settingsnode);
+                $this->build_action_menu_from_navigation($menu, $settingsnode, false, false, 1, false);
             }
         } else {
             return $this->region_main_settings_menu(false);
