@@ -65,10 +65,18 @@ span:first-of-type > .icon {
     }
 }
 
-// This settings menu needs some help because it's displayed in a pull-xs-right div.
+// Breadcrumbs need accessibility help because the background is middling grey.
+.breadcrumb-item a {
+    color: $body-color;
+    text-decoration: underline;
+}
+// First settings submenu needs help because it's floated right.
 #first-settings-submenu {
-    a {
+    .menubar > a,
+    .dropdown > a {
         margin-left: 2rem;
+        color: $body-color;
+        text-decoration: underline;
     }
     .icon {
         margin-right: 0.5rem;
