@@ -82,7 +82,7 @@ class core_renderer extends \core_renderer {
 
         if (empty($PAGE->layout_options['nonavbar'])) {
             $html .= html_writer::start_div('clearfix w-100 pull-xs-left', array('id' => 'page-navbar'));
-            $html .= html_writer::start_div('pull-xs-right', array('id' => 'first-settings-submenu'));
+            $html .= html_writer::start_div('pull-xs-right', array('id' => 'first-settings-submenu', 'style' => 'margin-top: 0.75rem;'));
             $html .= $this->context_header_first_subnav_menu();
             $html .= html_writer::end_div();
             $html .= html_writer::tag('div', $this->navbar(), array('class' => 'breadcrumb-nav'));
@@ -524,7 +524,7 @@ class core_renderer extends \core_renderer {
      * @return string
      */
     public function context_header_first_subnav_menu() {
-        return $this->context_header_settings_submenus(false, true, 3, get_string('morenavigationlinks'), "buttons");
+        return $this->context_header_settings_submenus(false, true, 3, get_string('morenavigationlinks'), "links");
     }
 
     /**

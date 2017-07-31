@@ -65,6 +65,16 @@ span:first-of-type > .icon {
     }
 }
 
+// This settings menu needs some help because it's displayed in a pull-xs-right div.
+#first-settings-submenu {
+    a {
+        margin-left: 2rem;
+    }
+    .icon {
+        margin-right: 0.5rem;
+    }
+}
+
 // YUI 2 Tree View icons must not have a margin left.
 .ygtvcell .icon {
     margin-left: 0 !important; /* stylelint-disable-line declaration-no-important */
