@@ -835,7 +835,7 @@ class core_renderer extends \core_renderer {
                 if ($indent) {
                     $link->add_class('m-l-1');
                 }
-                if (!$showicons && !$primary) {
+                if (!$showicons && $menu->count_primary_actions() >= $primary) {
                     $link->icon = null;
                 }
                 if (!empty($menuitem->classes)) {
