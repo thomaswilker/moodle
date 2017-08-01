@@ -4295,6 +4295,13 @@ class settings_navigation extends navigation_node {
             }
         }
 
+        // Check if we can view the gradebook's setup page.
+        if ($adminoptions->gradebook) {
+            $url = new moodle_url('/grade/edit/tree/index.php', array('id' => $course->id));
+            $coursenode->add(get_string('gradebooksetup', 'grades'), $url, self::TYPE_SETTING,
+                null, 'gradebooksetup', new pix_icon('i/settings', ''));
+        }
+
         if ($adminoptions->editcompletion) {
             // Add the course completion settings link
             $url = new moodle_url('/course/completion.php', array('id' => $course->id));
@@ -4336,13 +4343,6 @@ class settings_navigation extends navigation_node {
             foreach ($reports as $reportfunction) {
                 $reportfunction($reportnav, $course, $coursecontext);
             }
-        }
-
-        // Check if we can view the gradebook's setup page.
-        if ($adminoptions->gradebook) {
-            $url = new moodle_url('/grade/edit/tree/index.php', array('id' => $course->id));
-            $coursenode->add(get_string('gradebooksetup', 'grades'), $url, self::TYPE_SETTING,
-                null, 'gradebooksetup', new pix_icon('i/settings', ''));
         }
 
         //  Add outcome if permitted
@@ -5111,19 +5111,19 @@ class settings_navigation extends navigation_node {
             $categorynode->add($editstring, $url, self::TYPE_SETTING, null, null, new pix_icon('i/edit', ''));
         }
 
+        // Assign local roles
+        $assignableroles = get_assignable_roles($catcontext);
+        if (!empty($assignableroles)) {
+            $assignurl = new moodle_url('/'.$CFG->admin.'/roles/assign.php', array('contextid' => $catcontext->id));
+            $categorynode->add(get_string('assignroles', 'role'), $assignurl, self::TYPE_SETTING, null, 'roles', new pix_icon('i/assignroles', ''));
+        }
+
         if (has_capability('moodle/category:manage', $catcontext)) {
             $editurl = new moodle_url('/course/editcategory.php', array('id' => $catcontext->instanceid));
             $categorynode->add(get_string('editcategorythis'), $editurl, self::TYPE_SETTING, null, 'edit', new pix_icon('i/edit', ''));
 
             $addsubcaturl = new moodle_url('/course/editcategory.php', array('parent' => $catcontext->instanceid));
             $categorynode->add(get_string('addsubcategory'), $addsubcaturl, self::TYPE_SETTING, null, 'addsubcat', new pix_icon('i/withsubcat', ''));
-        }
-
-        // Assign local roles
-        $assignableroles = get_assignable_roles($catcontext);
-        if (!empty($assignableroles)) {
-            $assignurl = new moodle_url('/'.$CFG->admin.'/roles/assign.php', array('contextid' => $catcontext->id));
-            $categorynode->add(get_string('assignroles', 'role'), $assignurl, self::TYPE_SETTING, null, 'roles', new pix_icon('i/assignroles', ''));
         }
 
         // Override roles
