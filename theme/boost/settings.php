@@ -84,5 +84,10 @@ if ($ADMIN->fulltree) {
     $setting->set_updatedcallback('theme_reset_all_caches');
     $page->add($setting);
 
+    $setting = new admin_setting_configtext('theme_boost/utilitymenus',
+                                            new lang_string('utilitymenus', 'theme_boost'),
+                                            new lang_string('utilitymenus_desc', 'theme_boost'), 'coursebackup,modulebackup');
+    $page->add($setting);
+
     $settings->add($page);
 }

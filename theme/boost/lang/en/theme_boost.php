@@ -41,3 +41,5 @@ $string['rawscss_desc'] = 'Use this field to provide SCSS or CSS code which will
 $string['rawscsspre'] = 'Raw initial SCSS';
 $string['rawscsspre_desc'] = 'In this field you can provide initialising SCSS code, it will be injected before everything else. Most of the time you will use this setting to define variables.';
 $string['region-side-pre'] = 'Right';
+$string['utilitymenus'] = 'Utility sub-menus';
+$string['utilitymenus_desc'] = 'Comma separated list of navigation branches to turn into utility sub-menus. A utility sub-menu is a Boost specific navigation element that displays buttons and menus alongside the breadcrumbs.';

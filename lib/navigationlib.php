@@ -4473,7 +4473,7 @@ class settings_navigation extends navigation_node {
             $modulenode->add(get_string('editsettings'), $url, navigation_node::TYPE_SETTING, null, 'modedit', $icon);
         }
         // Add a backup container.
-        $activitybackup = $modulenode->add(get_string('backup'), null, self::TYPE_CONTAINER, null, 'activitybackup');
+        $activitybackup = $modulenode->add(get_string('backup'), null, self::TYPE_CONTAINER, null, 'modulebackup');
 
         $featuresfunc = $this->page->activityname.'_supports';
         if (function_exists($featuresfunc) && $featuresfunc(FEATURE_BACKUP_MOODLE2) && has_capability('moodle/backup:backupactivity', $this->page->cm->context)) {
@@ -4490,7 +4490,7 @@ class settings_navigation extends navigation_node {
 
         // Remove the branch if it's empty.
         if (!count($activitybackup->children)) {
-            $modulenode->remove('activitybackup');
+            $modulenode->remove('modulebackup');
         }
         // Assign local roles
         if (count(get_assignable_roles($this->page->cm->context))>0) {

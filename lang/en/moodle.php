@@ -1219,6 +1219,7 @@ $string['moreinfo'] = 'More info';
 $string['moreinformation'] = 'More information about this error';
 $string['moreprofileinfoneeded'] = 'Please tell us more about yourself';
 $string['morenavigationlinks'] = 'More...';
+$string['morenavigationmenu'] = 'More';
 $string['mostrecently'] = 'most recently';
 $string['move'] = 'Move';
 $string['movecoursemodule'] = 'Move resource';
