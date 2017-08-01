@@ -17,8 +17,8 @@
 {{!
     Action menu trigger.
 }}
-<div class="dropdown d-inline {{#showasbuttonsgrouped}}btn btn-secondary dropdown-toggle-split{{/showasbuttonsgrouped}}{{#showasbuttons}}btn btn-secondary{{/showasbuttons}}">
-    <a href="#" class="dropdown-toggle" id="dropdown-{{instance}}" title="{{title}}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{{actiontext}}}{{{menutrigger}}}{{#icon}}{{#pix}}{{key}},{{component}},{{title}}{{/pix}}{{/icon}}{{#rawicon}}{{{.}}}{{/rawicon}}{{#menutrigger}}<b class="caret"></b>{{/menutrigger}}</a>
+<div class="dropdown d-inline {{#showasbuttonsgrouped}}btn btn-secondary p-a-0 dropdown-toggle-split{{/showasbuttonsgrouped}}{{#showasbuttons}}btn btn-secondary{{/showasbuttons}}">
+    <a href="#" class="dropdown-toggle {{#showasbuttonsgrouped}}btn" style="border: 0;{{/showasbuttonsgrouped}}" id="dropdown-{{instance}}" title="{{title}}" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">{{{actiontext}}}{{{menutrigger}}}{{#icon}}{{#pix}}{{key}},{{component}},{{title}}{{/pix}}{{/icon}}{{#rawicon}}{{{.}}}{{/rawicon}}{{#menutrigger}}<b class="caret"></b>{{/menutrigger}}</a>
     {{#secondary}}
         <div class="dropdown-menu dropdown-menu-right {{classes}}"{{#attributes}} {{name}}="{{value}}"{{/attributes}}>
             {{#items}}{{!
