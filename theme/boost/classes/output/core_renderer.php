@@ -737,6 +737,7 @@ class core_renderer extends \core_renderer {
         }
 
         $menu->set_primarydisplaystyle("buttonsgrouped");
+        $menu->set_alignment(action_menu::TL, action_menu::BL);
 
         return $this->render($menu);
     }
@@ -772,6 +773,7 @@ class core_renderer extends \core_renderer {
             }
         }
         $menu->set_primarydisplaystyle("buttonsgrouped");
+        $menu->set_alignment(action_menu::TL, action_menu::BL);
         return $this->render($menu);
     }
 

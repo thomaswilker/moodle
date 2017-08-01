@@ -4551,6 +4551,8 @@ class action_menu implements renderable, templatable {
         $data->hassecondary = count($secondary->items);
         $data->primary = $primary;
         $data->secondary = $secondary;
+        list($align) = explode('-', $this->attributessecondary['data-align'], 2);
+        $data->rightalign = (($align != self::get_align_string(self::TL)) && ($align != self::get_align_string(self::BL)));
 
         return $data;
     }
