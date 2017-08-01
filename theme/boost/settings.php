@@ -86,7 +86,7 @@ if ($ADMIN->fulltree) {
 
     $setting = new admin_setting_configtext('theme_boost/utilitymenus',
                                             new lang_string('utilitymenus', 'theme_boost'),
-                                            new lang_string('utilitymenus_desc', 'theme_boost'), 'coursebackup,modulebackup');
+                                            new lang_string('utilitymenus_desc', 'theme_boost'), 'modulebackup,coursebackup');
     $page->add($setting);
 
     $settings->add($page);
