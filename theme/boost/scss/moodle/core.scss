@@ -6,6 +6,12 @@
     min-height: 45rem;
 }
 
+#page-navigation-header {
+    border: 1px transparent;
+    margin-bottom: -1rem !important; /* stylelint-disable-line declaration-no-important */
+    margin-left: 2px;
+    margin-right: 2px;
+}
 .context-header-settings-menu,
 .region-main-settings-menu {
     float: right;
