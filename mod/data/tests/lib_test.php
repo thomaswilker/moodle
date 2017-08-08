@@ -606,6 +606,8 @@ class mod_data_lib_testcase extends advanced_testcase {
         groups_add_member($group2, $user3);
         groups_add_member($group2, $user4);
 
+        $this->setAdminUser();
+
         // Add data.
         $field = data_get_field_new('text', $data);
 

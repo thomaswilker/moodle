@@ -655,6 +655,10 @@ class mod_data_external_testcase extends externallib_advanced_testcase {
         // Basically compare we retrieve all the fields and the correct values.
         $fields = $DB->get_records('data_fields', array('dataid' => $this->database->id), 'id');
         foreach ($result['fields'] as $field) {
+            // Ignore auto fields.
+            unset($fields[$field['id']]->timecreated);
+            unset($fields[$field['id']]->timemodified);
+            unset($fields[$field['id']]->usermodified);
             $this->assertEquals($field, (array) $fields[$field['id']]);
         }
     }

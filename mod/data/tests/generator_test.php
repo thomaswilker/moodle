@@ -113,7 +113,7 @@ class mod_data_generator_testcase extends advanced_testcase {
 
             ${$fieldname} = $this->getDataGenerator()->get_plugin_generator('mod_data')->create_field($record, $data);
 
-            $this->assertInstanceOf('data_field_' . $fieldtype, ${$fieldname});
+            $this->assertInstanceOf('stdClass', ${$fieldname});
             $count++;
         }
 
@@ -174,7 +174,7 @@ class mod_data_generator_testcase extends advanced_testcase {
             $record->required = 1;
 
             ${$fieldname} = $this->getDataGenerator()->get_plugin_generator('mod_data')->create_field($record, $data);
-            $this->assertInstanceOf('data_field_' . $fieldtype, ${$fieldname});
+            $this->assertInstanceOf('stdClass', ${$fieldname});
             $count++;
         }
 
