@@ -79,6 +79,7 @@ $functions = array(
         'classname'     => 'mod_data_external',
         'methodname'    => 'search_entries',
         'description'   => 'Search for entries in the given database.',
+        'ajax'          => true,
         'type'          => 'read',
         'capabilities'  => 'mod/data:viewentry',
         'services'      => array(MOODLE_OFFICIAL_MOBILE_SERVICE)

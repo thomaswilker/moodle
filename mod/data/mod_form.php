@@ -75,6 +75,11 @@ class mod_data_mod_form extends moodleform_mod {
                            array('optional' => true));
 
         // ----------------------------------------------------------------------
+        $mform->addElement('header', 'appearance', get_string('appearance'));
+        $mform->addElement('selectyesno', 'usetemplates', get_string('usetemplates', 'data'));
+        $mform->addHelpButton('usetemplates', 'usetemplates', 'data');
+        $mform->setDefault('usetemplates', 0);
+        // ----------------------------------------------------------------------
         if ($CFG->enablerssfeeds && $CFG->data_enablerssfeeds) {
             $mform->addElement('header', 'rsshdr', get_string('rss'));
             $mform->addElement('select', 'rssarticles', get_string('numberrssarticles', 'data') , $countoptions);

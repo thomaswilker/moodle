@@ -1,17 +1,55 @@
 <?php
+// This file is part of Moodle - http://moodle.org/
+//
+// Moodle is free software: you can redistribute it and/or modify
+// it under the terms of the GNU General Public License as published by
+// the Free Software Foundation, either version 3 of the License, or
+// (at your option) any later version.
+//
+// Moodle is distributed in the hope that it will be useful,
+// but WITHOUT ANY WARRANTY; without even the implied warranty of
+// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+// GNU General Public License for more details.
+//
+// You should have received a copy of the GNU General Public License
+// along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+
+/**
+ * Database renderer.
+ *
+ * @package    mod_data
+ * @copyright  2017 Damyon Wiese
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+namespace mod_data\output;
+
+use plugin_renderer_base;
+use html_writer;
+use html_table;
 
 defined('MOODLE_INTERNAL') || die();
 
-class mod_data_renderer extends plugin_renderer_base {
+/**
+ * Database renderer.
+ *
+ * @package    mod_data
+ * @copyright  2017 Damyon Wiese
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class renderer extends plugin_renderer_base {
 
-    public function import_setting_mappings($datamodule, data_preset_importer $importer) {
+    public function render_page(page $page) {
+        $context = $page->export_for_template($this);
+        return $this->render_from_template('mod_data/page', $context);
+    }
+
+    public function import_setting_mappings($datamodule, \data_preset_importer $importer) {
 
         $strblank = get_string('blank', 'data');
         $strcontinue = get_string('continue');
         $strwarning = get_string('mappingwarning', 'data');
         $strfieldmappings = get_string('fieldmappings', 'data');
         $strnew = get_string('new');
-
 
         $params = $importer->get_preset_settings();
         $settings = $params->settings;

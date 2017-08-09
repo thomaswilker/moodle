@@ -424,6 +424,7 @@ $string['currency'] = 'Currency';
 $string['currentcourse'] = 'Current course';
 $string['currentcourseadding'] = 'Current course, adding data to it';
 $string['currentcoursedeleting'] = 'Current course, deleting it first';
+$string['currentinparentheses'] = '(current)';
 $string['currentlanguage'] = 'Current language';
 $string['currentlocaltime'] = 'your current local time';
 $string['currentlyselectedusers'] = 'Currently selected users';

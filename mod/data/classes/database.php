@@ -139,6 +139,10 @@ class database extends persistent {
                 'default' => false,
                 'type' => PARAM_BOOL,
             ),
+            'usetemplates' => array(
+                'default' => false,
+                'type' => PARAM_BOOL,
+            ),
             'manageapproved' => array(
                 'default' => true,
                 'type' => PARAM_BOOL,

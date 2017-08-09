@@ -1,0 +1,45 @@
+{{!
+    This file is part of Moodle - http://moodle.org/
+
+    Moodle is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    Moodle is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
+}}
+{{!
+    @template mod_data/listrecords
+
+    List records for database module. Initially empty - data loaded from ajax.
+
+    Data attributes required for JS:
+    * none
+
+    Context variables required for this template:
+    * database
+      * list of fields from \mod_data\external\database exporter
+    * capabilities
+      * list of fields from \mod_data\external\capability exporter
+}}
+<div data-region="record-pagination">
+</div>
+<div data-region="record-list">
+    {{> core/loading }}    
+</div>
+<div data-region="record-pagination">
+</div>
+{{#js}}
+require(['mod_data/recordlist'], function(RecordList) {
+    var listSelector = '[data-region=record-list]';
+    var paginationSelector = '[data-region=record-pagination]';
+
+    var module = new RecordList(listSelector, paginationSelector, {{#quote}}{{database.id}}{{/quote}}, {{database.usetemplates}});
+});
+{{/js}}

@@ -67,9 +67,11 @@
                 $defaultemplate = 'singletemplate';
             }
 
-            $templatestab = new tabobject('templates', new moodle_url('/mod/data/templates.php', array('d' => $data->id, 'mode' => $defaultemplate)),
-                         get_string('templates','data'));
-            $row[] = $templatestab;
+            if ($data->usetemplates) {
+                $templatestab = new tabobject('templates', new moodle_url('/mod/data/templates.php', array('d' => $data->id, 'mode' => $defaultemplate)),
+                             get_string('templates','data'));
+                $row[] = $templatestab;
+            }
             $row[] = new tabobject('fields', new moodle_url('/mod/data/field.php', array('d' => $data->id)),
                          get_string('fields','data'));
             $row[] = new tabobject('presets', new moodle_url('/mod/data/preset.php', array('d' => $data->id)),

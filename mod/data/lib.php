@@ -4169,24 +4169,9 @@ function data_get_completion_state($course, $cm, $userid, $type) {
  * @since Moodle 3.3
  */
 function data_view($data, $course, $cm, $context) {
-    global $CFG;
-    require_once($CFG->libdir . '/completionlib.php');
+    $database = new mod_data\database(0, $data);
 
-    // Trigger course_module_viewed event.
-    $params = array(
-        'context' => $context,
-        'objectid' => $data->id
-    );
-
-    $event = \mod_data\event\course_module_viewed::create($params);
-    $event->add_record_snapshot('course_modules', $cm);
-    $event->add_record_snapshot('course', $course);
-    $event->add_record_snapshot('data', $data);
-    $event->trigger();
-
-    // Completion.
-    $completion = new completion_info($course);
-    $completion->set_module_viewed($cm);
+    return \mod_data\api::database_viewed($database, $course, $cm, $context);
 }
 
 /**

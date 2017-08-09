@@ -41,7 +41,6 @@ function xmldb_data_upgrade($oldversion) {
         upgrade_mod_savepoint(true, 2016030300, 'data');
     }
 
-
     // Moodle v3.1.0 release upgrade line.
     // Put any upgrade step following this.
 
@@ -88,6 +87,18 @@ function xmldb_data_upgrade($oldversion) {
         if (!$dbman->field_exists($table, $field)) {
             $dbman->add_field($table, $field);
         }
+
+        // Define field usetemplates to be added to data.
+        $table = new xmldb_table('data');
+        $field = new xmldb_field('usetemplates', XMLDB_TYPE_INTEGER, '4', null, XMLDB_NOTNULL, null, '0', 'asearchtemplate');
+
+        // Conditionally launch add field usetemplates.
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+
+        // In order to preserve the appearance of all existing databases, we default this to 1 on upgrade.
+        $DB->set_field('data', 'usetemplates', 1);
 
         // Define field usermodified to be added to data.
         $table = new xmldb_table('data');
