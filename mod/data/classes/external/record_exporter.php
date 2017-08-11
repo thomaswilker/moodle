@@ -24,7 +24,8 @@
 namespace mod_data\external;
 defined('MOODLE_INTERNAL') || die();
 
-use core\external\exporter;
+use core\external\persistent_exporter;
+use mod_data\record;
 use renderer_base;
 use core_user;
 
@@ -34,46 +35,10 @@ use core_user;
  * @copyright  2017 Juan Leyva <juan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class record_exporter extends exporter {
+class record_exporter extends persistent_exporter {
 
-    protected static function define_properties() {
-
-        return array(
-            'id' => array(
-                'type' => PARAM_INT,
-                'description' => 'Record id.',
-            ),
-            'userid' => array(
-                'type' => PARAM_INT,
-                'description' => 'The id of the user who created the record.',
-                'default' => 0,
-            ),
-            'groupid' => array(
-                'type' => PARAM_INT,
-                'description' => 'The group id this record belongs to (0 for no groups).',
-                'default' => 0,
-            ),
-            'dataid' => array(
-                'type' => PARAM_INT,
-                'description' => 'The database id this record belongs to.',
-                'default' => 0,
-            ),
-            'timecreated' => array(
-                'type' => PARAM_INT,
-                'description' => 'Time the record was created.',
-                'default' => 0,
-            ),
-            'timemodified' => array(
-                'type' => PARAM_INT,
-                'description' => 'Last time the record was modified.',
-                'default' => 0,
-            ),
-            'approved' => array(
-                'type' => PARAM_BOOL,
-                'description' => 'Whether the entry has been approved (if the database is configured in that way).',
-                'default' => 0,
-            ),
-        );
+    protected static function define_class() {
+        return record::class;
     }
 
     protected static function define_related() {
@@ -81,7 +46,7 @@ class record_exporter extends exporter {
             'database' => 'stdClass',
             'user' => 'stdClass?',
             'context' => 'context',
-            'contents' => 'stdClass[]?',
+            'contents' => '\mod_data\content[]?',
         );
     }
 

@@ -210,6 +210,8 @@ class mod_data_search_test extends advanced_testcase {
         $this->finalrecord[6]->timecreated = 1234567891;
         $this->finalrecord[6]->timemodified = 1234567892;
         $this->finalrecord[6]->userid = 6;
+        $this->finalrecord[6]->groupid = 2;
+        $this->finalrecord[6]->dataid = $data->id;
         $this->finalrecord[6]->firstname = $user->firstname;
         $this->finalrecord[6]->lastname = $user->lastname;
         $this->finalrecord[6]->firstnamephonetic = $user->firstnamephonetic;

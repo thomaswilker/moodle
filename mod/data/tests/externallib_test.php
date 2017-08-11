@@ -167,32 +167,14 @@ class mod_data_external_testcase extends externallib_advanced_testcase {
         }
         $enrol->enrol_user($instance2, $student->id, $studentrole->id);
 
-        // Create what we expect to be returned when querying the two courses.
-        // First for the student user.
-        $expectedfields = array('id', 'coursemodule', 'course', 'name', 'comments', 'timeavailablefrom',
-                            'timeavailableto', 'timeviewfrom', 'timeviewto', 'requiredentries', 'requiredentriestoview',
-                            'intro', 'introformat', 'introfiles', 'maxentries', 'rssarticles', 'singletemplate', 'listtemplate',
-                            'listtemplateheader', 'listtemplatefooter', 'addtemplate', 'rsstemplate', 'rsstitletemplate',
-                            'csstemplate', 'jstemplate', 'asearchtemplate', 'approval', 'defaultsort', 'defaultsortdir', 'manageapproved');
-
         // Add expected coursemodule.
         $database1->coursemodule = $database1->cmid;
         $database1->introfiles = [];
         $database2->coursemodule = $database2->cmid;
         $database2->introfiles = [];
 
-        $expected1 = array();
-        $expected2 = array();
-        foreach ($expectedfields as $field) {
-            if ($field == 'approval' or $field == 'manageapproved') {
-                $database1->{$field} = (bool) $database1->{$field};
-                $database2->{$field} = (bool) $database2->{$field};
-            }
-            $expected1[$field] = $database1->{$field};
-            $expected2[$field] = $database2->{$field};
-        }
-        $expected1['comments'] = (bool) $expected1['comments'];
-        $expected2['comments'] = (bool) $expected2['comments'];
+        $expected1 = (array) $database1;
+        $expected2 = (array) $database2;
 
         $expecteddatabases = array();
         $expecteddatabases[] = $expected2;
@@ -201,12 +183,15 @@ class mod_data_external_testcase extends externallib_advanced_testcase {
         // Call the external function passing course ids.
         $result = mod_data_external::get_databases_by_courses(array($course2->id, $course1->id));
         $result = external_api::clean_returnvalue(mod_data_external::get_databases_by_courses_returns(), $result);
-        $this->assertEquals($expecteddatabases, $result['databases']);
+
+        $this->assertDatabaseArraysEqual($expected2, $result['databases'][0]);
+        $this->assertDatabaseArraysEqual($expected1, $result['databases'][1]);
 
         // Call the external function without passing course id.
         $result = mod_data_external::get_databases_by_courses();
         $result = external_api::clean_returnvalue(mod_data_external::get_databases_by_courses_returns(), $result);
-        $this->assertEquals($expecteddatabases, $result['databases']);
+        $this->assertDatabaseArraysEqual($expected2, $result['databases'][0]);
+        $this->assertDatabaseArraysEqual($expected1, $result['databases'][1]);
 
         // Unenrol user from second course and alter expected databases.
         $enrol->unenrol_user($instance2, $student->id);
@@ -215,7 +200,7 @@ class mod_data_external_testcase extends externallib_advanced_testcase {
         // Call the external function without passing course id.
         $result = mod_data_external::get_databases_by_courses();
         $result = external_api::clean_returnvalue(mod_data_external::get_databases_by_courses_returns(), $result);
-        $this->assertEquals($expecteddatabases, $result['databases']);
+        $this->assertDatabaseArraysEqual($expected1, $result['databases'][0]);
 
         // Call for the second course we unenrolled the user from, expected warning.
         $result = mod_data_external::get_databases_by_courses(array($course2->id));
@@ -226,24 +211,16 @@ class mod_data_external_testcase extends externallib_advanced_testcase {
         // Now, try as a teacher for getting all the additional fields.
         self::setUser($teacher);
 
-        $additionalfields = array('scale', 'assessed', 'assesstimestart', 'assesstimefinish', 'editany', 'notification', 'timemodified');
-
-        foreach ($additionalfields as $field) {
-            if ($field == 'editany') {
-                $database1->{$field} = (bool) $database1->{$field};
-            }
-            $expecteddatabases[0][$field] = $database1->{$field};
-        }
         $result = mod_data_external::get_databases_by_courses();
         $result = external_api::clean_returnvalue(mod_data_external::get_databases_by_courses_returns(), $result);
-        $this->assertEquals($expecteddatabases, $result['databases']);
+        $this->assertDatabaseArraysEqual($expected1, $result['databases'][0]);
 
         // Admin should get all the information.
         self::setAdminUser();
 
         $result = mod_data_external::get_databases_by_courses(array($course1->id));
         $result = external_api::clean_returnvalue(mod_data_external::get_databases_by_courses_returns(), $result);
-        $this->assertEquals($expecteddatabases, $result['databases']);
+        $this->assertDatabaseArraysEqual($expected1, $result['databases'][0]);
     }
 
     /**
@@ -439,9 +416,11 @@ class mod_data_external_testcase extends externallib_advanced_testcase {
         $this->setUser($this->student1);
         $result = mod_data_external::get_entries($this->database->id);
         $result = external_api::clean_returnvalue(mod_data_external::get_entries_returns(), $result);
+
         $this->assertCount(0, $result['warnings']);
         $this->assertCount(2, $result['entries']);
         $this->assertEquals(2, $result['totalcount']);
+
         $this->assertEquals($entry11, $result['entries'][0]['id']);
         $this->assertEquals($this->student1->id, $result['entries'][0]['userid']);
         $this->assertEquals($this->group1->id, $result['entries'][0]['groupid']);
@@ -655,6 +634,17 @@ class mod_data_external_testcase extends externallib_advanced_testcase {
         // Basically compare we retrieve all the fields and the correct values.
         $fields = $DB->get_records('data_fields', array('dataid' => $this->database->id), 'id');
         foreach ($result['fields'] as $field) {
+            // Ignore auto fields.
+            unset($fields[$field['id']]->timecreated);
+            unset($fields[$field['id']]->timemodified);
+            unset($fields[$field['id']]->usermodified);
+            unset($field['timecreated']);
+            unset($field['timemodified']);
+            unset($field['usermodified']);
+            $field['dataid'] = (int) $field['dataid'];
+            $field['id'] = (int) $field['id'];
+            $field['required'] = (bool) $field['required'];
+
             $this->assertEquals($field, (array) $fields[$field['id']]);
         }
     }
@@ -846,6 +836,41 @@ class mod_data_external_testcase extends externallib_advanced_testcase {
         $this->setUser($this->student1);
         $this->expectException('moodle_exception');
         mod_data_external::delete_entry($entry21);
+    }
+
+    /**
+     * Compare 2 database records, ignoring automated fields and type casting.
+     * @param stdClass $one
+     * @param stdClass $two
+     */
+    public function assertDatabaseArraysEqual($one, $two) {
+        $expectedfields = array('id', 'coursemodule', 'course', 'name', 'comments', 'timeavailablefrom',
+                            'timeavailableto', 'timeviewfrom', 'timeviewto', 'requiredentries', 'requiredentriestoview',
+                            'intro', 'introformat', 'introfiles', 'maxentries', 'rssarticles', 'singletemplate', 'listtemplate',
+                            'listtemplateheader', 'listtemplatefooter', 'addtemplate', 'rsstemplate', 'rsstitletemplate',
+                            'csstemplate', 'jstemplate', 'asearchtemplate', 'approval', 'defaultsort', 'defaultsortdir',
+                            'manageapproved', 'scale', 'assessed', 'assesstimestart', 'assesstimefinish',
+                            'editany', 'completionentries', 'config', 'notification');
+
+        $intfields = array('id', 'coursemodule', 'course', 'timeavailablefrom', 'timeavailableto', 'timeviewfrom', 'timeviewto',
+                           'requiredentries', 'requiredentriestoview', 'introformat', 'maxentries', 'rssarticles', 'defaultsort',
+                           'scale', 'assesstimestart', 'assesstimefinish', 'completionentries', 'assessed');
+        $boolfields = array('approval', 'manageapproved', 'comments', 'defaultsortdir', 'editany', 'notification');
+
+        foreach ($expectedfields as $fieldname) {
+            $onevalue = $one[$fieldname];
+            $twovalue = $two[$fieldname];
+
+            if (in_array($fieldname, $boolfields)) {
+                $onevalue = (bool) $onevalue;
+                $twovalue = (bool) $twovalue;
+            }
+            if (in_array($fieldname, $intfields)) {
+                $onevalue = (int) $onevalue;
+                $twovalue = (int) $twovalue;
+            }
+            $this->assertEquals($onevalue, $twovalue, "Assert database field equal: $fieldname");
+        }
     }
 
     /**

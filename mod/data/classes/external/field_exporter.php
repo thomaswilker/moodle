@@ -24,7 +24,8 @@
 namespace mod_data\external;
 defined('MOODLE_INTERNAL') || die();
 
-use core\external\exporter;
+use core\external\persistent_exporter;
+use mod_data\field;
 
 /**
  * Class for exporting field data.
@@ -32,48 +33,10 @@ use core\external\exporter;
  * @copyright  2017 Juan Leyva <juan@moodle.com>
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class field_exporter extends exporter {
+class field_exporter extends persistent_exporter {
 
-    protected static function define_properties() {
-
-        $properties = array(
-            'id' => array(
-                'type' => PARAM_INT,
-                'description' => 'Field id.',
-            ),
-            'dataid' => array(
-                'type' => PARAM_INT,
-                'description' => 'The field type of the content.',
-                'default' => 0,
-            ),
-            'type' => array(
-                'type' => PARAM_PLUGIN,
-                'description' => 'The field type.',
-            ),
-            'name' => array(
-                'type' => PARAM_TEXT,
-                'description' => 'The field name.',
-            ),
-            'description' => array(
-                'type' => PARAM_RAW,
-                'description' => 'The field description.',
-            ),
-            'required' => array(
-                'type' => PARAM_BOOL,
-                'description' => 'Whether is a field required or not.',
-                'default' => 0,
-            ),
-        );
-        // Field possible parameters.
-        for ($i = 1; $i <= 10; $i++) {
-            $properties["param$i"] = array(
-                'type' => PARAM_RAW,
-                'description' => 'Field parameters',
-                'null' => NULL_ALLOWED,
-            );
-        }
-
-        return $properties;
+    protected static function define_class() {
+        return field::class;
     }
 
     protected static function define_related() {

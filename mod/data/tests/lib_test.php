@@ -606,6 +606,8 @@ class mod_data_lib_testcase extends advanced_testcase {
         groups_add_member($group2, $user3);
         groups_add_member($group2, $user4);
 
+        $this->setAdminUser();
+
         // Add data.
         $field = data_get_field_new('text', $data);
 
@@ -955,6 +957,7 @@ class mod_data_lib_testcase extends advanced_testcase {
         // Trigger and capture the event.
         $sink = $this->redirectEvents();
 
+        unset($data->cmid);
         data_view($data, $course, $cm, $context);
 
         $events = $sink->get_events();

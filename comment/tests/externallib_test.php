@@ -64,6 +64,7 @@ class core_comment_externallib_testcase extends externallib_advanced_testcase {
         $course = $this->getDataGenerator()->create_course(array('enablecomment' => 1));
         $studentrole = $DB->get_record('role', array('shortname' => 'student'));
         $this->getDataGenerator()->enrol_user($user->id, $course->id, $studentrole->id);
+        $this->setAdminUser();
 
         $record = new stdClass();
         $record->course = $course->id;

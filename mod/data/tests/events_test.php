@@ -240,6 +240,8 @@ class mod_data_events_testcase extends advanced_testcase {
         // The generator used to create a data module.
         $generator = $this->getDataGenerator()->get_plugin_generator('mod_data');
 
+        $this->setAdminUser();
+
         // Create a data module.
         $data = $generator->create_instance(array('course' => $course->id));
 

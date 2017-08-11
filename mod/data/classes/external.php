@@ -29,7 +29,11 @@ defined('MOODLE_INTERNAL') || die;
 require_once("$CFG->libdir/externallib.php");
 require_once($CFG->dirroot . "/mod/data/locallib.php");
 
-use mod_data\external\database_summary_exporter;
+use mod_data\database;
+use mod_data\record;
+use mod_data\content;
+use mod_data\field;
+use mod_data\external\database_exporter;
 use mod_data\external\record_exporter;
 use mod_data\external\content_exporter;
 use mod_data\external\field_exporter;
@@ -124,7 +128,10 @@ class mod_data_external extends external_api {
                         unset($database->{$field});
                     }
                 }
-                $exporter = new database_summary_exporter($database, array('context' => $context));
+
+                $databasepersistent = new database(0, $database);
+
+                $exporter = new database_exporter($databasepersistent, array('context' => $context));
                 $arrdatabases[] = $exporter->export($PAGE->get_renderer('core'));
             }
         }
@@ -146,7 +153,7 @@ class mod_data_external extends external_api {
         return new external_single_structure(
             array(
                 'databases' => new external_multiple_structure(
-                    database_summary_exporter::get_read_structure()
+                    database_exporter::get_read_structure()
                 ),
                 'warnings' => new external_warnings(),
             )
@@ -422,12 +429,23 @@ class mod_data_external extends external_api {
             $contents = $DB->get_records('data_content', array('recordid' => $record->id));
             $contentsids = array_merge($contentsids, array_keys($contents));
             if ($params['returncontents']) {
-                $related['contents'] = $contents;
+                $topersistent = function($value) {
+                    return new content(0, $value);
+                };
+                $related['contents'] = array_values(array_map($topersistent, $contents));
             } else {
                 $related['contents'] = null;
             }
 
-            $exporter = new record_exporter($record, $related);
+            // Remove user fields from the $record.
+            foreach ($user as $field => $value) {
+                if ($field != 'id') {
+                    unset($record->$field);
+                }
+            }
+
+            $recordpersistent = new record(0, $record);
+            $exporter = new record_exporter($recordpersistent, $related);
             $entries[] = $exporter->export($PAGE->get_renderer('core'));
         }
 
@@ -533,11 +551,16 @@ class mod_data_external extends external_api {
 
         $related = array('context' => $context, 'database' => $database, 'user' => null);
         if ($params['returncontents']) {
-            $related['contents'] = $DB->get_records('data_content', array('recordid' => $record->id));
+            $contents = $DB->get_records('data_content', array('recordid' => $record->id));
+            $topersistent = function($value) {
+                return new content(0, $value);
+            };
+            $related['contents'] = array_values(array_map($topersistent, $contents));
         } else {
             $related['contents'] = null;
         }
-        $exporter = new record_exporter($record, $related);
+        $recordpersistent = new record(0, $record);
+        $exporter = new record_exporter($recordpersistent, $related);
         $entry = $exporter->export($PAGE->get_renderer('core'));
 
         $result = array(
@@ -607,15 +630,16 @@ class mod_data_external extends external_api {
         $fieldinstances = data_get_field_instances($database);
 
         foreach ($fieldinstances as $fieldinstance) {
-            $record = $fieldinstance->field;
+            $field = $fieldinstance->field;
             // Now get the configs the user can see with his current permissions.
             $configs = $fieldinstance->get_config_for_external();
             foreach ($configs as $name => $value) {
                 // Overwrite.
-                $record->{$name} = $value;
+                $field->{$name} = $value;
             }
 
-            $exporter = new field_exporter($record, array('context' => $context));
+            $fieldpersistent = new field(0, $field);
+            $exporter = new field_exporter($fieldpersistent, array('context' => $context));
             $fields[] = $exporter->export($PAGE->get_renderer('core'));
         }
 
@@ -767,12 +791,24 @@ class mod_data_external extends external_api {
             $user = user_picture::unalias($record, null, 'userid');
             $related = array('context' => $context, 'database' => $database, 'user' => $user);
             if ($params['returncontents']) {
-                $related['contents'] = $DB->get_records('data_content', array('recordid' => $record->id));
+                $contents = $DB->get_records('data_content', array('recordid' => $record->id));
+                $topersistent = function($value) {
+                    return new content(0, $value);
+                };
+                $related['contents'] = array_values(array_map($topersistent, $contents));
             } else {
                 $related['contents'] = null;
             }
 
-            $exporter = new record_exporter($record, $related);
+            // Remove user fields from the $record.
+            foreach ($user as $field => $value) {
+                if ($field != 'id') {
+                    unset($record->$field);
+                }
+            }
+
+            $recordpersistent = new record(0, $record);
+            $exporter = new record_exporter($recordpersistent, $related);
             $entries[] = $exporter->export($PAGE->get_renderer('core'));
         }
 

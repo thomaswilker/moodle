@@ -53,21 +53,21 @@ define('DATA_EVENT_TYPE_CLOSE', 'close');
  */
 class data_field_base {     // Base class for Database Field Types (see field/*/field.class.php)
 
-    /** @var string Subclasses must override the type with their name */
-    var $type = 'unknown';
-    /** @var object The database object that this field belongs to */
-    var $data = NULL;
-    /** @var object The field object itself, if we know it */
-    var $field = NULL;
-    /** @var int Width of the icon for this fieldtype */
-    var $iconwidth = 16;
-    /** @var int Width of the icon for this fieldtype */
-    var $iconheight = 16;
-    /** @var object course module or cmifno */
-    var $cm;
-    /** @var object activity context */
-    var $context;
-    /** @var priority for globalsearch indexing */
+    /** @var string $type Subclasses must override the type with their name */
+    public $type = 'unknown';
+    /** @var object $data The database object that this field belongs to */
+    public $data = null;
+    /** @var object $field The field object itself, if we know it */
+    public $field = null;
+    /** @var int $iconwidth Width of the icon for this fieldtype */
+    public $iconwidth = 16;
+    /** @var int $iconheight Width of the icon for this fieldtype */
+    public $iconheight = 16;
+    /** @var object $cm course module or cmifno */
+    public $cm;
+    /** @var object $context activity context */
+    public $context;
+    /** @var int $priority Priority for globalsearch indexing */
     protected static $priority = self::NO_PRIORITY;
     /** priority value for invalid fields regarding indexing */
     const NO_PRIORITY = 0;
@@ -83,13 +83,13 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
     /**
      * Constructor function
      *
-     * @global object
-     * @uses CONTEXT_MODULE
+     * Requires field or data or both, each can be id or object
+     *
      * @param int $field
      * @param int $data
      * @param int $cm
      */
-    function __construct($field=0, $data=0, $cm=0) {   // Field or data or both, each can be id or object
+    function __construct($field=0, $data=0, $cm=0) {
         global $DB;
 
         if (empty($field) && empty($data)) {
@@ -140,21 +140,14 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
      *
      * @return bool
      */
-    function define_default_field() {
+    public function define_default_field() {
         global $OUTPUT;
         if (empty($this->data->id)) {
             echo $OUTPUT->notification('Programmer error: dataid not defined in field class');
         }
-        $this->field = new stdClass();
-        $this->field->id = 0;
-        $this->field->dataid = $this->data->id;
-        $this->field->type   = $this->type;
-        $this->field->param1 = '';
-        $this->field->param2 = '';
-        $this->field->param3 = '';
-        $this->field->name = '';
-        $this->field->description = '';
-        $this->field->required = false;
+
+        $persistent = new mod_data\field();
+        $this->field = $persistent->to_record();
 
         return true;
     }
@@ -164,29 +157,21 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
      *
      * @return bool
      */
-    function define_field($data) {
-        $this->field->type        = $this->type;
-        $this->field->dataid      = $this->data->id;
+    public function define_field($data) {
+        $record = clone($data);
+        $record->type        = $this->type;
+        $record->required    = (bool) $this->required;
+        $record->dataid      = $this->data->id;
 
-        $this->field->name        = trim($data->name);
-        $this->field->description = trim($data->description);
-        $this->field->required    = !empty($data->required) ? 1 : 0;
+        // We need to clean sloppy stdClasses passed to this function.
+        foreach ($record as $prop => $value) {
+            if (!mod_data\field::has_property($prop)) {
+                unset($record->$prop);
+            }
+        }
 
-        if (isset($data->param1)) {
-            $this->field->param1 = trim($data->param1);
-        }
-        if (isset($data->param2)) {
-            $this->field->param2 = trim($data->param2);
-        }
-        if (isset($data->param3)) {
-            $this->field->param3 = trim($data->param3);
-        }
-        if (isset($data->param4)) {
-            $this->field->param4 = trim($data->param4);
-        }
-        if (isset($data->param5)) {
-            $this->field->param5 = trim($data->param5);
-        }
+        $persistent = new mod_data\field(0, $record);
+        $this->field = $persistent->to_record();
 
         return true;
     }
@@ -198,30 +183,14 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
      * @global object
      * @return bool
      */
-    function insert_field() {
-        global $DB, $OUTPUT;
+    public function insert_field() {
+        // Backwards compatibility only. New code should use api::create_field().
+        $field = \mod_data\api::create_field($this->field);
 
-        if (empty($this->field)) {
-            echo $OUTPUT->notification('Programmer error: Field has not been defined yet!  See define_field()');
-            return false;
-        }
-
-        $this->field->id = $DB->insert_record('data_fields',$this->field);
-
-        // Trigger an event for creating this field.
-        $event = \mod_data\event\field_created::create(array(
-            'objectid' => $this->field->id,
-            'context' => $this->context,
-            'other' => array(
-                'fieldname' => $this->field->name,
-                'dataid' => $this->data->id
-            )
-        ));
-        $event->trigger();
+        $this->field = $field->to_record();
 
         return true;
     }
-
 
     /**
      * Update a field in the database
@@ -229,23 +198,9 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
      * @global object
      * @return bool
      */
-    function update_field() {
-        global $DB;
-
-        $DB->update_record('data_fields', $this->field);
-
-        // Trigger an event for updating this field.
-        $event = \mod_data\event\field_updated::create(array(
-            'objectid' => $this->field->id,
-            'context' => $this->context,
-            'other' => array(
-                'fieldname' => $this->field->name,
-                'dataid' => $this->data->id
-            )
-        ));
-        $event->trigger();
-
-        return true;
+    public function update_field() {
+        // Backwards compatibility only. New code should use api::update_field().
+        return \mod_data\api::update_field($this->field);
     }
 
     /**
@@ -254,47 +209,31 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
      * @global object
      * @return bool
      */
-    function delete_field() {
-        global $DB;
-
-        if (!empty($this->field->id)) {
-            // Get the field before we delete it.
-            $field = $DB->get_record('data_fields', array('id' => $this->field->id));
-
-            $this->delete_content();
-            $DB->delete_records('data_fields', array('id'=>$this->field->id));
-
-            // Trigger an event for deleting this field.
-            $event = \mod_data\event\field_deleted::create(array(
-                'objectid' => $this->field->id,
-                'context' => $this->context,
-                'other' => array(
-                    'fieldname' => $this->field->name,
-                    'dataid' => $this->data->id
-                 )
-            ));
-            $event->add_record_snapshot('data_fields', $field);
-            $event->trigger();
-        }
-
-        return true;
+    public function delete_field() {
+        // Backwards compatibility only. New code should use api::update_field().
+        return \mod_data\api::delete_field($this->field->id);
     }
 
     /**
      * Print the relevant form element in the ADD template for this field
      *
-     * @global object
      * @param int $recordid
      * @return string
      */
-    function display_add_field($recordid=0, $formdata=null) {
-        global $DB, $OUTPUT;
+    public function display_add_field($recordid=0, $formdata=null) {
+        global $OUTPUT;
 
         if ($formdata) {
             $fieldname = 'field_' . $this->field->id;
             $content = $formdata->$fieldname;
         } else if ($recordid) {
-            $content = $DB->get_field('data_content', 'content', array('fieldid'=>$this->field->id, 'recordid'=>$recordid));
+            $record = new \mod_data\record($recordid);
+            $content = \mod_data\record::get_content($this->field->id);
+            if ($content) {
+                $content = $content->get('content');
+            } else {
+                $content = '';
+            }
         } else {
             $content = '';
         }
@@ -318,6 +257,7 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
         return $str;
     }
 
+
     /**
      * Print the relevant form element to define the attributes for this field
      * viewable by teachers only.
@@ -327,7 +267,7 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
      * @return void Output is echo'd
      */
     function display_edit_field() {
-        global $CFG, $DB, $OUTPUT;
+        global $CFG, $OUTPUT;
 
         if (empty($this->field)) {   // No field has been defined yet, try and make one
             $this->define_default_field();
@@ -370,10 +310,11 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
      * @return bool|string
      */
     function display_browse_field($recordid, $template) {
-        global $DB;
+        $record = new \mod_data\record($recordid);
+        $content = \mod_data\record::get_content($this->field->id);
 
-        if ($content = $DB->get_record('data_content', array('fieldid'=>$this->field->id, 'recordid'=>$recordid))) {
-            if (isset($content->content)) {
+        if ($content) {
+            if ($content->get('content'))) {
                 $options = new stdClass();
                 if ($this->field->param1 == '1') {  // We are autolinking this field, so disable linking within us
                     //$content->content = '<span class="nolink">'.$content->content.'</span>';
@@ -381,7 +322,7 @@ class data_field_base {     // Base class for Database Field Types (see field/*/
                     $options->filter=false;
                 }
                 $options->para = false;
-                $str = format_text($content->content, $content->content1, $options);
+                $str = format_text($content->get('content'), $content->get('content1'), $options);
             } else {
                 $str = '';
             }
@@ -3831,7 +3772,7 @@ function data_get_advanced_search_sql($sort, $data, $recordids, $selectdata, $so
     $namefields = str_replace('u.id,', '', $namefields);
 
     if ($sort == 0) {
-        $nestselectsql = 'SELECT r.id, r.approved, r.timecreated, r.timemodified, r.userid, ' . $namefields . '
+        $nestselectsql = 'SELECT r.id, r.approved, r.timecreated, r.timemodified, r.userid, r.groupid, r.dataid, ' . $namefields . '
                         FROM {data_content} c,
                              {data_records} r,
                              {user} u ';
@@ -4220,24 +4161,9 @@ function data_get_completion_state($course, $cm, $userid, $type) {
  * @since Moodle 3.3
  */
 function data_view($data, $course, $cm, $context) {
-    global $CFG;
-    require_once($CFG->libdir . '/completionlib.php');
+    $database = new mod_data\database(0, $data);
 
-    // Trigger course_module_viewed event.
-    $params = array(
-        'context' => $context,
-        'objectid' => $data->id
-    );
-
-    $event = \mod_data\event\course_module_viewed::create($params);
-    $event->add_record_snapshot('course_modules', $cm);
-    $event->add_record_snapshot('course', $course);
-    $event->add_record_snapshot('data', $data);
-    $event->trigger();
-
-    // Completion.
-    $completion = new completion_info($course);
-    $completion->set_module_viewed($cm);
+    return \mod_data\api::database_viewed($database, $course, $cm, $context);
 }
 
 /**

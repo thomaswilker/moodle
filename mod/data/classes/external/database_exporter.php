@@ -15,31 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Class for exporting content associated to a record.
+ * Class for exporting database data.
  *
  * @package    mod_data
- * @copyright  2017 Juan Leyva <juan@moodle.com>
+ * @copyright  2017 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 namespace mod_data\external;
+
 defined('MOODLE_INTERNAL') || die();
 
+use mod_data\database;
 use core\external\persistent_exporter;
-use mod_data\content;
-use renderer_base;
 use external_files;
 use external_util;
+use renderer_base;
 
 /**
- * Class for exporting content associated to a record.
+ * Class for exporting database data.
  *
- * @copyright  2017 Juan Leyva <juan@moodle.com>
+ * @copyright  2017 Damyon Wiese
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class content_exporter extends persistent_exporter {
+class database_exporter extends persistent_exporter {
 
     protected static function define_class() {
-        return content::class;
+        return database::class;
     }
 
     protected static function define_related() {
@@ -50,7 +51,10 @@ class content_exporter extends persistent_exporter {
 
     protected static function define_other_properties() {
         return array(
-            'files' => array(
+            'coursemodule' => array(
+                'type' => PARAM_INT
+            ),
+            'introfiles' => array(
                 'type' => external_files::get_properties_for_exporter(),
                 'multiple' => true,
                 'optional' => true,
@@ -59,8 +63,25 @@ class content_exporter extends persistent_exporter {
     }
 
     protected function get_other_values(renderer_base $output) {
-        $values = ['files' => external_util::get_area_files($this->related['context']->id, 'mod_data', 'content', $this->persistent->get('id'))];
+        $context = $this->related['context'];
+
+        $values = array(
+            'coursemodule' => $context->instanceid,
+            'introfiles' => external_util::get_area_files($context->id, 'mod_data', 'intro', false, false),
+        );
 
         return $values;
+    }
+
+    /**
+     * Get the formatting parameters for the intro.
+     *
+     * @return array
+     */
+    protected function get_format_parameters_for_intro() {
+        return [
+            'component' => 'mod_data',
+            'filearea' => 'intro',
+        ];
     }
 }

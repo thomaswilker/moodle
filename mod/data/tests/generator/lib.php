@@ -181,12 +181,12 @@ class mod_data_generator extends testing_module_generator {
 
         $record = (object) $record;
 
-        $field = data_get_field($record, $data);
-        $field->insert_field();
+        $field = new \mod_data\field(0, $record);
+        $field->create();
 
         data_generate_default_template($data, 'addtemplate', 0, false, true);
 
-        return $field;
+        return $field->to_record();
     }
 
     /**
