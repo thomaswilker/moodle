@@ -131,6 +131,7 @@ class filter_mathjaxloader extends moodle_text_filter {
      */
     public function filter($text, array $options = array()) {
         global $PAGE;
+        static $jsinitialised = false;
 
         $legacy = get_config('filter_mathjaxloader', 'texfiltercompatibility');
         $extradelimiters = explode(',', get_config('filter_mathjaxloader', 'additionaldelimiters'));
@@ -161,6 +162,10 @@ class filter_mathjaxloader extends moodle_text_filter {
             }
         }
         if ($hasinline || $hasdisplay || $hasextra) {
+            if (empty($jsinitialised)) {
+                $PAGE->requires->js_init_code('M.util.js_pending("filter_mathjaxloader");');
+                $jsinitialised = true;
+            }
             $PAGE->requires->yui_module('moodle-filter_mathjaxloader-loader', 'M.filter_mathjaxloader.typeset');
             if ($hasextra) {
                 // If custom dilimeters are used, wrap whole text to prevent autolinking.
