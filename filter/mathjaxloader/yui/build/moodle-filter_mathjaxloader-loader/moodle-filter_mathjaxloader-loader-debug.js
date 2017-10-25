@@ -94,6 +94,7 @@ M.filter_mathjaxloader = M.filter_mathjaxloader || {
      */
     typeset: function() {
         if (!this._configured) {
+            M.util.js_pending('filter_mathjaxloader');
             var self = this;
             Y.use('mathjax', function() {
                 self._setLocale();
@@ -113,6 +114,9 @@ M.filter_mathjaxloader = M.filter_mathjaxloader || {
      */
     contentUpdated: function(event) {
         var self = this;
+        if (!this._configured) {
+            M.util.js_pending('filter_mathjaxloader');
+        }
         Y.use('mathjax', function() {
             if (typeof window.MathJax === "undefined") {
                 return;
