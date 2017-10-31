@@ -203,6 +203,8 @@ class core_calendar_external extends external_api {
             $courses = $params['events']['courseids'];
             $funcparam['courses'] = $courses;
         }
+        // Now get categories we can get events from.
+        $categories = \coursecat::get_all();
 
         // Let us findout groups that we can return events from.
         if (!$hassystemcap) {
@@ -273,7 +275,8 @@ class core_calendar_external extends external_api {
             } else {
                 // Can the user actually see this event?
                 $eventobj = calendar_event::load($eventobj);
-                if (($eventobj->courseid == $SITE->id) ||
+                if ((($eventobj->courseid == $SITE->id) && (empty($eventobj->categoryid))) ||
+                            (!empty($eventobj->categoryid) && in_array($eventobj->categoryid, $categories)) ||
                             (!empty($eventobj->groupid) && in_array($eventobj->groupid, $groups)) ||
                             (!empty($eventobj->courseid) && in_array($eventobj->courseid, $courses)) ||
                             ($USER->id == $eventobj->userid) ||
@@ -724,6 +727,14 @@ class core_calendar_external extends external_api {
         $warnings = array();
 
         $legacyevent = calendar_event::load($eventid);
+        // Must check we can see this event.
+        if (!calendar_view_event_allowed($legacyevent)) {
+            // We can't return a warning in this case because the event is not optional.
+            // We don't know the context for the event and it's not worth loading it.
+            $syscontext = context_system::instance();
+            throw new \required_capability_exception($syscontext, 'moodle/course:view', 'nopermission', '');
+        }
+
         $legacyevent->count_repeats();
 
         $eventmapper = event_container::get_event_mapper();
@@ -905,9 +916,14 @@ class core_calendar_external extends external_api {
         $PAGE->set_url('/calendar/');
 
         if ($courseid != SITEID && !empty($courseid)) {
-            // Course ID must be valid and existing.
-            $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-            $courses = [$course->id => $course];
+            // Course ID must be valid and existing (and you must be allowed to see it).
+            $mycourses = calendar_get_default_courses($courseid, '*', true);
+            if (!isset($mycourses[$courseid])) {
+                $coursecontext = context_course::instance($courseid);
+                throw new \required_capability_exception($coursecontext, 'moodle/course:view', 'nopermission', '');
+            }
+            $course = $mycourses[$courseid];
+            $courses = [$courseid => $course];
 
             $coursecat = \coursecat::get($course->category);
             $category = $coursecat->get_db_record();
@@ -995,9 +1011,14 @@ class core_calendar_external extends external_api {
         ]);
 
         if ($courseid != SITEID && !empty($courseid)) {
-            // Course ID must be valid and existing.
-            $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-            $courses = [$course->id => $course];
+            // Course ID must be valid and existing (and you must be allowed to see it).
+            $mycourses = calendar_get_default_courses($courseid, '*', true);
+            if (!isset($mycourses[$courseid])) {
+                $coursecontext = context_course::instance($courseid);
+                throw new \required_capability_exception($coursecontext, 'moodle/course:view', 'nopermission', '');
+            }
+            $course = $mycourses[$courseid];
+            $courses = [$courseid => $course];
 
             $coursecat = \coursecat::get($course->category);
             $category = $coursecat->get_db_record();
@@ -1029,7 +1050,7 @@ class core_calendar_external extends external_api {
         $calendar = new calendar_information(0, 0, 0, $time);
         $calendar->set_sources($course, $courses, $category);
 
-        list($data, $template) = calendar_get_view($calendar, 'day', $params['includenavigation']);
+        list($data, $template) = calendar_get_view($calendar, 'day');
 
         return $data;
     }
@@ -1157,9 +1178,14 @@ class core_calendar_external extends external_api {
         ]);
 
         if ($courseid != SITEID && !empty($courseid)) {
-            // Course ID must be valid and existing.
-            $course = $DB->get_record('course', array('id' => $courseid), '*', MUST_EXIST);
-            $courses = [$course->id => $course];
+            // Course ID must be valid and existing (and you must be allowed to see it).
+            $mycourses = calendar_get_default_courses($courseid, '*', true);
+            if (!isset($mycourses[$courseid])) {
+                $coursecontext = context_course::instance($courseid);
+                throw new \required_capability_exception($coursecontext, 'moodle/course:view', 'nopermission', '');
+            }
+            $course = $mycourses[$courseid];
+            $courses = [$courseid => $course];
         } else {
             $course = get_site();
             $courses = calendar_get_default_courses();
