@@ -361,6 +361,10 @@ div#dock {
 }
 
 // Quiz module
+.moodle-dialogue-base .moodle-dialogue.mod_quiz_preflight_popup .moodle-dialogue-bd #mod_quiz_preflight_form .fitem {
+    // Very specific rule in quiz causing display issues in the start attempt modal.
+    margin-left: 0px;
+}
 .path-mod-quiz .mod-quiz-edit-content {
     // Force the quiz edit page to always be large enough to prevent scrolling when accessing the menu.
     margin-bottom: 10rem;
