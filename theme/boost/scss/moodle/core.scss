@@ -1956,6 +1956,9 @@ dd:after {
         select {
             margin-bottom: 0;
         }
+        &.inplaceeditable-autocomplete {
+            min-width: 20rem;
+        }
     }
 
     .quickediticon img {
