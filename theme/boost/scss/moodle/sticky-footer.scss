@@ -6,6 +6,8 @@ $footer-min-height: 130px !default;
 html,
 body {
     height: 100%;
+}
+body.dir-rtl {
     overflow-y: auto;
 }
 
