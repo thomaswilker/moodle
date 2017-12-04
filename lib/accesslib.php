@@ -319,8 +319,7 @@ function get_role_definitions_uncached(array $roleids) {
     $sql = "SELECT ctx.path, rc.roleid, rc.capability, rc.permission
               FROM {role_capabilities} rc
               JOIN {context} ctx ON rc.contextid = ctx.id
-             WHERE rc.roleid $sql
-          ORDER BY ctx.path, rc.roleid, rc.capability";
+             WHERE rc.roleid $sql";
     $rs = $DB->get_recordset_sql($sql, $params);
 
     foreach ($rs as $rd) {
