@@ -2073,6 +2073,48 @@ class mod_assign_locallib_testcase extends mod_assign_base_testcase {
         $this->assertEquals(false, strpos($output, get_string('addnewattempt', 'assign')));
     }
 
+    public function test_markingworkflow_reset() {
+        global $PAGE, $DB;
+
+        // In this test, we are checking that grades are released
+        // if the assignment is updated to no longer use marking workflow.
+
+        $this->setUser($this->editingteachers[0]);
+        $assign = $this->create_instance(array('markingworkflow'=>1));
+        $PAGE->set_url(new moodle_url('/mod/assign/view.php', array('id' => $assign->get_course_module()->id)));
+
+        // Mark the submission and set to notmarked.
+        $this->setUser($this->teachers[0]);
+        $data = new stdClass();
+        $data->grade = '50.0';
+        $data->workflowstate = ASSIGN_MARKING_WORKFLOW_STATE_NOTMARKED;
+        $assign->testable_apply_grade_to_user($data, $this->students[0]->id, 0);
+
+        // Check the student can't see the grade.
+        $this->setUser($this->students[0]);
+        $output = $assign->view_student_summary($this->students[0], true);
+        $this->assertEquals(false, strpos($output, '50.0'));
+
+        // Make sure the grade isn't pushed to the gradebook.
+        $grades = $assign->get_user_grades_for_gradebook($this->students[0]->id);
+        $this->assertEmpty($grades);
+
+        $this->setUser($this->editingteachers[0]);
+        $instance = $assign->get_instance();
+        $instance->instance = $instance->id;
+        $instance->markingworkflow = false;
+        $assign->update_instance($instance);
+
+        // Check the student can see the grade.
+        $this->setUser($this->students[0]);
+        $output = $assign->view_student_summary($this->students[0], true);
+
+        $this->assertNotEquals(false, strpos($output, '50.0'));
+
+        // Make sure the grade is pushed to the gradebook.
+        $grades = $assign->get_user_grades_for_gradebook($this->students[0]->id);
+        $this->assertEquals(50, (int)$grades[$this->students[0]->id]->rawgrade);
+    }
 
     public function test_markingworkflow() {
         global $PAGE;
