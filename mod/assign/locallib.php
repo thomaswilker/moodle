@@ -1239,6 +1239,7 @@ class assign {
     public function update_instance($formdata) {
         global $DB;
         $adminconfig = $this->get_admin_config();
+        $before = $DB->get_record('assign', ['id' => $formdata->instance]);
 
         $update = new stdClass();
         $update->id = $formdata->instance;
@@ -1280,10 +1281,16 @@ class assign {
         if (isset($formdata->preventsubmissionnotingroup)) {
             $update->preventsubmissionnotingroup = $formdata->preventsubmissionnotingroup;
         }
+        
         $update->markingworkflow = $formdata->markingworkflow;
         $update->markingallocation = $formdata->markingallocation;
         if (empty($update->markingworkflow)) { // If marking workflow is disabled, make sure allocation is disabled.
             $update->markingallocation = 0;
+        }
+
+        if ($before->markingworkflow && !$formdata->markingworkflow) {
+            // Marking workflow has been disabled so we need to release all the grades.
+            $this->release_all_marking_workflow_grades();
         }
 
         $result = $DB->update_record('assign', $update);
@@ -7682,6 +7689,43 @@ class assign {
         }
     }
 
+    /**
+     * Release all grades for this assignment.
+     *
+     */
+    public function release_all_marking_workflow_grades() {
+        global $DB;
+
+        $useridlist = $this->list_participants(null, true);
+
+        $validstates = $this->get_marking_workflow_states_for_current_user();
+        $releasedstate = ASSIGN_MARKING_WORKFLOW_STATE_RELEASED;
+        if (empty($validstates[$releasedstate]) && !has_capability('mod/assign:addinstance', $this->get_context())) {
+            throw new required_capability_exception($this->get_context(), 'mod/assign:addinstance', 'nopermission', '');
+        }
+
+        foreach ($useridlist as $user) {
+            $userid = $user->id;
+            $flags = $this->get_user_flags($userid, true);
+
+            if ($flags->workflowstate !== $releasedstate) {
+                $flags->workflowstate = $releasedstate;
+
+                if ($this->update_user_flags($flags)) {
+
+                    // Update Gradebook.
+                    $assign = clone $this->get_instance();
+                    $assign->cmidnumber = $this->get_course_module()->idnumber;
+                    // Set assign gradebook feedback plugin status.
+                    $assign->gradefeedbackenabled = $this->is_gradebook_feedback_enabled();
+                    assign_update_grades($assign, $userid);
+                }
+
+                $user = core_user::get_user($userid);
+                \mod_assign\event\workflow_state_updated::create_from_user($this, $user, $releasedstate)->trigger();
+            }
+        }
+    }
 
     /**
      * Prevent student updates to this submission.
